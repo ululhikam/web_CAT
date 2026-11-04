@@ -10,7 +10,7 @@ export function getLogger(level = process.env.LOG_LEVEL ?? 'info'): Logger {
   if (rootLogger) return rootLogger;
 
   const isDev = process.env.NODE_ENV === 'development';
-  rootLogger = pino({
+  const base = {
     level,
     base: { service: 'webcat-api', env: process.env.NODE_ENV },
     redact: {
@@ -27,15 +27,27 @@ export function getLogger(level = process.env.LOG_LEVEL ?? 'info'): Logger {
       ],
       remove: true,
     },
-    ...(isDev
-      ? {
-          transport: {
-            target: 'pino-pretty',
-            options: { colorize: true, translateTime: 'HH:MM:ss', ignore: 'pid,hostname,service,env' },
-          },
-        }
-      : {}),
-  });
+  } satisfies pino.LoggerOptions;
+
+  if (!isDev) {
+    rootLogger = pino(base);
+    return rootLogger;
+  }
+
+  try {
+    rootLogger = pino({
+      ...base,
+      transport: {
+        target: 'pino-pretty',
+        options: { colorize: true, translateTime: 'HH:MM:ss', ignore: 'pid,hostname,service,env' },
+      },
+    });
+  } catch {
+    // `pino-pretty` hanya alat bantu developer. Bila belum terpasang
+    // (mis. instalasi produksi tanpa devDependencies), jangan sampai API
+    // gagal boot — log tetap keluar sebagai JSON.
+    rootLogger = pino(base);
+  }
 
   return rootLogger;
 }
