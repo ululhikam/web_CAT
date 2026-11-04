@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ROLES } from '../common/rbac';
-import { emailSchema, passwordSchema } from '../auth/index';
+import { emailSchema, passwordSchema, phoneSchema } from '../auth/index';
 
 /* ------------------------------------------------------------------ provisioning */
 
@@ -53,6 +53,39 @@ export const adminResetPasswordSchema = z.object({
 });
 export type AdminResetPasswordInput = z.infer<typeof adminResetPasswordSchema>;
 
+/* ------------------------------------------------------------------ profil sendiri */
+
+/** PATCH /users/me — minimal satu field harus diisi. */
+export const updateProfileSchema = z
+  .object({
+    fullName: z.string().trim().min(2, 'Nama minimal 2 karakter').max(120).optional(),
+    phone: phoneSchema.nullable().optional(),
+  })
+  .refine((value) => value.fullName !== undefined || value.phone !== undefined, {
+    message: 'Kirim minimal satu field: fullName atau phone',
+  });
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+
+/** POST /users/me/avatar — minta signed upload langsung ke storage. */
+export const avatarUploadSchema = z.object({
+  contentType: z.enum(['image/jpeg', 'image/png', 'image/webp'], {
+    message: 'Gunakan JPEG, PNG, atau WebP',
+  }),
+  sizeBytes: z.coerce
+    .number()
+    .int()
+    .min(1, 'Berkas kosong')
+    .max(2 * 1024 * 1024, 'Maksimal 2 MB'),
+});
+export type AvatarUploadInput = z.infer<typeof avatarUploadSchema>;
+
+export interface AvatarUploadResponse {
+  path: string;
+  token: string;
+  signedUrl: string;
+  expiresAt: string;
+}
+
 /* ------------------------------------------------------------------ queries */
 
 export const userListQuerySchema = z.object({
@@ -72,6 +105,8 @@ export interface AdminUserSummary {
   id: string;
   email: string;
   fullName: string;
+  phone: string | null;
+  avatarPath: string | null;
   role: 'USER' | 'ADMIN' | 'SUPER_ADMIN';
   status: 'ACTIVE' | 'SUSPENDED' | 'PENDING_INVITE';
   emailVerified: boolean;

@@ -19,6 +19,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { HealthModule } from './modules/health/health.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { QuestionsModule } from './modules/questions/questions.module';
+import { MediaModule } from './modules/media/media.module';
+import { ImportsModule } from './modules/imports/imports.module';
 
 /**
  * Root module — modular monolith.
@@ -41,8 +46,13 @@ import { HealthModule } from './modules/health/health.module';
     PortsModule,
     AuditModule,
     AuthModule,
+    SettingsModule,
     UsersModule,
     BillingModule,
+    CategoriesModule,
+    MediaModule,
+    QuestionsModule,
+    ImportsModule,
     HealthModule,
     CronModule,
   ],

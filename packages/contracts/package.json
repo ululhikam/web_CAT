@@ -31,6 +31,30 @@
       "types": "./dist/exams/index.d.ts",
       "default": "./dist/exams/index.js"
     },
+    "./categories": {
+      "types": "./dist/categories/index.d.ts",
+      "default": "./dist/categories/index.js"
+    },
+    "./questions": {
+      "types": "./dist/questions/index.d.ts",
+      "default": "./dist/questions/index.js"
+    },
+    "./media": {
+      "types": "./dist/media/index.d.ts",
+      "default": "./dist/media/index.js"
+    },
+    "./imports": {
+      "types": "./dist/imports/index.d.ts",
+      "default": "./dist/imports/index.js"
+    },
+    "./audit": {
+      "types": "./dist/audit/index.d.ts",
+      "default": "./dist/audit/index.js"
+    },
+    "./settings": {
+      "types": "./dist/settings/index.d.ts",
+      "default": "./dist/settings/index.js"
+    },
     "./ports": {
       "types": "./dist/ports/index.d.ts",
       "default": "./dist/ports/index.js"
