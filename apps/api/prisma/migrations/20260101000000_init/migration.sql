@@ -1,4 +1,4 @@
-﻿-- CreateSchema
+-- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 
 -- CreateEnum
@@ -938,4 +938,3 @@ ALTER TABLE "import_jobs" ADD CONSTRAINT "import_jobs_admin_id_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "import_job_errors" ADD CONSTRAINT "import_job_errors_job_id_fkey" FOREIGN KEY ("job_id") REFERENCES "import_jobs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-

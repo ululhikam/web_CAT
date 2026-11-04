@@ -17,32 +17,32 @@ data dari database — bukan dari daftar harga yang ditulis di komponen.
 
 Hasil verifikasi terakhir (`pnpm verify`, 5 November 2026 03:15 WIB):
 
-| Gerbang    | Perintah         | Hasil                                    |
-| ---------- | ---------------- | ---------------------------------------- |
-| Lint       | `pnpm lint`      | ✅ 6 task berhasil                        |
-| Typecheck  | `pnpm typecheck` | ✅ 5 paket, `svelte-check` 0 error        |
-| Test       | `pnpm test`      | ✅ 33 tes lulus (6 berkas)                |
-| Build      | `pnpm build`     | ✅ API + web + paket, adapter-node `done` |
+| Gerbang    | Perintah         | Hasil                                     |
+| ---------- | ---------------- | ----------------------------------------- |
+| Lint       | `pnpm lint`      | ✅ 6 task berhasil                         |
+| Typecheck  | `pnpm typecheck` | ✅ 5 paket, `svelte-check` 0 error         |
+| Test       | `pnpm test`      | ✅ 33 tes lulus (6 berkas)                 |
+| Build      | `pnpm build`     | ✅ API + web + paket, adapter-node `done`  |
 
-Total kode sumber: **174 berkas, ±15.300 baris** (di luar `node_modules`, `dist`,
+Total kode sumber: **175 berkas, ±15.340 baris** (di luar `node_modules`, `dist`,
 `build`, dan `.svelte-kit`).
 
 ---
 
 ## 2. Keputusan Arsitektur
 
-| #   | Keputusan                          | Alasan                                                                                      |
-| --- | ---------------------------------- | ------------------------------------------------------------------------------------------- |
-| 1   | Monolit modular NestJS, 1 function | Batas Vercel Hobby 12 function; satu instance Nest di-cache antar request.                   |
-| 2   | Tanpa Redis/BullMQ                 | Menghindari layanan tambahan berbayar. Job memakai `job_queue` + `outbox_events` di Postgres.|
-| 3   | Postgres `FOR UPDATE SKIP LOCKED`  | Worker aman dijalankan paralel tanpa saling menunggu.                                        |
-| 4   | Vercel Cron + `pg_cron`            | Penjadwalan tanpa infrastruktur worker permanen.                                             |
-| 5   | Dua proyek Vercel                  | Pemisahan API dan web agar build & cache independen.                                         |
-| 6   | Prisma schema multi-file           | Schema 740+ baris dipecah per domain agar mudah ditinjau.                                    |
-| 7   | Password: scrypt (Node built-in)   | Tanpa dependensi native; Argon2id ditunda ke Fase B1.                                        |
-| 8   | Harga hanya dari DB                | Klien mengirim `planCode` saja; harga tidak pernah dipercaya dari browser.                    |
-| 9   | Kontrak sebagai CommonJS           | NestJS (CJS) mengonsumsi langsung; web memakai `import type` + subpath exports.              |
-| 10  | Guard rute di sisi klien (Fase 0)  | Cepat dan cukup untuk kerangka; dipindah ke `hooks.server.ts` pada Fase B1.                  |
+| #   | Keputusan                          | Alasan                                                                                       |
+| --- | ---------------------------------- | -------------------------------------------------------------------------------------------- |
+| 1   | Monolit modular NestJS, 1 function | Batas Vercel Hobby 12 function; satu instance Nest di-cache antar request.                    |
+| 2   | Tanpa Redis/BullMQ                 | Menghindari layanan tambahan berbayar. Job memakai `job_queue` + `outbox_events` di Postgres. |
+| 3   | Postgres `FOR UPDATE SKIP LOCKED`  | Worker aman dijalankan paralel tanpa saling menunggu.                                         |
+| 4   | Vercel Cron + `pg_cron`            | Penjadwalan tanpa infrastruktur worker permanen.                                              |
+| 5   | Dua proyek Vercel                  | Pemisahan API dan web agar build & cache independen.                                          |
+| 6   | Prisma schema multi-file           | Schema besar dipecah per domain agar mudah ditinjau.                                          |
+| 7   | Password: scrypt (Node built-in)   | Tanpa dependensi native; Argon2id ditunda ke Fase B1.                                         |
+| 8   | Harga hanya dari DB                | Klien mengirim `planCode` saja; harga tidak pernah dipercaya dari browser.                     |
+| 9   | Kontrak sebagai CommonJS           | NestJS (CJS) mengonsumsi langsung; web memakai `import type` + subpath exports.               |
+| 10  | Guard rute di sisi klien (Fase 0)  | Cepat dan cukup untuk kerangka; dipindah ke `hooks.server.ts` pada Fase B1.                   |
 
 Detail lengkap ada di `docs/adr/`.
 
@@ -54,7 +54,7 @@ Detail lengkap ada di `docs/adr/`.
 
 - `package.json` — workspace, `packageManager: pnpm@11.12.0`, script `verify`
   (lint → typecheck → test → build), `db:validate`.
-- `pnpm-workspace.yaml` — `apps/*`, `packages/*`, `allowBuilds` (`msw: false`).
+- `pnpm-workspace.yaml` — `apps/*`, `packages/*`.
 - `turbo.json` — `dependsOn: ["^build"]` agar paket kontrak selalu dibangun lebih dulu.
 - `tsconfig.base.json`, `.npmrc`, `.editorconfig`, `.prettierrc`, `.prettierignore`,
   `.gitignore`, `.env.example`, `CODEOWNERS`.
@@ -85,7 +85,7 @@ Sumber tunggal tipe, validasi, dan aturan akses:
   `exam_sessions`, `subtest_attempts`, `subtest_locks`, `questions`,
   `question_options`, `answers`, `audit_logs`, `job_queue`, `outbox_events`,
   `rate_limits`, `settings`.
-- Migrasi baseline `20260101000000_init` (740 baris SQL).
+- Migrasi baseline `20260101000000_init` (±941 baris SQL) + `migration_lock.toml`.
 - Seed idempoten: 3 role, 20 permission, 3 tahap, **6 subtes**, 6 paket harga,
   dan bootstrap `SUPER_ADMIN` dari environment.
 
@@ -153,7 +153,7 @@ SvelteKit 2 + Svelte 5 (runes) + Vite 6.
 - `svelte.config.js` — adapter berganti otomatis: `adapter-vercel` bila `VERCEL`
   terisi, `adapter-node` bila tidak (menghindari kegagalan symlink di Windows).
 - `vite.config.ts` — proxy `/api` → `http://localhost:3000`.
-- `hooks.server.ts` — header keamanan (CSP dasar, HSTS, nosniff, referrer policy).
+- `hooks.server.ts` — header keamanan (nosniff, frame, referrer, permissions policy).
 - `src/lib/api/client.ts` — pembungkus `fetch` yang membuka envelope, melempar
   `ApiError`, dan melakukan **satu** percobaan refresh token.
 - `src/lib/stores/session.svelte.ts` — store runes: `restore()`, `login()`, `logout()`.
@@ -201,15 +201,15 @@ Halaman ini sebelumnya tidak ada dan menjadi permintaan eksplisit:
 
 ## 4. Pengujian
 
-| Berkas                          | Jumlah | Cakupan                                                  |
-| ------------------------------- | ------ | -------------------------------------------------------- |
-| `packages/contracts/test/rbac.spec.ts`        | 5 | Hierarki role, matriks permission aditif, anti-escalation |
-| `packages/contracts/test/pagination.spec.ts`  | 8 | Default limit, batas, round-trip cursor, base64url        |
-| `packages/contracts/test/plans.spec.ts`       | 6 | Kode unik, satu paket populer, harga/hari konsisten       |
-| `apps/api/test/token.spec.ts`                 | 5 | Panjang token, keunikan, OTP 6 digit, SHA-256             |
-| `apps/api/test/envelope.spec.ts`              | 4 | Bentuk envelope sukses/gagal, `details` opsional          |
-| `packages/mocks/test/fixtures.spec.ts`        | 5 | Total 1090, determinisme, komposisi, tanpa kunci jawaban  |
-| **Total**                       | **33** |                                                          |
+| Berkas                                        | Jumlah | Cakupan                                                  |
+| --------------------------------------------- | ------ | -------------------------------------------------------- |
+| `packages/contracts/test/rbac.spec.ts`        | 5      | Hierarki role, matriks permission aditif, anti-escalation |
+| `packages/contracts/test/pagination.spec.ts`  | 8      | Default limit, batas, round-trip cursor, base64url        |
+| `packages/contracts/test/plans.spec.ts`       | 6      | Kode unik, satu paket populer, harga/hari konsisten       |
+| `apps/api/test/token.spec.ts`                 | 5      | Panjang token, keunikan, OTP 6 digit, SHA-256             |
+| `apps/api/test/envelope.spec.ts`              | 4      | Bentuk envelope sukses/gagal, `details` opsional          |
+| `packages/mocks/test/fixtures.spec.ts`        | 5      | Total 1090, determinisme, komposisi, tanpa kunci jawaban  |
+| **Total**                                     | **33** |                                                          |
 
 ---
 
@@ -226,10 +226,7 @@ pnpm build          → contracts (tsc), api (tsc), web (vite + adapter-node)
 pnpm db:validate    → schema Prisma valid
 ```
 
-Total kode sumber saat laporan ditulis: **174 berkas, ±15.300 baris**.
-
-Catatan lingkungan: Node **v22.13.0**, pnpm **11.12.0**, git **2.47.1**,
-Windows 10/11 (PowerShell 5.1).
+Total kode sumber saat laporan ditulis: **175 berkas, ±15.340 baris**.
 
 ---
 

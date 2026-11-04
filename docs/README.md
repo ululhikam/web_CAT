@@ -1,10 +1,13 @@
 # Dokumentasi
 
-| Dokumen                                            | Isi                                                            |
-| -------------------------------------------------- | -------------------------------------------------------------- |
-| [LAPORAN-PEKERJAAN.md](LAPORAN-PEKERJAAN.md)       | Laporan pekerjaan Fase 0: tanggal, jam, rincian, verifikasi     |
-| [adr/](adr/)                                       | Architecture Decision Record (0001–0003)                        |
-| [../plan.md](../plan.md)                           | Blueprint produk & teknis (sumber kebenaran)                    |
+| Berkas                                                          | Isi                                                   |
+| --------------------------------------------------------------- | ----------------------------------------------------- |
+| [LAPORAN-PEKERJAAN.md](LAPORAN-PEKERJAAN.md)                    | Laporan pekerjaan Fase 0 lengkap dengan tanggal & jam |
+| [adr/0001](adr/0001-monolit-nestjs-satu-function.md)            | Satu Vercel Function untuk seluruh API                |
+| [adr/0002](adr/0002-antrean-postgres-tanpa-redis.md)            | Antrean & penjadwalan tanpa Redis                     |
+| [adr/0003](adr/0003-harga-hanya-dari-database.md)               | Harga paket hanya dari database                       |
+
+Dokumen rencana induk ada di [`../plan.md`](../plan.md).
 
 ## Konvensi
 
