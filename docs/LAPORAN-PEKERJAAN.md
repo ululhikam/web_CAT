@@ -24,7 +24,7 @@ Hasil verifikasi terakhir (`pnpm verify`, 5 November 2026 03:15 WIB):
 | Test       | `pnpm test`      | ✅ 33 tes lulus (6 berkas)                 |
 | Build      | `pnpm build`     | ✅ API + web + paket, adapter-node `done`  |
 
-Total kode sumber: **175 berkas, ±15.340 baris** (di luar `node_modules`, `dist`,
+Total kode sumber: **176 berkas, ±15.340 baris** (di luar `node_modules`, `dist`,
 `build`, dan `.svelte-kit`).
 
 ---
@@ -226,7 +226,7 @@ pnpm build          → contracts (tsc), api (tsc), web (vite + adapter-node)
 pnpm db:validate    → schema Prisma valid
 ```
 
-Total kode sumber saat laporan ditulis: **175 berkas, ±15.340 baris**.
+Total kode sumber saat laporan ditulis: **176 berkas, ±15.340 baris**.
 
 ---
 
