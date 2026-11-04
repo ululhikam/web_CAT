@@ -125,6 +125,135 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   return envelope.data as T;
 }
 
+/**
+ * Kirim `FormData` (multipart) ke API.
+ *
+ * Dipakai unggah media dan impor soal. `content-type` sengaja tidak diisi agar
+ * browser menambahkan boundary sendiri.
+ */
+export async function apiUpload<T>(
+  path: string,
+  form: FormData,
+  options: Omit<RequestOptions, 'body'> = {},
+): Promise<T> {
+  const doFetch = options.fetchImpl ?? fetch;
+  const url = path.startsWith('http') ? path : `${BASE}${path}`;
+
+  const send = (token: string | null) =>
+    doFetch(url, {
+      method: options.method ?? 'POST',
+      credentials: 'include',
+      headers: {
+        accept: 'application/json',
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
+      body: form,
+      signal: options.signal,
+    });
+
+  let response = await send(options.token ?? null);
+  if (response.status === 401 && !options.skipRefresh && options.token) {
+    const fresh = await refreshAccessToken(doFetch);
+    if (fresh) response = await send(fresh);
+  }
+
+  const text = await response.text();
+  let envelope: ApiEnvelope<T> | null = null;
+  if (text) {
+    try {
+      envelope = JSON.parse(text) as ApiEnvelope<T>;
+    } catch {
+      throw new ApiError(response.status, 'COMMON_INVALID_RESPONSE', 'Respons server tidak valid.');
+    }
+  }
+
+  if (!response.ok || !envelope || envelope.success !== true) {
+    const body = envelope?.error;
+    throw new ApiError(
+      response.status,
+      body?.code ?? 'COMMON_INTERNAL_ERROR',
+      body?.message ?? `Permintaan gagal (HTTP ${response.status}).`,
+      body?.details,
+    );
+  }
+
+  return envelope.data as T;
+}
+
+/**
+ * Unduh berkas biner (template XLSX, laporan error CSV, konten media).
+ *
+ * Endpoint biner tidak memakai envelope, jadi kegagalan tetap dipetakan ke
+ * `ApiError` bila server mengembalikan JSON.
+ */
+export async function apiDownload(
+  path: string,
+  options: Omit<RequestOptions, 'body'> = {},
+): Promise<{ blob: Blob; filename: string | null }> {
+  const doFetch = options.fetchImpl ?? fetch;
+  const url = path.startsWith('http') ? path : `${BASE}${path}`;
+
+  const send = (token: string | null) =>
+    doFetch(url, {
+      method: options.method ?? 'GET',
+      credentials: 'include',
+      headers: {
+        accept: '*/*',
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
+      signal: options.signal,
+    });
+
+  let response = await send(options.token ?? null);
+  if (response.status === 401 && !options.skipRefresh && options.token) {
+    const fresh = await refreshAccessToken(doFetch);
+    if (fresh) response = await send(fresh);
+  }
+
+  if (!response.ok) {
+    const text = await response.text();
+    let message = `Unduhan gagal (HTTP ${response.status}).`;
+    let code = 'COMMON_INTERNAL_ERROR';
+    try {
+      const envelope = JSON.parse(text) as ApiEnvelope<unknown>;
+      message = envelope.error?.message ?? message;
+      code = envelope.error?.code ?? code;
+    } catch {
+      // bukan JSON: pakai pesan umum
+    }
+    throw new ApiError(response.status, code, message);
+  }
+
+  return {
+    blob: await response.blob(),
+    filename: filenameFromDisposition(response.headers.get('content-disposition')),
+  };
+}
+
+function filenameFromDisposition(header: string | null): string | null {
+  if (!header) return null;
+  const match = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(header);
+  if (!match?.[1]) return null;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return match[1];
+  }
+}
+
+/** Simpan blob ke disk lewat elemen `<a>` sementara. */
+export function saveBlob(blob: Blob, filename: string): void {
+  if (typeof document === 'undefined') return;
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
 /** Pesan siap tampil untuk pengguna; tidak pernah membocorkan detail internal. */
 export function apiErrorMessage(error: unknown): string {
   if (error instanceof ApiError) return error.message;

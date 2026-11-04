@@ -41,6 +41,18 @@
         <a href="/admin/users" class:is-active={page.url.pathname.startsWith('/admin/users')}>
           Pengguna
         </a>
+        <a href="/admin/questions" class:is-active={page.url.pathname.startsWith('/admin/questions')}>
+          Soal
+        </a>
+        <a
+          href="/admin/categories"
+          class:is-active={page.url.pathname.startsWith('/admin/categories')}
+        >
+          Kategori
+        </a>
+        <a href="/admin/media" class:is-active={page.url.pathname.startsWith('/admin/media')}>
+          Media
+        </a>
         <a href="/admin/plans" class:is-active={page.url.pathname.startsWith('/admin/plans')}>
           Paket
         </a>

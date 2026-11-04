@@ -27,6 +27,7 @@ export const AUDIT = Symbol('AUDIT');
 
 import { DevAccessPolicy } from './impl/dev-access-policy';
 import { MockQuestionPool } from './impl/mock-question-pool';
+import { PrismaQuestionPool } from './impl/prisma-question-pool';
 import { DevStorage } from './impl/dev-storage';
 import { ConsoleMail } from './impl/console-mail';
 import { SupabaseStorage } from './impl/supabase-storage';
@@ -40,6 +41,7 @@ import { PrismaAudit } from './impl/prisma-audit';
   providers: [
     DevAccessPolicy,
     MockQuestionPool,
+    PrismaQuestionPool,
     DevStorage,
     ConsoleMail,
     FakePaymentProvider,
@@ -57,10 +59,15 @@ import { PrismaAudit } from './impl/prisma-audit';
     },
     {
       provide: QUESTION_POOL,
-      inject: [AppConfigService, MockQuestionPool],
-      useFactory: (config: AppConfigService, mock: MockQuestionPool) => {
-        void config.value.QUESTION_POOL;
-        return mock;
+      inject: [AppConfigService, MockQuestionPool, PrismaQuestionPool],
+      useFactory: (
+        config: AppConfigService,
+        mock: MockQuestionPool,
+        prismaPool: PrismaQuestionPool,
+      ) => {
+        // `dev` memakai mock agar sesi ujian dapat dijalankan tanpa seed soal;
+        // `db` memakai sampling nyata dari bank soal PUBLISHED.
+        return config.value.QUESTION_POOL === 'db' ? prismaPool : mock;
       },
     },
     {

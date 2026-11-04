@@ -52,6 +52,14 @@ enum ImportSourceKind {
   DOCX
 }
 
+enum ImportItemStatus {
+  VALID
+  INVALID
+  DUPLICATE
+  IMPORTED
+  SKIPPED
+}
+
 model Category {
   id        String    @id @default(uuid()) @db.Uuid
   parentId  String?   @map("parent_id") @db.Uuid
@@ -145,6 +153,9 @@ model MediaAsset {
   height      Int?
   sizeBytes   Int?     @map("size_bytes")
   checksum    String   @unique
+  /// Fallback penyimpanan biner saat StoragePort dev dipakai. Di produksi
+  /// kolom ini NULL dan objek berada di bucket privat Supabase.
+  data        Bytes?
   uploadedBy  String?  @map("uploaded_by") @db.Uuid
   createdAt   DateTime @default(now()) @map("created_at")
 
@@ -196,11 +207,15 @@ model ImportJob {
   processedRows Int              @default(0) @map("processed_rows")
   stats         Json?
   warnings      Json?
+  /// Target stage/subtes, tipe & kesulitan default, mode dedupe, kategori.
+  /// Disimpan JSON agar menambah opsi impor tidak perlu migrasi baru.
+  settings      Json?
   createdAt     DateTime         @default(now()) @map("created_at")
   finishedAt    DateTime?        @map("finished_at")
 
   admin    User             @relation(fields: [adminId], references: [id], onDelete: Restrict)
   errors   ImportJobError[]
+  items    ImportJobItem[]
   questions Question[]
 
   @@index([adminId, createdAt(sort: Desc)])
@@ -220,4 +235,26 @@ model ImportJobError {
 
   @@index([jobId])
   @@map("import_job_errors")
+}
+
+/// Satu baris hasil parsing/ekstraksi. Disimpan agar review bisa dilakukan
+/// bertahap tanpa mem-parse ulang dokumen (dan tanpa menyimpan file asli).
+model ImportJobItem {
+  id         String           @id @default(uuid()) @db.Uuid
+  jobId      String           @map("job_id") @db.Uuid
+  rowNumber  Int              @map("row_number")
+  status     ImportItemStatus @default(VALID)
+  confidence Decimal?         @db.Decimal(5, 4)
+  payload    Json?
+  rawText    String?          @map("raw_text")
+  issues     Json?
+  questionId String?          @map("question_id") @db.Uuid
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime         @updatedAt @map("updated_at")
+
+  job ImportJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, rowNumber])
+  @@index([jobId, status])
+  @@map("import_job_items")
 }
