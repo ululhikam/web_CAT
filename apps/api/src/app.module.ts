@@ -18,6 +18,8 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BillingModule } from './modules/billing/billing.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { HealthModule } from './modules/health/health.module';
 
 /**
@@ -43,6 +45,8 @@ import { HealthModule } from './modules/health/health.module';
     AuthModule,
     UsersModule,
     BillingModule,
+    PaymentsModule,
+    AnalyticsModule,
     HealthModule,
     CronModule,
   ],

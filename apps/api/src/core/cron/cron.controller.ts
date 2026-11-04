@@ -5,6 +5,8 @@ import { JobQueueService } from '../jobs/job-queue.service';
 import { OutboxService } from '../jobs/outbox.service';
 import { LoggerService } from '../logger/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { BillingExpiryService } from '../../modules/billing/billing-expiry.service';
+import { PaymentsService } from '../../modules/payments/payments.service';
 import { CronAuthGuard } from './cron-auth.guard';
 
 interface CronRunResult {
@@ -17,8 +19,8 @@ interface CronRunResult {
  * Endpoint cron (dipanggil Vercel Cron tiap menit). Semua idempoten:
  * aman dipanggil dua kali bersamaan karena klaim memakai SKIP LOCKED.
  *
- * B3/B4 mengisi logika domain di service masing-masing; Phase 0 hanya
- * menyediakan kerangka + housekeeping yang sudah final.
+ * Logika domain dijalankan lewat service masing-masing; controller hanya
+ * mengorkestrasi urutan dan mengembalikan ringkasan.
  */
 @ApiExcludeController()
 @Public()
@@ -30,6 +32,8 @@ export class CronController {
     private readonly outbox: OutboxService,
     private readonly prisma: PrismaService,
     private readonly logger: LoggerService,
+    private readonly billing: BillingExpiryService,
+    private readonly payments: PaymentsService,
   ) {}
 
   @Post('finalize-subtests')
@@ -62,13 +66,35 @@ export class CronController {
     };
   }
 
+  /**
+   * Siklus hidup langganan & tagihan:
+   *  1. Langganan PENDING yang mencapai `starts_at` → ACTIVE.
+   *  2. Langganan ACTIVE yang lewat `ends_at` → EXPIRED (+ event + outbox).
+   *  3. Tagihan PENDING yang lewat `expires_at` → EXPIRED.
+   *  4. Tagihan PENDING tanpa `expires_at` yang lebih dari 24 jam → EXPIRED.
+   *  5. Pengingat H-3 dan H-0 (maksimal sekali per jendela).
+   */
   @Post('expire-subscriptions')
   async expireSubscriptions(): Promise<CronRunResult> {
-    const result = await this.prisma.subscription.updateMany({
-      where: { status: 'ACTIVE', endsAt: { lt: new Date() } },
-      data: { status: 'EXPIRED' },
-    });
-    return { job: 'expire-subscriptions', processed: result.count };
+    const now = new Date();
+    const activated = await this.billing.activateDueSubscriptions(now);
+    const subscriptions = await this.billing.expireDueSubscriptions(now);
+    const overdue = await this.payments.expireOverdue(now);
+    const stale = await this.payments.expireStale(now);
+    const reminders = await this.billing.sendExpiryReminders(now);
+
+    return {
+      job: 'expire-subscriptions',
+      processed: activated + subscriptions + overdue + stale,
+      details: {
+        subscriptionsActivated: activated,
+        subscriptions,
+        transactionsOverdue: overdue,
+        transactionsStale: stale,
+        remindersSent: reminders.sent,
+        remindersSkipped: reminders.skipped,
+      },
+    };
   }
 
   @Post('cleanup')

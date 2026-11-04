@@ -1,5 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { AppConfigService } from '../config/config.service';
+import { EntitlementsModule } from '../../modules/entitlements/entitlements.module';
+import { BillingAccessPolicy } from '../../modules/entitlements/billing-access-policy';
 
 /**
  * ============================================================================
@@ -30,27 +32,33 @@ import { MockQuestionPool } from './impl/mock-question-pool';
 import { DevStorage } from './impl/dev-storage';
 import { ConsoleMail } from './impl/console-mail';
 import { FakePaymentProvider } from './impl/fake-payment-provider';
+import { MidtransProvider } from './impl/midtrans-provider';
 import { HeuristicDocExtractor } from './impl/heuristic-doc-extractor';
 import { PrismaAudit } from './impl/prisma-audit';
 
 @Global()
 @Module({
+  imports: [EntitlementsModule],
   providers: [
     DevAccessPolicy,
     MockQuestionPool,
     DevStorage,
     ConsoleMail,
     FakePaymentProvider,
+    MidtransProvider,
     HeuristicDocExtractor,
     PrismaAudit,
     {
       provide: ACCESS_POLICY,
-      inject: [AppConfigService, DevAccessPolicy],
-      useFactory: (config: AppConfigService, dev: DevAccessPolicy) => {
-        // Fase 5 (B4) mengganti cabang 'billing' ke BillingAccessPolicy.
-        // Sampai itu, dev policy dipakai agar B3 tidak terblokir.
-        void config.value.ACCESS_POLICY;
-        return dev;
+      inject: [AppConfigService, DevAccessPolicy, BillingAccessPolicy],
+      useFactory: (
+        config: AppConfigService,
+        dev: DevAccessPolicy,
+        billing: BillingAccessPolicy,
+      ) => {
+        // `billing` dipakai setelah B4 selesai (gate G3). `dev` tetap tersedia
+        // agar pengembangan modul lain tidak terblokir.
+        return config.value.ACCESS_POLICY === 'billing' ? billing : dev;
       },
     },
     {
@@ -79,10 +87,13 @@ import { PrismaAudit } from './impl/prisma-audit';
     },
     {
       provide: PAYMENT,
-      inject: [AppConfigService, FakePaymentProvider],
-      useFactory: (config: AppConfigService, fake: FakePaymentProvider) => {
-        void config.value.PAYMENT;
-        return fake;
+      inject: [AppConfigService, FakePaymentProvider, MidtransProvider],
+      useFactory: (
+        config: AppConfigService,
+        fake: FakePaymentProvider,
+        midtrans: MidtransProvider,
+      ) => {
+        return config.value.PAYMENT === 'midtrans' ? midtrans : fake;
       },
     },
     {
