@@ -33,8 +33,53 @@ export interface PoolStatus {
   missingSubtestCodes: string[];
 }
 
+export interface DifficultyMix {
+  EASY?: number;
+  MEDIUM?: number;
+  HARD?: number;
+}
+
+export interface PoolMedia {
+  id: string;
+  storagePath: string;
+  mime: string;
+  role: 'STEM' | 'OPTION' | 'EXPLANATION';
+  optionLabel: string | null;
+  altText: string | null;
+  sortOrder: number;
+}
+
+export interface PoolOption {
+  id: string;
+  label: string;
+  contentText: string | null;
+  isCorrect: boolean;
+  scoreValue: number;
+  dimensionMap: Record<string, number> | null;
+  sortOrder: number;
+}
+
+export interface PoolQuestion {
+  id: string;
+  publicCode: string;
+  stageCode: string;
+  subtestCode: string;
+  type: string;
+  stemText: string;
+  stemFormat: string;
+  explanation: string | null;
+  scoringStrategy: string;
+  scoringConfig: Record<string, unknown> | null;
+  weight: number;
+  pairGroup: string | null;
+  columnIndex: number | null;
+  options: PoolOption[];
+  media: PoolMedia[];
+}
+
 export interface QuestionPoolPort {
   validate(subtestCode: string, count: number): Promise<PoolStatus>;
+  sample(subtestCode: string, count: number, mix?: DifficultyMix): Promise<PoolQuestion[]>;
 }
 
 export interface SignedUpload {
@@ -81,11 +126,29 @@ export interface ExtractedBlock {
   page?: number;
 }
 
+/** Gambar yang ditemukan saat ekstraksi dokumen. */
+export interface ExtractedImage {
+  index: number;
+  /** Halaman asal (PDF) bila ada. */
+  page?: number;
+  /** Indeks blok teks tempat gambar berada (DOCX). */
+  blockIndex?: number;
+  /** Petunjuk penempatan hasil heuristik; admin tetap dapat mengubahnya. */
+  role?: 'STEM' | 'OPTION';
+  optionLabel?: string;
+  altText?: string;
+  data: Uint8Array;
+  mime: string;
+  width?: number;
+  height?: number;
+}
+
 export interface ExtractionResult {
   blocks: ExtractedBlock[];
   warnings: string[];
   pageCount: number;
   confidence: number;
+  images?: ExtractedImage[];
 }
 
 export interface DocExtractorPort {

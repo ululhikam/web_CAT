@@ -13,7 +13,7 @@
     "isolatedModules": false,
     "verbatimModuleSyntax": false,
     "noUncheckedIndexedAccess": false,
-    "types": ["node"]
+    "types": ["node", "multer"]
   },
   "include": ["src/**/*.ts", "api/**/*.ts", "prisma/**/*.ts", "scripts/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]

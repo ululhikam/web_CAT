@@ -6,6 +6,7 @@ export default defineConfig({
     environment: 'node',
     include: ['test/**/*.spec.ts', 'src/**/*.spec.ts'],
     passWithNoTests: false,
+    pool: 'threads',
   },
   resolve: {
     alias: {

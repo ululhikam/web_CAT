@@ -27,8 +27,11 @@ export const AUDIT = Symbol('AUDIT');
 
 import { DevAccessPolicy } from './impl/dev-access-policy';
 import { MockQuestionPool } from './impl/mock-question-pool';
+import { PrismaQuestionPool } from './impl/prisma-question-pool';
 import { DevStorage } from './impl/dev-storage';
 import { ConsoleMail } from './impl/console-mail';
+import { SupabaseStorage } from './impl/supabase-storage';
+import { ResendMail } from './impl/resend-mail';
 import { FakePaymentProvider } from './impl/fake-payment-provider';
 import { HeuristicDocExtractor } from './impl/heuristic-doc-extractor';
 import { PrismaAudit } from './impl/prisma-audit';
@@ -38,6 +41,7 @@ import { PrismaAudit } from './impl/prisma-audit';
   providers: [
     DevAccessPolicy,
     MockQuestionPool,
+    PrismaQuestionPool,
     DevStorage,
     ConsoleMail,
     FakePaymentProvider,
@@ -55,26 +59,29 @@ import { PrismaAudit } from './impl/prisma-audit';
     },
     {
       provide: QUESTION_POOL,
-      inject: [AppConfigService, MockQuestionPool],
-      useFactory: (config: AppConfigService, mock: MockQuestionPool) => {
-        void config.value.QUESTION_POOL;
-        return mock;
+      inject: [AppConfigService, MockQuestionPool, PrismaQuestionPool],
+      useFactory: (
+        config: AppConfigService,
+        mock: MockQuestionPool,
+        prismaPool: PrismaQuestionPool,
+      ) => {
+        // `dev` memakai mock agar sesi ujian dapat dijalankan tanpa seed soal;
+        // `db` memakai sampling nyata dari bank soal PUBLISHED.
+        return config.value.QUESTION_POOL === 'db' ? prismaPool : mock;
       },
     },
     {
       provide: STORAGE,
       inject: [AppConfigService, DevStorage],
       useFactory: (config: AppConfigService, dev: DevStorage) => {
-        void config.value.STORAGE;
-        return dev;
+        return config.value.STORAGE === 'supabase' ? new SupabaseStorage(config) : dev;
       },
     },
     {
       provide: MAIL,
       inject: [AppConfigService, ConsoleMail],
       useFactory: (config: AppConfigService, consoleMail: ConsoleMail) => {
-        void config.value.MAIL;
-        return consoleMail;
+        return config.value.MAIL === 'resend' ? new ResendMail(config) : consoleMail;
       },
     },
     {

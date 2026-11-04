@@ -5,6 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import type { Prisma } from '@prisma/client';
 import {
   decodeCursor,
@@ -13,10 +14,12 @@ import {
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
   type AdminUserSummary,
+  type AvatarUploadResponse,
   type Role,
+  type UpdateProfileInput,
 } from '@webcat/contracts';
-import { AUDIT, MAIL } from '../../core/ports/ports.module';
-import type { AuditPort, MailPort } from '@webcat/contracts';
+import { AUDIT, MAIL, STORAGE } from '../../core/ports/ports.module';
+import type { AuditPort, MailPort, StoragePort } from '@webcat/contracts';
 import { AppConfigService } from '../../core/config/config.service';
 import { PasswordService } from '../../core/security/password.service';
 import { PrismaService } from '../../core/prisma/prisma.service';
@@ -59,6 +62,7 @@ export class UsersService {
     private readonly subscriptions: SubscriptionsService,
     @Inject(MAIL) private readonly mail: MailPort,
     @Inject(AUDIT) private readonly audit: AuditPort,
+    @Inject(STORAGE) private readonly storage: StoragePort,
   ) {}
 
   // ------------------------------------------------------------------ mapping
@@ -69,6 +73,8 @@ export class UsersService {
       id: user.id,
       email: user.email,
       fullName: user.fullName,
+      phone: user.phone,
+      avatarPath: user.avatarPath,
       role: user.role.code,
       status: (user.status === 'DELETED' ? 'SUSPENDED' : user.status) as
         | 'ACTIVE'
@@ -401,5 +407,80 @@ export class UsersService {
     });
 
     return { message: 'Password direset. Semua sesi user telah dicabut.' };
+  }
+
+  // ------------------------------------------------------------------ profil sendiri
+
+  async updateProfile(
+    id: string,
+    input: UpdateProfileInput,
+    actor: Actor,
+  ): Promise<AdminUserSummary> {
+    const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
+    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...(input.fullName !== undefined ? { fullName: input.fullName } : {}),
+        ...(input.phone !== undefined ? { phone: input.phone } : {}),
+      },
+      include: USER_INCLUDE,
+    });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.profile_updated',
+      entityType: 'user',
+      entityId: id,
+      metadata: {
+        fields: Object.keys(input),
+        phoneChanged: input.phone !== undefined && input.phone !== user.phone,
+      },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return this.toSummary(updated);
+  }
+
+  /**
+   * Minta signed upload avatar. Ukuran/mime sudah divalidasi kontrak sebelum
+   * masuk sini; path tidak memuat informasi sensitif selain id user.
+   */
+  async requestAvatar(
+    id: string,
+    contentType: string,
+    sizeBytes: number,
+    actor: Actor,
+  ): Promise<AvatarUploadResponse> {
+    const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
+    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const extension =
+      contentType === 'image/png' ? 'png' : contentType === 'image/webp' ? 'webp' : 'jpg';
+    const path = `avatars/${id}/${randomUUID()}.${extension}`;
+    const upload = await this.storage.createSignedUpload(path, contentType);
+
+    // Path dicatat sekarang agar UI dapat menampilkan avatar setelah upload;
+    // objek yang gagal diunggah akan dibersihkan cron media yatim (B3).
+    await this.prisma.user.update({ where: { id }, data: { avatarPath: path } });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.avatar_upload_requested',
+      entityType: 'user',
+      entityId: id,
+      metadata: { path, contentType, sizeBytes },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return {
+      path: upload.path,
+      token: upload.token,
+      signedUrl: upload.signedUrl,
+      expiresAt: upload.expiresAt.toISOString(),
+    };
   }
 }

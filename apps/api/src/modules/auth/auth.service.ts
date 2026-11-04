@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
@@ -10,6 +11,7 @@ import type { Prisma, User } from '@prisma/client';
 import {
   ERROR_CODES,
   ERROR_STATUS,
+  type AuthSessionSummary,
   type MessageResult,
   type RegisterInput,
   type AuthUser,
@@ -22,6 +24,7 @@ import { JwtService } from '../../core/auth/jwt.service';
 import { LoggerService } from '../../core/logger/logger.service';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { PasswordService } from '../../core/security/password.service';
+import { SettingsService } from '../settings/settings.service';
 import {
   generateNumericCode,
   generateOpaqueToken,
@@ -43,6 +46,14 @@ export interface RequestMeta {
   userAgent?: string | null;
 }
 
+/** Profil minimal dari Google OpenID Connect (`userinfo`). */
+export interface GoogleIdentity {
+  sub: string;
+  email: string;
+  emailVerified: boolean;
+  name?: string;
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -57,6 +68,7 @@ export class AuthService {
     private readonly jwt: JwtService,
     private readonly passwords: PasswordService,
     private readonly logger: LoggerService,
+    private readonly settings: SettingsService,
     @Inject(MAIL) private readonly mail: MailPort,
     @Inject(AUDIT) private readonly audit: AuditPort,
   ) {}
@@ -125,6 +137,17 @@ export class AuthService {
   // ------------------------------------------------------------------ register
 
   async register(input: RegisterInput): Promise<MessageResult> {
+    const registrationEnabled = await this.settings.value('auth.registration_enabled');
+
+    // Default mati: akun peserta dibuat admin. SUPER_ADMIN dapat membuka
+    // pendaftaran publik lewat menu Pengaturan.
+    if (!registrationEnabled) {
+      throw new ForbiddenException({
+        code: ERROR_CODES.AUTH_REGISTRATION_DISABLED,
+        message: 'Pendaftaran mandiri dinonaktifkan. Hubungi admin untuk dibuatkan akun.',
+      });
+    }
+
     const email = input.email.trim().toLowerCase();
 
     const existing = await this.prisma.user.findUnique({ where: { email } });
@@ -328,6 +351,80 @@ export class AuthService {
     return this.issueSession(user, meta);
   }
 
+  // ------------------------------------------------------------------ google oauth
+
+  /**
+   * Login lewat Google hanya untuk akun yang SUDAH dibuat admin.
+   *
+   * Tidak ada provisioning otomatis: bila email Google tidak cocok dengan akun
+   * mana pun, user diarahkan menghubungi admin. `googleSub` ditautkan saat
+   * login pertama agar perubahan email Google tidak memutus akun.
+   */
+  async loginWithGoogle(identity: GoogleIdentity, meta: RequestMeta): Promise<AuthTokens> {
+    if (!identity.emailVerified) {
+      throw new ForbiddenException({
+        code: ERROR_CODES.AUTH_OAUTH_FAILED,
+        message: 'Email Google belum diverifikasi',
+      });
+    }
+
+    const email = identity.email.trim().toLowerCase();
+    const user = await this.prisma.user.findFirst({
+      where: {
+        deletedAt: null,
+        OR: [{ googleSub: identity.sub }, { email }],
+      },
+      include: this.includeRole,
+    });
+
+    if (!user) {
+      throw new NotFoundException({
+        code: ERROR_CODES.AUTH_OAUTH_ACCOUNT_NOT_FOUND,
+        message: 'Akun Google ini belum terdaftar. Hubungi admin untuk dibuatkan akun.',
+      });
+    }
+
+    if (user.status !== 'ACTIVE') {
+      throw new ForbiddenException({
+        code: ERROR_CODES.USER_SUSPENDED,
+        message: 'Akun belum aktif. Selesaikan aktivasi undangan terlebih dahulu.',
+      });
+    }
+
+    if (!user.googleSub || !user.emailVerifiedAt) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          ...(user.googleSub ? {} : { googleSub: identity.sub }),
+          ...(user.emailVerifiedAt ? {} : { emailVerifiedAt: new Date() }),
+          lastLoginAt: new Date(),
+        },
+      });
+    } else {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      });
+    }
+
+    await this.audit.record({
+      actorUserId: user.id,
+      action: 'auth.login_google',
+      entityType: 'user',
+      entityId: user.id,
+      metadata: { linked: !user.googleSub },
+      ip: meta.ip ?? null,
+      userAgent: meta.userAgent ?? null,
+    });
+
+    const fresh = await this.prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+      include: this.includeRole,
+    });
+
+    return this.issueSession(fresh, meta);
+  }
+
   // ------------------------------------------------------------------ refresh
 
   async refresh(refreshToken: string | undefined, meta: RequestMeta): Promise<AuthTokens> {
@@ -390,6 +487,54 @@ export class AuthService {
       }),
     ]);
     return { message: 'Semua sesi berhasil dicabut' };
+  }
+
+  // ------------------------------------------------------------------ device mgmt
+
+  /** Sesi aktif milik user; sesi yang sedang dipakai ditandai `current`. */
+  async listSessions(userId: string, currentSessionId: string): Promise<AuthSessionSummary[]> {
+    const sessions = await this.prisma.session.findMany({
+      where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
+      orderBy: [{ lastSeenAt: 'desc' }, { createdAt: 'desc' }],
+      select: {
+        id: true,
+        ip: true,
+        userAgent: true,
+        createdAt: true,
+        lastSeenAt: true,
+        expiresAt: true,
+      },
+    });
+
+    return sessions.map((session) => ({
+      id: session.id,
+      current: session.id === currentSessionId,
+      ip: session.ip,
+      userAgent: session.userAgent,
+      createdAt: session.createdAt.toISOString(),
+      lastSeenAt: session.lastSeenAt.toISOString(),
+      expiresAt: session.expiresAt.toISOString(),
+    }));
+  }
+
+  /**
+   * Cabut satu sesi milik sendiri. Filter `userId` wajib agar user tidak
+   * bisa mencabut sesi orang lain hanya dengan menebak id.
+   */
+  async revokeSession(userId: string, sessionId: string): Promise<MessageResult> {
+    const result = await this.prisma.session.updateMany({
+      where: { id: sessionId, userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+
+    if (result.count === 0) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_TOKEN_INVALID,
+        message: 'Sesi tidak ditemukan atau sudah berakhir',
+      });
+    }
+
+    return { message: 'Sesi berhasil dicabut' };
   }
 
   // ------------------------------------------------------------------ password

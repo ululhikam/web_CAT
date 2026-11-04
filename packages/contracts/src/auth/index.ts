@@ -73,6 +73,18 @@ export interface AuthUser {
   status: string;
 }
 
+/** Satu perangkat/sesi aktif milik user (untuk halaman device management). */
+export interface AuthSessionSummary {
+  id: string;
+  /** True untuk sesi yang sedang dipakai melakukan request ini. */
+  current: boolean;
+  ip: string | null;
+  userAgent: string | null;
+  createdAt: string;
+  lastSeenAt: string;
+  expiresAt: string;
+}
+
 export interface LoginResult {
   accessToken: string;
   user: AuthUser;
