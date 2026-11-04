@@ -5,12 +5,15 @@ import {
   adminCreateUserSchema,
   adminResetPasswordSchema,
   changeUserRoleSchema,
+  quotaResetSchema,
   updateUserStatusSchema,
   userListQuerySchema,
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
   type AdminResetPasswordInput,
   type AdminUserSummary,
+  type QuotaResetInput,
+  type QuotaResetResponse,
   type UserListQuery,
 } from '@webcat/contracts';
 import { AuthUser } from '../../core/auth/decorators/current-user.decorator';
@@ -94,5 +97,17 @@ export class UsersController {
     @Req() req: Request,
   ) {
     return this.users.adminResetPassword(id, body.newPassword, this.actor(user, req));
+  }
+
+  /** Membebaskan kuota harian dengan meng-void sesi ujian hari ini (ber-audit). */
+  @RequirePermissions('exams.recompute')
+  @Post(':id/quota-reset')
+  resetQuota(
+    @Param('id') id: string,
+    @Body(zodPipe(quotaResetSchema)) body: QuotaResetInput,
+    @AuthUser() user: AuthPrincipal,
+    @Req() req: Request,
+  ): Promise<QuotaResetResponse> {
+    return this.users.resetQuota(id, body.reason, this.actor(user, req));
   }
 }

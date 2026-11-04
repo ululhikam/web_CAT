@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './core/auth/jwt-auth.guard';
 import { PermissionsGuard } from './core/auth/permissions.guard';
 import { EmailVerifiedGuard } from './core/auth/email-verified.guard';
 import { RateLimitModule } from './core/ratelimit/rate-limit.module';
+import { RateLimitGuard } from './core/ratelimit/rate-limit.guard';
 import { JobsModule } from './core/jobs/jobs.module';
 import { PortsModule } from './core/ports/ports.module';
 import { CronModule } from './core/cron/cron.module';
@@ -19,6 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { HealthModule } from './modules/health/health.module';
+import { SettingsModule } from './modules/settings/settings.module';
 
 /**
  * Root module — modular monolith.
@@ -41,6 +43,7 @@ import { HealthModule } from './modules/health/health.module';
     PortsModule,
     AuditModule,
     AuthModule,
+    SettingsModule,
     UsersModule,
     BillingModule,
     HealthModule,
@@ -48,6 +51,7 @@ import { HealthModule } from './modules/health/health.module';
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RateLimitGuard },
     { provide: APP_GUARD, useClass: PermissionsGuard },
     { provide: APP_GUARD, useClass: EmailVerifiedGuard },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^8.1.0",
     "@prisma/client": "^6.2.1",
+    "@supabase/supabase-js": "^2.118.0",
     "@webcat/contracts": "workspace:*",
     "cookie-parser": "^1.4.7",
     "dotenv": "^18.0.9",

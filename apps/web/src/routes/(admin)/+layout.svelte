@@ -44,6 +44,17 @@
         <a href="/admin/plans" class:is-active={page.url.pathname.startsWith('/admin/plans')}>
           Paket
         </a>
+        {#if session.isSuperAdmin}
+          <a href="/admin/audit" class:is-active={page.url.pathname.startsWith('/admin/audit')}>
+            Audit
+          </a>
+          <a
+            href="/admin/settings"
+            class:is-active={page.url.pathname.startsWith('/admin/settings')}
+          >
+            Pengaturan
+          </a>
+        {/if}
         <a href="/dashboard">Ke dashboard</a>
       </nav>
     </header>

@@ -7,4 +7,6 @@ export * from './auth/index';
 export * from './users/index';
 export * from './plans/index';
 export * from './exams/index';
+export * from './audit/index';
+export * from './settings/index';
 export * from './ports/index';

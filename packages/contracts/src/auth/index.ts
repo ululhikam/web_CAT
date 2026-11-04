@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+/**
+ * Nama cookie refresh. Dipakai API untuk men-set cookie dan web (SSR guard)
+ * untuk mendeteksi sesi. Nilai tidak mengandung prefiks `__Host-` karena
+ * API dan web berada di origin berbeda saat dev/preview.
+ */
+export const REFRESH_COOKIE_NAME = 'webcat_rt';
+
 export const emailSchema = z.string().trim().toLowerCase().email('Format email tidak valid');
 
 export const passwordSchema = z
@@ -71,6 +78,18 @@ export interface AuthUser {
   emailVerified: boolean;
   mustChangePassword: boolean;
   status: string;
+}
+
+/** Satu perangkat/sesi aktif milik user (untuk halaman device management). */
+export interface AuthSessionSummary {
+  id: string;
+  /** True untuk sesi yang sedang dipakai melakukan request ini. */
+  current: boolean;
+  ip: string | null;
+  userAgent: string | null;
+  createdAt: string;
+  lastSeenAt: string;
+  expiresAt: string;
 }
 
 export interface LoginResult {

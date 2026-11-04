@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  Param,
   Post,
   Req,
   Res,
@@ -158,5 +160,20 @@ export class AuthController {
   @Post('logout-all')
   logoutAll(@AuthUser() user: AuthPrincipal) {
     return this.auth.logoutAll(user.id);
+  }
+
+  /** Daftar perangkat/sesi aktif milik user yang sedang login. */
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('sessions')
+  sessions(@AuthUser() user: AuthPrincipal) {
+    return this.auth.listSessions(user.id, user.sessionId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete('sessions/:id')
+  revokeSession(@AuthUser() user: AuthPrincipal, @Param('id') id: string) {
+    return this.auth.revokeSession(user.id, id);
   }
 }

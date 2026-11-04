@@ -5,6 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import type { Prisma } from '@prisma/client';
 import {
   decodeCursor,
@@ -13,10 +14,14 @@ import {
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
   type AdminUserSummary,
+  type AvatarUploadResponse,
+  type QuotaResetResponse,
   type Role,
+  type UpdateProfileInput,
 } from '@webcat/contracts';
-import { AUDIT, MAIL } from '../../core/ports/ports.module';
-import type { AuditPort, MailPort } from '@webcat/contracts';
+import { AUDIT, MAIL, STORAGE } from '../../core/ports/ports.module';
+import type { AuditPort, MailPort, StoragePort } from '@webcat/contracts';
+import { examDateOnly } from '../../core/time/exam-date';
 import { AppConfigService } from '../../core/config/config.service';
 import { PasswordService } from '../../core/security/password.service';
 import { PrismaService } from '../../core/prisma/prisma.service';
@@ -59,6 +64,7 @@ export class UsersService {
     private readonly subscriptions: SubscriptionsService,
     @Inject(MAIL) private readonly mail: MailPort,
     @Inject(AUDIT) private readonly audit: AuditPort,
+    @Inject(STORAGE) private readonly storage: StoragePort,
   ) {}
 
   // ------------------------------------------------------------------ mapping
@@ -69,11 +75,11 @@ export class UsersService {
       id: user.id,
       email: user.email,
       fullName: user.fullName,
+      phone: user.phone,
+      avatarPath: user.avatarPath,
       role: user.role.code,
       status: (user.status === 'DELETED' ? 'SUSPENDED' : user.status) as
-        | 'ACTIVE'
-        | 'SUSPENDED'
-        | 'PENDING_INVITE',
+        'ACTIVE' | 'SUSPENDED' | 'PENDING_INVITE',
       emailVerified: user.emailVerifiedAt !== null,
       createdAt: user.createdAt.toISOString(),
       createdBy: user.createdById,
@@ -116,10 +122,7 @@ export class UsersService {
       const createdAt = new Date(cursor.t);
       where.AND = [
         {
-          OR: [
-            { createdAt: { lt: createdAt } },
-            { createdAt, id: { lt: cursor.i } },
-          ],
+          OR: [{ createdAt: { lt: createdAt } }, { createdAt, id: { lt: cursor.i } }],
         },
       ];
     }
@@ -138,9 +141,7 @@ export class UsersService {
     return {
       items: page.map((row) => this.toSummary(row)),
       nextCursor:
-        hasMore && last
-          ? encodeCursor({ t: last.createdAt.toISOString(), i: last.id })
-          : null,
+        hasMore && last ? encodeCursor({ t: last.createdAt.toISOString(), i: last.id }) : null,
       hasMore,
     };
   }
@@ -150,7 +151,8 @@ export class UsersService {
       where: { id, deletedAt: null },
       include: USER_INCLUDE,
     });
-    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
     return this.toSummary(user);
   }
 
@@ -160,10 +162,7 @@ export class UsersService {
    * Admin membuat akun untuk peserta. Ini SATU-SATUNYA jalur pembuatan akun
    * peserta; tidak ada self-registration wajib.
    */
-  async create(
-    input: AdminCreateUserInput,
-    actor: Actor,
-  ): Promise<AdminCreateUserResponse> {
+  async create(input: AdminCreateUserInput, actor: Actor): Promise<AdminCreateUserResponse> {
     const email = input.email.trim().toLowerCase();
 
     if (!canManageRole(actor.role, input.role)) {
@@ -270,7 +269,8 @@ export class UsersService {
     actor: Actor,
   ): Promise<AdminUserSummary> {
     const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
-    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
 
     if (user.id === actor.id && status !== 'ACTIVE') {
       throw new ForbiddenException({
@@ -319,7 +319,8 @@ export class UsersService {
       where: { id, deletedAt: null },
       include: { role: true },
     });
-    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
 
     if (actor.role !== 'SUPER_ADMIN') {
       throw new ForbiddenException({
@@ -376,7 +377,8 @@ export class UsersService {
     actor: Actor,
   ): Promise<{ message: string }> {
     const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
-    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
 
     const passwordHash = await this.passwords.hash(newPassword);
 
@@ -401,5 +403,130 @@ export class UsersService {
     });
 
     return { message: 'Password direset. Semua sesi user telah dicabut.' };
+  }
+
+  /**
+   * Membebaskan kuota ujian hari itu dengan menandai sesi sebagai VOIDED.
+   * Hanya sesi yang belum di-void yang dihitung; alasan wajib untuk audit.
+   */
+  async resetQuota(id: string, reason: string, actor: Actor): Promise<QuotaResetResponse> {
+    const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const examDate = examDateOnly();
+    const sessions = await this.prisma.examSession.findMany({
+      where: { userId: id, examDate, voidedAt: null },
+      select: { id: true },
+    });
+
+    if (sessions.length > 0) {
+      await this.prisma.examSession.updateMany({
+        where: { id: { in: sessions.map((session) => session.id) } },
+        data: { status: 'VOIDED', voidedAt: new Date() },
+      });
+    }
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.quota_reset',
+      entityType: 'user',
+      entityId: id,
+      metadata: {
+        reason,
+        examDate: examDate.toISOString().slice(0, 10),
+        voidedSessions: sessions.length,
+        sessionIds: sessions.map((session) => session.id),
+      },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return {
+      userId: id,
+      examDate: examDate.toISOString().slice(0, 10),
+      voidedSessions: sessions.length,
+      message:
+        sessions.length > 0
+          ? `${sessions.length} sesi ujian hari ini dibatalkan; kuota dapat dipakai lagi.`
+          : 'Tidak ada sesi ujian hari ini; kuota tetap tersedia.',
+    };
+  }
+
+  // ------------------------------------------------------------------ profil sendiri
+
+  async updateProfile(
+    id: string,
+    input: UpdateProfileInput,
+    actor: Actor,
+  ): Promise<AdminUserSummary> {
+    const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...(input.fullName !== undefined ? { fullName: input.fullName } : {}),
+        ...(input.phone !== undefined ? { phone: input.phone } : {}),
+      },
+      include: USER_INCLUDE,
+    });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.profile_updated',
+      entityType: 'user',
+      entityId: id,
+      metadata: {
+        fields: Object.keys(input),
+        phoneChanged: input.phone !== undefined && input.phone !== user.phone,
+      },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return this.toSummary(updated);
+  }
+
+  /**
+   * Minta signed upload avatar. Ukuran/mime sudah divalidasi kontrak sebelum
+   * masuk sini; path tidak memuat informasi sensitif selain id user.
+   */
+  async requestAvatar(
+    id: string,
+    contentType: string,
+    sizeBytes: number,
+    actor: Actor,
+  ): Promise<AvatarUploadResponse> {
+    const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const extension =
+      contentType === 'image/png' ? 'png' : contentType === 'image/webp' ? 'webp' : 'jpg';
+    const path = `avatars/${id}/${randomUUID()}.${extension}`;
+    const upload = await this.storage.createSignedUpload(path, contentType);
+
+    // Path dicatat sekarang agar UI dapat menampilkan avatar setelah upload;
+    // objek yang gagal diunggah akan dibersihkan cron media yatim (B3).
+    await this.prisma.user.update({ where: { id }, data: { avatarPath: path } });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.avatar_upload_requested',
+      entityType: 'user',
+      entityId: id,
+      metadata: { path, contentType, sizeBytes },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return {
+      path: upload.path,
+      token: upload.token,
+      signedUrl: upload.signedUrl,
+      expiresAt: upload.expiresAt.toISOString(),
+    };
   }
 }
