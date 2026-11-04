@@ -21,6 +21,7 @@
   const nav = [
     { href: '/dashboard', label: 'Ringkasan' },
     { href: '/subscription', label: 'Langganan' },
+    { href: '/transactions', label: 'Transaksi' },
   ] as const;
 
   let current = $derived($page.url.pathname);

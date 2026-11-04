@@ -38,11 +38,29 @@
     <header class="admin__bar">
       <a class="admin__brand" href="/admin/users">Web CAT Admin</a>
       <nav aria-label="Navigasi admin">
+        <a
+          href="/admin/dashboard"
+          class:is-active={page.url.pathname.startsWith('/admin/dashboard')}
+        >
+          Dashboard
+        </a>
         <a href="/admin/users" class:is-active={page.url.pathname.startsWith('/admin/users')}>
           Pengguna
         </a>
         <a href="/admin/plans" class:is-active={page.url.pathname.startsWith('/admin/plans')}>
           Paket
+        </a>
+        <a
+          href="/admin/transactions"
+          class:is-active={page.url.pathname.startsWith('/admin/transactions')}
+        >
+          Transaksi
+        </a>
+        <a
+          href="/admin/subscriptions"
+          class:is-active={page.url.pathname.startsWith('/admin/subscriptions')}
+        >
+          Langganan
         </a>
         <a href="/dashboard">Ke dashboard</a>
       </nav>

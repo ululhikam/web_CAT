@@ -8,10 +8,14 @@
   import PlanCard from '$lib/components/PlanCard.svelte';
   import { formatIdr } from '$lib/format';
   import { session } from '$lib/stores/session.svelte';
-  import type { Plan } from '@webcat/contracts';
+  import { apiRequest, apiErrorMessage } from '$lib/api/client';
+  import type { CheckoutResult, Plan } from '@webcat/contracts';
   import type { PageData } from './$types';
 
   let { data }: { data: PageData } = $props();
+
+  let choosingCode = $state<string | null>(null);
+  let checkoutError = $state<string | null>(null);
 
   const selectedCode = $derived($page.url.searchParams.get('plan')?.toUpperCase() ?? null);
 
@@ -28,14 +32,51 @@
     return plan.features.some((feature) => feature.label === label && feature.included);
   }
 
-  /** CTA hanya mengirim `planCode`; nominal tidak pernah berasal dari klien. */
-  function choosePlan(plan: Plan) {
+  /**
+   * CTA hanya mengirim `planCode`; nominal tidak pernah berasal dari klien.
+   * Paket gratis langsung aktif; paket berbayar membuat tagihan lalu
+   * diarahkan ke halaman checkout / gateway.
+   */
+  async function choosePlan(plan: Plan): Promise<void> {
     if (!session.user) {
       const redirect = `/pricing?plan=${encodeURIComponent(plan.code)}`;
-      void goto(`/login?redirect=${encodeURIComponent(redirect)}`);
+      await goto(`/login?redirect=${encodeURIComponent(redirect)}`);
       return;
     }
-    void goto(`/subscription?plan=${encodeURIComponent(plan.code)}`);
+
+    if (!session.accessToken || choosingCode) return;
+
+    choosingCode = plan.code;
+    checkoutError = null;
+
+    try {
+      const result = await apiRequest<CheckoutResult>('/checkout/transactions', {
+        method: 'POST',
+        token: session.accessToken,
+        body: { planCode: plan.code },
+      });
+
+      if (result.subscription) {
+        await goto('/subscription?status=success');
+        return;
+      }
+
+      if (result.simulated) {
+        await goto(`/checkout?orderId=${encodeURIComponent(result.transaction.orderId)}`);
+        return;
+      }
+
+      if (result.redirectUrl) {
+        window.location.href = result.redirectUrl;
+        return;
+      }
+
+      await goto(`/checkout?orderId=${encodeURIComponent(result.transaction.orderId)}`);
+    } catch (cause) {
+      checkoutError = apiErrorMessage(cause);
+    } finally {
+      choosingCode = null;
+    }
   }
 
   const faqs = [
@@ -130,6 +171,11 @@
     </div>
   </section>
 {:else}
+  {#if checkoutError}
+    <section class="container">
+      <Alert tone="danger" title="Checkout gagal">{checkoutError}</Alert>
+    </section>
+  {/if}
   {#if data.trial}
     <div class="container">
       <div class="trial">
