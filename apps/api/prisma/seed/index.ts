@@ -12,10 +12,15 @@
  */
 import { PrismaClient } from '@prisma/client';
 import { PERMISSIONS, ROLE_PERMISSIONS, ROLES } from '@webcat/contracts';
+import { loadLocalEnv } from '../../src/core/config/load-env';
 import { seedExamStructure } from './exam.seed';
 import { seedPlans } from './plans.seed';
 import { seedRoles } from './roles.seed';
 import { seedSuperAdmin } from './super-admin.seed';
+
+// `pnpm db:seed` dijalankan lewat tsx (bukan Prisma CLI), jadi `.env`
+// harus dimuat sendiri sebelum PrismaClient dibuat.
+loadLocalEnv();
 
 export const prisma = new PrismaClient({
   log: ['warn', 'error'],

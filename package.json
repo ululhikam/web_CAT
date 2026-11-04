@@ -26,6 +26,7 @@
     "db:diff": "pnpm --filter @webcat/api prisma:diff",
     "env:check": "pnpm --filter @webcat/api env:check",
     "db:guard": "pnpm --filter @webcat/api db:guard",
+    "db:ping": "pnpm --filter @webcat/api db:ping",
     "cron:run": "pnpm --filter @webcat/api cron:run",
     "fixtures:generate": "pnpm --filter @webcat/mocks generate",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"

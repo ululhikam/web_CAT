@@ -3,8 +3,12 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { loadLocalEnv } from './core/config/load-env';
 import { requestIdMiddleware } from './core/http/request-id';
 import { getLogger } from './core/logger/logger';
+
+// Muat `.env` sebelum AppConfigService membaca process.env.
+loadLocalEnv();
 
 /**
  * Bootstrap bersama untuk dev server dan serverless handler.

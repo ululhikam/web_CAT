@@ -52,15 +52,19 @@ docs/                  laporan pekerjaan & ADR
 
 ```bash
 pnpm install
-cp .env.example .env            # isi DATABASE_URL, JWT_SECRET, dll.
+cp .env.example .env            # isi DATABASE_URL, DIRECT_URL, JWT_SECRET, dll.
 
+pnpm env:check                  # validasi variabel environment
+pnpm db:ping                    # cek koneksi ke Postgres/Supabase
 pnpm db:generate                # prisma generate
 pnpm db:validate                # validasi schema
-pnpm db:migrate                 # migrasi ke database
+pnpm db:deploy                  # jalankan migrasi
 pnpm db:seed                    # role, permission, tahap, subtes, paket, SUPER_ADMIN
 
 pnpm dev                        # api :3000 + web :5173
 ```
+
+Panduan Supabase langkah demi langkah: [`docs/SUPABASE-SETUP.md`](docs/SUPABASE-SETUP.md).
 
 ## Perintah Penting
 
@@ -72,6 +76,7 @@ pnpm dev                        # api :3000 + web :5173
 | `pnpm test`           | Vitest seluruh paket                                 |
 | `pnpm build`          | build produksi                                       |
 | `pnpm env:check`      | validasi variabel environment                        |
+| `pnpm db:ping`        | cek koneksi & jumlah tabel di database               |
 | `pnpm db:validate`    | validasi schema Prisma                               |
 | `pnpm db:guard`       | menolak operasi destruktif di lingkungan produksi    |
 | `pnpm cron:run`       | menjalankan satu siklus worker job secara manual     |

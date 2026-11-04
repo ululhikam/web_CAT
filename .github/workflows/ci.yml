@@ -21,6 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
+    # Nilai dummy: `prisma validate`/`generate` hanya membaca schema dan tidak
+    # menyentuh database. DIRECT_URL wajib ada karena dideklarasikan di
+    # blok datasource.
+    env:
+      DATABASE_URL: postgresql://user:pass@localhost:5432/webcat
+      DIRECT_URL: postgresql://user:pass@localhost:5432/webcat
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,6 +46,9 @@ jobs:
 
       - name: Prisma validate
         run: pnpm --filter @webcat/api exec prisma validate --schema prisma/schema
+
+      - name: Prisma generate
+        run: pnpm db:generate
 
       # Paket kontrak (CommonJS) harus dibangun sebelum typecheck/build
       # karena web & API mengimpor tipe dari dist-nya.

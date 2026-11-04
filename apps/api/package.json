@@ -21,11 +21,8 @@
     "prisma:seed": "tsx prisma/seed/index.ts",
     "env:check": "tsx scripts/env-check.ts",
     "db:guard": "tsx scripts/db-guard.ts",
+    "db:ping": "tsx scripts/db-ping.ts",
     "cron:run": "tsx scripts/cron-run.ts"
-  },
-  "prisma": {
-    "schema": "prisma/schema",
-    "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -35,6 +32,7 @@
     "@prisma/client": "^6.2.1",
     "@webcat/contracts": "workspace:*",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.9",
     "jsonwebtoken": "^9.0.2",
     "pino": "^9.5.0",
     "reflect-metadata": "^0.2.2",
