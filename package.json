@@ -1,0 +1,42 @@
+{
+  "name": "web-cat",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Platform simulasi ujian Polri (Psikologi, TPA, TPK) — NestJS + SvelteKit + Supabase di Vercel",
+  "packageManager": "pnpm@11.12.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "dev:api": "pnpm --filter @webcat/api dev",
+    "dev:web": "pnpm --filter @webcat/web dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,svelte,js,mjs,json,md,prisma,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,svelte,js,mjs,json,md,prisma,css}\"",
+    "db:generate": "pnpm --filter @webcat/api prisma:generate",
+    "db:validate": "pnpm --filter @webcat/api prisma:validate",
+    "db:migrate": "pnpm --filter @webcat/api prisma:migrate",
+    "db:deploy": "pnpm --filter @webcat/api prisma:deploy",
+    "db:seed": "pnpm --filter @webcat/api prisma:seed",
+    "db:reset": "pnpm --filter @webcat/api prisma:reset",
+    "db:diff": "pnpm --filter @webcat/api prisma:diff",
+    "env:check": "pnpm --filter @webcat/api env:check",
+    "db:guard": "pnpm --filter @webcat/api db:guard",
+    "cron:run": "pnpm --filter @webcat/api cron:run",
+    "fixtures:generate": "pnpm --filter @webcat/mocks generate",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.7",
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.13.0"
+  }
+}

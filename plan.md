@@ -17,7 +17,7 @@
 4. [System Architecture](#4-system-architecture)
 5. [Database Design](#5-database-design)
 6. [Authentication & Authorization](#6-authentication--authorization)
-7. [Examination Engine — Psikologi, TPA, TPK](#7-examination-engine--psikologi-tpa-tpk)
+7. [Examination Engine — 3 Tes (Psikologi, TPA, TPK)](#7-examination-engine--3-tes-psikologi-tpa-tpk)
 8. [Anti-Cheating](#8-anti-cheating)
 9. [Pricing, Subscription & Payment Gateway](#9-pricing-subscription--payment-gateway)
 10. [Question Management, Bulk & Document Import](#10-question-management-bulk--document-import)
@@ -51,6 +51,9 @@
 | D10 | **SvelteKit single app** (`(auth)/(app)/(admin)`) di Vercel | Guard role di `hooks.server.ts`, satu design system | Bundle admin & user satu deploy (diterima) |
 | D11 | **Rate limit & lock di Postgres**, bukan Redis | Menghindari dependensi infra tambahan | Tabel token bucket + `pg_advisory_xact_lock`; butuh index & pembersihan berkala via pg_cron |
 | D12 | **Import soal PDF/DOCX** dengan ekstraksi heuristik + **AI assist opsional**, wajib review manusia | Format bank soal existing mayoritas dokumen Word/PDF | Pipeline bertahap, confidence score, tidak ada auto-publish |
+| D13 | **Pricing sebagai data, bukan halaman statis**: paket & harga di `subscription_plans`, halaman `(app)/pricing` merender dari API | Harga berubah tanpa deploy; satu sumber kebenaran untuk checkout & halaman | Halaman pricing belum ada → menjadi deliverable B4 (§9.3); admin wajib bisa mengubah paket dari UI |
+| D14 | **Dua jalur aktivasi akses**: (a) pembelian mandiri via Midtrans, (b) **grant manual oleh admin** (`source=MANUAL_GRANT`, durasi bebas) | Sebagian peserta/instansi tidak membayar online; operasional butuh jalur cepat | `AccessPolicyPort` hanya membaca "langganan aktif", tidak peduli sumbernya; semua grant ber-audit |
+| D15 | **3 role**: `USER` ⊂ `ADMIN` ⊂ `SUPER_ADMIN` (permission-based), admin dapat membuat akun user | Permintaan eksplisit; `SUPER_ADMIN` harus bisa menangani semua | Guard memeriksa permission, bukan nama role; anti-lockout `SUPER_ADMIN` terakhir |
 
 ### 1.1 Yang Dihapus dari Desain Awal
 
@@ -62,6 +65,7 @@
 | Railway / Fly.io | Vercel (web + API + cron) | Satu platform deploy |
 | Mailpit | Resend test mode + `ConsoleMail` saat dev | Tanpa container |
 | Testcontainers | Dedicated Supabase test project + `prisma migrate reset` | Tanpa Docker di CI/dev |
+| Halaman pricing statis / hardcode harga | `(app)/pricing` yang merender `subscription_plans` dari API | Harga berubah tanpa deploy dan tidak ada risiko salah tampil |
 
 **Di luar scope:** aplikasi native, ujian offline penuh, normalisasi psikometri ilmiah (norma populasi), refund otomatis ke payment gateway, multi-tenant.
 
@@ -122,19 +126,20 @@ Format `FR-<domain>-<n>`. Prioritas: **M** (must), **S** (should), **C** (could)
 | FR-EX-12 | Admin: monitoring live, void sesi, recompute skor, **force unlock** (ber-audit, hanya SUPER_ADMIN), reset kuota harian | M |
 | FR-EX-13 | Anti-cheat event capture + policy berjenjang (warn → lock subtes → eliminate) | M |
 
-### 2.4 Billing (BL)
+### 2.4 Billing & Pricing (BL)
 
 | ID | Requirement | P |
 |---|---|---|
-| FR-BL-1 | Paket langganan dinamis (harian/mingguan/bulanan/custom) | M |
-| FR-BL-2 | Checkout Midtrans Snap, status transaksi lengkap | M |
-| FR-BL-3 | Webhook tervalidasi signature, idempoten, retry-safe | M |
-| FR-BL-4 | Aktivasi langganan otomatis saat `settlement`/`capture` | M |
-| FR-BL-5 | Riwayat transaksi & riwayat perubahan status langganan | M |
-| FR-BL-6 | Email notifikasi pembayaran & langganan (Resend) | M |
-| FR-BL-7 | Admin refund/mark-paid/extend/cancel + audit | S |
-| FR-BL-8 | Gating: tanpa langganan aktif (termasuk grant manual dari admin) → tidak bisa mulai ujian | M |
-| FR-BL-9 | Langganan manual (`source=MANUAL_GRANT`) tercatat lengkap: pemberi, alasan, tanggal mulai/akhir, dan muncul di riwayat user | M |
+| FR-BL-1 | Paket langganan dinamis (harian/mingguan/bulanan/custom) yang datanya menjadi sumber tunggal halaman pricing | M |
+| FR-BL-2 | **Halaman pricing publik** (belum ada saat ini): daftar paket + harga + perbandingan fitur + CTA checkout, SSR & cache pendek; spesifikasi §9.3 | M |
+| FR-BL-3 | Checkout Midtrans Snap (gateway **sudah terpasang**), status transaksi lengkap | M |
+| FR-BL-4 | Webhook tervalidasi signature, idempoten, retry-safe | M |
+| FR-BL-5 | Aktivasi langganan otomatis saat `settlement`/`capture` | M |
+| FR-BL-6 | Riwayat transaksi & riwayat perubahan status langganan | M |
+| FR-BL-7 | Email notifikasi pembayaran & langganan (Resend) | M |
+| FR-BL-8 | Admin refund/mark-paid + audit | S |
+| FR-BL-9 | Gating: tanpa langganan aktif (termasuk grant manual dari admin) → tidak bisa mulai ujian | M |
+| FR-BL-10 | Langganan manual (`source=MANUAL_GRANT`) tercatat lengkap: pemberi, alasan, tanggal mulai/akhir, dan muncul di riwayat user | M |
 
 ### 2.5 Platform/Admin (AD)
 
@@ -312,6 +317,8 @@ erDiagram
     uuid role_id FK
     text status
     text google_sub UK
+    uuid created_by FK
+    boolean must_change_password
     int token_version
     timestamptz last_login_at
     timestamptz created_at
@@ -584,7 +591,7 @@ erDiagram
   }
 ```
 
-### 5.4 ERD — Billing
+### 5.4 ERD — Billing & Pricing (dengan grant manual)
 
 ```mermaid
 erDiagram
@@ -624,6 +631,7 @@ erDiagram
     uuid id PK
     uuid subscription_id FK
     uuid transaction_id FK
+    uuid actor_user_id FK
     text event
     timestamptz starts_at
     timestamptz ends_at
@@ -740,20 +748,37 @@ sequenceDiagram
 
 Guard chain: `JwtAuthGuard → SessionGuard → EmailVerifiedGuard → PermissionsGuard`.
 
+**Daftar role (final, 3 role):**
+
+| Role | Deskripsi | Cara dibuat |
+|---|---|---|
+| `USER` | Peserta ujian. Bisa mendaftar sendiri (email/OTP atau Google) **atau** dibuatkan admin. Hanya bisa mengerjakan ujian & melihat hasilnya sendiri. | Self-register **atau** `POST /admin/users` |
+| `ADMIN` | Operator platform. Mengelola bank soal, konfigurasi tes, monitoring ujian, **membuat akun user**, dan **mengatur masa langganan** manual. | Hanya oleh `SUPER_ADMIN` |
+| `SUPER_ADMIN` | **Handle semua.** Akses penuh tanpa pengecualian: seluruh izin `ADMIN` + manajemen role, pengaturan platform, audit, force unlock, impersonasi. | Di-seed saat bootstrap / oleh `SUPER_ADMIN` lain |
+
+> Role bersifat **aditif** (bukan saling eksklusif): `SUPER_ADMIN` otomatis memiliki seluruh permission `ADMIN`, dan `ADMIN` memiliki seluruh permission `USER` yang relevan. Guard memeriksa permission, bukan nama role, sehingga penambahan permission baru tidak memerlukan perubahan guard.
+
 | Permission | USER | ADMIN | SUPER_ADMIN |
 |---|---|---|---|
-| `exam.take` | ✔ | – | – |
+| `exam.take` | ✔ | ✔ | ✔ |
 | `questions.read/write/import/publish` | – | ✔ | ✔ |
 | `exams.config`, `exams.monitor`, `exams.recompute` | – | ✔ | ✔ |
 | `exams.force_unlock` | – | – | ✔ |
 | `users.read`, `users.suspend` | – | ✔ | ✔ |
 | `users.create`, `users.password.reset` | – | ✔ | ✔ |
 | `subscriptions.manage` (grant/extend/revoke manual) | – | ✔ | ✔ |
-| `roles.manage` (ubah role user) | – | – | ✔ |
+| `roles.manage` (ubah role user, termasuk menjadikan `ADMIN`) | – | – | ✔ |
 | `settings.write`, `audit.read`, `system.impersonate` | – | – | ✔ |
 | `billing.read`, `billing.write` | – | ✔ | ✔ |
 
 Frontend hanya menyembunyikan UI; semua endpoint tetap divalidasi backend. IDOR test wajib di CI (akses resource milik user lain → 404, bukan 403).
+
+**Hierarki peran (3 level, aditif):** `USER` ⊂ `ADMIN` ⊂ `SUPER_ADMIN`.
+
+- `ADMIN` mengelola **operasional harian**: bank soal, konfigurasi tes, monitoring ujian, membuat akun user, memberi/perpanjang langganan manual, dan melihat dashboard.
+- `SUPER_ADMIN` **menangani semua**: seluruh izin `ADMIN` + mengubah role (termasuk menjadikan/mencabut `ADMIN`), mengubah pengaturan platform, force unlock subtes, membaca audit log, dan impersonasi untuk dukungan. Tidak ada operasi yang hanya bisa dilakukan `ADMIN` namun tidak bisa dilakukan `SUPER_ADMIN` — sehingga selalu ada jalur eskalasi.
+- **Pembatasan anti-lockout:** `SUPER_ADMIN` tidak dapat menurunkan role dirinya sendiri, dan sistem menolak aksi yang menghilangkan `SUPER_ADMIN` terakhir. Perubahan role selalu ber-audit (`ROLE_CHANGE`) dengan aktor, target, role lama, dan role baru.
+- Akun `ADMIN` hanya dapat dibuat oleh `SUPER_ADMIN` (bukan self-service), dan emailnya wajib terverifikasi.
 
 ---
 
@@ -1019,7 +1044,18 @@ Aksi: `WARN` (respons + overlay), `LOCK_SUBTEST` (subtes sekarang ditutup, alasa
 
 ## 9. Pricing, Subscription & Payment Gateway
 
-> **Status implementasi:** payment gateway (**Midtrans**) **sudah terpasang**, tetapi **halaman pricing belum ada**. Bagian ini menetapkan struktur paket, **desain halaman pricing**, dan alur checkout yang memakai gateway tersebut. Angka harga adalah **usulan awal** yang disimpan di database (bukan hardcode) sehingga bisa diubah admin kapan saja tanpa deploy. Pembayaran **tidak wajib** untuk semua user: admin dapat mengaktifkan langganan secara manual (§9.5).
+> **Status implementasi:** payment gateway (**Midtrans**) **sudah terpasang**, tetapi **halaman pricing belum ada**. Bagian ini menetapkan struktur paket, **desain halaman pricing**, dan alur checkout yang memakai gateway tersebut. Angka harga adalah **usulan awal** yang disimpan di database (bukan hardcode) sehingga bisa diubah admin kapan saja tanpa deploy. Pembayaran **tidak wajib** untuk semua user: admin dapat mengaktifkan langganan secara manual (§9.6).
+
+**Gap saat ini vs target:**
+
+| Komponen | Status | Yang harus dibangun |
+|---|---|---|
+| Payment gateway Midtrans (Snap + webhook) | **Ada** | Pertahankan; tambahkan halaman pricing sebagai titik masuk |
+| Halaman pricing publik | **Belum ada** | Bangun `(app)/pricing` sesuai §9.3 (deliverable B4) |
+| Paket & harga di database | Sebagian (seed) | Lengkapi `subscription_plans` + UI admin `(admin)/plans` |
+| Checkout & aktivasi langganan | Ada (gateway) | Pastikan `planCode` dari halaman pricing tersambung |
+| Admin membuat user manual | **Belum ada** | `POST /admin/users` + form `(admin)/users/new` (§9.7) |
+| Admin mengatur masa langganan | **Belum ada** | Grant/extend/revoke manual (§9.6) |
 
 ### 9.1 Struktur Pricing (default seed, dapat diubah admin)
 
@@ -1084,27 +1120,110 @@ sequenceDiagram
 - **Expiry:** cron harian menandai `expired` + email H-3 dan H-0.
 - **Webhook di serverless:** wajib verifikasi signature, validasi `gross_amount` vs DB, tolak `transaction_id` tak dikenal; tidak mempercayai status dari return URL. Karena Vercel tidak menjamin urutan, event diproses murni berdasarkan `transaction_status` + idempotency.
 - **Abstraksi:** `PaymentProvider` (`createCharge`, `verifyWebhook`, `parseEvent`, `refund?`). Implementasi `MidtransProvider`; `FakeProvider` untuk dev/test (signature valid lokal, `POST /internal/payments/fake/settle`).
-- **Tanpa gateway (fallback operasional):** admin dapat mengaktifkan langganan manual (§9.5) — berguna untuk pembayaran transfer bank, instansi, atau kompensasi gangguan.
+- **Tanpa gateway (fallback operasional):** admin dapat mengaktifkan langganan manual (§9.6) — berguna untuk pembayaran transfer bank, instansi, atau kompensasi gangguan.
 
-### 9.3 Halaman & UX
+### 9.3 Halaman Pricing (belum ada — ini spesifikasinya)
+
+Halaman pricing **wajib dibuat** karena saat ini user tidak punya titik masuk untuk membeli paket. Rute: `(app)/pricing`, dapat diakses tanpa login (SSR, cache 60 detik, revalidasi saat admin mengubah paket).
+
+**Wireframe (desktop ≥ 1024 px):**
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  Logo        Harga   Cara Kerja   FAQ            [Masuk] [Daftar]    │
+├──────────────────────────────────────────────────────────────────────┤
+│                     Pilih Paket Latihan Anda                         │
+│        Latihan ujian Polri lengkap: Psikologi, TPA, dan TPK          │
+│              ◇ Garansi akses sesuai masa aktif                       │
+├──────────────────────────────────────────────────────────────────────┤
+│ ┌───────────┐ ┌───────────┐ ┌─────────────────┐ ┌───────────┐        │
+│ │ Mingguan  │ │ 2 Minggu  │ │ ★ Paling Populer│ │ 3 Bulan   │        │
+│ │ Rp 49.000 │ │ Rp 89.000 │ │   Bulanan       │ │ Rp399.000 │        │
+│ │ ≈7rb/hari │ │ ≈6rb/hari │ │  Rp 149.000     │ │ hemat 11% │        │
+│ │           │ │           │ │  ≈5rb/hari      │ │           │        │
+│ │ ✓ 1 sesi  │ │ ✓ 1 sesi  │ │ ✓ 1 sesi/hari   │ │ ✓ 1 sesi  │        │
+│ │ ✓ 3 tes   │ │ ✓ 3 tes   │ │ ✓ 3 tes         │ │ ✓ 3 tes   │        │
+│ │ ✓ riwayat │ │ ✓ pembahas│ │ ✓ pembahasan    │ │ ✓ prioritas│       │
+│ │ [Pilih]   │ │ [Pilih]   │ │ [Pilih Paket]   │ │ [Pilih]   │        │
+│ └───────────┘ └───────────┘ └─────────────────┘ └───────────┘        │
+├──────────────────────────────────────────────────────────────────────┤
+│  Perbandingan fitur (tabel)  ·  FAQ  ·  Metode pembayaran            │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+**Wireframe (mobile < 640 px):** kartu ditumpuk 1 kolom, urut `sort_order`; "Paling Populer" tetap di posisi ke-3 dengan border tebal; tabel perbandingan menjadi accordion per paket; CTA lengket di bawah (`sticky bottom bar`) saat kartu terpilih.
+
+**Kontrak data halaman (SvelteKit `+page.server.ts`):**
+
+```ts
+// (app)/pricing/+page.server.ts
+export const load = async ({ fetch, setHeaders, locals }) => {
+  const res = await fetch('/api/v1/plans');           // publik, tanpa auth
+  const plans = (await res.json()).data as Plan[];    // sudah terurut sort_order
+  setHeaders({ 'cache-control': 'public, max-age=60, stale-while-revalidate=300' });
+  return { plans, activeSubscription: locals.subscription ?? null };
+};
+```
+
+- Rendering **SSR** agar harga terlihat tanpa menunggu JS; hidrasi hanya untuk interaksi CTA.
+- Jika `locals.subscription` aktif → tombol berubah menjadi "Perpanjang" dan menampilkan tanggal berakhir.
+- Parameter `?plan=<CODE>` menandai kartu terpilih (dipakai untuk deep-link dari email/kampanye) dan divalidasi terhadap daftar paket.
+
+**Struktur halaman (atas → bawah):**
+
+| # | Blok | Isi & perilaku |
+|---|---|---|
+| 1 | Hero | Judul "Pilih Paket Latihan Anda", subjudul 1 kalimat, badge "Garansi akses sesuai masa aktif", CTA sekunder "Lihat cara kerja" |
+| 2 | Kartu paket | Grid 4 kartu (WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY) dari `GET /plans`; urut `sort_order`; `MONTHLY` diberi badge **"Paling Populer"**; `TRIAL_3D` ditampilkan sebagai banner terpisah "Coba 3 hari gratis" (hanya jika user belum pernah trial) |
+| 3 | Harga | Format `Rp 149.000` (pemisah ribuan titik, tanpa desimal); jika `compare_at_price_idr` ada → tampil coret + badge diskon `-x%`; teks turunan "≈ Rp 4.967/hari" |
+| 4 | Daftar fitur | Checklist `features[]` dari DB; fitur yang tidak dimiliki paket ditampilkan abu-abu (bukan disembunyikan) agar perbandingan jujur |
+| 5 | CTA | "Pilih Paket" → jika belum login: `redirect=/pricing?plan=MONTHLY` → login → kembali ke checkout; jika sudah login: `POST /checkout/transactions` → buka Snap |
+| 6 | Tabel perbandingan | Matriks paket × fitur untuk layar ≥ 768 px; di mobile menjadi accordion per paket |
+| 7 | FAQ | 5–7 pertanyaan (masa aktif, stacking, refund, ganti perangkat, apa yang terjadi jika gugur, apakah bisa lanjut tes berikutnya) |
+| 8 | Trust/Footer CTA | Metode pembayaran (logo QRIS, VA, GoPay, OVO, DANA, ShopeePay, kartu), kebijakan privasi, kontak dukungan |
+
+**State yang wajib ditangani:**
+
+| State | Tampilan |
+|---|---|
+| Loading | Skeleton kartu (bukan spinner halaman penuh), teks tetap terbaca |
+| Tidak ada paket publik | Empty state + CTA "Hubungi admin" (bukan error) |
+| Gagal fetch | Pesan + tombol "Coba lagi", fallback ke cache terakhir (stale-while-revalidate) |
+| Sudah punya langganan aktif | Banner "Langganan aktif sampai <tanggal>" + tombol "Perpanjang" (stacking), tetap boleh melihat paket lain |
+| Pembayaran pending | Halaman checkout menampilkan status + tombol "Cek status" (polling ringan 5 detik, berhenti setelah 10 menit) |
+| Pembayaran sukses/gagal | Redirect ke `/subscription?status=success` atau `?status=failed` dengan pesan jelas, bukan halaman kosong |
+
+**Aturan konten & teknis:**
+
+- **Satu sumber data:** semua teks harga, durasi, badge, dan fitur berasal dari `subscription_plans` — tidak ada hardcode di Svelte. Admin mengubah harga → halaman ikut berubah tanpa deploy.
+- **Nominal tidak pernah dikirim klien** ke endpoint checkout; klien hanya mengirim `planCode`.
+- **Formatting:** `Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 })`; zona waktu & locale konsisten `Asia/Jakarta`.
+- **Analytics event:** `pricing_view`, `plan_select {planCode}`, `checkout_start {planCode}`, `checkout_success {planCode, amount}` — untuk mengukur konversi per paket (dipakai di dashboard admin).
+- **SEO:** `<title>Harga & Paket Latihan Ujian</title>`, meta description, canonical `/pricing`, structured data `Product` + `Offer` per paket (harga dalam IDR).
+- **Aksesibilitas:** kontras ≥ 4.5:1, fokus keyboard terlihat, kartu paket berupa `<article>` dengan heading, tombol CTA punya label eksplisit ("Pilih Paket Bulanan"), tidak ada info penting yang hanya dibedakan warna.
+- **Responsif:** 1 kolom < 640 px, 2 kolom 640–1023 px, 4 kolom ≥ 1024 px; harga tidak pernah terpotong.
+- **A/B & promo:** opsional flag `FF_PRICING_V2`; kode promo (fase 2) ditampilkan sebagai field di checkout, bukan di halaman pricing.
+
+### 9.4 Halaman & UX Pendukung
 
 | Halaman | Isi |
 |---|---|
-| `(app)/pricing` | Kartu paket, harga coret, daftar fitur, CTA "Pilih Paket" |
+| `(app)/pricing` | Desain lengkap di §9.3 — kartu paket, harga coret, daftar fitur, CTA "Pilih Paket" |
 | `(app)/checkout` | Ringkasan paket, total, tombol Snap, status pembayaran (polling ringan) |
 | `(app)/subscription` | Status aktif, sisa hari, tanggal berakhir, tombol perpanjang |
 | `(app)/transactions` | Riwayat transaksi + status + invoice |
-| `(admin)/plans` | CRUD paket & harga, toggle publik, urutan tampil |
+| `(admin)/plans` | CRUD paket & harga, toggle publik, urutan tampil — mengubah data ini langsung mengubah halaman pricing |
 | `(admin)/transactions` | Semua transaksi, filter status, mark-paid/refund |
-| `(admin)/users/:id` | Tab langganan: **beri/perpanjang/cabut** dengan durasi kustom |
+| `(admin)/users/new` | **Buat akun manual**: nama, email, telepon, role (`USER`/`ADMIN` — `ADMIN` hanya oleh `SUPER_ADMIN`), lalu **masa langganan** (paket atau `durationDays` 1–3650 / tanggal akhir) |
+| `(admin)/users/:id` | Tab langganan: **beri/perpanjang/cabut** dengan durasi kustom + riwayat pemberian |
 
 **Invoice:** setiap transaksi `SUCCESS` menghasilkan nomor invoice (`INV/YYYY/MM/<urut>`), dapat diunduh PDF sederhana (fase 2; fase 1 cukup halaman HTML yang bisa dicetak).
 
-### 9.4 Gating Ujian
+### 9.5 Gating Ujian
 
 `AccessPolicyPort.assertCanStartExam(userId)` = langganan aktif (pembelian **atau** grant manual admin) + belum ada sesi hari ini; dipanggil saat buat sesi **dan** saat membuka TPA/TPK (langganan bisa habis di tengah ujian → tes berikutnya ditolak dengan pesan jelas).
 
-### 9.5 Grant Langganan Manual oleh Admin
+### 9.6 Grant Langganan Manual oleh Admin
 
 - Endpoint: `POST /admin/subscriptions` dengan `{ userId, planId?, durationDays, startsAt?, reason }`; `durationDays` 1–3650.
 - Jika user sudah punya langganan aktif → **stacking** (`starts_at = max(now, ends_at)`), kecuali `mode=REPLACE` dipilih admin (dicatat di audit).
@@ -1112,7 +1231,7 @@ sequenceDiagram
 - Bisa dicabut (`PATCH /admin/subscriptions/:id` → `REVOKED`) dengan alasan wajib; tidak menghapus riwayat.
 - Semua aksi menulis `audit_logs` (`SUBSCRIPTION_GRANT`, `SUBSCRIPTION_EXTEND`, `SUBSCRIPTION_REVOKE`) + mengirim email ke user.
 
-### 9.6 Pembuatan User oleh Admin
+### 9.7 Pembuatan User oleh Admin
 
 - `POST /admin/users` → buat user `PENDING_INVITE`, kirim email undangan (token 7 hari) untuk membuat password.
 - Admin **tidak** melihat/menyimpan password user; opsional "buat password sementara" yang wajib diganti saat login pertama (`must_change_password=true`).
@@ -1264,9 +1383,6 @@ Pagination: `?limit=50&cursor=…` → `meta: { nextCursor, hasMore }`. Semua ID
 | POST | `/admin/users` | admin | **Buat akun user manual** (nama, email, telepon) + kirim undangan aktivasi |
 | POST | `/admin/users/:id/reset-password` | admin | Kirim link reset password ke user |
 | PATCH | `/admin/users/:id/status` · `/admin/users/:id/role` | admin/super | Suspend / ubah role |
-| POST | `/admin/subscriptions` | admin | **Grant langganan manual**: `{userId, planId?, durationDays, startsAt?, reason}` |
-| PATCH | `/admin/subscriptions/:id` | admin | Perpanjang / ubah tanggal akhir / cabut (alasan wajib) |
-| GET | `/admin/subscriptions` | admin | Daftar langganan + filter aktif/akan habis |
 | POST | `/admin/users/:id/quota-reset` | admin | Bebaskan kuota harian (audit) |
 | GET | `/admin/audit-logs` | super | Audit |
 | GET/PATCH | `/admin/settings` | super | Konfigurasi platform |
@@ -1313,21 +1429,24 @@ Pagination: `?limit=50&cursor=…` → `meta: { nextCursor, hasMore }`. Semua ID
 | POST | `/admin/exam-sessions/:id/subtests/:subId/unlock` | **super** | Force unlock (alasan wajib, audit) |
 | GET | `/admin/dashboard/exams` | admin | Statistik per subtes |
 
-### 12.4 Billing (B4)
+### 12.4 Pricing, Subscription & Payments (B4)
 
 | Method | Path | Akses | Fungsi |
 |---|---|---|---|
-| GET | `/plans` | publik | Paket aktif |
+| GET | `/plans` | publik | Paket publik untuk **halaman pricing** (cache 60 detik, ETag) |
+| GET | `/plans/:code` | publik | Detail paket (dipakai checkout) |
 | GET | `/subscriptions/me` · `/subscriptions/me/history` | user | Status & riwayat |
 | POST | `/checkout/transactions` | user | Buat transaksi + Snap |
 | GET | `/transactions` · `/transactions/:id` | owner | Riwayat |
 | POST | `/payments/midtrans/notification` | publik+signature | Webhook |
 | GET | `/payments/midtrans/finish` | publik | Return URL → redirect web |
-| GET/POST/PATCH | `/admin/plans[/:id]` | admin | Paket |
+| GET/POST/PATCH | `/admin/plans[/:id]` | admin | Paket & harga |
 | GET | `/admin/transactions` · `/admin/transactions/:id` | admin | Transaksi |
 | POST | `/admin/transactions/:id/mark-paid` · `/refund` | admin | Rekonsiliasi manual |
-| POST | `/admin/subscriptions/:id/extend` · `/cancel` | admin | Koreksi langganan |
-| GET | `/admin/dashboard/revenue` | admin | KPI revenue |
+| GET | `/admin/subscriptions` | admin | Daftar langganan + filter aktif/akan habis |
+| POST | `/admin/subscriptions` | admin | **Grant manual**: `{userId, planId?, durationDays, startsAt?, mode, reason}` |
+| PATCH | `/admin/subscriptions/:id` | admin | Perpanjang / ubah `ends_at` / cabut (alasan wajib) |
+| GET | `/admin/dashboard/revenue` | admin | KPI revenue & konversi per paket |
 
 ### 12.5 Internal (cron & kesehatan)
 
@@ -1348,7 +1467,7 @@ Pagination: `?limit=50&cursor=…` → `meta: { nextCursor, hasMore }`. Semua ID
 
 - **Penamaan:** DB `snake_case`; TS `camelCase`; file `kebab-case.ts`; kelas `PascalCase`; tabel plural; enum `SCREAMING_SNAKE`; route plural.
 - **DTO:** class-validator untuk request; Zod di `packages/contracts` untuk response + validasi frontend. Sumber kebenaran = OpenAPI.
-- **Error codes** terpusat (`packages/contracts/src/common/error-codes.ts`): `AUTH_INVALID_CREDENTIALS`, `AUTH_EMAIL_NOT_VERIFIED`, `EXAM_SESSION_ACTIVE_EXISTS`, `EXAM_SESSION_ALREADY_TODAY`, `EXAM_SUBTEST_LOCKED`, `EXAM_SESSION_ELIMINATED`, `EXAM_POOL_INSUFFICIENT`, `BILLING_SUBSCRIPTION_REQUIRED`, `BILLING_PLAN_INACTIVE`, `PAYMENT_SIGNATURE_INVALID`, `COMMON_RATE_LIMITED`.
+- **Error codes** terpusat (`packages/contracts/src/common/error-codes.ts`): `AUTH_INVALID_CREDENTIALS`, `AUTH_EMAIL_NOT_VERIFIED`, `EXAM_SESSION_ACTIVE_EXISTS`, `EXAM_SESSION_ALREADY_TODAY`, `EXAM_SUBTEST_LOCKED`, `EXAM_SESSION_ELIMINATED`, `EXAM_POOL_INSUFFICIENT`, `BILLING_SUBSCRIPTION_REQUIRED`, `BILLING_PLAN_INACTIVE`, `PAYMENT_SIGNATURE_INVALID`, `SUBSCRIPTION_DURATION_INVALID`, `SUBSCRIPTION_REASON_REQUIRED`, `USER_EMAIL_ALREADY_EXISTS`, `USER_INVITE_EXPIRED`, `ROLE_CHANGE_FORBIDDEN`, `LAST_SUPER_ADMIN_FORBIDDEN`, `COMMON_RATE_LIMITED`.
 - **Ports** (`apps/api/src/core/ports/`, dibekukan Phase 0):
 
 ```ts
@@ -1392,11 +1511,12 @@ interface PaymentProvider {
 5. **Headers:** CSP ketat (`default-src 'self'`; `img-src` Supabase; `connect-src` API), HSTS, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`.
 6. **IDOR:** query ujian selalu memfilter `user_id` dari token; endpoint admin dijaga permission; test negatif di CI (resource user lain → 404).
 7. **Integritas ujian:** DTO soal tidak pernah memuat `is_correct`/`dimension_map`/`pair_group`; subtes terminal menolak semua write; waktu dari server; config snapshot mencegah perubahan retroaktif; saat `ELIMINATED`, endpoint subtes berikutnya mengembalikan 409 tanpa membocorkan soal.
-8. **Pembayaran:** signature SHA512, nominal divalidasi vs DB, idempotency unik, event tak dikenal ditolak + alert.
+8. **Akses & langganan:** grant manual hanya untuk `ADMIN`/`SUPER_ADMIN` (permission `subscriptions.manage`), alasan wajib, `durationDays` dibatasi 1–3650, tidak ada penghapusan riwayat, seluruh aksi ber-audit. Pembayaran: signature SHA512, nominal divalidasi vs DB, idempotency unik, event tak dikenal ditolak + alert.
+9. **Provisioning user:** undangan memakai token sekali pakai (hash di DB, TTL 7 hari); admin tidak pernah menerima password user; `must_change_password` dipaksa di klien **dan** server; perubahan role dilindungi anti-lockout (`SUPER_ADMIN` terakhir tidak dapat diturunkan).
 9. **Secrets:** env divalidasi saat boot (Zod); service role key hanya server-side; `CRON_SECRET` wajib; rotasi kunci terdokumentasi di runbook.
 10. **Rate limiting:** token bucket di Postgres (UPSERT atomik per `(bucket, window)`), dibersihkan pg_cron; captcha Turnstile opsional setelah 3 kegagalan login.
 11. **Upload dokumen:** scan ukuran & MIME, tolak arsip terenkripsi, batas 50 halaman/PDF dan 10 MB/DOCX, timeout ekstraksi 20 detik, ekstraksi dijalankan dengan memori terbatas (hindari zip bomb: `jszip` dengan limit entri 2.000, total 200 MB).
-12. **Audit & PII:** audit append-only untuk login, perubahan role, publish soal, void sesi, force unlock; log tidak memuat token/password/OTP; hapus akun → anonimisasi.
+12. **Audit & PII:** audit append-only untuk login, perubahan role, grant/cabut langganan, pembuatan user, publish soal, void sesi, force unlock; log tidak memuat token/password/OTP; hapus akun → anonimisasi.
 13. **Backup & DR:** Supabase PITR 7 hari + dump harian terenkripsi ke Storage; uji restore kuartalan.
 14. **Dependency:** `pnpm audit` + Dependabot mingguan; lockfile committed.
 
@@ -1407,10 +1527,10 @@ interface PaymentProvider {
 | Level | Tools | Cakupan wajib |
 |---|---|---|
 | Unit | Vitest | Timer & lock math, finalisasi idempoten, 8 strategi skor (termasuk `CORRECT_MINUS_PENALTY`, `DIMENSION_PROFILE`, `CONSISTENCY_INDEX`, `PASS_HAND_METRIC`), dedupe hash, violation policy, stacking langganan, parser dokumen (fixture PDF/DOCX) |
-| Integration | Vitest + Supabase branch project | Unique constraint (soal duplikat, sesi/hari, subtes), transaksi autosave, cron finalisasi (2 proses paralel → 1 skor), replay webhook 3× → 1 aktivasi, klaim `job_queue` `SKIP LOCKED` |
+| Integration | Vitest + Supabase branch project | Unique constraint (soal duplikat, sesi/hari, subtes), transaksi autosave, cron finalisasi (2 proses paralel → 1 skor), replay webhook 3× → 1 aktivasi, klaim `job_queue` `SKIP LOCKED`, grant langganan manual (stacking/REPLACE) + expiry cron |
 | Contract | Zod round-trip + `openapi-diff` | Setiap endpoint baru mengubah kontrak secara eksplisit; frontend typecheck terhadap tipe generated |
-| E2E API | Supertest | Register→verifikasi→login→langganan→Psikologi 4 subtes→TPA→TPK→gugur/lulus→hasil→admin monitoring |
-| E2E UI | Playwright (chromium + firefox) | **Kecermatan 500 soal/10 menit dengan fake clock & keyboard-only**; Pass Hand 150 kolom; Kepribadian 140 pernyataan + pasangan jebakan; refresh di tengah subtes; waktu habis → layar terkunci; gugur → subtes berikut 409; import PDF & DOCX end-to-end |
+| E2E API | Supertest | Register→verifikasi→login→langganan→Psikologi 4 subtes→TPA→TPK→gugur/lulus→hasil→admin monitoring; admin buat user manual → set masa aktif → user login → ujian |
+| E2E UI | Playwright (chromium + firefox) | **Halaman pricing**: render paket dari API, klik CTA → login redirect → checkout; **Kecermatan 500 soal/10 menit dengan fake clock & keyboard-only**; Pass Hand 150 kolom; Kepribadian 140 pernyataan + pasangan jebakan; refresh di tengah subtes; waktu habis → layar terkunci; gugur → subtes berikut 409; import PDF & DOCX end-to-end; admin form "tambah user + durasi langganan" |
 | Load | k6 | 1.000 VU: autosave Kecermatan (500 req/detik), heartbeat 4.000 rpm, start sesi burst 100/detik; p95 & error rate < 0,1% |
 | Security | Manual + ZAP baseline | IDOR sesi/transaksi, rate limit, CSRF, signature webhook, upload berbahaya (SVG, zip bomb, PDF rusak) |
 | A11y | axe-core di Playwright | Halaman ujian & form kritis 0 violation serius |
@@ -1485,17 +1605,17 @@ flowchart LR
 
 | Item | Isi |
 |---|---|
-| Fitur | Registrasi + OTP/link, Google OAuth, reset password, profil, single-session + device mgmt, RBAC, audit log, settings platform, manajemen user, health, Swagger, error/timeout standard, email service, storage service, cron runner + `job_queue` worker-in-request |
-| Modul backend | `core/*` (config, prisma, logger, filters, interceptors, guards, decorators, ports, jobs, cron, storage, mail, rate-limit), `auth`, `users`, `rbac`, `audit`, `health`, `internal/cron` |
-| Frontend | `(auth)/login`, `register`, `verify`, `forgot`, `reset`; `(app)/+layout` + profil + devices; `(admin)/+layout` + dashboard shell + users + audit + settings; `lib/api/client.ts`; `lib/stores/auth`; `packages/ui` |
-| DB | `core.prisma`: users, roles, permissions, role_permissions, auth_identities, sessions, verification_tokens, audit_logs, outbox_events, job_queue, rate_limit_hits, platform_settings + seed role, 3 stage, 4 subtes |
+| Fitur | Registrasi + OTP/link, Google OAuth, reset password, profil, single-session + device mgmt, RBAC 3 role (`USER`/`ADMIN`/`SUPER_ADMIN`), **pembuatan akun user oleh admin + undangan aktivasi**, audit log, settings platform, manajemen user, health, Swagger, error/timeout standard, email service, storage service, cron runner + `job_queue` worker-in-request |
+| Modul backend | `core/*` (config, prisma, logger, filters, interceptors, guards, decorators, ports, jobs, cron, storage, mail, rate-limit), `auth`, `users` (termasuk `users/admin-provisioning.service.ts`), `rbac` (guard permission + anti-lockout), `audit`, `health`, `internal/cron` |
+| Frontend | `(auth)/login`, `register`, `verify`, `forgot`, `reset`, `invite/:token` (aktivasi akun buatan admin); `(app)/+layout` + profil + devices; `(admin)/+layout` + dashboard shell + users (+ form tambah user & tab langganan placeholder) + audit + settings; `lib/api/client.ts`; `lib/stores/auth`; `packages/ui` |
+| DB | `core.prisma`: users (termasuk `created_by`, `must_change_password`), roles, permissions, role_permissions, auth_identities, sessions, verification_tokens, audit_logs, outbox_events, job_queue, rate_limit_hits, platform_settings + seed role `USER`/`ADMIN`/`SUPER_ADMIN`, 3 stage, 4 subtes |
 | API | Seluruh §12.1 + §12.5 |
 | Eksternal | Google OAuth, Resend, Supabase Storage (avatar), Vercel Cron |
-| Testing | Unit guard/policy/rate-limit; integration token rotation, unique active session, klaim job `SKIP LOCKED`, cron idempoten; E2E auth; Playwright auth flow |
+| Testing | Unit guard/policy/rate-limit, anti-lockout role, validasi durasi grant; integration token rotation, unique active session, klaim job `SKIP LOCKED`, cron idempoten, undangan admin kedaluwarsa, email duplikat ditolak; E2E auth + provisioning user; Playwright auth flow |
 | Dependency | Tidak ada (root) |
 | Boleh diubah | root config (`package.json`, `turbo.json`, `pnpm-workspace.yaml`, `vercel.json`, `.github/**`, `.env.*.example`), `apps/api/src/core/**`, `apps/api/src/main.ts` + `api/index.ts`, `modules/{auth,users,rbac,audit,health,internal}/**`, `prisma/schema/core.prisma`, `prisma/migrations/*_b1_*`, `prisma/seed/**`, `apps/web/src/lib/{api,stores,auth}/**`, `(auth)/**`, `(app)/+layout.*`, `(admin)/+layout.*`, `packages/{ui,config}/**`, `packages/contracts/src/{common,auth,users,audit}/**` |
 | Tidak boleh diubah | `modules/{questions,exams,billing}/**` (stub), `prisma/schema/{question,exam,billing}.prisma`, route `(app)/exam`, `(app)/subscription`, `(admin)/questions`, `(admin)/exams`, `(admin)/plans` |
-| DoD | Auth+RBAC E2E hijau; sesi tunggal terbukti via test konkuren; cron endpoint idempoten & aman 2× paralel; audit tercatat untuk 5 aksi kritis; Swagger up; design system dipakai ≥ 1 halaman; coverage core 80% |
+| DoD | Auth+RBAC E2E hijau; 3 role ter-seed & permission teruji; **admin membuat user → user menerima undangan → aktivasi → login berhasil**; `SUPER_ADMIN` terakhir tidak bisa diturunkan; sesi tunggal terbukti via test konkuren; cron endpoint idempoten & aman 2× paralel; audit tercatat untuk 5 aksi kritis; Swagger up; design system dipakai ≥ 1 halaman; coverage core 80% |
 
 ### 17.2 Branch 2 — `dev/b2-question-bank`
 
@@ -1537,23 +1657,25 @@ flowchart LR
 
 | Item | Isi |
 |---|---|
-| Fitur | CRUD paket, pricing, checkout Midtrans Snap, status pembayaran, riwayat transaksi, langganan & riwayatnya, webhook terverifikasi + idempoten, expiry & reminder via cron, entitlement gating, admin transaksi/refund/mark-paid/extend/cancel, dashboard revenue |
-| Modul backend | `plans`, `billing`, `payments` (abstraksi + Midtrans + webhook), `entitlements` (impl `AccessPolicyPort`), `analytics` (view read-only) |
-| Frontend | `(app)/pricing`, `(app)/checkout`, `(app)/transactions`, `(app)/subscription`, `(admin)/plans`, `(admin)/transactions`, widget revenue di `(admin)/dashboard` |
+| Fitur | CRUD paket & harga, **halaman pricing publik (belum ada — deliverable utama branch ini, spesifikasi §9.3)**, checkout Midtrans Snap, status pembayaran, riwayat transaksi, langganan & riwayatnya, webhook terverifikasi + idempoten, expiry & reminder via cron, entitlement gating, admin transaksi/refund/mark-paid, **grant langganan manual (durasi bebas, stacking/REPLACE, cabut, wajib alasan)**, UI admin tambah user + set masa aktif, dashboard revenue & konversi per paket |
+| Modul backend | `plans`, `billing` (subscriptions + grant manual), `payments` (abstraksi + Midtrans + webhook), `entitlements` (impl `AccessPolicyPort`), `analytics` (view read-only) |
+| Frontend | `(app)/pricing` (**prioritas #1**; SSR + cache 60 detik + state loading/empty/error/aktif), `(app)/checkout`, `(app)/transactions`, `(app)/subscription`, `(admin)/plans`, `(admin)/transactions`, `(admin)/users/new` + tab langganan di `(admin)/users/:id`, widget revenue di `(admin)/dashboard` |
 | DB | `billing.prisma`: subscription_plans, subscriptions, subscription_events, transactions, payment_webhook_events, view `v_daily_revenue` |
 | API | Seluruh §12.4 |
 | Eksternal | Midtrans (sandbox/production), Resend, Vercel Cron |
-| Testing | Unit price/stacking, signature, status mapping; integration replay webhook 3× → 1 aktivasi, dua webhook paralel, expired/failed, entitlement gate, cron expiry; Playwright checkout `FakeProvider`; fixture payload Midtrans asli |
+| Testing | Unit price/stacking, durasi grant (batas 1–3650), signature, status mapping; integration replay webhook 3× → 1 aktivasi, dua webhook paralel, expired/failed, grant manual stacking vs REPLACE, revoke + audit, entitlement gate, cron expiry; Playwright halaman pricing (SSR, harga dari DB, CTA → login redirect → checkout `FakeProvider`) + tab langganan admin; fixture payload Midtrans asli |
 | Dependency | **B1** keras (auth, RBAC, audit, mail, outbox, job_queue). `AccessPolicyPort` dikonsumsi B3 (gate G3) |
 | Boleh diubah | `modules/{plans,billing,payments,entitlements,analytics}/**`, `prisma/schema/billing.prisma`, `prisma/migrations/*_b4_*` (+ view), `(app)/{pricing,checkout,transactions,subscription}/**`, `(admin)/{plans,transactions}/**` + `dashboard/RevenueWidget.svelte`, `packages/contracts/src/{billing,plans}/**` |
 | Tidak boleh diubah | `core/**`, `prisma/schema/{core,question,exam}.prisma`, `modules/**` B1–B3, `packages/ui`, route ujian |
-| DoD | Pembayaran sandbox → langganan aktif → bisa ujian; webhook replay aman; signature invalid ditolak; stacking benar; refund tidak menghapus riwayat; dashboard < 1 detik pada 100k baris; coverage 80% |
+| DoD | **Halaman pricing live** (paket, harga, coret, perbandingan, CTA) dan datanya hanya dari DB; pembayaran sandbox → langganan aktif → bisa ujian; webhook replay aman; signature invalid ditolak; stacking benar; refund tidak menghapus riwayat; halaman pricing LCP < 2,5 detik & 0 violation serius; dashboard < 1 detik pada 100k baris; coverage 80% |
 
 ### 17.5 Matriks Kepemilikan File
 
 | Area | Owner | Branch lain |
 |---|---|---|
 | `apps/api/src/core/**` (kecuali `ports/*`) | B1 | Baca saja |
+| `modules/users/**` + `(admin)/users/**` (buat user, edit, suspend) | B1 | B4 hanya menambah `SubscriptionTab.svelte` |
+| `(admin)/users/:id` tab langganan (grant/extend/revoke) | B4 | B1 menyediakan slot tab |
 | `core/ports/*.ts` | per-domain (identity→B1, question→B2, exam/access→B3, payment→B4) | Implementasi, tidak edit |
 | `core/ports/ports.module.ts` | **Integrator** | 1 baris/PR + review |
 | `app.module.ts`, `api/index.ts`, `vercel.json` | **Integrator** (Phase 0 lengkap) | Tidak |
@@ -1586,7 +1708,7 @@ flowchart LR
   G1 --> B4
   B2 --> G2{{"G2<br/>QuestionPoolPort + pool 500/140/150"}}
   G2 --> B3
-  B4 --> G3{{"G3<br/>AccessPolicyPort + webhook sandbox"}}
+  B4 --> G3{{"G3<br/>AccessPolicyPort + webhook sandbox +<br/>halaman pricing"}}
   G3 --> B3
   B1 --> G4{{"G4 — Integration<br/>semua port real"}}
   B2 --> G4
@@ -1643,7 +1765,7 @@ flowchart LR
 
 ### 18.7 Resolusi Konflik
 
-- Rebase harian; PR kecil; feature flag (`FF_EXAM_ENGINE`, `FF_BILLING`, `FF_DOC_IMPORT`).
+- Rebase harian; PR kecil; feature flag (`FF_EXAM_ENGINE`, `FF_PRICING`, `FF_BILLING`, `FF_DOC_IMPORT`).
 - Konflik pada file non-whitelist = pelanggaran kepemilikan → eskalasi integrator.
 - Konflik migrasi: regenerasi di branch integrator, bukan edit file yang sudah di-merge.
 
@@ -1654,8 +1776,8 @@ flowchart LR
 | Milestone | Durasi | Deliverable | Exit criteria |
 |---|---|---|---|
 | **M0 — Foundation** | 1 minggu | Phase 0: monorepo, Vercel config, Supabase project, 4 schema, migrasi baseline, `core` skeleton, ports + mock 760 soal, `packages/ui`, cron runner, seed runner, env check, db-guard | G0: CI hijau, `pnpm dev` + `pnpm dev:api` jalan, mock server jalan, `vercel build` sukses |
-| **M1 — Core Domains** | 2 minggu | B1 auth penuh + cron; B2 CRUD 6 tipe soal + media; B4 paket + checkout FakeProvider; B3 session skeleton + subtest lifecycle (mock pool) | G1: login → dashboard; soal dibuat; subtes bisa dibuka & terkunci dengan mock |
-| **M2 — Feature Complete** | 3 minggu | B2 import spreadsheet + **PDF/DOCX** + review UI; B3 4 subtes Psikologi + TPA + TPK + lock + gugur + 8 strategi + proctoring; B4 webhook Midtrans + entitlement + admin grant langganan | G2/G3: 3 tes selesai dengan pool nyata; pembayaran sandbox & grant manual mengaktifkan langganan |
+| **M1 — Core Domains** | 2 minggu | B1 auth penuh + cron + **provisioning user oleh admin**; B2 CRUD 6 tipe soal + media; B4 paket + **halaman pricing v1 (data statis dari seed paket)** + checkout FakeProvider; B3 session skeleton + subtest lifecycle (mock pool) | G1: login → dashboard; soal dibuat; subtes bisa dibuka & terkunci dengan mock; admin membuat user dan menetapkan masa aktif |
+| **M2 — Feature Complete** | 3 minggu | B2 import spreadsheet + **PDF/DOCX** + review UI; B3 4 subtes Psikologi + TPA + TPK + lock + gugur + 8 strategi + proctoring; B4 webhook Midtrans + entitlement + **grant manual + halaman pricing final (data DB, responsive, a11y)** | G2/G3: 3 tes selesai dengan pool nyata; pembayaran sandbox & grant manual mengaktifkan langganan; halaman pricing lulus review UX |
 | **M3 — Integration** | 1 minggu | Swap mock → real, `app.module` final, cron produksi, E2E lintas branch, OpenAPI final, migrasi upgrade path | G4 |
 | **M4 — Hardening** | 1–2 minggu | Security review, k6 1.000 VU (fokus autosave Kecermatan), a11y, observability, runbook, UAT 20 pilot | Error rate < 0,1%; p95 sesuai NFR; 0 temuan kritis |
 | **M5 — Launch** | 3–5 hari | Migrasi produksi, seed soal final (**≥ 760 Psikologi + TPA + TPK**), verifikasi Midtrans production, monitoring 72 jam | v1.0.0 |
@@ -1695,6 +1817,12 @@ Total **10–12 minggu** untuk 4 workstream paralel. Critical path: **B1 → B2 
 | Antrian/cron | Vercel Cron + `job_queue` + pg_cron | Tidak ada Redis/worker |
 | Bahasa & zona waktu | UI Indonesia, `Asia/Jakarta`, Rupiah, `id-ID` | Pasar target |
 | Captcha | Turnstile setelah 3 kegagalan | Tanpa friction untuk pengguna normal |
+| **Role** | **3 role: `USER`, `ADMIN`, `SUPER_ADMIN`** — `SUPER_ADMIN` "handle semua" (semua izin `ADMIN` + role, settings, audit, force unlock, impersonasi) | Sesuai permintaan; permission-based agar mudah diperluas |
+| **Pembuatan user** | Self-register **dan** provisioning oleh admin; admin menetapkan role + masa langganan awal | Sesuai permintaan; user yang tidak mau daftar sendiri tetap bisa dilayani |
+| **Masa langganan manual** | `durationDays` 1–3650 atau tanggal akhir eksplisit; default **stacking**, `REPLACE` opsional; wajib alasan; dapat dicabut | Fleksibel untuk perorangan & instansi; tidak merusak sisa masa aktif |
+| **Halaman pricing** | **Belum ada — menjadi deliverable B4** dengan spesifikasi §9.3 | Payment gateway sudah terpasang, sehingga halaman pricing adalah gap terbesar saat ini |
+| **Harga paket** | **Usulan awal** 49k / 89k / 149k / 399k (§9.1), disimpan di DB | Bisa diubah admin tanpa deploy; angka final menunggu keputusan bisnis |
+| **Midtrans** | Sudah ada; dipakai untuk pembelian mandiri. Grant manual tetap tersedia sebagai jalur operasional | Tidak memaksa semua user membayar online |
 
 **Angka soal (default; "±760 soal" = 740 item bank statis + 20 template Pass Hand):**
 
@@ -1725,12 +1853,15 @@ Total **10–12 minggu** untuk 4 workstream paralel. Critical path: **B1 → B2 
 - [ ] Vercel project (web + api) + `vercel.json` (rewrite `/api/*`, cron, `maxDuration`)
 - [ ] NestJS skeleton: config (Zod), logger (pino), filters, interceptors, guards stub, Swagger, Prisma singleton
 - [ ] `api/index.ts` (serverless entry) + `@sveltejs/adapter-vercel`
-- [ ] Prisma multi-file + migrasi baseline (core/question/exam/billing) + seed 3 stage & 4 subtes
+- [ ] Prisma multi-file + migrasi baseline (core/question/exam/billing) + seed 3 stage (PSIKOLOGI, TPA, TPK), 6 subtes (4 Psikologi + TPA + TPK), 3 role (`USER`/`ADMIN`/`SUPER_ADMIN`), dan paket harga awal (§9.1)
 - [ ] `packages/contracts`: envelope, error codes, pagination, port interfaces, OpenAPI skeleton, subpath exports
-- [ ] `packages/mocks`: MSW + fixture **760 soal** (termasuk pasangan Kepribadian, Kecermatan, kolom Pass Hand)
+- [ ] `packages/mocks`: MSW + fixture **760 soal Psikologi** (termasuk pasangan Kepribadian, Kecermatan, kolom Pass Hand) + fixture TPA/TPK
 - [ ] `packages/ui`: design token + 10 komponen dasar
 - [ ] `job_queue` + `outbox_events` + cron runner + `pnpm cron:run` (lokal)
 - [ ] Rate limit Postgres (token bucket) + guard
 - [ ] Seed runner (auto-scan `seeds/`), `env:check`, `db-guard`
 - [ ] Template PR, CODEOWNERS, label `contract:breaking`, ADR-0001 (arsitektur), ADR-0002 (kepemilikan), ADR-0003 (tanpa Redis/worker)
 - [ ] SvelteKit skeleton: route group `(auth)`, `(app)`, `(admin)`, `hooks.server.ts` stub
+- [ ] Placeholder route `(app)/pricing` dengan data seed (buyer-facing gap yang harus terlihat sejak awal)
+- [ ] Seed 3 role + 1 akun `SUPER_ADMIN` bootstrap + 1 akun `ADMIN` uji; dokumentasi cara menambah admin
+- [ ] Endpoint stub `GET /plans` (dari seed) + `POST /admin/subscriptions` (grant manual) di kontrak OpenAPI sejak Phase 0

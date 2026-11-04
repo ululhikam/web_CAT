@@ -1,0 +1,15 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# pnpm 11: daftar paket yang boleh menjalankan build script.
+# Semua sisanya diblokir (supply-chain hardening).
+allowBuilds:
+  "@prisma/client": true
+  "@prisma/engines": true
+  prisma: true
+  esbuild: true
+  "@node-rs/argon2": true
+  sharp: true
+  "@scarf/scarf": false
+  msw: false

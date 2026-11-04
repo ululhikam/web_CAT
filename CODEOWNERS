@@ -1,0 +1,19 @@
+# Setiap area punya satu owner. Branch lain tidak boleh mengedit file milik owner.
+# Ganti @username dengan akun GitHub masing-masing saat tim terbentuk.
+
+*                                   @ululhikam
+
+/apps/api/src/core/                 @ululhikam
+/apps/api/src/main.ts               @ululhikam
+/apps/api/api/                      @ululhikam
+/apps/api/prisma/schema/core.prisma @ululhikam
+/apps/api/prisma/schema/question.prisma @ululhikam
+/apps/api/prisma/schema/exam.prisma @ululhikam
+/apps/api/prisma/schema/billing.prisma @ululhikam
+/apps/api/prisma/seed/              @ululhikam
+/packages/ui/                       @ululhikam
+/packages/contracts/                @ululhikam
+/packages/mocks/                    @ululhikam
+/.github/                           @ululhikam
+/vercel.json                        @ululhikam
+/docs/adr/                          @ululhikam

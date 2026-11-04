@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@webcat/api",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60,
+      "memory": 1024,
+      "regions": ["sin1"]
+    }
+  },
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
+  "crons": [
+    { "path": "/api/v1/internal/cron/finalize-subtests", "schedule": "* * * * *" },
+    { "path": "/api/v1/internal/cron/process-jobs", "schedule": "* * * * *" },
+    { "path": "/api/v1/internal/cron/expire-subscriptions", "schedule": "0 1 * * *" },
+    { "path": "/api/v1/internal/cron/cleanup", "schedule": "0 18 * * *" }
+  ]
+}

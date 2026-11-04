@@ -1,0 +1,58 @@
+{
+  "name": "@webcat/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NestJS API — satu Vercel Serverless Function",
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/src/main.js",
+    "lint": "eslint src --max-warnings 0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prisma:generate": "prisma generate --schema prisma/schema",
+    "prisma:validate": "prisma validate --schema prisma/schema",
+    "prisma:migrate": "prisma migrate dev --schema prisma/schema",
+    "prisma:deploy": "prisma migrate deploy --schema prisma/schema",
+    "prisma:reset": "prisma migrate reset --force --schema prisma/schema",
+    "prisma:diff": "prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema --shadow-database-url $DATABASE_URL --exit-code",
+    "prisma:baseline": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema --script",
+    "prisma:seed": "tsx prisma/seed/index.ts",
+    "env:check": "tsx scripts/env-check.ts",
+    "db:guard": "tsx scripts/db-guard.ts",
+    "cron:run": "tsx scripts/cron-run.ts"
+  },
+  "prisma": {
+    "schema": "prisma/schema",
+    "seed": "tsx prisma/seed/index.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^8.1.0",
+    "@prisma/client": "^6.2.1",
+    "@webcat/contracts": "workspace:*",
+    "cookie-parser": "^1.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "pino": "^9.5.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.10.2",
+    "@types/supertest": "^6.0.2",
+    "prisma": "^6.2.1",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}

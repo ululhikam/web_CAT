@@ -1,0 +1,223 @@
+// ============================================================================
+// question.prisma — Bank soal, media, import  (owner: B2)
+// ============================================================================
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTI_CHOICE
+  IMAGE_CHOICE
+  LIKERT_STATEMENT
+  MISSING_ELEMENT
+  PASS_HAND_COLUMN
+}
+
+enum QuestionStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum StemFormat {
+  MARKDOWN
+  HTML
+}
+
+enum MediaRole {
+  STEM
+  OPTION
+  EXPLANATION
+}
+
+enum ImportJobStatus {
+  UPLOADED
+  PARSING
+  PARSED
+  REVIEWING
+  COMMITTING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ImportSourceKind {
+  SPREADSHEET
+  PDF
+  DOCX
+}
+
+model Category {
+  id        String    @id @default(uuid()) @db.Uuid
+  parentId  String?   @map("parent_id") @db.Uuid
+  name      String
+  slug      String
+  path      String
+  sortOrder Int       @default(0) @map("sort_order")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  questions Question[]
+
+  @@unique([parentId, slug])
+  @@index([path])
+  @@map("categories")
+}
+
+model Tag {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  questions QuestionTag[]
+
+  @@map("tags")
+}
+
+model Question {
+  id             String         @id @default(uuid()) @db.Uuid
+  publicCode     String         @unique @map("public_code")
+  stageCode      StageCode      @map("stage_code")
+  subtestCode    SubtestCode    @map("subtest_code")
+  categoryId     String?        @map("category_id") @db.Uuid
+  type           QuestionType
+  status         QuestionStatus @default(DRAFT)
+  difficulty     Difficulty     @default(MEDIUM)
+  stemText       String         @map("stem_text")
+  stemFormat     StemFormat     @default(MARKDOWN) @map("stem_format")
+  explanation    String?
+  scoringStrategy String        @default("KEYED_CORRECT") @map("scoring_strategy")
+  scoringConfig  Json?          @map("scoring_config")
+  weight         Decimal        @default(1) @db.Decimal(6, 3)
+  pairGroup      String?        @map("pair_group")
+  columnIndex    Int?           @map("column_index")
+  dedupeHash     String         @map("dedupe_hash")
+  dedupeOverride Boolean        @default(false) @map("dedupe_override")
+  sourceImportId String?        @map("source_import_id") @db.Uuid
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  deletedAt      DateTime?      @map("deleted_at")
+
+  category       Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  sourceImport   ImportJob?          @relation(fields: [sourceImportId], references: [id], onDelete: SetNull)
+  options        QuestionOption[]
+  media          QuestionMedia[]
+  tags           QuestionTag[]
+  sessionQuestions ExamSessionQuestion[]
+
+  @@index([subtestCode, status, difficulty])
+  @@index([stageCode, subtestCode])
+  @@index([categoryId])
+  @@index([dedupeHash])
+  @@map("questions")
+}
+
+model QuestionOption {
+  id            String  @id @default(uuid()) @db.Uuid
+  questionId    String  @map("question_id") @db.Uuid
+  label         String
+  contentText   String? @map("content_text")
+  isCorrect     Boolean @default(false) @map("is_correct")
+  scoreValue    Decimal @default(0) @db.Decimal(6, 3) @map("score_value")
+  dimensionMap  Json?   @map("dimension_map")
+  sortOrder     Int     @default(0) @map("sort_order")
+
+  question Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  media    QuestionMedia[]
+
+  @@unique([questionId, label])
+  @@index([questionId, sortOrder])
+  @@map("question_options")
+}
+
+model MediaAsset {
+  id          String   @id @default(uuid()) @db.Uuid
+  storagePath String   @unique @map("storage_path")
+  mime        String
+  width       Int?
+  height      Int?
+  sizeBytes   Int?     @map("size_bytes")
+  checksum    String   @unique
+  uploadedBy  String?  @map("uploaded_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  questionMedia QuestionMedia[]
+
+  @@map("media_assets")
+}
+
+model QuestionMedia {
+  id           String    @id @default(uuid()) @db.Uuid
+  questionId   String    @map("question_id") @db.Uuid
+  optionId     String?   @map("option_id") @db.Uuid
+  mediaAssetId String    @map("media_asset_id") @db.Uuid
+  role         MediaRole @default(STEM)
+  sortOrder    Int       @default(0) @map("sort_order")
+  altText      String?   @map("alt_text")
+
+  question   Question      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  option     QuestionOption? @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  mediaAsset MediaAsset    @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict)
+
+  @@unique([questionId, optionId, mediaAssetId, role])
+  @@index([questionId, role, sortOrder])
+  @@map("question_media")
+}
+
+model QuestionTag {
+  questionId String @map("question_id") @db.Uuid
+  tagId      String @map("tag_id") @db.Uuid
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, tagId])
+  @@index([tagId])
+  @@map("question_tags")
+}
+
+model ImportJob {
+  id            String           @id @default(uuid()) @db.Uuid
+  adminId       String           @map("admin_id") @db.Uuid
+  sourceKind    ImportSourceKind @map("source_kind")
+  status        ImportJobStatus  @default(UPLOADED)
+  originalName  String           @map("original_name")
+  storagePath   String           @map("storage_path")
+  mime          String
+  sizeBytes     Int              @map("size_bytes")
+  totalRows     Int              @default(0) @map("total_rows")
+  processedRows Int              @default(0) @map("processed_rows")
+  stats         Json?
+  warnings      Json?
+  createdAt     DateTime         @default(now()) @map("created_at")
+  finishedAt    DateTime?        @map("finished_at")
+
+  admin    User             @relation(fields: [adminId], references: [id], onDelete: Restrict)
+  errors   ImportJobError[]
+  questions Question[]
+
+  @@index([adminId, createdAt(sort: Desc)])
+  @@index([status])
+  @@map("import_jobs")
+}
+
+model ImportJobError {
+  id          String @id @default(uuid()) @db.Uuid
+  jobId       String @map("job_id") @db.Uuid
+  rowNumber   Int?   @map("row_number")
+  code        String
+  message     String
+  rawPayload  Json?  @map("raw_payload")
+
+  job ImportJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@map("import_job_errors")
+}

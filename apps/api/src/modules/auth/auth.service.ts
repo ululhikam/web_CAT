@@ -1,0 +1,630 @@
+import {
+  ConflictException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
+import type { Prisma, User } from '@prisma/client';
+import {
+  ERROR_CODES,
+  ERROR_STATUS,
+  type MessageResult,
+  type RegisterInput,
+  type AuthUser,
+} from '@webcat/contracts';
+import type { MailPort } from '@webcat/contracts';
+import { AUDIT, MAIL } from '../../core/ports/ports.module';
+import type { AuditPort } from '@webcat/contracts';
+import { AppConfigService } from '../../core/config/config.service';
+import { JwtService } from '../../core/auth/jwt.service';
+import { LoggerService } from '../../core/logger/logger.service';
+import { PrismaService } from '../../core/prisma/prisma.service';
+import { PasswordService } from '../../core/security/password.service';
+import {
+  generateNumericCode,
+  generateOpaqueToken,
+  sha256,
+} from '../../core/security/token.util';
+
+const EMAIL_OTP_TTL_MINUTES = 15;
+const EMAIL_OTP_MAX_ATTEMPTS = 5;
+const INVITE_TTL_DAYS = 7;
+const RESET_TTL_MINUTES = 60;
+const SESSION_TTL_DAYS = 30;
+
+type UserWithRole = Prisma.UserGetPayload<{
+  include: { role: { include: { permissions: { include: { permission: true } } } } };
+}>;
+
+export interface RequestMeta {
+  ip?: string | null;
+  userAgent?: string | null;
+}
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUser;
+}
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: AppConfigService,
+    private readonly jwt: JwtService,
+    private readonly passwords: PasswordService,
+    private readonly logger: LoggerService,
+    @Inject(MAIL) private readonly mail: MailPort,
+    @Inject(AUDIT) private readonly audit: AuditPort,
+  ) {}
+
+  // ------------------------------------------------------------------ helpers
+
+  private toAuthUser(user: UserWithRole): AuthUser {
+    return {
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      phone: user.phone,
+      role: user.role.code,
+      permissions: user.role.permissions.map((item) => item.permission.code).sort(),
+      emailVerified: user.emailVerifiedAt !== null,
+      mustChangePassword: user.mustChangePassword,
+      status: user.status,
+    };
+  }
+
+  private includeRole = {
+    role: { include: { permissions: { include: { permission: true } } } },
+  } as const;
+
+  private async sendMail(to: string, subject: string, html: string, text: string): Promise<void> {
+    try {
+      await this.mail.send({ to, subject, html, text });
+    } catch (error) {
+      // Email gagal TIDAK boleh menggagalkan alur utama; user bisa minta kirim ulang.
+      this.logger.error('Gagal mengirim email', {
+        to,
+        subject,
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private async issueSession(
+    user: UserWithRole,
+    meta: RequestMeta,
+    familyId?: string,
+  ): Promise<AuthTokens> {
+    const refreshToken = generateOpaqueToken();
+    const session = await this.prisma.session.create({
+      data: {
+        userId: user.id,
+        familyId: familyId ?? randomUUID(),
+        refreshTokenHash: sha256(refreshToken),
+        ip: meta.ip ?? null,
+        userAgent: meta.userAgent?.slice(0, 400) ?? null,
+        expiresAt: new Date(Date.now() + SESSION_TTL_DAYS * 24 * 3600 * 1000),
+      },
+      select: { id: true },
+    });
+
+    const accessToken = this.jwt.signAccessToken({
+      sub: user.id,
+      sid: session.id,
+      role: user.role.code,
+      ver: user.tokenVersion,
+    });
+
+    return { accessToken, refreshToken, user: this.toAuthUser(user) };
+  }
+
+  // ------------------------------------------------------------------ register
+
+  async register(input: RegisterInput): Promise<MessageResult> {
+    const email = input.email.trim().toLowerCase();
+
+    const existing = await this.prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      throw new ConflictException({
+        code: ERROR_CODES.AUTH_EMAIL_ALREADY_REGISTERED,
+        message: 'Email sudah terdaftar. Silakan masuk atau reset password.',
+      });
+    }
+
+    const role = await this.prisma.role.findUnique({ where: { code: 'USER' } });
+    if (!role) {
+      throw new Error('Role USER belum di-seed. Jalankan `pnpm db:seed`.');
+    }
+
+    const passwordHash = await this.passwords.hash(input.password);
+    const user = await this.prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        fullName: input.fullName.trim(),
+        phone: input.phone ?? null,
+        roleId: role.id,
+        status: 'ACTIVE',
+      },
+      select: { id: true, email: true, fullName: true },
+    });
+
+    const code = generateNumericCode(6);
+    await this.prisma.verificationToken.create({
+      data: {
+        userId: user.id,
+        purpose: 'EMAIL_VERIFY',
+        codeHash: sha256(code),
+        expiresAt: new Date(Date.now() + EMAIL_OTP_TTL_MINUTES * 60 * 1000),
+      },
+    });
+
+    await this.sendMail(
+      user.email,
+      'Kode verifikasi Web CAT',
+      `<p>Halo ${user.fullName},</p><p>Kode verifikasi Anda: <strong>${code}</strong></p><p>Berlaku ${EMAIL_OTP_TTL_MINUTES} menit.</p>`,
+      `Kode verifikasi Web CAT: ${code} (berlaku ${EMAIL_OTP_TTL_MINUTES} menit)`,
+    );
+
+    await this.audit.record({
+      actorUserId: user.id,
+      action: 'auth.register',
+      entityType: 'user',
+      entityId: user.id,
+      metadata: { email: user.email },
+    });
+
+    return { message: 'Pendaftaran berhasil. Cek email untuk kode verifikasi.' };
+  }
+
+  // ------------------------------------------------------------------ verify
+
+  async verifyEmail(input: { email: string; code: string }): Promise<MessageResult> {
+    const user = await this.prisma.user.findUnique({
+      where: { email: input.email.trim().toLowerCase() },
+      select: { id: true, email: true, emailVerifiedAt: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_OTP_INVALID,
+        message: 'Kode verifikasi tidak valid atau sudah kedaluwarsa',
+      });
+    }
+
+    const token = await this.prisma.verificationToken.findFirst({
+      where: {
+        userId: user.id,
+        purpose: 'EMAIL_VERIFY',
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!token || !token.codeHash) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_OTP_INVALID,
+        message: 'Kode verifikasi tidak valid atau sudah kedaluwarsa',
+      });
+    }
+
+    if (token.attempts >= EMAIL_OTP_MAX_ATTEMPTS) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_OTP_ATTEMPTS_EXCEEDED,
+        message: 'Terlalu banyak percobaan. Minta kode baru.',
+      });
+    }
+
+    if (token.codeHash !== sha256(input.code)) {
+      await this.prisma.verificationToken.update({
+        where: { id: token.id },
+        data: { attempts: { increment: 1 } },
+      });
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_OTP_INVALID,
+        message: 'Kode verifikasi salah',
+      });
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.verificationToken.update({
+        where: { id: token.id },
+        data: { usedAt: new Date() },
+      }),
+      this.prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerifiedAt: new Date() },
+      }),
+    ]);
+
+    return { message: 'Email berhasil diverifikasi. Silakan masuk.' };
+  }
+
+  async resendVerification(email: string): Promise<MessageResult> {
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.trim().toLowerCase() },
+      select: { id: true, email: true, fullName: true, emailVerifiedAt: true },
+    });
+
+    // Selalu jawab generik agar tidak membocorkan status email.
+    const generic = { message: 'Jika email terdaftar, kode baru telah dikirim.' };
+    if (!user || user.emailVerifiedAt) return generic;
+
+    const code = generateNumericCode(6);
+    await this.prisma.verificationToken.create({
+      data: {
+        userId: user.id,
+        purpose: 'EMAIL_VERIFY',
+        codeHash: sha256(code),
+        expiresAt: new Date(Date.now() + EMAIL_OTP_TTL_MINUTES * 60 * 1000),
+      },
+    });
+
+    await this.sendMail(
+      user.email,
+      'Kode verifikasi Web CAT (baru)',
+      `<p>Kode verifikasi baru: <strong>${code}</strong></p>`,
+      `Kode verifikasi Web CAT: ${code}`,
+    );
+
+    return generic;
+  }
+
+  // ------------------------------------------------------------------ login
+
+  async login(
+    input: { email: string; password: string },
+    meta: RequestMeta,
+  ): Promise<AuthTokens> {
+    const user = await this.prisma.user.findFirst({
+      where: { email: input.email.trim().toLowerCase(), deletedAt: null },
+      include: this.includeRole,
+    });
+
+    const invalid = new UnauthorizedException({
+      code: ERROR_CODES.AUTH_INVALID_CREDENTIALS,
+      message: 'Email atau password salah',
+    });
+
+    if (!user || !user.passwordHash) throw invalid;
+
+    const ok = await this.passwords.verify(user.passwordHash, input.password);
+    if (!ok) throw invalid;
+
+    if (user.status === 'SUSPENDED' || user.status === 'DELETED') {
+      throw new ForbiddenException({
+        code: ERROR_CODES.USER_SUSPENDED,
+        status: ERROR_STATUS.USER_SUSPENDED,
+        message: 'Akun Anda dinonaktifkan. Hubungi admin.',
+      });
+    }
+
+    if (!user.emailVerifiedAt) {
+      throw new ForbiddenException({
+        code: ERROR_CODES.AUTH_EMAIL_NOT_VERIFIED,
+        message: 'Verifikasi email Anda terlebih dahulu.',
+      });
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() },
+    });
+
+    await this.audit.record({
+      actorUserId: user.id,
+      action: 'auth.login',
+      entityType: 'user',
+      entityId: user.id,
+      ip: meta.ip ?? null,
+      userAgent: meta.userAgent ?? null,
+    });
+
+    return this.issueSession(user, meta);
+  }
+
+  // ------------------------------------------------------------------ refresh
+
+  async refresh(refreshToken: string | undefined, meta: RequestMeta): Promise<AuthTokens> {
+    if (!refreshToken) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_TOKEN_INVALID,
+        message: 'Sesi tidak ditemukan',
+      });
+    }
+
+    const session = await this.prisma.session.findFirst({
+      where: { refreshTokenHash: sha256(refreshToken) },
+      include: { user: { include: this.includeRole } },
+    });
+
+    if (!session || session.revokedAt || session.expiresAt <= new Date()) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_SESSION_REVOKED,
+        message: 'Sesi sudah berakhir. Silakan masuk kembali.',
+      });
+    }
+
+    const user = session.user;
+    if (user.deletedAt || user.status === 'SUSPENDED' || user.status === 'DELETED') {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.USER_SUSPENDED,
+        message: 'Akun Anda tidak aktif',
+      });
+    }
+
+    // Rotasi: token lama langsung dicabut; family dipertahankan agar
+    // deteksi replay tetap bekerja.
+    await this.prisma.session.update({
+      where: { id: session.id },
+      data: { revokedAt: new Date(), lastSeenAt: new Date() },
+    });
+
+    return this.issueSession(user, meta, session.familyId);
+  }
+
+  async logout(refreshToken: string | undefined): Promise<MessageResult> {
+    if (refreshToken) {
+      await this.prisma.session.updateMany({
+        where: { refreshTokenHash: sha256(refreshToken), revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+    }
+    return { message: 'Berhasil keluar' };
+  }
+
+  async logoutAll(userId: string): Promise<MessageResult> {
+    await this.prisma.$transaction([
+      this.prisma.session.updateMany({
+        where: { userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      }),
+      this.prisma.user.update({
+        where: { id: userId },
+        data: { tokenVersion: { increment: 1 } },
+      }),
+    ]);
+    return { message: 'Semua sesi berhasil dicabut' };
+  }
+
+  // ------------------------------------------------------------------ password
+
+  async forgotPassword(email: string): Promise<MessageResult> {
+    const generic = { message: 'Jika email terdaftar, tautan reset sudah dikirim.' };
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.trim().toLowerCase() },
+      select: { id: true, email: true, deletedAt: true },
+    });
+    if (!user || user.deletedAt) return generic;
+
+    const token = generateOpaqueToken();
+    await this.prisma.verificationToken.create({
+      data: {
+        userId: user.id,
+        purpose: 'PASSWORD_RESET',
+        tokenHash: sha256(token),
+        expiresAt: new Date(Date.now() + RESET_TTL_MINUTES * 60 * 1000),
+      },
+    });
+
+    const link = `${this.config.value.APP_URL}/reset-password?token=${encodeURIComponent(token)}`;
+    await this.sendMail(
+      user.email,
+      'Reset password Web CAT',
+      `<p>Klik tautan berikut untuk mengatur ulang password (berlaku ${RESET_TTL_MINUTES} menit):</p><p><a href="${link}">${link}</a></p>`,
+      `Reset password Web CAT: ${link}`,
+    );
+
+    return generic;
+  }
+
+  async resetPassword(input: { token: string; password: string }): Promise<MessageResult> {
+    const record = await this.prisma.verificationToken.findFirst({
+      where: {
+        purpose: 'PASSWORD_RESET',
+        tokenHash: sha256(input.token),
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    if (!record) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_TOKEN_INVALID,
+        message: 'Tautan reset tidak valid atau sudah kedaluwarsa',
+      });
+    }
+
+    const passwordHash = await this.passwords.hash(input.password);
+
+    await this.prisma.$transaction([
+      this.prisma.verificationToken.update({
+        where: { id: record.id },
+        data: { usedAt: new Date() },
+      }),
+      this.prisma.user.update({
+        where: { id: record.userId },
+        data: { passwordHash, mustChangePassword: false, tokenVersion: { increment: 1 } },
+      }),
+      this.prisma.session.updateMany({
+        where: { userId: record.userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      }),
+    ]);
+
+    await this.audit.record({
+      actorUserId: record.userId,
+      action: 'auth.password_reset',
+      entityType: 'user',
+      entityId: record.userId,
+    });
+
+    return { message: 'Password berhasil diubah. Silakan masuk.' };
+  }
+
+  async changePassword(
+    userId: string,
+    input: { currentPassword: string; newPassword: string },
+  ): Promise<MessageResult> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, passwordHash: true },
+    });
+
+    if (!user?.passwordHash) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_INVALID_CREDENTIALS,
+        message: 'Password lama salah',
+      });
+    }
+
+    const ok = await this.passwords.verify(user.passwordHash, input.currentPassword);
+    if (!ok) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_INVALID_CREDENTIALS,
+        message: 'Password lama salah',
+      });
+    }
+
+    const passwordHash = await this.passwords.hash(input.newPassword);
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash, mustChangePassword: false, tokenVersion: { increment: 1 } },
+    });
+
+    return { message: 'Password berhasil diperbarui' };
+  }
+
+  // ------------------------------------------------------------------ invite
+
+  /**
+   * Aktivasi akun yang dibuat admin lewat tautan undangan.
+   * Token sekali pakai, berlaku 7 hari, disimpan sebagai hash.
+   */
+  async activateInvite(input: {
+    token: string;
+    password: string;
+    fullName?: string;
+  }): Promise<MessageResult> {
+    const record = await this.prisma.verificationToken.findFirst({
+      where: {
+        purpose: 'INVITE',
+        tokenHash: sha256(input.token),
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      include: { user: { select: { id: true, deletedAt: true } } },
+    });
+
+    if (!record || record.user.deletedAt) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.USER_INVITE_EXPIRED,
+        message: 'Tautan undangan tidak valid atau sudah kedaluwarsa',
+      });
+    }
+
+    const passwordHash = await this.passwords.hash(input.password);
+
+    await this.prisma.$transaction([
+      this.prisma.verificationToken.update({
+        where: { id: record.id },
+        data: { usedAt: new Date() },
+      }),
+      this.prisma.user.update({
+        where: { id: record.userId },
+        data: {
+          passwordHash,
+          status: 'ACTIVE',
+          emailVerifiedAt: new Date(),
+          mustChangePassword: false,
+          ...(input.fullName ? { fullName: input.fullName.trim() } : {}),
+        },
+      }),
+    ]);
+
+    await this.audit.record({
+      actorUserId: record.userId,
+      action: 'auth.invite_activated',
+      entityType: 'user',
+      entityId: record.userId,
+    });
+
+    return { message: 'Akun berhasil diaktifkan. Silakan masuk.' };
+  }
+
+  // ------------------------------------------------------------------ invite
+
+  /**
+   * Dipanggil modul users saat provisioning: membuat token undangan
+   * sekali pakai yang berlaku INVITE_TTL_DAYS hari.
+   */
+  async createInvite(userId: string): Promise<{ token: string; expiresAt: Date }> {
+    const token = generateOpaqueToken();
+    const expiresAt = new Date(Date.now() + INVITE_TTL_DAYS * 24 * 3600 * 1000);
+
+    await this.prisma.verificationToken.create({
+      data: {
+        userId,
+        purpose: 'INVITE',
+        tokenHash: sha256(token),
+        expiresAt,
+      },
+    });
+
+    return { token, expiresAt };
+  }
+
+  // ------------------------------------------------------------------ me
+
+  async me(userId: string): Promise<AuthUser> {
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId, deletedAt: null },
+      include: this.includeRole,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_TOKEN_INVALID,
+        message: 'Akun tidak ditemukan',
+      });
+    }
+
+    return this.toAuthUser(user);
+  }
+
+  /** Dipakai PrincipalLoader: satu query untuk sesi + user + role + permission. */
+  async loadPrincipal(input: {
+    sub: string;
+    sid: string;
+    ver: number;
+  }): Promise<{ user: AuthUser; sessionId: string } | null> {
+    const session = await this.prisma.session.findFirst({
+      where: {
+        id: input.sid,
+        userId: input.sub,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      include: { user: { include: this.includeRole } },
+    });
+
+    if (!session) return null;
+
+    const user = session.user;
+    if (user.deletedAt || user.status !== 'ACTIVE' || user.tokenVersion !== input.ver) {
+      return null;
+    }
+
+    return { user: this.toAuthUser(user), sessionId: session.id };
+  }
+
+  /** Dipakai seed & provisioning: user dengan email tertentu. */
+  async findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { email: email.trim().toLowerCase() } });
+  }
+}
