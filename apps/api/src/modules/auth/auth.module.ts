@@ -2,6 +2,8 @@ import { Global, Module } from '@nestjs/common';
 import { PRINCIPAL_LOADER } from '../../core/auth/principal-loader';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { GoogleOAuthController } from './google-oauth.controller';
+import { GoogleOAuthService } from './google-oauth.service';
 import { PrincipalLoaderService } from './principal-loader.service';
 
 /**
@@ -10,9 +12,10 @@ import { PrincipalLoaderService } from './principal-loader.service';
  */
 @Global()
 @Module({
-  controllers: [AuthController],
+  controllers: [AuthController, GoogleOAuthController],
   providers: [
     AuthService,
+    GoogleOAuthService,
     PrincipalLoaderService,
     { provide: PRINCIPAL_LOADER, useExisting: PrincipalLoaderService },
   ],

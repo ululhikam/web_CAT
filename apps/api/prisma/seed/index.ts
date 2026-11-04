@@ -16,6 +16,7 @@ import { loadLocalEnv } from '../../src/core/config/load-env';
 import { seedExamStructure } from './exam.seed';
 import { seedPlans } from './plans.seed';
 import { seedRoles } from './roles.seed';
+import { seedPlatformSettings } from './settings.seed';
 import { seedSuperAdmin } from './super-admin.seed';
 
 // `pnpm db:seed` dijalankan lewat tsx (bukan Prisma CLI), jadi `.env`
@@ -33,6 +34,7 @@ async function main(): Promise<void> {
   await seedRoles(prisma);
   await seedExamStructure(prisma);
   await seedPlans(prisma);
+  await seedPlatformSettings(prisma);
   await seedSuperAdmin(prisma);
 
   const permissions = await prisma.permission.count();

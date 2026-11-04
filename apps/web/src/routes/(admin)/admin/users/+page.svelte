@@ -8,7 +8,7 @@
   import { apiRequest, apiErrorMessage } from '$lib/api/client';
   import { session } from '$lib/stores/session.svelte';
   import { formatDate } from '$lib/format';
-  import type { AdminUserSummary } from '@webcat/contracts';
+  import type { AdminUserSummary, CursorPage } from '@webcat/contracts';
 
   let users = $state<AdminUserSummary[]>([]);
   let loading = $state(true);
@@ -23,10 +23,10 @@
       const params = new URLSearchParams({ limit: '50' });
       if (query.trim()) params.set('q', query.trim());
 
-      const result = await apiRequest<AdminUserSummary[]>(`/admin/users?${params}`, {
+      const result = await apiRequest<CursorPage<AdminUserSummary>>(`/admin/users?${params}`, {
         token: session.accessToken,
       });
-      users = result;
+      users = result.items;
     } catch (cause) {
       error = apiErrorMessage(cause);
     } finally {

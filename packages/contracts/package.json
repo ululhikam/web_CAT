@@ -31,6 +31,14 @@
       "types": "./dist/exams/index.d.ts",
       "default": "./dist/exams/index.js"
     },
+    "./audit": {
+      "types": "./dist/audit/index.d.ts",
+      "default": "./dist/audit/index.js"
+    },
+    "./settings": {
+      "types": "./dist/settings/index.d.ts",
+      "default": "./dist/settings/index.js"
+    },
     "./ports": {
       "types": "./dist/ports/index.d.ts",
       "default": "./dist/ports/index.js"

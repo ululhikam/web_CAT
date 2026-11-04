@@ -14,6 +14,19 @@
   let error = $state<string | null>(null);
 
   const redirectTo = $derived($page.url.searchParams.get('redirect') ?? '/dashboard');
+  const oauthError = $derived($page.url.searchParams.get('error'));
+
+  const oauthMessage = $derived(
+    oauthError === 'oauth_state'
+      ? 'Sesi login Google kedaluwarsa atau tidak valid. Silakan coba lagi.'
+      : oauthError === 'AUTH_OAUTH_ACCOUNT_NOT_FOUND'
+        ? 'Akun Google ini belum terdaftar. Hubungi admin untuk dibuatkan akun.'
+        : oauthError === 'AUTH_OAUTH_NOT_CONFIGURED'
+          ? 'Login Google belum dikonfigurasi oleh admin.'
+          : oauthError
+            ? 'Login Google gagal. Silakan coba lagi atau masuk dengan password.'
+            : null,
+  );
 
   async function submit(event: SubmitEvent) {
     event.preventDefault();
@@ -50,6 +63,10 @@
       <Alert tone="danger">{error}</Alert>
     {/if}
 
+    {#if oauthMessage}
+      <Alert tone="danger">{oauthMessage}</Alert>
+    {/if}
+
     <form class="auth__form" onsubmit={submit} novalidate>
       <Field label="Email" for="email" required>
         <Input
@@ -84,8 +101,14 @@
       </Button>
     </form>
 
+    <div class="auth__divider"><span>atau</span></div>
+
+    <Button href="/api/v1/auth/google" variant="secondary" fullWidth>
+      Masuk dengan Google
+    </Button>
+
     <p class="auth__alt">
-      Belum punya paket? <a href="/pricing">Lihat harga &amp; paket</a>
+      Belum punya akun? <a href="/register">Daftar</a> · <a href="/pricing">Lihat harga &amp; paket</a>
     </p>
   </div>
 </div>
@@ -127,6 +150,22 @@
     display: flex;
     justify-content: flex-end;
     font-size: var(--text-sm);
+  }
+
+  .auth__divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .auth__divider::before,
+  .auth__divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
   }
 
   .auth__alt {

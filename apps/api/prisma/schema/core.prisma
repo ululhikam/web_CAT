@@ -160,6 +160,9 @@ model Session {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Satu sesi aktif per user ditegakkan oleh partial unique index
+  // `sessions_one_active_per_user` (migrasi 20261105043000_b1).
+  // Indeks parsial tidak didukung DSL Prisma, jadi sengaja tidak ditulis di sini.
   @@index([userId, revokedAt])
   @@index([familyId])
   @@map("sessions")

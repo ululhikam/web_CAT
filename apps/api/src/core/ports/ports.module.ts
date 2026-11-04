@@ -29,6 +29,8 @@ import { DevAccessPolicy } from './impl/dev-access-policy';
 import { MockQuestionPool } from './impl/mock-question-pool';
 import { DevStorage } from './impl/dev-storage';
 import { ConsoleMail } from './impl/console-mail';
+import { SupabaseStorage } from './impl/supabase-storage';
+import { ResendMail } from './impl/resend-mail';
 import { FakePaymentProvider } from './impl/fake-payment-provider';
 import { HeuristicDocExtractor } from './impl/heuristic-doc-extractor';
 import { PrismaAudit } from './impl/prisma-audit';
@@ -65,16 +67,14 @@ import { PrismaAudit } from './impl/prisma-audit';
       provide: STORAGE,
       inject: [AppConfigService, DevStorage],
       useFactory: (config: AppConfigService, dev: DevStorage) => {
-        void config.value.STORAGE;
-        return dev;
+        return config.value.STORAGE === 'supabase' ? new SupabaseStorage(config) : dev;
       },
     },
     {
       provide: MAIL,
       inject: [AppConfigService, ConsoleMail],
       useFactory: (config: AppConfigService, consoleMail: ConsoleMail) => {
-        void config.value.MAIL;
-        return consoleMail;
+        return config.value.MAIL === 'resend' ? new ResendMail(config) : consoleMail;
       },
     },
     {
