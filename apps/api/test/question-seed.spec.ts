@@ -6,6 +6,7 @@ import {
   QUESTION_CATEGORIES,
   type SeedQuestion,
 } from '../prisma/seed/questions';
+import { ScoringService } from '../src/modules/scoring/scoring.service';
 
 /**
  * Uji bank soal realistis sebelum di-seed.
@@ -76,12 +77,50 @@ describe('komposisi bank soal', () => {
     expect(only('KECERMATAN')).toHaveLength(500);
     expect(only('PASS_HAND')).toHaveLength(150);
     expect(only('TPK')).toHaveLength(100);
-    expect(only('TPA').length).toBeGreaterThanOrEqual(15);
+    // F4-03/F4-04: TPA kini punya bank soal penuh, bukan hanya soal figural.
+    expect(only('TPA').length).toBeGreaterThanOrEqual(100);
+  });
+
+  it('TPA terbagi ke verbal, numerik, penalaran, dan figural', () => {
+    const tpa = only('TPA');
+    const perCategory = new Map<string, number>();
+    for (const question of tpa) {
+      perCategory.set(question.categoryPath, (perCategory.get(question.categoryPath) ?? 0) + 1);
+    }
+
+    expect(perCategory.get('tpa/verbal')).toBeGreaterThanOrEqual(35);
+    expect(perCategory.get('tpa/numerik')).toBeGreaterThanOrEqual(30);
+    expect(perCategory.get('tpa/penalaran')).toBeGreaterThanOrEqual(15);
+    expect(perCategory.get('tpa/figural')).toBeGreaterThanOrEqual(10);
   });
 
   it('memakai kode publik unik', () => {
     const codes = questions.map((question) => question.publicCode);
     expect(new Set(codes).size).toBe(codes.length);
+  });
+
+  it('pengecoh numerik sepadan besaran dengan kunci (bukan +1 pada angka ribuan)', () => {
+    // Kunci ribuan (mis. harga Rp68.000) harus berpengecoh kelipatan 1.000;
+    // `68.001` menandai kunci dan mustahil dipilih peserta.
+    const numeric = only('TPA').filter(
+      (question) => question.options.length === 5 && /^\d+$/.test(question.options.find((option) => option.isCorrect)?.contentText ?? ''),
+    );
+
+    expect(numeric.length).toBeGreaterThan(0);
+
+    for (const question of numeric) {
+      const key = Number(question.options.find((option) => option.isCorrect)?.contentText);
+      if (key < 1_000 || key % 1_000 !== 0) continue;
+
+      for (const option of question.options) {
+        const value = Number(option.contentText);
+        if (option.isCorrect) continue;
+        expect(
+          value % 1_000,
+          `${question.publicCode}: pengecoh ${value} tidak sepadan dengan kunci ${key}`,
+        ).toBe(0);
+      }
+    }
   });
 
   it('setiap path kategori soal tersedia pada taksonomi seed', () => {
@@ -127,7 +166,7 @@ describe('bentuk soal', () => {
   it('soal pilihan tunggal punya tepat satu kunci dan lima opsi unik', () => {
     const textChoice = only('KECERDASAN')
       .concat(only('TPK'), only('KECERMATAN'), only('TPA'))
-      .filter((question) => question.type !== 'IMAGE_CHOICE');
+      .filter((question) => question.type !== 'IMAGE_CHOICE' && question.type !== 'MULTI_CHOICE');
 
     for (const question of textChoice) {
       expect(question.options, question.publicCode).toHaveLength(5);
@@ -229,6 +268,94 @@ describe('kelengkapan media soal bergambar (F3-26)', () => {
         expect(option.contentText, `${question.publicCode}/${option.label}`).toBeNull();
       }
     }
+  });
+});
+
+describe('pilihan ganda banyak jawaban (F4-05)', () => {
+  const multi = questions.filter((question) => question.type === 'MULTI_CHOICE');
+
+  it('minimal lima soal tersebar di Kecerdasan dan TPA', () => {
+    expect(multi.length).toBeGreaterThanOrEqual(5);
+    expect(new Set(multi.map((question) => question.subtestCode))).toEqual(
+      new Set(['KECERDASAN', 'TPA']),
+    );
+  });
+
+  it('punya 2–4 kunci dan tepat lima opsi unik', () => {
+    for (const question of multi) {
+      const correct = question.options.filter((option) => option.isCorrect);
+      expect(correct.length, question.publicCode).toBeGreaterThanOrEqual(2);
+      expect(correct.length, question.publicCode).toBeLessThanOrEqual(4);
+
+      expect(question.options, question.publicCode).toHaveLength(5);
+      const texts = question.options.map((option) => option.contentText);
+      expect(new Set(texts).size, question.publicCode).toBe(5);
+      expect(texts.some((text) => text === null), question.publicCode).toBe(false);
+    }
+  });
+
+  it('memakai strategi MULTI_CORRECT_PARTIAL dan bobot kunci 1', () => {
+    for (const question of multi) {
+      expect(question.scoringStrategy, question.publicCode).toBe('MULTI_CORRECT_PARTIAL');
+      expect(question.scoringConfig.wrongPenalty, question.publicCode).toBe(0.5);
+      for (const option of question.options) {
+        expect(option.scoreValue, `${question.publicCode}/${option.label}`).toBe(
+          option.isCorrect ? 1 : 0,
+        );
+      }
+    }
+  });
+
+  it('tidak menghasilkan skor benar bila hanya sebagian kunci dipilih', () => {
+    // Kontrak skor subtes memakai KEYED_CORRECT: skor penuh hanya bila
+    // himpunan terpilih sama dengan kunci, jadi memilih sebagian = salah.
+    const sample = multi[0]!;
+    const correct = sample.options.filter((option) => option.isCorrect);
+    const chosen = correct.slice(0, correct.length - 1).map((option) => `${sample.publicCode}-${option.label}`);
+
+    const score = new ScoringService().score({
+      strategy: 'KEYED_CORRECT',
+      config: {},
+      questionCount: 1,
+      durationMinutes: 10,
+      answers: [
+        {
+          questionId: 'q-1',
+          position: 1,
+          columnIndex: null,
+          snapshot: {
+            sourceId: sample.publicCode,
+            type: 'MULTI_CHOICE',
+            stem: sample.stemText,
+            stemFormat: 'MARKDOWN',
+            difficulty: sample.difficulty,
+            weight: 1,
+            scale: null,
+            isReverse: false,
+            pairGroup: null,
+            columnIndex: null,
+            columnNumbers: null,
+            missingElement: null,
+            media: [],
+            options: sample.options.map((option) => ({
+              id: `${sample.publicCode}-${option.label}`,
+              label: option.label,
+              text: option.contentText,
+              isCorrect: option.isCorrect,
+              scoreValue: option.scoreValue,
+              dimensionMap: null,
+              media: [],
+            })),
+          },
+          answer: { optionIds: chosen },
+          timeSpentMs: 1000,
+        },
+      ],
+    });
+
+    expect(score.correct).toBe(0);
+    expect(score.wrong).toBe(1);
+    expect(score.percentage).toBe(0);
   });
 });
 
@@ -346,6 +473,42 @@ describe('kepribadian', () => {
       // Satu item positif dan satu terbalik agar uji konsistensi bermakna.
       const reversed = members.map((member) => member.scoringConfig.isReverse);
       expect(new Set(reversed).size, group).toBe(2);
+    }
+  });
+
+  it('F4-06: setiap pairGroup punya anggota genap dan minimal satu item terbalik', () => {
+    const byPair = new Map<string, SeedQuestion[]>();
+    for (const question of likert) {
+      if (!question.pairGroup) continue;
+      byPair.set(question.pairGroup, [...(byPair.get(question.pairGroup) ?? []), question]);
+    }
+
+    // Setiap pasangan harus memuat >= 1 item terbalik supaya skor dimensi
+    // tidak bisa dinaikkan hanya dengan menjawab "sangat setuju" di semua item.
+    for (const [pair, items] of byPair) {
+      expect(items.length % 2, `pair ${pair} berjumlah ${items.length}`).toBe(0);
+      const reversed = items.filter((item) => item.scoringConfig.isReverse === true);
+      expect(reversed.length, `pair ${pair} tanpa item terbalik`).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it('F4-06: ketiga dimensi terwakili dan item terbalik tersebar', () => {
+    const perDimension = new Map<string, { total: number; reversed: number }>();
+
+    for (const question of likert) {
+      const dimension = Object.keys(question.options[0]!.dimensionMap ?? {})[0]!;
+      const entry = perDimension.get(dimension) ?? { total: 0, reversed: 0 };
+      entry.total += 1;
+      if (question.scoringConfig.isReverse === true) entry.reversed += 1;
+      perDimension.set(dimension, entry);
+    }
+
+    expect([...perDimension.keys()].sort()).toEqual(['KEPEMIMPINAN', 'KERJASAMA', 'STABILITAS']);
+    for (const [dimension, entry] of perDimension) {
+      expect(entry.total, dimension).toBeGreaterThan(30);
+      // Item terbalik harus ada, tetapi tidak mendominasi (30–50%).
+      expect(entry.reversed / entry.total, dimension).toBeGreaterThan(0.2);
+      expect(entry.reversed / entry.total, dimension).toBeLessThan(0.6);
     }
   });
 });
