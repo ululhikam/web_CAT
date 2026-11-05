@@ -41,7 +41,9 @@ describe('GoogleOAuthService', () => {
     expect(state).toMatch(/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/);
     expect(service.verifyState(state)).toBe(true);
 
-    const tampered = `${state.slice(0, -1)}A`;
+    // Pastikan karakter terakhir benar-benar berubah; tanda tangan HMAC bisa
+    // kebetulan berakhiran "A" sehingga versi lama test menjadi flaky.
+    const tampered = `${state.slice(0, -1)}${state.endsWith('A') ? 'B' : 'A'}`;
     expect(service.verifyState(tampered)).toBe(false);
 
     vi.setSystemTime(new Date('2026-01-01T00:11:00.000Z'));
