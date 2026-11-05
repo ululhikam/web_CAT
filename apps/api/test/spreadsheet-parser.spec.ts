@@ -68,7 +68,7 @@ describe('parseSpreadsheet (CSV)', () => {
   });
 
   it('menandai baris tanpa kunci sebagai tidak lengkap', async () => {
-    const csv = [HEADER.join(','), 'PSIKOLOGI,TPA,SINGLE_CHOICE,MEDIUM,"Soal tanpa kunci",A,B,C,D,'].join('\n');
+    const csv = [HEADER.join(','), 'PSIKOLOGI,TKK,SINGLE_CHOICE,MEDIUM,"Soal tanpa kunci",A,B,C,D,'].join('\n');
 
     const result = await parseSpreadsheet(Buffer.from(csv), 'text/csv', 's.csv', settings);
     const row = result.rows[0]!;
@@ -116,8 +116,8 @@ describe('parseSpreadsheet (XLSX)', () => {
     const buffer = await xlsxBuffer([
       HEADER,
       [
-        'TPA',
-        'TPA',
+        'TKK',
+        'TKK',
         'MULTI_CHOICE',
         'HARD',
         'Manakah bilangan prima?',
@@ -137,7 +137,7 @@ describe('parseSpreadsheet (XLSX)', () => {
     );
 
     const row = result.rows[0]!;
-    expect(row.payload?.stageCode).toBe('TPA');
+    expect(row.payload?.stageCode).toBe('TKK');
     expect(row.payload?.type).toBe('MULTI_CHOICE');
     expect(row.payload?.correctLabels).toEqual(['A', 'B']);
     expect(row.payload?.options.map((option) => option.contentText)).toEqual(['2', '3', '4', '6']);

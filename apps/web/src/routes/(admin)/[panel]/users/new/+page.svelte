@@ -55,7 +55,7 @@
 </script>
 
 <svelte:head>
-  <title>Tambah Pengguna — Admin Web CAT</title>
+  <title>Tambah Pengguna — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page adm-page--narrow">

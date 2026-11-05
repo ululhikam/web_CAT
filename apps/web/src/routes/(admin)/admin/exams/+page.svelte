@@ -201,7 +201,7 @@
 </script>
 
 <svelte:head>
-  <title>Konfigurasi ujian -" Admin Web CAT</title>
+  <title>Konfigurasi ujian - Admin TES CAT</title>
 </svelte:head>
 
 <div class="page">
@@ -411,7 +411,7 @@
       {/if}
 
       {#each stages as stage (stage.id)}
-        <Card title={`${stage.code} -" ${stage.name}`} description={stage.description ?? undefined}>
+        <Card title={`${stage.code} - ${stage.name}`} description={stage.description ?? undefined}>
           <div class="stage-head">
             <Badge tone={stage.isActive ? 'success' : 'neutral'}>
               {stage.isActive ? 'Aktif' : 'Nonaktif'}

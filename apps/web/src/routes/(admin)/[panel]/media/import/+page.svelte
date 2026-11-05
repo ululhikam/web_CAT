@@ -293,7 +293,7 @@
 </script>
 
 <svelte:head>
-  <title>Impor ZIP gambar — Admin Web CAT</title>
+  <title>Impor ZIP gambar — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

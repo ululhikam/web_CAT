@@ -44,7 +44,7 @@ export const MOCK_PLANS: Plan[] = [
     durationDays: 3,
     pricePerDayIdr: 0,
     features: [
-      { label: '1 sesi simulasi penuh (3 tes)', included: true },
+      { label: '1 sesi TES CAT penuh (3 tes)', included: true },
       { label: 'Pembahasan jawaban', included: false },
       { label: 'Analisis hasil per subtes', included: false },
     ],
@@ -63,7 +63,7 @@ export const MOCK_PLANS: Plan[] = [
     durationDays: 7,
     pricePerDayIdr: 7000,
     features: [
-      { label: 'Sesi simulasi tanpa batas', included: true },
+      { label: 'Sesi TES CAT tanpa batas', included: true },
       { label: 'Pembahasan jawaban', included: true },
       { label: 'Analisis hasil per subtes', included: true },
     ],
@@ -82,7 +82,7 @@ export const MOCK_PLANS: Plan[] = [
     durationDays: 30,
     pricePerDayIdr: 4967,
     features: [
-      { label: 'Sesi simulasi tanpa batas', included: true },
+      { label: 'Sesi TES CAT tanpa batas', included: true },
       { label: 'Pembahasan jawaban', included: true },
       { label: 'Analisis hasil per subtes', included: true },
       { label: 'Mentoring grup', included: true },
@@ -102,7 +102,7 @@ export const MOCK_PLANS: Plan[] = [
     durationDays: 90,
     pricePerDayIdr: 4433,
     features: [
-      { label: 'Sesi simulasi tanpa batas', included: true },
+      { label: 'Sesi TES CAT tanpa batas', included: true },
       { label: 'Pembahasan jawaban', included: true },
       { label: 'Analisis hasil per subtes', included: true },
       { label: 'Mentoring grup', included: true },

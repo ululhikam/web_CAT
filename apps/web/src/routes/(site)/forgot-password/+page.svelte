@@ -34,7 +34,7 @@
 </script>
 
 <svelte:head>
-  <title>Lupa Password — Web CAT</title>
+  <title>Lupa Password — TES CAT</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 

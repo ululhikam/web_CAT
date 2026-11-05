@@ -53,6 +53,31 @@ export const adminResetPasswordSchema = z.object({
 });
 export type AdminResetPasswordInput = z.infer<typeof adminResetPasswordSchema>;
 
+/**
+ * PATCH /admin/users/:id — admin memperbaiki data profil peserta (mis. salah
+ * ketik nama saat pembuatan akun). Email dan role sengaja tidak termasuk:
+ * email adalah identitas login dan role punya endpoint sendiri yang ber-audit.
+ */
+export const adminUpdateUserSchema = z
+  .object({
+    fullName: z.string().trim().min(2, 'Nama minimal 2 karakter').max(120).optional(),
+    phone: phoneSchema.nullable().optional(),
+    reason: z.string().trim().min(3).max(500).optional(),
+  })
+  .refine((value) => value.fullName !== undefined || value.phone !== undefined, {
+    message: 'Kirim minimal satu field: fullName atau phone',
+  });
+export type AdminUpdateUserInput = z.infer<typeof adminUpdateUserSchema>;
+
+/**
+ * DELETE /admin/users/:id — hapus-lunak: akun tidak bisa login lagi, tetapi
+ * riwayat ujian/transaksi tetap utuh untuk audit.
+ */
+export const adminDeleteUserSchema = z.object({
+  reason: z.string().trim().min(3, 'Alasan minimal 3 karakter').max(500),
+});
+export type AdminDeleteUserInput = z.infer<typeof adminDeleteUserSchema>;
+
 /* ------------------------------------------------------------------ profil sendiri */
 
 /** PATCH /users/me — minimal satu field harus diisi. */

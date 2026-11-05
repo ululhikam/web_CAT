@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
@@ -166,7 +166,7 @@
 </script>
 
 <svelte:head>
-  <title>Bank Soal — Admin Web CAT</title>
+  <title>Bank Soal — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">
@@ -239,7 +239,7 @@
     <select class="select" bind:value={stageCode} aria-label="Stage">
       <option value="">Stage</option>
       <option value="PSIKOLOGI">Psikologi</option>
-      <option value="TPA">TPA</option>
+      <option value="TKK">TKK</option>
       <option value="TPK">TPK</option>
     </select>
     <select class="select" bind:value={subtestCode} aria-label="Subtes">
@@ -248,7 +248,7 @@
       <option value="KEPRIBADIAN">Kepribadian</option>
       <option value="KECERMATAN">Kecermatan</option>
       <option value="PASS_HAND">Pass Hand</option>
-      <option value="TPA">TPA</option>
+      <option value="TKK">TKK</option>
       <option value="TPK">TPK</option>
     </select>
     <select class="select" bind:value={type} aria-label="Tipe">

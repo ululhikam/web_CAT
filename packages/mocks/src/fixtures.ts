@@ -6,14 +6,14 @@
  *   KEPRIBADIAN  140  (Likert 1–5)
  *   KECERMATAN   500
  *   PASS_HAND    150  (kolom)
- *   TPA          100
+ *   TKK          100
  *   TPK          100
  *   -----------------
  *   TOTAL       1090
  *
  * Catatan: `plan.md` menyebut "±760 soal" di beberapa tempat sebagai
  * perkiraan lama; angka yang mengikat adalah konfigurasi subtes di
- * `exam.seed.ts` (890 soal psikologi + 100 TPA + 100 TPK = 1090).
+ * `exam.seed.ts` (890 soal psikologi + 100 TKK + 100 TPK = 1090).
  */
 import type { StageCode, SubtestCode } from '@webcat/contracts';
 import { createRng, intBetween, pick, shuffle } from './rng';
@@ -75,7 +75,7 @@ export const SUBTEST_SPECS: readonly SubtestSpec[] = [
   { subtestCode: 'KEPRIBADIAN', stageCode: 'PSIKOLOGI', count: 140, kind: 'LIKERT' },
   { subtestCode: 'KECERMATAN', stageCode: 'PSIKOLOGI', count: 500, kind: 'MULTIPLE_CHOICE' },
   { subtestCode: 'PASS_HAND', stageCode: 'PSIKOLOGI', count: 150, kind: 'COLUMN_MATCH' },
-  { subtestCode: 'TPA', stageCode: 'TPA', count: 100, kind: 'MULTIPLE_CHOICE' },
+  { subtestCode: 'TKK', stageCode: 'TKK', count: 100, kind: 'MULTIPLE_CHOICE' },
   { subtestCode: 'TPK', stageCode: 'TPK', count: 100, kind: 'MULTIPLE_CHOICE' },
 ] as const;
 
@@ -92,7 +92,13 @@ const KECERDASAN_TOPICS = [
 
 const KECERMATAN_TOPICS = ['Kode Angka', 'Kode Huruf', 'Simbol', 'Kombinasi'] as const;
 
-const TPA_TOPICS = ['Verbal', 'Numerik', 'Penalaran Logis'] as const;
+const TKK_TOPICS = [
+  'Perangkat Keras',
+  'Perangkat Lunak',
+  'Jaringan',
+  'Keamanan Siber',
+  'Aplikasi Perkantoran',
+] as const;
 
 const TPK_TOPICS = [
   'Struktur Organisasi Polri',
@@ -214,8 +220,8 @@ export function buildFixtures(seed = FIXTURE_SEED): FixtureQuestion[] {
       const topics =
         spec.subtestCode === 'KECERMATAN'
           ? KECERMATAN_TOPICS
-          : spec.subtestCode === 'TPA'
-            ? TPA_TOPICS
+          : spec.subtestCode === 'TKK'
+            ? TKK_TOPICS
             : spec.subtestCode === 'TPK'
               ? TPK_TOPICS
               : KECERDASAN_TOPICS;
@@ -223,8 +229,8 @@ export function buildFixtures(seed = FIXTURE_SEED): FixtureQuestion[] {
       const label =
         spec.subtestCode === 'KECERMATAN'
           ? 'Kecermatan'
-          : spec.subtestCode === 'TPA'
-            ? 'TPA'
+          : spec.subtestCode === 'TKK'
+            ? 'TKK'
             : spec.subtestCode === 'TPK'
               ? 'TPK'
               : 'Kecerdasan';
@@ -245,7 +251,7 @@ export function buildFixturesBySubtest(seed = FIXTURE_SEED): Record<SubtestCode,
     KEPRIBADIAN: [],
     KECERMATAN: [],
     PASS_HAND: [],
-    TPA: [],
+    TKK: [],
     TPK: [],
   } as Record<SubtestCode, FixtureQuestion[]>;
 

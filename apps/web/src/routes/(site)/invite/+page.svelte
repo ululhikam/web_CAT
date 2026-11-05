@@ -40,7 +40,7 @@
 </script>
 
 <svelte:head>
-  <title>Aktivasi Akun — Web CAT</title>
+  <title>Aktivasi Akun — TES CAT</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 

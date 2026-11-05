@@ -146,7 +146,7 @@
 </script>
 
 <svelte:head>
-  <title>Profil — Web CAT</title>
+  <title>Profil — TES CAT</title>
 </svelte:head>
 
 <div class="page">

@@ -33,9 +33,9 @@ interface StageSeed {
  *   Kecermatan   500 soal /  10 menit
  *   Pass Hand    150 kolom / 18 menit
  *
- * TPA & TPK masing-masing dimodelkan sebagai SATU subtes teknis agar
+ * TKK & TPK masing-masing dimodelkan sebagai SATU subtes teknis agar
  * `exam_session_questions` selalu terikat ke `subtest_session_id`.
- * Jumlah soal TPA/TPK masih sementara (dapat diubah admin).
+ * Jumlah soal TKK/TPK masih sementara (dapat diubah admin).
  */
 const STAGES: StageSeed[] = [
   {
@@ -105,20 +105,20 @@ const STAGES: StageSeed[] = [
     ],
   },
   {
-    code: 'TPA',
-    name: 'Tes Potensi Akademik',
-    description: 'Verbal, numerik, dan penalaran logis.',
+    code: 'TKK',
+    name: 'Tes Kemampuan Komputer',
+    description: 'Perangkat keras, perangkat lunak, jaringan, keamanan, dan aplikasi perkantoran.',
     orderIndex: 2,
     weight: 30,
     passingScore: 60,
     eliminationEnabled: true,
     subtests: [
       {
-        code: 'TPA',
-        name: 'Tes Potensi Akademik',
+        code: 'TKK',
+        name: 'Tes Kemampuan Komputer',
         orderIndex: 1,
         questionCount: 100,
-        durationMinutes: 90,
+        durationMinutes: 60,
         weight: 100,
         passingScore: 60,
         scoringStrategy: 'KEYED_CORRECT',

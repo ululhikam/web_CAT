@@ -61,7 +61,7 @@ export const SUBTEST_STAGE: Record<SubtestCode, StageCode> = {
   KEPRIBADIAN: 'PSIKOLOGI',
   KECERMATAN: 'PSIKOLOGI',
   PASS_HAND: 'PSIKOLOGI',
-  TPA: 'TPA',
+  TKK: 'TKK',
   TPK: 'TPK',
 };
 

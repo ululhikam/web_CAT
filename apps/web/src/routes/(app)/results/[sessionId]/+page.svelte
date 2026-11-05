@@ -60,6 +60,17 @@
     return value === null || value === undefined ? '-' : `${value.toFixed(2)}%`;
   }
 
+  /**
+   * Sesi yang gugur/kedaluwarsa tidak punya nilai total. Menampilkan `-` sebagai
+   * angka besar terlihat seperti data rusak, jadi pakai label status yang jelas.
+   */
+  function scoreHeadline(status: string | null | undefined): string {
+    if (status === 'ELIMINATED') return 'GUGUR';
+    if (status === 'EXPIRED') return 'KEDALUWARSA';
+    if (status === 'VIOLATION') return 'DIBATALKAN';
+    return 'TANPA NILAI';
+  }
+
   function number(value: number | null | undefined): string {
     return value === null || value === undefined ? '-' : String(value);
   }
@@ -78,7 +89,7 @@
 </script>
 
 <svelte:head>
-  <title>Hasil ujian -" Web CAT</title>
+  <title>Hasil ujian - TES CAT</title>
 </svelte:head>
 
 <div class="page">
@@ -99,10 +110,18 @@
       </div>
       <div class="score">
         <Badge tone={statusTone} size="md">{statusLabel(result.status)}</Badge>
-        <p class="score__value">{percent(result.totalScore)}</p>
+        <p class="score__value" class:score__value--label={result.totalScore === null}>
+          {#if result.totalScore === null}
+            {scoreHeadline(result.status)}
+          {:else}
+            {percent(result.totalScore)}
+          {/if}
+        </p>
         <p class="score__caption">
           {#if result.status === 'ELIMINATED'}
-            Gugur{result.eliminatedSubtestCode ? ` pada ${result.eliminatedSubtestCode}` : ''}
+            Nilai total tidak dihitung{result.eliminatedSubtestCode
+              ? `, gugur pada subtes ${result.eliminatedSubtestCode}`
+              : ''}
           {:else if result.passed === true}
             Lulus
           {:else if result.passed === false}
@@ -170,7 +189,7 @@
 
     {#each result.stages as stage (stage.id)}
       <Card
-        title={`${stage.stageCode} -" ${stage.name}`}
+        title={`${stage.stageCode} - ${stage.name}`}
         description={`Bobot ${stage.weight}% · status ${statusLabel(stage.status)}`}
       >
         <div class="stage-head">
@@ -357,6 +376,13 @@
     font-weight: 750;
     line-height: 1;
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Label status (GUGUR/KEDALUWARSA) lebih panjang dari angka, jadi dikecilkan
+     agar tidak meluber di layar sempit. */
+  .score__value--label {
+    font-size: var(--text-xl);
+    letter-spacing: 0.02em;
   }
 
   .score__caption {

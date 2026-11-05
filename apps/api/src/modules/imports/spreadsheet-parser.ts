@@ -338,7 +338,7 @@ export async function parseSpreadsheet(
 /** Template XLSX dua sheet: kolom wajib + contoh baris. */
 export async function buildTemplateWorkbook(): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Web CAT';
+  workbook.creator = 'TES CAT';
   const sheet = workbook.addWorksheet('questions');
   const headers = [
     'public_code',
@@ -399,8 +399,8 @@ export async function buildTemplateWorkbook(): Promise<Buffer> {
   help.getRow(1).font = { bold: true };
   const rows: Array<[string, string, string]> = [
     ['stem_text', 'ya', 'Teks soal'],
-    ['stage_code', 'tidak', 'PSIKOLOGI | TPA | TPK'],
-    ['subtest_code', 'tidak', 'KECERDASAN | KEPRIBADIAN | KECERMATAN | PASS_HAND | TPA | TPK'],
+    ['stage_code', 'tidak', 'PSIKOLOGI | TKK | TPK'],
+    ['subtest_code', 'tidak', 'KECERDASAN | KEPRIBADIAN | KECERMATAN | PASS_HAND | TKK | TPK'],
     ['type', 'tidak', 'SINGLE_CHOICE | MULTI_CHOICE | IMAGE_CHOICE | LIKERT_STATEMENT | MISSING_ELEMENT | PASS_HAND_COLUMN'],
     ['difficulty', 'tidak', 'EASY | MEDIUM | HARD'],
     ['option_a..option_e', 'tidak', 'Teks opsi'],

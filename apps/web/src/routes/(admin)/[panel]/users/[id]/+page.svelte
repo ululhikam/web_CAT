@@ -1,10 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Badge from '@webcat/ui/components/Badge.svelte';
   import Button from '@webcat/ui/components/Button.svelte';
   import Card from '@webcat/ui/components/Card.svelte';
+  import Field from '@webcat/ui/components/Field.svelte';
+  import Input from '@webcat/ui/components/Input.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
   import { apiErrorMessage, apiRequest } from '$lib/api/client';
@@ -29,6 +32,19 @@
   let loading = $state(true);
   let error = $state<string | null>(null);
 
+  // Form perbaikan data profil. Email tidak diubah dari sini karena dipakai
+  // sebagai identitas login (lihat adminUpdateUserSchema di contracts).
+  let editName = $state('');
+  let editPhone = $state('');
+  let editReason = $state('');
+  let savingProfile = $state(false);
+  let profileError = $state<string | null>(null);
+  let profileSaved = $state(false);
+
+  let deleteReason = $state('');
+  let deleting = $state(false);
+  let deleteError = $state<string | null>(null);
+
   async function load() {
     loading = true;
     error = null;
@@ -38,10 +54,60 @@
         token: session.accessToken,
         cacheTtlMs: 0,
       });
+      editName = overview.profile.fullName;
+      editPhone = overview.profile.phone ?? '';
     } catch (cause) {
       error = apiErrorMessage(cause);
     } finally {
       loading = false;
+    }
+  }
+
+  async function saveProfile(event: SubmitEvent) {
+    event.preventDefault();
+    if (savingProfile) return;
+
+    savingProfile = true;
+    profileError = null;
+    profileSaved = false;
+
+    try {
+      await apiRequest(`/admin/users/${id}`, {
+        method: 'PATCH',
+        token: session.accessToken,
+        body: {
+          fullName: editName.trim(),
+          phone: editPhone.trim() ? editPhone.trim() : null,
+          ...(editReason.trim() ? { reason: editReason.trim() } : {}),
+        },
+      });
+      profileSaved = true;
+      editReason = '';
+      await load();
+    } catch (cause) {
+      profileError = apiErrorMessage(cause);
+    } finally {
+      savingProfile = false;
+    }
+  }
+
+  async function removeUser(event: SubmitEvent) {
+    event.preventDefault();
+    if (deleting) return;
+
+    deleting = true;
+    deleteError = null;
+
+    try {
+      await apiRequest(`/admin/users/${id}`, {
+        method: 'DELETE',
+        token: session.accessToken,
+        body: { reason: deleteReason.trim() },
+      });
+      await goto(`${adminBase()}/users`);
+    } catch (cause) {
+      deleteError = apiErrorMessage(cause);
+      deleting = false;
     }
   }
 
@@ -51,7 +117,7 @@
 </script>
 
 <svelte:head>
-  <title>Detail pengguna — Admin Web CAT</title>
+  <title>Detail pengguna — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">
@@ -164,6 +230,77 @@
       </Card>
     </div>
 
+    <!-- ------------------------------------------------------------ kelola -->
+    <div class="adm-grid-2">
+      {#if session.can('users.update')}
+        <Card title="Perbaiki data peserta" padding="md">
+          <form class="form" onsubmit={saveProfile}>
+            <Field label="Nama lengkap" for="editName" required>
+              <Input id="editName" bind:value={editName} required autocomplete="name" />
+            </Field>
+            <Field
+              label="Nomor WhatsApp"
+              for="editPhone"
+              hint="Kosongkan untuk menghapus nomor. Format 62xxxxxxxxxx."
+            >
+              <Input id="editPhone" type="tel" bind:value={editPhone} placeholder="6281234567890" />
+            </Field>
+            <Field label="Alasan perubahan" for="editReason" hint="Opsional, tercatat di audit log.">
+              <Input id="editReason" bind:value={editReason} />
+            </Field>
+
+            {#if profileError}
+              <Alert tone="danger" title="Gagal menyimpan perubahan">{profileError}</Alert>
+            {/if}
+            {#if profileSaved}
+              <Alert tone="success" title="Tersimpan">Data peserta diperbarui.</Alert>
+            {/if}
+
+            <div class="actions">
+              <Button type="submit" loading={savingProfile} disabled={!editName.trim()}>
+                Simpan perubahan
+              </Button>
+            </div>
+          </form>
+        </Card>
+      {/if}
+
+      {#if session.can('users.delete')}
+        <Card title="Hapus akun" padding="md">
+          <Alert tone="warning" title="Tindakan permanen">
+            Akun tidak bisa login lagi dan hilang dari daftar pengguna. Riwayat ujian, langganan,
+            dan transaksi tetap tersimpan untuk audit.
+          </Alert>
+
+          <form class="form" onsubmit={removeUser}>
+            <Field
+              label="Alasan penghapusan"
+              for="deleteReason"
+              required
+              hint="Minimal 3 karakter. Tercatat di audit log."
+            >
+              <Input id="deleteReason" bind:value={deleteReason} required />
+            </Field>
+
+            {#if deleteError}
+              <Alert tone="danger" title="Gagal menghapus akun">{deleteError}</Alert>
+            {/if}
+
+            <div class="actions">
+              <Button
+                type="submit"
+                variant="danger"
+                loading={deleting}
+                disabled={deleteReason.trim().length < 3}
+              >
+                Hapus akun
+              </Button>
+            </div>
+          </form>
+        </Card>
+      {/if}
+    </div>
+
     <!-- ------------------------------------------------------------- ujian -->
     <Card title="Riwayat ujian" description={examSummaryLine(overview.exams)} padding="none">
       {#if overview.exams.recent.length === 0}
@@ -257,6 +394,18 @@
 </div>
 
 <style>
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+
   .facts {
     display: flex;
     flex-direction: column;

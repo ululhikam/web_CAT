@@ -53,7 +53,7 @@ enum JobStatus {
 /// Dipakai lintas domain (question, exam, billing). Jangan diubah tanpa RFC.
 enum StageCode {
   PSIKOLOGI
-  TPA
+  TKK
   TPK
 }
 
@@ -62,7 +62,7 @@ enum SubtestCode {
   KEPRIBADIAN
   KECERMATAN
   PASS_HAND
-  TPA
+  TKK
   TPK
 }
 

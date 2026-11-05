@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Button from '@webcat/ui/components/Button.svelte';
@@ -129,7 +129,7 @@
 </script>
 
 <svelte:head>
-  <title>Kategori — Admin Web CAT</title>
+  <title>Kategori — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

@@ -95,7 +95,7 @@
 </script>
 
 <svelte:head>
-  <title>Riwayat ujian -" Web CAT</title>
+  <title>Riwayat ujian - TES CAT</title>
 </svelte:head>
 
 <div class="page">

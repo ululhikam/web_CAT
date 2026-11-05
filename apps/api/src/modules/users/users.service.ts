@@ -13,6 +13,7 @@ import {
   canManageRole,
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
+  type AdminUpdateUserInput,
   type AdminUserExamRow,
   type AdminUserOverview,
   type AdminUserPaymentRow,
@@ -386,9 +387,9 @@ export class UsersService {
       try {
         await this.mail.send({
           to: user.email,
-          subject: 'Undangan akun Web CAT',
-          html: `<p>Halo ${user.fullName},</p><p>Akun simulasi ujian Anda sudah dibuat. Klik tautan berikut untuk membuat password (berlaku 7 hari):</p><p><a href="${inviteUrl}">${inviteUrl}</a></p>`,
-          text: `Aktifkan akun Web CAT Anda: ${inviteUrl}`,
+          subject: 'Undangan akun TES CAT',
+          html: `<p>Halo ${user.fullName},</p><p>Akun TES CAT Anda sudah dibuat. Klik tautan berikut untuk membuat password (berlaku 7 hari):</p><p><a href="${inviteUrl}">${inviteUrl}</a></p>`,
+          text: `Aktifkan akun TES CAT Anda: ${inviteUrl}`,
         });
       } catch {
         // Undangan tetap bisa diberikan manual oleh admin (inviteUrl di respons).
@@ -474,6 +475,103 @@ export class UsersService {
     });
 
     return this.toSummary(updated);
+  }
+
+  /**
+   * Memperbaiki data profil peserta yang dibuat admin (mis. salah ketik nama).
+   * Email sengaja tidak dapat diubah di sini: email adalah identitas login dan
+   * dipakai untuk verifikasi/pemulihan akun.
+   */
+  async updateProfileByAdmin(
+    id: string,
+    input: AdminUpdateUserInput,
+    actor: Actor,
+  ): Promise<AdminUserSummary> {
+    const user = await this.prisma.user.findFirst({ where: { id, deletedAt: null } });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const data: Prisma.UserUpdateInput = {};
+    if (input.fullName !== undefined) data.fullName = input.fullName.trim();
+    if (input.phone !== undefined) data.phone = input.phone;
+
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data,
+      include: USER_INCLUDE,
+    });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.profile_updated_by_admin',
+      entityType: 'user',
+      entityId: id,
+      metadata: {
+        from: { fullName: user.fullName, phone: user.phone },
+        to: { fullName: updated.fullName, phone: updated.phone },
+        reason: input.reason ?? null,
+      },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return this.toSummary(updated);
+  }
+
+  /**
+   * Hapus-lunak: akun tidak bisa login lagi (`deletedAt` + status DELETED),
+   * tetapi riwayat ujian, langganan, dan transaksi tetap utuh untuk audit.
+   */
+  async softDelete(id: string, reason: string, actor: Actor): Promise<{ message: string }> {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
+      include: { role: true },
+    });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    if (user.id === actor.id) {
+      throw new ForbiddenException({
+        code: 'USER_DELETE_SELF_FORBIDDEN',
+        message: 'Anda tidak dapat menghapus akun sendiri',
+      });
+    }
+
+    // Anti-lockout: jangan sampai panel kehilangan SUPER_ADMIN aktif terakhir.
+    if (user.role.code === 'SUPER_ADMIN') {
+      const count = await this.prisma.user.count({
+        where: { status: 'ACTIVE', deletedAt: null, role: { code: 'SUPER_ADMIN' } },
+      });
+      if (count <= 1) {
+        throw new ConflictException({
+          code: 'LAST_SUPER_ADMIN_FORBIDDEN',
+          message: 'Tidak dapat menghapus SUPER_ADMIN terakhir',
+        });
+      }
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id },
+        data: { status: 'DELETED', deletedAt: new Date(), tokenVersion: { increment: 1 } },
+      }),
+      this.prisma.session.updateMany({
+        where: { userId: id, revokedAt: null },
+        data: { revokedAt: new Date() },
+      }),
+    ]);
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.deleted',
+      entityType: 'user',
+      entityId: id,
+      metadata: { email: user.email, role: user.role.code, reason },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return { message: 'Akun dihapus. Riwayat ujian dan transaksi tetap tersimpan.' };
   }
 
   async changeRole(

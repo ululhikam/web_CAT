@@ -60,7 +60,7 @@ export class MockQuestionPool implements QuestionPoolPort {
 }
 
 function stageOf(subtestCode: string): string {
-  if (subtestCode === 'TPA') return 'TPA';
+  if (subtestCode === 'TKK') return 'TKK';
   if (subtestCode === 'TPK') return 'TPK';
   return 'PSIKOLOGI';
 }

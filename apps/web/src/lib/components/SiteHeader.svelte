@@ -4,7 +4,7 @@
   import { session } from '$lib/stores/session.svelte';
 
   const nav = [
-    { href: '/#simulasi', label: 'Simulasi Interaktif' },
+    { href: '/#tes-cat', label: 'TES CAT Interaktif' },
     { href: '/#struktur', label: 'Struktur Seleksi' },
     { href: '/#kalkulator', label: 'Kalkulator Ambang Batas' },
     { href: '/pricing', label: 'Harga & Paket' },
@@ -21,13 +21,13 @@
 
 <header class="header">
   <div class="header__inner">
-    <a class="brand" href="/" aria-label="Web CAT POLRI — Beranda">
+    <a class="brand" href="/" aria-label="TES CAT — Beranda">
       <div class="brand__icon">
         <span>CAT</span>
       </div>
       <div class="brand__text">
-        <span class="brand__title">Web CAT POLRI</span>
-        <span class="brand__sub">Portal Simulasi Seleksi</span>
+        <span class="brand__title">TES CAT</span>
+        <span class="brand__sub">Portal Seleksi Polri</span>
       </div>
     </a>
 

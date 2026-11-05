@@ -11,7 +11,7 @@ import {
 } from '../prisma/seed/media/figural';
 import {
   FIGURAL_KECERDASAN,
-  FIGURAL_TPA,
+  FIGURAL_TKK,
   figureAssetCode,
   figureAssets,
   layoutFor,
@@ -28,7 +28,7 @@ import {
  * database.
  */
 
-const FIGURAL_ROWS = [...FIGURAL_KECERDASAN, ...FIGURAL_TPA];
+const FIGURAL_ROWS = [...FIGURAL_KECERDASAN, ...FIGURAL_TKK];
 const IMAGE_ROWS = FIGURAL_ROWS.filter((row) => row.type === 'IMAGE_CHOICE');
 
 function specOf(row: (typeof FIGURAL_ROWS)[number]): FigureSpec {

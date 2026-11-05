@@ -64,7 +64,7 @@
 </script>
 
 <svelte:head>
-  <title>Verifikasi email — Web CAT</title>
+  <title>Verifikasi email — TES CAT</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 

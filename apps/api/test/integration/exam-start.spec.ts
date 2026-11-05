@@ -66,13 +66,13 @@ describe.skipIf(!integrationEnabled)('startSession (Postgres)', () => {
       'KEPRIBADIAN',
       'KECERMATAN',
       'PASS_HAND',
-      'TPA',
+      'TKK',
       'TPK',
     ]);
 
     const stages = response.session!.stages;
     expect(stages).toHaveLength(3);
-    expect(stages.map((stage) => stage.stageCode)).toEqual(['PSIKOLOGI', 'TPA', 'TPK']);
+    expect(stages.map((stage) => stage.stageCode)).toEqual(['PSIKOLOGI', 'TKK', 'TPK']);
 
     // Subtes pertama READY, sisanya LOCKED.
     expect(subtests[0]!.status).toBe('READY');

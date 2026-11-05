@@ -52,7 +52,7 @@
 
   const STAGE_OPTIONS: Array<{ value: StageCode; label: string }> = [
     { value: 'PSIKOLOGI', label: 'Psikologi' },
-    { value: 'TPA', label: 'TPA' },
+    { value: 'TKK', label: 'TKK' },
     { value: 'TPK', label: 'TPK' },
   ];
 
@@ -63,7 +63,7 @@
       { value: 'KECERMATAN', label: 'Kecermatan' },
       { value: 'PASS_HAND', label: 'Pass Hand' },
     ],
-    TPA: [{ value: 'TPA', label: 'TPA' }],
+    TKK: [{ value: 'TKK', label: 'TKK' }],
     TPK: [{ value: 'TPK', label: 'TPK' }],
   };
 
@@ -105,7 +105,7 @@
   $effect(() => {
     const allowed = SUBTESTS[draft.stageCode] ?? [];
     if (!allowed.some((item) => item.value === draft.subtestCode)) {
-      draft.subtestCode = allowed[0]?.value ?? 'TPA';
+      draft.subtestCode = allowed[0]?.value ?? 'TKK';
     }
   });
 

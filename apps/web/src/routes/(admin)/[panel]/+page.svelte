@@ -122,7 +122,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard — {panelTitle} Web CAT</title>
+  <title>Dashboard — {panelTitle} TES CAT</title>
 </svelte:head>
 
 <div class="adm-dashboard">
@@ -248,7 +248,7 @@
       <!-- LEFT: Monthly Recap Report (Chart Area) -->
       <div class="card-box">
         <div class="card-box__header">
-          <h2 class="card-box__title">Aktivitas Simulasi & Bank Soal</h2>
+          <h2 class="card-box__title">Aktivitas TES CAT & Bank Soal</h2>
           <button class="btn-more-dots" type="button" aria-label="Opsi">⋮</button>
         </div>
 

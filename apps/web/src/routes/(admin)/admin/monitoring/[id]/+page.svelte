@@ -140,7 +140,7 @@
 </script>
 
 <svelte:head>
-  <title>Detail sesi -" Admin Web CAT</title>
+  <title>Detail sesi - Admin TES CAT</title>
 </svelte:head>
 
 <div class="page">

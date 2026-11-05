@@ -84,7 +84,7 @@
       { code: 'KECERMATAN', label: 'Kecermatan' },
       { code: 'PASS_HAND', label: 'Pass Hand' },
     ],
-    TPA: [{ code: 'TPA', label: 'TPA' }],
+    TKK: [{ code: 'TKK', label: 'TKK' }],
     TPK: [{ code: 'TPK', label: 'TPK' }],
   };
 
@@ -93,7 +93,7 @@
       ? (SUBTESTS_BY_STAGE[targetStageCode] ?? [])
       : [
           ...(SUBTESTS_BY_STAGE.PSIKOLOGI ?? []),
-          ...(SUBTESTS_BY_STAGE.TPA ?? []),
+          ...(SUBTESTS_BY_STAGE.TKK ?? []),
           ...(SUBTESTS_BY_STAGE.TPK ?? []),
         ],
   );
@@ -461,7 +461,7 @@
 </script>
 
 <svelte:head>
-  <title>Impor Soal — Admin Web CAT</title>
+  <title>Impor Soal — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">
@@ -535,7 +535,7 @@
             >
               <option value="">Deteksi otomatis</option>
               <option value="PSIKOLOGI">Psikologi</option>
-              <option value="TPA">TPA</option>
+              <option value="TKK">TKK</option>
               <option value="TPK">TPK</option>
             </select>
           </Field>

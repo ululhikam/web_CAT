@@ -197,22 +197,36 @@ export function parseQuestionSnapshot(value: unknown): QuestionSnapshot {
 
 /* ------------------------------------------------------------------ konfigurasi */
 
-const STAGE_CODES: readonly StageCode[] = ['PSIKOLOGI', 'TPA', 'TPK'];
+const STAGE_CODES: readonly StageCode[] = ['PSIKOLOGI', 'TKK', 'TPK'];
 const SUBTEST_CODES: readonly SubtestCode[] = [
   'KECERDASAN',
   'KEPRIBADIAN',
   'KECERMATAN',
   'PASS_HAND',
-  'TPA',
+  'TKK',
   'TPK',
 ];
 
 function asStageCode(value: unknown): StageCode | null {
+  // `TPA` adalah kode lama (sebelum F5-16). Snapshot sesi historis masih
+  // menyimpan teks `TPA` di dalam JSON, jadi dibaca sebagai `TKK`.
+  if (value === 'TPA') return 'TKK';
   return STAGE_CODES.includes(value as StageCode) ? (value as StageCode) : null;
 }
 
 function asSubtestCode(value: unknown): SubtestCode | null {
+  if (value === 'TPA') return 'TKK';
   return SUBTEST_CODES.includes(value as SubtestCode) ? (value as SubtestCode) : null;
+}
+
+/**
+ * Snapshot sesi lama masih menyimpan nama "Tes Potensi Akademik" untuk kode
+ * yang sekarang bernama TKK. Kodenya sudah dipetakan ke TKK, jadi namanya ikut
+ * dinormalkan agar halaman hasil tidak menampilkan dua nama untuk satu tes.
+ */
+function normalizeTkkName(code: StageCode | SubtestCode, name: string): string {
+  if (code !== 'TKK') return name;
+  return /potensi\s+akademik/i.test(name) ? 'Tes Kemampuan Komputer' : name;
 }
 
 export function parseSubtestConfig(value: unknown): SubtestConfigSnapshot | null {
@@ -223,7 +237,7 @@ export function parseSubtestConfig(value: unknown): SubtestConfigSnapshot | null
   return {
     subtestId: asString(raw.subtestId),
     code,
-    name: asString(raw.name, code),
+    name: normalizeTkkName(code, asString(raw.name, code)),
     orderIndex: asNumber(raw.orderIndex, 1),
     questionCount: Math.max(1, asNumber(raw.questionCount, 1)),
     durationMinutes: Math.max(1, asNumber(raw.durationMinutes, 1)),
@@ -242,7 +256,7 @@ export function parseStageConfig(value: unknown): StageConfigSnapshot | null {
   return {
     stageId: asString(raw.stageId),
     code,
-    name: asString(raw.name, code),
+    name: normalizeTkkName(code, asString(raw.name, code)),
     description: asNullableString(raw.description),
     orderIndex: asNumber(raw.orderIndex, 1),
     weight: Math.max(0, asNumber(raw.weight, 0)),

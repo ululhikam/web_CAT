@@ -4,7 +4,7 @@
   import { page } from '$app/state';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
-  import { homePathFor } from '$lib/panel';
+  import { canRoleAccessPath, homePathFor } from '$lib/panel';
   import { session } from '$lib/stores/session.svelte';
 
   let { children }: { children: Snippet } = $props();
@@ -16,24 +16,46 @@
   let messageMenuOpen = $state(false);
   let signingOut = $state(false);
 
-  const navPrimary = [
-    { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as const },
-    { href: '/exam', label: 'Ujian CAT', icon: 'shield' as const, badge: 'B3' },
-    { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
-    { href: '/simulation', label: 'Simulasi CAT', icon: 'shield' as const, badge: 'Latihan' },
-    { href: '/dashboard#latihan', label: 'Bank Soal Subtes', icon: 'questions' as const },
-    { href: '/dashboard#riwayat', label: 'Riwayat & Nilai (MS/TMS)', icon: 'list' as const },
-  ];
+  const navPrimary = $derived(
+    session.isAdmin
+      ? [
+          // Admin mengerjakan tes dari panel; sediakan jalan pulang tanpa
+          // melewati halaman peserta lain.
+          {
+            href: session.isSuperAdmin ? '/super-admin' : '/admin',
+            label: 'Kembali ke panel',
+            icon: 'dashboard' as const,
+          },
+          { href: '/exam', label: 'TES CAT', icon: 'shield' as const, badge: 'Ujian' },
+          { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
+        ]
+      : [
+          { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as const },
+          { href: '/exam', label: 'TES CAT', icon: 'shield' as const, badge: 'Ujian' },
+          { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
+          { href: '/dashboard#latihan', label: 'Bank Soal Subtes', icon: 'questions' as const },
+          { href: '/dashboard#riwayat', label: 'Riwayat & Nilai (MS/TMS)', icon: 'list' as const },
+        ],
+  );
 
-  const navBilling = [
-    { href: '/subscription', label: 'Paket Langganan', icon: 'card' as const },
-    { href: '/transactions', label: 'Riwayat Transaksi', icon: 'list' as const },
-  ];
+  const navBilling = $derived(
+    session.isAdmin
+      ? []
+      : [
+          { href: '/subscription', label: 'Paket Langganan', icon: 'card' as const },
+          { href: '/transactions', label: 'Riwayat Transaksi', icon: 'list' as const },
+        ],
+  );
 
-  const navAccount = [
-    { href: '/profile', label: 'Profil Peserta', icon: 'profile' as const },
-    { href: '/devices', label: 'Perangkat Aktif', icon: 'devices' as const },
-  ];
+  // Halaman profil/perangkat khusus peserta; admin memakai panelnya sendiri.
+  const navAccount = $derived(
+    session.isAdmin
+      ? []
+      : [
+          { href: '/profile', label: 'Profil Peserta', icon: 'profile' as const },
+          { href: '/devices', label: 'Perangkat Aktif', icon: 'devices' as const },
+        ],
+  );
 
   let currentPath = $derived(page.url.pathname);
   let currentHash = $derived(page.url.hash);
@@ -68,10 +90,25 @@
   $effect(() => {
     if (session.loading || !session.user) return;
 
-    if (session.isAdmin) {
+    // Admin diarahkan ke panelnya, KECUALI saat mereka sedang mengerjakan atau
+    // melihat hasil tes dari menu "TES CAT".
+    if (session.isAdmin && !canRoleAccessPath(session.user.role, page.url.pathname)) {
       void goto(homePathFor(session.user.role), { replaceState: true });
     }
   });
+
+  /**
+   * Admin/super admin boleh memakai halaman peserta (TES CAT & hasil) untuk
+   * mengerjakan atau memverifikasi tes, jadi layout peserta tetap ditampilkan
+   * di path tersebut.
+   */
+  const adminAllowedHere = $derived(
+    Boolean(
+      session.user &&
+        session.isAdmin &&
+        canRoleAccessPath(session.user.role, page.url.pathname),
+    ),
+  );
 
   function toggleSidebar() {
     if (typeof window !== 'undefined' && window.innerWidth >= 900) {
@@ -116,7 +153,7 @@
 
 <svelte:window onclick={handleWindowClick} />
 
-{#if !session.user || session.isAdmin}
+{#if !session.user || (session.isAdmin && !adminAllowedHere)}
   <div class="loading"><Spinner size={32} label="Memeriksa status sesi" /></div>
 {:else}
   <!-- Backdrop Mobile -->
@@ -144,7 +181,7 @@
           </div>
           {#if !sidebarCollapsed}
             <div class="brand-info">
-              <span class="brand-title">Web CAT</span>
+              <span class="brand-title">TES CAT</span>
               <span class="brand-sub">Portal Peserta</span>
             </div>
           {/if}
@@ -189,7 +226,7 @@
           </a>
         {/each}
 
-        {#if !sidebarCollapsed}
+        {#if !sidebarCollapsed && navBilling.length > 0}
           <div class="nav-heading">PAKET &amp; AKSES</div>
         {/if}
         {#each navBilling as item (item.href)}
@@ -210,7 +247,7 @@
           </a>
         {/each}
 
-        {#if !sidebarCollapsed}
+        {#if !sidebarCollapsed && navAccount.length > 0}
           <div class="nav-heading">PENGATURAN AKUN</div>
         {/if}
         {#each navAccount as item (item.href)}
@@ -234,7 +271,7 @@
 
       <div class="sidebar__footer">
         {#if !sidebarCollapsed}
-          <span class="version-tag">Web CAT v1.1 • RuangAdmin</span>
+          <span class="version-tag">TES CAT v1.1 • RuangAdmin</span>
         {/if}
         <button
           class="btn-sidebar-logout"
@@ -308,7 +345,7 @@
                   <div class="dropdown-item">
                     <div class="dropdown-item__dot dot--blue"></div>
                     <div>
-                      <div class="dropdown-item__text">Simulasi Tryout Akbar #1 sudah dibuka untuk semua peserta aktif.</div>
+                      <div class="dropdown-item__text">TES CAT Tryout Akbar #1 sudah dibuka untuk semua peserta aktif.</div>
                       <div class="dropdown-item__time">Kemarin • 14:30 WIB</div>
                     </div>
                   </div>
@@ -364,7 +401,7 @@
                     <div class="dropdown-item__dot dot--blue"></div>
                     <div>
                       <div class="dropdown-item__title">Tim Administrasi</div>
-                      <div class="dropdown-item__text">Paket langganan Anda aktif. Gunakan kesempatan simulasi sebaik mungkin.</div>
+                      <div class="dropdown-item__text">Paket langganan Anda aktif. Gunakan kesempatan TES CAT sebaik mungkin.</div>
                       <div class="dropdown-item__time">3 jam lalu</div>
                     </div>
                   </div>

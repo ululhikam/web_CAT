@@ -165,7 +165,7 @@ export class BillingExpiryService {
           `Masa aktif ${subscription.plan?.name ?? 'langganan Anda'} berakhir pada ${subscription.endsAt.toISOString()}.`,
           'Perpanjang sekarang agar latihan tidak terhenti.',
           '',
-          '— Tim Web CAT',
+          '— Tim TES CAT',
         ].join('\n'),
         html: `<p>Halo ${subscription.user.fullName},</p>
 <p>Masa aktif <strong>${subscription.plan?.name ?? 'langganan Anda'}</strong> berakhir pada

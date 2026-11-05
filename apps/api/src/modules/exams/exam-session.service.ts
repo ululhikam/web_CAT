@@ -8,6 +8,7 @@ import type {
   ClockState,
   ExamEligibility,
   ExamQuestionPage,
+  ExamStageOption,
   HeartbeatResponse,
   LockReason,
   PoolShortage,
@@ -24,6 +25,7 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 import { ACCESS_POLICY, QUESTION_POOL } from '../../core/ports/ports.module';
 import { ExamConfigService } from './exam-config.service';
 import { ExamFinalizerService } from './exam-finalizer.service';
+import { anomalyEventId, detectAnswerAnomalies } from './answer-anomaly';
 import { ExamQuestionProjection } from './exam-question-projection';
 import { ExamQuestionSource } from './exam-question-source';
 import {
@@ -78,6 +80,17 @@ const TERMINAL_SESSION: readonly SessionStatus[] = [
 
 const DAY_MS = 86_400_000;
 
+/**
+ * Konteks aktor untuk pembatasan akses.
+ *
+ * `privileged` dipakai ADMIN/SUPER_ADMIN: mereka boleh membuka semua tes tanpa
+ * langganan aktif dan tanpa batas kuota harian. Pemeriksaan teknis (sesi aktif,
+ * ketersediaan bank soal) tetap berlaku agar data sesi tidak rusak.
+ */
+export interface SessionActor {
+  privileged?: boolean;
+}
+
 @Injectable()
 export class ExamSessionService {
   private readonly logger = new Logger(ExamSessionService.name);
@@ -94,7 +107,16 @@ export class ExamSessionService {
 
   /* ------------------------------------------------------------------ eligibility */
 
-  async getEligibility(userId: string): Promise<ExamEligibility> {
+  /**
+   * Konteks aktor untuk pembatasan akses.
+   *
+   * `privileged` dipakai ADMIN/SUPER_ADMIN: mereka boleh membuka semua tes
+   * tanpa langganan aktif dan tanpa batas kuota harian. Pemeriksaan teknis
+   * (sesi aktif, ketersediaan bank soal) tetap berlaku agar data sesi tidak
+   * rusak.
+   */
+  async getEligibility(userId: string, actor: SessionActor = {}): Promise<ExamEligibility> {
+    const privileged = actor.privileged === true;
     const now = new Date();
     const settings = await this.config.getSettings();
     const access = await this.accessPolicy.check(userId);
@@ -104,30 +126,60 @@ export class ExamSessionService {
     const sessionsToday = await this.safeCountSessions(userId, examDate);
     const reasons = new Set<string>();
 
-    if (!access.allowed) reasons.add(access.code);
+    // Admin tidak dibatasi langganan maupun kuota harian.
+    if (!privileged) {
+      if (!access.allowed) reasons.add(access.code);
+      if (sessionsToday >= settings.maxSessionsPerDay) reasons.add('DAILY_LIMIT_REACHED');
+    }
+    // Sesi aktif tetap dilaporkan agar klien melanjutkannya, bukan membuat
+    // sesi kedua (unique index harian juga akan menolaknya).
     if (active) reasons.add('ACTIVE_SESSION_EXISTS');
-    if (sessionsToday >= settings.maxSessionsPerDay) reasons.add('DAILY_LIMIT_REACHED');
 
     const stages = await this.config.getSessionStages();
     const poolProblems: PoolShortage[] = [];
+    const stageOptions: ExamStageOption[] = [];
+
     for (const stage of stages) {
+      const stageProblems: PoolShortage[] = [];
       for (const subtest of stage.subtests) {
         try {
           const pool = await this.questionPool.validate(subtest.code, subtest.questionCount);
           if (!pool.ready) {
-            reasons.add('EXAM_POOL_INSUFFICIENT');
             // F4-09: teruskan rincian yang sudah dirumuskan pool, bukan
             // sekadar kode alasan.
-            poolProblems.push(...(pool.problems ?? []));
+            stageProblems.push(...(pool.problems ?? []));
           }
         } catch {
-          reasons.add('EXAM_POOL_INSUFFICIENT');
+          stageProblems.push({
+            subtestCode: subtest.code as SubtestCode,
+            required: subtest.questionCount,
+            available: 0,
+            missing: subtest.questionCount,
+            message: `Bank soal ${subtest.name} belum dapat diperiksa.`,
+          });
         }
       }
+
+      poolProblems.push(...stageProblems);
+      stageOptions.push({
+        code: stage.code as StageCode,
+        name: stage.name,
+        description: stage.description ?? null,
+        orderIndex: stage.orderIndex,
+        questionCount: stage.subtests.reduce((sum, subtest) => sum + subtest.questionCount, 0),
+        durationMinutes: stage.subtests.reduce((sum, subtest) => sum + subtest.durationMinutes, 0),
+        available: stageProblems.length === 0,
+        reasons: stageProblems.length === 0 ? [] : ['EXAM_POOL_INSUFFICIENT'],
+      });
     }
 
+    // Bank soal hanya memblokir bila TIDAK ADA satu pun tes yang siap. Tes
+    // tertentu yang kosong tetap tampil sebagai kartu nonaktif.
+    const anyStageAvailable = stageOptions.some((stage) => stage.available);
+    if (!anyStageAvailable) reasons.add('EXAM_POOL_INSUFFICIENT');
+
     const nextAvailableAt =
-      sessionsToday >= settings.maxSessionsPerDay
+      !privileged && sessionsToday >= settings.maxSessionsPerDay
         ? nextLocalMidnight(now, settings.timezone).toISOString()
         : null;
 
@@ -144,6 +196,7 @@ export class ExamSessionService {
       sessionsToday,
       nextAvailableAt,
       activeSessionId: active?.id ?? null,
+      stages: stageOptions,
     };
   }
 
@@ -203,8 +256,13 @@ export class ExamSessionService {
     });
   }
 
-  async startSession(userId: string): Promise<ActiveSessionResponse> {
-    const eligibility = await this.getEligibility(userId);
+  async startSession(
+    userId: string,
+    options: { stageCode?: StageCode } = {},
+    actor: SessionActor = {},
+  ): Promise<ActiveSessionResponse> {
+    const privileged = actor.privileged === true;
+    const eligibility = await this.getEligibility(userId, actor);
     if (eligibility.activeSessionId) {
       throw new AppError({
         code: 'EXAM_SESSION_ACTIVE_EXISTS',
@@ -221,12 +279,31 @@ export class ExamSessionService {
         details: { nextAvailableAt: eligibility.nextAvailableAt },
       });
     }
-    // F4-09: bila satu-satunya penghalang adalah bank soal, jawab dengan
-    // rincian subtes & kekurangannya — bukan `EXAM_SESSION_LOCKED` generik.
-    if (eligibility.reasons.length === 1 && eligibility.reasons[0] === 'EXAM_POOL_INSUFFICIENT') {
+
+    // Bila peserta memilih satu tes, hanya ketersediaan tes itu yang relevan.
+    const selected = options.stageCode
+      ? eligibility.stages.find((stage) => stage.code === options.stageCode)
+      : null;
+
+    if (options.stageCode && !selected) {
+      throw new AppError({
+        code: 'EXAM_STAGE_NOT_AVAILABLE',
+        status: 409,
+        message: 'Tes yang dipilih tidak tersedia',
+        details: { stageCode: options.stageCode },
+      });
+    }
+
+    if (selected && !selected.available) {
       throw this.poolInsufficientError(eligibility.poolProblems);
     }
-    if (!eligibility.canStart) {
+
+    if (!selected && !eligibility.canStart) {
+      // F4-09: bila satu-satunya penghalang adalah bank soal, jawab dengan
+      // rincian subtes & kekurangannya — bukan `EXAM_SESSION_LOCKED` generik.
+      if (eligibility.reasons.every((reason) => reason === 'EXAM_POOL_INSUFFICIENT')) {
+        throw this.poolInsufficientError(eligibility.poolProblems);
+      }
       throw new AppError({
         code: 'EXAM_SESSION_LOCKED',
         status: 409,
@@ -235,10 +312,13 @@ export class ExamSessionService {
       });
     }
 
-    await this.accessPolicy.assertCanStartExam(userId);
+    if (!privileged) {
+      await this.accessPolicy.assertCanStartExam(userId);
+    }
 
     const now = new Date();
-    const snapshot = await this.config.requireSessionSnapshot(now);
+    const baseSnapshot = await this.config.requireSessionSnapshot(now);
+    const snapshot = this.scopeSnapshot(baseSnapshot, options.stageCode);
     const examDate = examDateFor(now, snapshot.timezone);
 
     for (const stage of snapshot.stages) {
@@ -253,6 +333,30 @@ export class ExamSessionService {
     let sessionId: string;
     try {
       sessionId = await this.prisma.$transaction(async (tx) => {
+        // Kuota harian ditegakkan di sini (setelah index unik harian dihapus
+        // pada F5-17) agar peserta dapat memilih tes berbeda pada hari yang
+        // sama bila `max_sessions_per_day` mengizinkan. Advisory lock per
+        // peserta mencegah dua permintaan paralel menembus kuota.
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`exam-session:${userId}:${examDate.toISOString()}`}))`;
+
+        if (!privileged) {
+          const sessionsToday = await tx.examSession.count({
+            where: {
+              userId,
+              examDate,
+              voidedAt: null,
+              status: { not: 'VOIDED' },
+            },
+          });
+          if (sessionsToday >= snapshot.maxSessionsPerDay) {
+            throw new AppError({
+              code: 'EXAM_SESSION_ALREADY_TODAY',
+              status: 409,
+              message: 'Kuota sesi ujian hari ini sudah habis',
+            });
+          }
+        }
+
         const created = await tx.examSession.create({
           data: {
             userId,
@@ -332,7 +436,32 @@ export class ExamSessionService {
     return this.buildActiveResponse(row, now);
   }
 
-  /* ------------------------------------------------------------------ resume & ringkasan */
+  /**
+   * Persempit snapshot konfigurasi menjadi satu tes saja (bila peserta memilih
+   * satu tes dari layar pemilihan). `orderIndex` dinormalkan agar urutan tes
+   * pada sesi tunggal tetap mulai dari 1.
+   */
+  private scopeSnapshot(
+    snapshot: SessionConfigSnapshot,
+    stageCode?: StageCode,
+  ): SessionConfigSnapshot {
+    if (!stageCode) return snapshot;
+
+    const stages = snapshot.stages
+      .filter((stage) => stage.code === stageCode)
+      .map((stage, index) => ({ ...stage, orderIndex: index + 1 }));
+
+    if (stages.length === 0) {
+      throw new AppError({
+        code: 'EXAM_STAGE_NOT_AVAILABLE',
+        status: 409,
+        message: 'Tes yang dipilih tidak tersedia',
+        details: { stageCode },
+      });
+    }
+
+    return { ...snapshot, stages };
+  }
 
   async getActiveSession(userId: string): Promise<ActiveSessionResponse> {
     const now = new Date();
@@ -404,7 +533,9 @@ export class ExamSessionService {
     sessionId: string,
     stageId: string,
     subtestId: string,
+    actor: SessionActor = {},
   ): Promise<ActiveSessionResponse> {
+    const privileged = actor.privileged === true;
     const now = new Date();
     const row = await this.loadOwnedSession(userId, sessionId);
     if (TERMINAL_SESSION.includes(asSessionStatus(row.status))) {
@@ -439,7 +570,11 @@ export class ExamSessionService {
       });
     }
 
-    this.assertPreviousSubtestsTerminal(row, stage, subtest);
+    // Admin/super admin dapat membuka tes mana pun tanpa harus menuntaskan
+    // subtes sebelumnya (mis. verifikasi bank soal per tes).
+    if (!privileged) {
+      this.assertPreviousSubtestsTerminal(row, stage, subtest);
+    }
 
     const config = parseSessionConfig(row.configSnapshot);
     const subtestConfig =
@@ -768,6 +903,7 @@ export class ExamSessionService {
 
     const saved: string[] = [];
     const rejected: Array<{ questionId: string; code: string }> = [];
+    let createdCount = 0;
     const valid: Array<{
       questionId: string;
       position: number;
@@ -841,10 +977,12 @@ export class ExamSessionService {
               sessionQuestionId: item.questionId,
               clientSeq: input.clientSeq,
               answerPayload: item.payload as unknown as Prisma.InputJsonValue,
+              timeSpentMs: item.timeSpentMs,
               answeredAt: now,
             },
           });
 
+          createdCount += 1;
           saved.push(item.questionId);
         }
 
@@ -867,6 +1005,15 @@ export class ExamSessionService {
       { timeout: 30_000, maxWait: 10_000 },
     );
 
+    // F5-13 — catat anomali waktu jawab. Dijalankan di luar transaksi autosave:
+    // kegagalan pencatatan tidak boleh menggagalkan penyimpanan jawaban, dan
+    // anomali tidak pernah mengubah status sesi.
+    if (createdCount > 0) {
+      await this.recordAnswerAnomalies(row.id, subtest.id, subtest.subtestCode).catch((cause) => {
+        this.logger.warn(`Gagal mencatat anomali waktu jawab: ${String(cause)}`);
+      });
+    }
+
     const total = await this.prisma.examSessionQuestion.count({
       where: { subtestSessionId: subtest.id },
     });
@@ -882,6 +1029,67 @@ export class ExamSessionService {
       ),
       nextCursor,
     };
+  }
+
+  /* ------------------------------------------------------------------ anomali waktu jawab */
+
+  /**
+   * F5-13 — catat anomali waktu jawab sebagai sinyal proctoring.
+   *
+   * Hanya menulis `proctoring_events`; `exam_violations` tidak disentuh sehingga
+   * tidak ada aksi otomatis (warn/lock/eliminate) yang menggugurkan peserta.
+   *
+   * Idempoten: `clientEventId` diturunkan dari `(tipe, soal)`, jadi autosave
+   * berulang atas soal yang sama tidak menambah sinyal baru.
+   */
+  private async recordAnswerAnomalies(
+    sessionId: string,
+    subtestSessionId: string,
+    subtestCode: string,
+  ): Promise<void> {
+    const questions = await this.prisma.examSessionQuestion.findMany({
+      where: { subtestSessionId, answers: { some: {} } },
+      select: {
+        id: true,
+        position: true,
+        snapshot: true,
+        answers: {
+          orderBy: { clientSeq: 'asc' },
+          select: { clientSeq: true, timeSpentMs: true },
+        },
+      },
+    });
+    if (questions.length === 0) return;
+
+    const findings = detectAnswerAnomalies({
+      subtestCode,
+      questions: questions.map((question) => ({
+        id: question.id,
+        position: question.position,
+        snapshot: parseQuestionSnapshot(question.snapshot),
+      })),
+      events: questions.flatMap((question) =>
+        question.answers.map((answer) => ({
+          sessionQuestionId: question.id,
+          clientSeq: answer.clientSeq,
+          timeSpentMs: answer.timeSpentMs,
+        })),
+      ),
+    });
+    if (findings.length === 0) return;
+
+    const now = new Date();
+    await this.prisma.proctoringEvent.createMany({
+      data: findings.map((finding) => ({
+        sessionId,
+        clientEventId: anomalyEventId(finding.type, finding.sessionQuestionId),
+        type: finding.type,
+        severity: finding.severity,
+        occurredAtServer: now,
+        metadata: finding.metadata as Prisma.InputJsonValue,
+      })),
+      skipDuplicates: true,
+    });
   }
 
   /* ------------------------------------------------------------------ selesai & heartbeat */

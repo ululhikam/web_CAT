@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import Button from '@webcat/ui/components/Button.svelte';
   import Badge from '@webcat/ui/components/Badge.svelte';
@@ -45,7 +45,7 @@
 </script>
 
 <svelte:head>
-  <title>Pengguna — Admin Web CAT</title>
+  <title>Pengguna — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

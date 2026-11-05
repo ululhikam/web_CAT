@@ -264,9 +264,9 @@ export class AuthService {
 
     await this.sendMail(
       user.email,
-      'Kode verifikasi Web CAT',
+      'Kode verifikasi TES CAT',
       `<p>Halo ${user.fullName},</p><p>Kode verifikasi Anda: <strong>${code}</strong></p><p>Berlaku ${EMAIL_OTP_TTL_MINUTES} menit.</p>`,
-      `Kode verifikasi Web CAT: ${code} (berlaku ${EMAIL_OTP_TTL_MINUTES} menit)`,
+      `Kode verifikasi TES CAT: ${code} (berlaku ${EMAIL_OTP_TTL_MINUTES} menit)`,
     );
 
     await this.audit.record({
@@ -366,9 +366,9 @@ export class AuthService {
 
     await this.sendMail(
       user.email,
-      'Kode verifikasi Web CAT (baru)',
+      'Kode verifikasi TES CAT (baru)',
       `<p>Kode verifikasi baru: <strong>${code}</strong></p>`,
-      `Kode verifikasi Web CAT: ${code}`,
+      `Kode verifikasi TES CAT: ${code}`,
     );
 
     return generic;
@@ -660,9 +660,9 @@ export class AuthService {
     const link = `${this.config.value.APP_URL}/reset-password?token=${encodeURIComponent(token)}`;
     await this.sendMail(
       user.email,
-      'Reset password Web CAT',
+      'Reset password TES CAT',
       `<p>Klik tautan berikut untuk mengatur ulang password (berlaku ${RESET_TTL_MINUTES} menit):</p><p><a href="${link}">${link}</a></p>`,
-      `Reset password Web CAT: ${link}`,
+      `Reset password TES CAT: ${link}`,
     );
 
     return generic;

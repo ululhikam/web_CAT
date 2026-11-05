@@ -52,12 +52,12 @@ describe('buildPayload', () => {
   it('memakai stage/subtes default bila tidak ada di berkas', () => {
     const result = buildPayload(
       draft({ stageCode: undefined, subtestCode: undefined }),
-      { ...settings, targetStageCode: 'TPA', targetSubtestCode: 'TPA' },
+      { ...settings, targetStageCode: 'TKK', targetSubtestCode: 'TKK' },
     );
 
     expect(result.issues).toEqual([]);
-    expect(result.payload.stageCode).toBe('TPA');
-    expect(result.payload.subtestCode).toBe('TPA');
+    expect(result.payload.stageCode).toBe('TKK');
+    expect(result.payload.subtestCode).toBe('TKK');
   });
 
   it('menurunkan stage dari subtes bila target tidak diberikan', () => {
@@ -77,7 +77,7 @@ describe('buildPayload', () => {
 
   it('menolak kombinasi stage/subtes yang tidak sah', () => {
     const result = buildPayload(
-      draft({ stageCode: 'TPA', subtestCode: 'KECERDASAN' }),
+      draft({ stageCode: 'TKK', subtestCode: 'KECERDASAN' }),
       settings,
     );
 

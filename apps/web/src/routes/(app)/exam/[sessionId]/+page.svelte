@@ -24,8 +24,9 @@
   let confirmFinish = $state(false);
   let passHandValues = $state<string[]>([]);
   let textAnswer = $state('');
-  let jumpTo = $state('');
-  let showPalette = $state(false);
+  /** Soal yang ditandai "ragu-ragu" agar mudah ditinjau ulang. */
+  let flagged = $state<Set<string>>(new Set());
+  let isFullscreen = $state(false);
   let loadedQuestionId: string | null = null;
   let questionShownAt = Date.now();
   let advanceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -124,19 +125,52 @@
 
   async function boot(): Promise<void> {
     if (!sessionId) return;
+    restoreFlags();
     try {
       const result = await examRunner.loadSession(sessionId);
       examRunner.startTicker();
       attachProctoring();
       if (result.currentSubtest?.status === 'ACTIVE') {
         await examRunner.loadQuestions();
+        // Browser hanya mengizinkan fullscreen dari gestur pengguna, jadi
+        // permintaan otomatis ini boleh gagal — banner "Layar penuh" tetap
+        // tampil sampai peserta menekannya.
+        if (!document.fullscreenElement) void enterFullscreen();
       }
     } catch {
       // error sudah dipetakan store
     }
   }
 
+  const flagKey = `exam-flags:${sessionId}`;
+
+  function restoreFlags(): void {
+    if (typeof localStorage === 'undefined') return;
+    try {
+      const raw = localStorage.getItem(flagKey);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        flagged = new Set(parsed.filter((entry): entry is string => typeof entry === 'string'));
+      }
+    } catch {
+      // data lokal rusak — abaikan, flag hanya alat bantu peserta
+    }
+  }
+
+  function persistFlags(next: Set<string>): void {
+    if (typeof localStorage === 'undefined') return;
+    try {
+      localStorage.setItem(flagKey, JSON.stringify([...next]));
+    } catch {
+      // penyimpanan penuh/diblokir — tidak menghalangi ujian
+    }
+  }
+
   async function openSubtest(): Promise<void> {
+    // Anti-kecurangan: layar penuh diminta langsung dari gestur klik peserta,
+    // satu-satunya saat browser mengizinkannya.
+    await enterFullscreen();
     const result = await examRunner.openCurrentSubtest();
     if (result) index = 0;
   }
@@ -228,12 +262,13 @@
     }
   }
 
-  function jump(): void {
-    const target = Number(jumpTo);
-    if (Number.isInteger(target) && target >= 1 && target <= examRunner.questions.length) {
-      index = target - 1;
-      jumpTo = '';
-    }
+  function toggleFlag(): void {
+    if (!question) return;
+    const next = new Set(flagged);
+    if (next.has(question.id)) next.delete(question.id);
+    else next.add(question.id);
+    flagged = next;
+    persistFlags(next);
   }
 
   async function finish(force = false): Promise<void> {
@@ -271,24 +306,62 @@
   function attachProctoring(): void {
     if (detach) return;
 
+    isFullscreen = Boolean(document.fullscreenElement);
+
     const onVisibility = () => {
       examRunner.pushEvent(document.hidden ? 'TAB_BLUR' : 'TAB_FOCUS');
       // F5-10: saat tab disembunyikan, kirim antrean lebih dulu — tab bisa
       // dibuang OS tanpa sempat memicu `beforeunload`.
       if (document.hidden) void examRunner.flush();
     };
-    const onCopy = () => examRunner.pushEvent('COPY');
-    const onPaste = () => examRunner.pushEvent('PASTE');
-    const onCut = () => examRunner.pushEvent('CUT');
+    // Anti-kecurangan: salin/tempel/ potong benar-benar diblokir, bukan hanya
+    // dicatat. Event tetap dikirim server agar pelanggaran terlihat di
+    // monitoring.
+    const onCopy = (event: Event) => {
+      event.preventDefault();
+      examRunner.pushEvent('COPY');
+    };
+    const onPaste = (event: Event) => {
+      event.preventDefault();
+      examRunner.pushEvent('PASTE');
+    };
+    const onCut = (event: Event) => {
+      event.preventDefault();
+      examRunner.pushEvent('CUT');
+    };
+    const onDragStart = (event: DragEvent) => {
+      event.preventDefault();
+    };
     const onContext = (event: MouseEvent) => {
       event.preventDefault();
       examRunner.pushEvent('CONTEXT_MENU');
     };
     const onFullscreen = () => {
-      examRunner.pushEvent(document.fullscreenElement ? 'FULLSCREEN_ENTER' : 'FULLSCREEN_EXIT');
+      isFullscreen = Boolean(document.fullscreenElement);
+      examRunner.pushEvent(isFullscreen ? 'FULLSCREEN_ENTER' : 'FULLSCREEN_EXIT');
     };
     const onResize = () => examRunner.pushEvent('WINDOW_RESIZED');
     const onKeydown = (event: KeyboardEvent) => {
+      // Blokir pintasan salin/tempel/cetak meskipun fokus ada di input.
+      const accel = event.ctrlKey || event.metaKey;
+      if (accel && ['c', 'v', 'x'].includes(event.key.toLowerCase())) {
+        event.preventDefault();
+        examRunner.pushEvent(
+          event.key.toLowerCase() === 'v'
+            ? 'PASTE'
+            : event.key.toLowerCase() === 'c'
+              ? 'COPY'
+              : 'CUT',
+        );
+        return;
+      }
+      if (event.key === 'PrintScreen') {
+        // Sebagian besar browser mengabaikan preventDefault di sini, tetapi
+        // pencatatan tetap berguna untuk monitoring.
+        examRunner.pushEvent('COPY');
+        return;
+      }
+
       const target = event.target as HTMLElement | null;
       if (
         target &&
@@ -351,6 +424,7 @@
     document.addEventListener('copy', onCopy);
     document.addEventListener('paste', onPaste);
     document.addEventListener('cut', onCut);
+    document.addEventListener('dragstart', onDragStart);
     document.addEventListener('contextmenu', onContext);
     document.addEventListener('fullscreenchange', onFullscreen);
     window.addEventListener('resize', onResize);
@@ -363,6 +437,7 @@
       document.removeEventListener('copy', onCopy);
       document.removeEventListener('paste', onPaste);
       document.removeEventListener('cut', onCut);
+      document.removeEventListener('dragstart', onDragStart);
       document.removeEventListener('contextmenu', onContext);
       document.removeEventListener('fullscreenchange', onFullscreen);
       window.removeEventListener('resize', onResize);
@@ -382,7 +457,7 @@
 </script>
 
 <svelte:head>
-  <title>{subtest?.name ?? 'Ujian'} -" Web CAT</title>
+  <title>{subtest?.name ?? 'Ujian'} - TES CAT</title>
 </svelte:head>
 
 {#if !session.user}
@@ -510,56 +585,107 @@
         {/if}
       </Card>
     {:else if subtest.status === 'ACTIVE'}
-      <header class="runner__header">
-        <div class="runner__identity">
-          <p class="runner__stage">{examRunner.active?.currentStageCode ?? 'UJIAN'}</p>
-          <h1 class="runner__title">{subtest.name}</h1>
-          <p class="muted">
-            Soal {Math.min(index + 1, examRunner.totalQuestions)} dari {examRunner.totalQuestions} · terjawab
-            {examRunner.answeredCount}
-          </p>
-        </div>
+      <div class="runner">
+        <!-- KIRI: navigasi soal + tombol akhiri sesi -->
+        <aside class="runner__side runner__side--left" aria-label="Daftar soal">
+          <div class="palette-card">
+            <header class="palette-card__head">
+              <h2 class="palette-card__title">Daftar soal</h2>
+              <span class="palette-card__count">
+                {examRunner.answeredCount}/{examRunner.totalQuestions}
+              </span>
+            </header>
+            <div class="palette">
+              {#each examRunner.questions as entry, entryIndex (entry.id)}
+                <button
+                  type="button"
+                  class="palette__item"
+                  class:palette__item--current={entryIndex === index}
+                  class:palette__item--answered={examRunner.answerOf(entry.id) !== null}
+                  class:palette__item--flagged={flagged.has(entry.id)}
+                  aria-current={entryIndex === index ? 'true' : undefined}
+                  onclick={() => (index = entryIndex)}
+                >
+                  {entryIndex + 1}
+                </button>
+              {/each}
+            </div>
+            <ul class="legend">
+              <li><span class="dot dot--current"></span>Dikerjakan sekarang</li>
+              <li><span class="dot dot--answered"></span>Sudah dijawab</li>
+              <li><span class="dot dot--flagged"></span>Ragu-ragu</li>
+            </ul>
+          </div>
 
-        <div class="runner__timer" class:runner__timer--critical={timerCritical} aria-live="polite">
-          <span class="runner__timer-label">Sisa waktu</span>
-          <span class="runner__timer-value">{examRunner.remainingLabel}</span>
-        </div>
-      </header>
+          <Button variant="danger" fullWidth onclick={() => (confirmFinish = true)}>
+            Akhiri sesi
+          </Button>
+        </aside>
 
-      <div
-        class="progress"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow={progress}
-      >
-        <span class="progress__bar" style={`width:${progress}%`}></span>
-      </div>
+        <!-- TENGAH: soal + jawaban + navigasi bawah -->
+        <main class="runner__main">
+          <header class="runner__header">
+            <div class="runner__identity">
+              <p class="runner__stage">{examRunner.active?.currentStageCode ?? 'UJIAN'}</p>
+              <h1 class="runner__title">{subtest.name}</h1>
+              <p class="muted">
+                Soal {Math.min(index + 1, examRunner.totalQuestions)} dari {examRunner
+                  .totalQuestions} · terjawab
+                {examRunner.answeredCount}
+              </p>
+            </div>
 
-      <div class="statusline">
-        <span class:statusline__offline={!examRunner.connected}>
-          {#if examRunner.saving}
-            Menyimpan...
-          {:else if examRunner.pendingCount > 0}
-            {examRunner.pendingCount} jawaban menunggu terkirim
-          {:else if examRunner.lastSavedAt}
-            Tersimpan {formatDateTime(new Date(examRunner.lastSavedAt).toISOString())}
-          {:else}
-            Autosave aktif
+            <div
+              class="runner__timer"
+              class:runner__timer--critical={timerCritical}
+              aria-live="polite"
+            >
+              <span class="runner__timer-label">Sisa waktu</span>
+              <span class="runner__timer-value">{examRunner.remainingLabel}</span>
+            </div>
+          </header>
+
+          <div
+            class="progress"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow={progress}
+          >
+            <span class="progress__bar" style={`width:${progress}%`}></span>
+          </div>
+
+          <div class="statusline">
+            <span class:statusline__offline={!examRunner.connected}>
+              {#if examRunner.saving}
+                Menyimpan...
+              {:else if examRunner.pendingCount > 0}
+                {examRunner.pendingCount} jawaban menunggu terkirim
+              {:else if examRunner.lastSavedAt}
+                Tersimpan {formatDateTime(new Date(examRunner.lastSavedAt).toISOString())}
+              {:else}
+                Autosave aktif
+              {/if}
+            </span>
+            <span>{examRunner.connected ? 'Terhubung' : 'Offline'}</span>
+          </div>
+
+          {#if !isFullscreen}
+            <div class="fullscreen-note">
+              <span>Ujian sebaiknya dikerjakan dalam mode layar penuh.</span>
+              <Button variant="secondary" size="sm" onclick={enterFullscreen}>Layar penuh</Button>
+            </div>
           {/if}
-        </span>
-        <span>{examRunner.connected ? 'Terhubung' : 'Offline'}</span>
-      </div>
 
-      {#if examRunner.restoredCount > 0 && examRunner.pendingCount > 0}
-        <!--
-          F5-10: jawaban dari IndexedDB sudah tampil lagi setelah halaman
-          dimuat ulang. Indikator hilang sendiri setelah semua ter-ACK.
-        -->
-        <p class="muted restored">
-          {examRunner.restoredCount} jawaban dipulihkan dari perangkat dan sedang dikirim ulang.
-        </p>
-      {/if}
+          {#if examRunner.restoredCount > 0 && examRunner.pendingCount > 0}
+            <!--
+              F5-10: jawaban dari IndexedDB sudah tampil lagi setelah halaman
+              dimuat ulang. Indikator hilang sendiri setelah semua ter-ACK.
+            -->
+            <p class="muted restored">
+              {examRunner.restoredCount} jawaban dipulihkan dari perangkat dan sedang dikirim ulang.
+            </p>
+          {/if}
 
       {#if examRunner.loadingQuestions}
         <div class="center"><Spinner size={26} label="Memuat soal" /></div>
@@ -776,74 +902,79 @@
           {/if}
         </article>
 
-        <footer class="runner__footer">
-          <div class="nav">
-            <Button variant="secondary" disabled={index === 0} onclick={goBack}>Sebelumnya</Button>
-            <Button
-              variant="secondary"
-              disabled={index >= examRunner.questions.length - 1}
-              onclick={advance}
-            >
-              Berikutnya
-            </Button>
-            {#if examRunner.questions.length > 40}
-              <form
-                class="jump"
-                onsubmit={(event) => {
-                  event.preventDefault();
-                  jump();
-                }}
+          <footer class="runner__footer">
+            <div class="runner__nav runner__nav--start">
+              <Button variant="secondary" disabled={index === 0} onclick={goBack}>Sebelumnya</Button>
+            </div>
+            <div class="runner__nav runner__nav--center">
+              <Button
+                variant={question && flagged.has(question.id) ? 'success' : 'ghost'}
+                onclick={toggleFlag}
+                title="Tandai soal ini untuk ditinjau ulang"
               >
-                <input
-                  class="input jump__input"
-                  type="number"
-                  min="1"
-                  max={examRunner.questions.length}
-                  value={jumpTo}
-                  oninput={(event) => (jumpTo = event.currentTarget.value)}
-                  aria-label="Lompat ke nomor soal"
-                  placeholder="No."
-                />
-                <Button type="submit" variant="ghost">Lompat</Button>
-              </form>
-            {/if}
-          </div>
-
-          <div class="nav">
-            {#if examRunner.questions.length <= 120}
-              <Button variant="ghost" onclick={() => (showPalette = !showPalette)}>
-                {showPalette ? 'Sembunyikan daftar' : 'Daftar soal'}
+                {question && flagged.has(question.id) ? 'Ragu-ragu ✓' : 'Ragu-ragu'}
               </Button>
-            {/if}
-            <Button variant="danger" onclick={() => (confirmFinish = true)}
-              >Selesaikan subtes</Button
-            >
-          </div>
-        </footer>
-
-        {#if showPalette}
-          <div class="palette" aria-label="Daftar soal">
-            {#each examRunner.questions as entry, entryIndex (entry.id)}
-              <button
-                type="button"
-                class="palette__item"
-                class:palette__item--current={entryIndex === index}
-                class:palette__item--answered={examRunner.answerOf(entry.id) !== null}
-                onclick={() => (index = entryIndex)}
+            </div>
+            <div class="runner__nav runner__nav--end">
+              <Button
+                variant="secondary"
+                disabled={index >= examRunner.questions.length - 1}
+                onclick={advance}
               >
-                {entryIndex + 1}
-              </button>
-            {/each}
-          </div>
+                Selanjutnya
+              </Button>
+            </div>
+          </footer>
         {/if}
-      {/if}
+        </main>
+
+        <!-- KANAN: urutan tes -->
+        <aside class="runner__side runner__side--right" aria-label="Urutan tes">
+          <div class="sequence-card">
+            <h2 class="sequence-card__title">Urutan tes</h2>
+            <ol class="sequence">
+              {#each examRunner.active?.session?.stages ?? [] as stage (stage.id)}
+                <li
+                  class="sequence__stage"
+                  class:sequence__stage--current={stage.stageCode === examRunner.active?.currentStageCode}
+                >
+                  <p class="sequence__stage-name">{stage.name}</p>
+                  <ul class="sequence__subtests">
+                    {#each stage.subtests as entry (entry.id)}
+                      <li
+                        class="sequence__subtest"
+                        class:sequence__subtest--active={entry.id === subtest.id}
+                        class:sequence__subtest--done={['COMPLETED', 'EXPIRED', 'ELIMINATED'].includes(
+                          entry.status,
+                        )}
+                      >
+                        <span class="sequence__dot"></span>
+                        <span class="sequence__name">{entry.name}</span>
+                        <span class="sequence__status">{entry.status}</span>
+                      </li>
+                    {/each}
+                  </ul>
+                </li>
+              {/each}
+            </ol>
+          </div>
+
+          {#if examRunner.nextSubtest}
+            <div class="sequence-card sequence-card--next">
+              <p class="sequence-card__label">Berikutnya</p>
+              <p class="sequence-card__next">{examRunner.nextSubtest.name}</p>
+            </div>
+          {/if}
+        </aside>
+      </div>
     {/if}
   </div>
 
   {#if confirmFinish}
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="finish-title">
       <div class="modal__panel">
-        <h2 id="finish-title">Selesaikan subtes?</h2>        <p class="muted">
+        <h2 id="finish-title">Akhiri sesi ini?</h2>
+        <p class="muted">
           Subtes akan dinilai sekarang dan tidak dapat dibuka kembali. Pastikan semua jawaban sudah
           terkirim.
         </p>
@@ -897,7 +1028,272 @@
   }
 
   .page--wide {
-    max-width: 1040px;
+    max-width: 1320px;
+  }
+
+  /* ---------------------------------------------- runner: palet | soal | alur */
+
+  .runner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .runner__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+
+  .runner__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  @media (min-width: 900px) {
+    .runner {
+      grid-template-columns: 210px minmax(0, 1fr);
+    }
+
+    .runner__side--right {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1180px) {
+    .runner {
+      grid-template-columns: 210px minmax(0, 1fr) 240px;
+    }
+
+    .runner__side--right {
+      grid-column: auto;
+    }
+
+    .runner__side {
+      position: sticky;
+      top: var(--space-4);
+    }
+  }
+
+  .palette-card,
+  .sequence-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .palette-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .palette-card__title,
+  .sequence-card__title {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+  }
+
+  .palette-card__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .dot {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: var(--radius-full);
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .dot--current {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  .dot--answered {
+    background: var(--color-success);
+    border-color: var(--color-success);
+  }
+
+  .dot--flagged {
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+  }
+
+  .palette__item--flagged {
+    background: var(--color-warning-soft);
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+  }
+
+  .sequence {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sequence__stage-name {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .sequence__stage--current .sequence__stage-name {
+    color: var(--color-primary);
+  }
+
+  .sequence__subtests {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-1) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sequence__subtest {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .sequence__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    flex: none;
+    border-radius: var(--radius-full);
+    background: var(--color-border-strong);
+  }
+
+  .sequence__name {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sequence__status {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-subtle);
+  }
+
+  .sequence__subtest--active {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .sequence__subtest--active .sequence__dot {
+    background: var(--color-primary);
+  }
+
+  .sequence__subtest--done {
+    color: var(--color-success);
+  }
+
+  .sequence__subtest--done .sequence__dot {
+    background: var(--color-success);
+  }
+
+  .sequence-card--next {
+    gap: var(--space-1);
+  }
+
+  .sequence-card__label {
+    margin: 0;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .sequence-card__next {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .fullscreen-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .runner__footer {
+    position: sticky;
+    bottom: var(--space-3);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 6px 20px rgb(15 23 42 / 8%);
+  }
+
+  .runner__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .runner__nav--center {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .runner__nav--end {
+    justify-content: flex-end;
   }
 
   .center {
@@ -991,6 +1387,9 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: var(--color-surface);
+    /* Anti-kecurangan: teks soal tidak dapat disorot/ditarik keluar. */
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .question__header {
@@ -1215,30 +1614,6 @@
     outline: none;
     border-color: var(--color-primary);
     box-shadow: var(--shadow-ring);
-  }
-
-  .runner__footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
-  .nav {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  .jump {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-  }
-
-  .jump__input {
-    width: 5rem;
   }
 
   .palette {

@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { page } from '$app/stores';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Badge from '@webcat/ui/components/Badge.svelte';
@@ -94,7 +94,7 @@
 </script>
 
 <svelte:head>
-  <title>Langganan — Web CAT</title>
+  <title>Langganan — TES CAT</title>
 </svelte:head>
 
 <div class="page">

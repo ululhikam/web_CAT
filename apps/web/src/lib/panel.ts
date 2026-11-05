@@ -36,8 +36,19 @@ export function panelCrumbLabel(panel: string | null | undefined): 'Admin' | 'Su
 
 const PARTICIPANT_PREFIXES = ['/dashboard', '/subscription', '/profile', '/devices'] as const;
 
+/**
+ * Halaman peserta yang juga boleh dibuka admin/super admin: layar pemilihan
+ * tes, pengerjaan ujian, dan hasil. Dipakai menu "TES CAT" di panel.
+ */
+const SHARED_PREFIXES = ['/exam', '/results'] as const;
+
 function matchesPrefix(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
+
+/** Apakah path termasuk halaman ujian yang boleh diakses semua role. */
+export function isSharedExamPath(pathname: string): boolean {
+  return SHARED_PREFIXES.some((prefix) => matchesPrefix(pathname, prefix));
 }
 
 /** Halaman beranda sesuai role, dipakai setelah login dan saat redirect. */
@@ -56,6 +67,10 @@ export function homePathFor(role: Role | null | undefined): string {
  */
 export function canRoleAccessPath(role: Role | null | undefined, pathname: string): boolean {
   if (!pathname.startsWith('/') || pathname.startsWith('//')) return false;
+
+  // Halaman TES CAT & hasil dipakai bersama: admin boleh mengerjakan dan
+  // memverifikasi tes tanpa keluar dari panel.
+  if (isSharedExamPath(pathname)) return true;
 
   const isParticipantPath = PARTICIPANT_PREFIXES.some((prefix) =>
     matchesPrefix(pathname, prefix),

@@ -134,7 +134,7 @@
 </script>
 
 <svelte:head>
-  <title>Transaksi — Admin Web CAT</title>
+  <title>Transaksi — Admin TES CAT</title>
 </svelte:head>
 
 <div class="page">

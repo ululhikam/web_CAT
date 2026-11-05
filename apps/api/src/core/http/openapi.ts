@@ -464,10 +464,10 @@ export function enrichDocument(document: OpenAPIObject, routes: RouteDoc[]): Ope
 /** Bangun dokumen OpenAPI lengkap dari aplikasi Nest yang sudah dibuat. */
 export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
   const config = new DocumentBuilder()
-    .setTitle('Web CAT API')
+    .setTitle('TES CAT API')
     .setDescription(
       [
-        'Simulasi ujian Polri — Tes Psikologi (Kecerdasan, Kepribadian, Kecermatan, Pass Hand), TPA, TPK.',
+        'TES CAT ujian Polri — Tes Psikologi (Kecerdasan, Kepribadian, Kecermatan, Pass Hand), TKK, TPK.',
         '',
         '**Format respons**: semua endpoint mengembalikan envelope',
         '`{ success, data, meta, error, requestId }`. Lihat `docs/api/README.md`.',

@@ -55,7 +55,7 @@
 </script>
 
 <svelte:head>
-  <title>Masuk — Portal CAT POLRI Terpadu</title>
+  <title>Masuk — Portal TES CAT Terpadu</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -69,7 +69,7 @@
       </div>
 
       <h1 class="hero-title">
-        Simulasi Ujian Berbasis Komputer Standar Nasional
+        TES CAT Berbasis Komputer Standar Nasional
       </h1>
 
       <p class="hero-desc">
@@ -94,7 +94,7 @@
           </div>
           <div>
             <strong>3 Tahapan Ujian Berurutan</strong>
-            <p>Psikologi (4 subtes), TPA (Akademik), dan TPK (Kepolisian).</p>
+            <p>Psikologi (4 subtes), TKK (Komputer), dan TPK (Kepolisian).</p>
           </div>
         </div>
 

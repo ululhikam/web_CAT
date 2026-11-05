@@ -2,8 +2,8 @@
  * Seed data minimal yang HARUS ada agar aplikasi bisa dipakai:
  *
  *   1. 3 role + permission (matriks sama dengan packages/contracts/rbac)
- *   2. 3 stage: PSIKOLOGI, TPA, TPK
- *   3. 6 subtes (4 psikologi + TPA + TPK)
+ *   2. 3 stage: PSIKOLOGI, TKK, TPK
+ *   3. 6 subtes (4 psikologi + TKK + TPK)
  *   4. exam_settings (singleton)
  *   5. subscription_plans (harga awal, bisa diubah admin lewat DB)
  *   6. akun SUPER_ADMIN pertama (dari env, sekali pakai)

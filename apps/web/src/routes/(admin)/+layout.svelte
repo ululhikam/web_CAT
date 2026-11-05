@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import '$lib/styles/admin.css';
 
   import { onMount, type Snippet } from 'svelte';
@@ -138,7 +138,7 @@
         <a class="brand" href={base} onclick={() => (drawerOpen = false)}>
           <span class="brand__mark" aria-hidden="true">RA</span>
           <span class="brand__text">
-            <span class="brand__name">Web CAT</span>
+            <span class="brand__name">TES CAT</span>
             <span class="brand__tag">{panelTitle}</span>
           </span>
         </a>
@@ -179,7 +179,7 @@
       </nav>
 
       <div class="sidebar__footer">
-        <div class="footer-version">Web CAT v1.1 • RuangAdmin</div>
+        <div class="footer-version">TES CAT v1.1 • RuangAdmin</div>
         <button class="side-action" type="button" disabled={signingOut} onclick={signOut}>
           <AdminIcon name="logout" size={15} />
           <span>{signingOut ? 'Keluar…' : 'Keluar Panel'}</span>

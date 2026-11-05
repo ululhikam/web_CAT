@@ -89,13 +89,13 @@ describe('buildDashboardSummary', () => {
         perSubtest: [
           { subtestCode: 'TPK', attempts: 2, averagePercentage: 80, bestPercentage: 90 },
           { subtestCode: 'KECERDASAN', attempts: 3, averagePercentage: 55.5, bestPercentage: 70 },
-          { subtestCode: 'TPA', attempts: 1, averagePercentage: 67.25, bestPercentage: 67.25 },
+          { subtestCode: 'TKK', attempts: 1, averagePercentage: 67.25, bestPercentage: 67.25 },
         ],
       }),
       [],
     );
 
-    expect(result.perSubtest.map((row) => row.code)).toEqual(['KECERDASAN', 'TPA', 'TPK']);
+    expect(result.perSubtest.map((row) => row.code)).toEqual(['KECERDASAN', 'TKK', 'TPK']);
     expect(result.weakestSubtest?.code).toBe('KECERDASAN');
     expect(result.weakestSubtest?.label).toBe('Kecerdasan');
     expect(result.weakestSubtest?.averagePercentage).toBe(55.5);

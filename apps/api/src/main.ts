@@ -89,7 +89,7 @@ export async function createApp(): Promise<NestExpressApplication> {
     const document = buildOpenApiDocument(app);
     SwaggerModule.setup('api/docs', app, document, {
       swaggerOptions: { persistAuthorization: true, displayRequestDuration: true },
-      customSiteTitle: 'Web CAT API',
+      customSiteTitle: 'TES CAT API',
     });
   }
 

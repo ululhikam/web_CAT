@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Badge from '@webcat/ui/components/Badge.svelte';
@@ -208,7 +208,7 @@
 </script>
 
 <svelte:head>
-  <title>Paket &amp; Harga — Admin Web CAT</title>
+  <title>Paket &amp; Harga — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

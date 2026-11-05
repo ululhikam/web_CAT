@@ -8,7 +8,7 @@ const ROLE_LABEL: Record<(typeof ROLES)[number], string> = {
 };
 
 const PERMISSION_LABEL: Record<string, string> = {
-  'exam.take': 'Mengerjakan simulasi ujian',
+  'exam.take': 'Mengerjakan TES CAT ujian',
   'questions.read': 'Melihat bank soal',
   'questions.write': 'Membuat/mengubah soal',
   'questions.import': 'Mengimpor soal dari PDF/DOCX',
@@ -19,6 +19,8 @@ const PERMISSION_LABEL: Record<string, string> = {
   'exams.force_unlock': 'Membuka paksa subtes yang terkunci',
   'users.read': 'Melihat daftar & detail user',
   'users.create': 'Membuat akun user baru',
+  'users.update': 'Memperbaiki data profil user',
+  'users.delete': 'Menghapus akun user (hapus-lunak)',
   'users.suspend': 'Menonaktifkan / mengaktifkan user',
   'users.password.reset': 'Mereset password user',
   'subscriptions.manage': 'Memberi & mencabut langganan manual',

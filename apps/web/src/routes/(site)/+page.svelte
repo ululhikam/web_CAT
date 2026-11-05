@@ -20,21 +20,22 @@
       explanation: 'Silogisme kategorik premis mayor & minor mutlak.',
     },
     {
-      subtest: 'Tes Potensi Akademik — Hubungan Kata',
-      question: 'POLISI : HUKUM = HAKIM : ...',
+      subtest: 'Tes Kemampuan Komputer — Perangkat Keras',
+      question:
+        'Komponen komputer yang bertugas memproses seluruh instruksi program dan menjadi pusat kendali sistem disebut...',
       options: [
-        { key: 'A', text: 'Pengadilan' },
-        { key: 'B', text: 'Keadilan' },
-        { key: 'C', text: 'Terdakwa' },
-        { key: 'D', text: 'Keputusan' },
+        { key: 'A', text: 'Central Processing Unit (CPU)' },
+        { key: 'B', text: 'Monitor' },
+        { key: 'C', text: 'Keyboard' },
+        { key: 'D', text: 'Printer' },
       ],
-      correctKey: 'B',
-      explanation: 'Polisi menegakkan hukum; Hakim menegakkan keadilan.',
+      correctKey: 'A',
+      explanation: 'CPU adalah unit pemroses utama yang mengeksekusi instruksi program.',
     },
   ];
 
   // State for Interactive Structure Tabs
-  let activeTab = $state<'psi' | 'tpa' | 'tpk'>('psi');
+  let activeTab = $state<'psi' | 'tkk' | 'tpk'>('psi');
 
   const tabData = {
     psi: {
@@ -49,17 +50,17 @@
       ],
       desc: 'Setiap subtes psikologi memiliki pengatur waktu otomatis dari server. Kehabisan waktu pada satu subtes langsung mengunci berkas dan melanjutkan ke subtes berikutnya.',
     },
-    tpa: {
-      title: 'Tes Potensi Akademik (TPA)',
+    tkk: {
+      title: 'Tes Kemampuan Komputer (TKK)',
       duration: '90 Menit • 100 Butir Soal',
       passingGrade: 'Sistem Ranking Komparatif',
       subtests: [
-        { name: 'Kemampuan Verbal & Analogi', count: '25 Soal', time: 'Terpadu', rule: 'Sinonim, antonim, analogi' },
-        { name: 'Penalaran Numerik & Logika Aljabar', count: '30 Soal', time: 'Terpadu', rule: 'Deret angka, berhitung cepat' },
-        { name: 'Silogisme & Penalaran Analitis', count: '25 Soal', time: 'Terpadu', rule: 'Logika formal & kondisi' },
-        { name: 'Penalaran Spasial & Hubungan Gambar', count: '20 Soal', time: 'Terpadu', rule: 'Rotasi bangun & pola visual' },
+        { name: 'Perangkat Keras (Hardware)', count: '25 Soal', time: 'Terpadu', rule: 'Komponen CPU, memori, dan periferal' },
+        { name: 'Perangkat Lunak & Sistem Operasi', count: '30 Soal', time: 'Terpadu', rule: 'Instalasi, konfigurasi, dan troubleshooting' },
+        { name: 'Jaringan Komputer', count: '25 Soal', time: 'Terpadu', rule: 'Topologi, alamat IP, dan protokol dasar' },
+        { name: 'Keamanan & Aplikasi Perkantoran', count: '20 Soal', time: 'Terpadu', rule: 'Malware, enkripsi, pengolah kata & angka' },
       ],
-      desc: 'Mengukur kecakapan berpikir logis dan analitis dengan bobot standar seleksi Mabes Polri. Soal disajikan secara acak terstandarisasi untuk mencegah saling contek.',
+      desc: 'Mengukur pemahaman dasar teknologi informasi: perangkat keras, perangkat lunak, jaringan komputer, keamanan siber, serta aplikasi perkantoran yang dipakai sehari-hari.',
     },
     tpk: {
       title: 'Tes Pengetahuan Kepolisian (TPK)',
@@ -77,15 +78,15 @@
 
   // State for Interactive Passing Grade Calculator
   let calcPsi = $state(72);
-  let calcTpa = $state(68);
+  let calcTkk = $state(68);
   let calcTpk = $state(75);
 
   const calcFinalScore = $derived(
-    Number((calcPsi * 0.35 + calcTpa * 0.35 + calcTpk * 0.3).toFixed(2))
+    Number((calcPsi * 0.35 + calcTkk * 0.35 + calcTpk * 0.3).toFixed(2))
   );
 
   const isEliminated = $derived(
-    calcPsi < 61.0 || calcTpa < 60.0 || calcTpk < 60.0
+    calcPsi < 61.0 || calcTkk < 60.0 || calcTpk < 60.0
   );
 
   const tracks = [
@@ -104,7 +105,7 @@
     },
     {
       q: 'Apakah benar subtes yang habis waktunya terkunci permanen?',
-      a: 'Benar. Begitu waktu subtes habis, sistem secara otomatis melakukan submit otomatis (hard-lock) dan Anda tidak dapat membuka kembali lembar soal tersebut. Hal ini dirancang agar simulasi memberikan tekanan mental yang otentik.',
+      a: 'Benar. Begitu waktu subtes habis, sistem secara otomatis melakukan submit otomatis (hard-lock) dan Anda tidak dapat membuka kembali lembar soal tersebut. Hal ini dirancang agar TES CAT memberikan tekanan mental yang otentik.',
     },
     {
       q: 'Dapatkah ujian dikerjakan bersamaan di laptop dan ponsel?',
@@ -118,10 +119,10 @@
 </script>
 
 <svelte:head>
-  <title>Web CAT POLRI — Simulasi Seleksi Berstandar Resmi Polri</title>
+  <title>TES CAT — Seleksi Berstandar Resmi Polri</title>
   <meta
     name="description"
-    content="Platform simulasi Computer Assisted Test (CAT) seleksi penerimaan Polri. Timer server mandiri, sistem gugur, dan analisis ambang batas nilai real-time."
+    content="Platform TES CAT (Computer Assisted Test) seleksi penerimaan Polri. Timer server mandiri, sistem gugur, dan analisis ambang batas nilai real-time."
   />
 </svelte:head>
 
@@ -143,13 +144,13 @@
       </h1>
 
       <p class="hero-lead">
-        Simulasi Computer Assisted Test (CAT) resmi untuk Akpol, Bintara, dan Tamtama. Dilengkapi
+        TES CAT (Computer Assisted Test) resmi untuk Akpol, Bintara, dan Tamtama. Dilengkapi
         timer server anti-curang, sistem gugur bertahap, dan kalkulasi nilai ambang batas otomatis.
       </p>
 
       <div class="hero-cta-group">
         <Button href="/login" size="lg">Mulai Latihan Sekarang</Button>
-        <a href="#simulasi" class="btn-text-link">Coba Simulasi Interaktif ↓</a>
+        <a href="#tes-cat" class="btn-text-link">Coba TES CAT Interaktif ↓</a>
       </div>
 
       <!-- Trust Metrics Strip -->
@@ -172,7 +173,7 @@
     </div>
 
     <!-- Right: Interactive Live CAT Exam Preview Widget -->
-    <div class="hero-preview" id="simulasi">
+    <div class="hero-preview" id="tes-cat">
       <div class="cat-widget">
         <!-- Widget Header -->
         <div class="cat-widget__head">
@@ -301,13 +302,13 @@
 
       <button
         class="tab-btn"
-        class:tab-btn--active={activeTab === 'tpa'}
+        class:tab-btn--active={activeTab === 'tkk'}
         role="tab"
-        aria-selected={activeTab === 'tpa'}
-        onclick={() => (activeTab = 'tpa')}
+        aria-selected={activeTab === 'tkk'}
+        onclick={() => (activeTab = 'tkk')}
       >
         <span class="tab-btn__num">02</span>
-        <span class="tab-btn__name">Tes Potensi Akademik (TPA)</span>
+        <span class="tab-btn__name">Tes Kemampuan Komputer (TKK)</span>
       </button>
 
       <button
@@ -371,7 +372,7 @@
 <section class="section-block section-block--alt" id="kalkulator">
   <div class="site-container">
     <div class="section-title-wrap">
-      <span class="section-kicker">SIMULASI AMBANG BATAS (PASSING GRADE)</span>
+      <span class="section-kicker">KALKULASI AMBANG BATAS (PASSING GRADE)</span>
       <h2 class="section-heading">Kalkulator Kelulusan Sistem Gugur</h2>
       <p class="section-subheading">
         Geser nilai di bawah ini untuk melihat bagaimana sistem gugur Polri mendeteksi kelulusan
@@ -403,16 +404,16 @@
 
         <div class="slider-group">
           <div class="slider-header">
-            <label for="tpa-range" class="slider-label">2. Nilai Potensi Akademik (Bobot 35%)</label>
-            <span class="slider-val" class:text-danger={calcTpa < 60.0}>{calcTpa.toFixed(1)}</span>
+            <label for="tkk-range" class="slider-label">2. Nilai Kemampuan Komputer (Bobot 35%)</label>
+            <span class="slider-val" class:text-danger={calcTkk < 60.0}>{calcTkk.toFixed(1)}</span>
           </div>
           <input
-            id="tpa-range"
+            id="tkk-range"
             type="range"
             min="40"
             max="100"
             step="1"
-            bind:value={calcTpa}
+            bind:value={calcTkk}
             class="range-slider"
           />
           <span class="slider-hint">Batas kelulusan minimal: 60.00</span>
@@ -438,7 +439,7 @@
 
       <!-- Result Card -->
       <div class="calc-result" class:calc-result--eliminated={isEliminated}>
-        <span class="result-kicker">HASIL SIMULASI AKHIR</span>
+        <span class="result-kicker">HASIL TES CAT AKHIR</span>
 
         <div class="result-number-wrap">
           <span class="result-number">{calcFinalScore}</span>
@@ -582,7 +583,7 @@
       <div class="cta-copy">
         <h2 class="cta-heading">Siap Menguji Kesiapan Seleksi Anda?</h2>
         <p class="cta-sub">
-          Masuk ke akun peserta Anda untuk memulai simulasi terintegrasi dengan timer resmi dan
+          Masuk ke akun peserta Anda untuk memulai TES CAT terintegrasi dengan timer resmi dan
           analisis ambang batas.
         </p>
       </div>

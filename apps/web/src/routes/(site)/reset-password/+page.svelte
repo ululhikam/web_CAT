@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-  <title>Buat Password Baru — Web CAT</title>
+  <title>Buat Password Baru — TES CAT</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 

@@ -26,7 +26,7 @@ export type MediaRole = (typeof MEDIA_ROLES)[number];
 /** Subtes yang sah untuk setiap stage. Dipakai validasi API + form admin. */
 export const STAGE_SUBTESTS: Record<StageCode, readonly SubtestCode[]> = {
   PSIKOLOGI: ['KECERDASAN', 'KEPRIBADIAN', 'KECERMATAN', 'PASS_HAND'],
-  TPA: ['TPA'],
+  TKK: ['TKK'],
   TPK: ['TPK'],
 };
 

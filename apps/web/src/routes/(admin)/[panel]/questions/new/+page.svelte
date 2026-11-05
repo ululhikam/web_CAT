@@ -74,7 +74,7 @@
 </script>
 
 <svelte:head>
-  <title>Tambah Soal — Admin Web CAT</title>
+  <title>Tambah Soal — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

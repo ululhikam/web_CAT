@@ -37,6 +37,8 @@ export interface AdminNavItem {
   permission?: Permission;
   /** Hanya muncul di panel SUPER_ADMIN. */
   platformOnly?: boolean;
+  /** Tautan menuju halaman di luar panel (mis. `/exam`). */
+  absolute?: boolean;
 }
 
 export interface AdminNavGroup {
@@ -53,6 +55,8 @@ interface NavSeed {
   permission?: Permission;
   platformOnly?: boolean;
   adminOnly?: boolean;
+  /** Path absolut (di luar basis panel). */
+  absolute?: boolean;
 }
 
 const NAV_SEEDS: readonly NavSeed[] = [
@@ -122,6 +126,15 @@ const NAV_SEEDS: readonly NavSeed[] = [
   },
   {
     group: 'Ujian',
+    path: '/exam',
+    label: 'Kerjakan TES CAT',
+    description: 'Pilih dan kerjakan tes Psikologi, TKK, atau TPK.',
+    icon: 'list',
+    permission: 'exam.take',
+    absolute: true,
+  },
+  {
+    group: 'Ujian',
     path: '/monitoring',
     label: 'Monitoring ujian',
     description: 'Pantau sesi berjalan, progres peserta, dan pelanggaran.',
@@ -175,13 +188,16 @@ function buildNav(panel: AdminPanel): AdminNavGroup[] {
   const items = NAV_SEEDS.filter(
     (seed) => (panel === 'super-admin' || !seed.platformOnly) && (panel === 'admin' || !seed.adminOnly),
   ).map<AdminNavItem>((seed) => ({
-    href: seed.path ? `${base}${seed.path}` : base,
+    // `absolute` menunjuk halaman di luar panel (mis. `/exam`), jadi tidak
+    // ditempeli basis panel.
+    href: seed.absolute ? seed.path : seed.path ? `${base}${seed.path}` : base,
     path: seed.path,
     label: seed.label,
     description: seed.description,
     icon: seed.icon,
     permission: seed.permission,
     platformOnly: seed.platformOnly,
+    absolute: seed.absolute,
   }));
 
   return GROUP_ORDER.flatMap((group) => {

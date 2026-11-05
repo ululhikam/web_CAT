@@ -209,8 +209,8 @@ export interface ImportTemplateColumn {
 
 export const IMPORT_TEMPLATE_COLUMNS: readonly ImportTemplateColumn[] = [
   { key: 'public_code', required: false, description: 'Kode unik soal (opsional)' },
-  { key: 'stage_code', required: false, description: 'PSIKOLOGI | TPA | TPK' },
-  { key: 'subtest_code', required: false, description: 'KECERDASAN | KEPRIBADIAN | KECERMATAN | PASS_HAND | TPA | TPK' },
+  { key: 'stage_code', required: false, description: 'PSIKOLOGI | TKK | TPK' },
+  { key: 'subtest_code', required: false, description: 'KECERDASAN | KEPRIBADIAN | KECERMATAN | PASS_HAND | TKK | TPK' },
   { key: 'category_path', required: false, description: 'contoh: psikologi/kecerdasan/verbal' },
   { key: 'type', required: false, description: 'SINGLE_CHOICE | MULTI_CHOICE | IMAGE_CHOICE | LIKERT_STATEMENT | MISSING_ELEMENT | PASS_HAND_COLUMN' },
   { key: 'difficulty', required: false, description: 'EASY | MEDIUM | HARD' },

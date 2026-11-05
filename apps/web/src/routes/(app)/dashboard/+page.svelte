@@ -115,7 +115,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard Peserta - Web CAT POLRI</title>
+  <title>Dashboard Peserta - TES CAT POLRI</title>
 </svelte:head>
 
 <div class="dashboard-page">
@@ -126,9 +126,9 @@
       <p class="page-subtitle">Portal latihan dan evaluasi terpadu berbasis Computer Assisted Test (CAT) Polri.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-start-cat" type="button" onclick={() => goto('/simulation')}>
+      <button class="btn-start-cat" type="button" onclick={() => goto('/exam')}>
         <AdminIcon name="shield" size={17} />
-        <span>Mulai Simulasi CAT</span>
+        <span>Mulai TES CAT</span>
       </button>
     </div>
   </div>
@@ -231,15 +231,15 @@
   <!-- TRYOUT FAST-LAUNCH BANNER (Interactive Section) -->
   <section class="banner-tryout" id="tryout" aria-label="Akses Cepat Tryout">
     <div class="banner-tryout__content">
-      <span class="banner-tag">SIMULASI MANDIRI &amp; TRYOUT AKBAR</span>
+      <span class="banner-tag">TES CAT MANDIRI &amp; TRYOUT AKBAR</span>
       <h2 class="banner-title">Uji Kesiapan Seleksi Anda dengan Sistem CAT Asli</h2>
       <p class="banner-desc">
         Dilengkapi pengatur waktu terpisah per subtes, bobot penilaian resmi, serta pendeteksi ambang batas kelulusan Memenuhi Syarat (MS) sesuai pengaturan ujian.
       </p>
       <div class="banner-buttons">
-        <button class="btn-primary-launch" type="button" onclick={() => goto('/simulation')}>
+        <button class="btn-primary-launch" type="button" onclick={() => goto('/exam')}>
           <AdminIcon name="shield" size={17} />
-          <span>Mulai Simulasi CAT Sekarang</span>
+          <span>Mulai TES CAT Sekarang</span>
         </button>
         <a href="#riwayat" class="btn-secondary-launch">
           <AdminIcon name="list" size={17} />

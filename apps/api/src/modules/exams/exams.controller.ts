@@ -24,6 +24,15 @@ import { JwtAuthGuard } from '../../core/auth/jwt-auth.guard';
 import { zodPipe } from '../../core/http/validation.pipe';
 import { ExamSessionService } from './exam-session.service';
 
+/**
+ * ADMIN/SUPER_ADMIN boleh mengerjakan semua tes tanpa langganan aktif dan
+ * tanpa batas kuota harian. Ini hanya soal akses; seluruh guard teknis sesi
+ * (satu sesi aktif, ketersediaan bank soal) tetap berlaku.
+ */
+function isPrivileged(role: AuthPrincipal['role']): boolean {
+  return role === 'ADMIN' || role === 'SUPER_ADMIN';
+}
+
 @ApiTags('Exams')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -35,16 +44,20 @@ export class ExamsController {
   @Get('eligibility')
   @ApiOperation({ summary: 'Cek apakah peserta boleh memulai sesi ujian' })
   eligibility(@AuthUser() user: AuthPrincipal): Promise<ExamEligibility> {
-    return this.sessions.getEligibility(user.id);
+    return this.sessions.getEligibility(user.id, { privileged: isPrivileged(user.role) });
   }
 
   @Post('sessions')
   @ApiOperation({ summary: 'Mulai sesi ujian baru (materialisasi konfigurasi)' })
   start(
     @AuthUser() user: AuthPrincipal,
-    @Body(zodPipe(startExamSessionSchema)) _input: StartExamSessionInput,
+    @Body(zodPipe(startExamSessionSchema)) input: StartExamSessionInput,
   ): Promise<ActiveSessionResponse> {
-    return this.sessions.startSession(user.id);
+    return this.sessions.startSession(
+      user.id,
+      { stageCode: input.stageCode },
+      { privileged: isPrivileged(user.role) },
+    );
   }
 
   @Get('sessions/active')
@@ -70,7 +83,9 @@ export class ExamsController {
     @Param('stageId') stageId: string,
     @Param('subId') subtestId: string,
   ): Promise<ActiveSessionResponse> {
-    return this.sessions.openSubtest(user.id, sessionId, stageId, subtestId);
+    return this.sessions.openSubtest(user.id, sessionId, stageId, subtestId, {
+      privileged: isPrivileged(user.role),
+    });
   }
 
   @Get('sessions/:id/subtests/:subId/questions')

@@ -1,16 +1,20 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   adminCreateUserSchema,
+  adminDeleteUserSchema,
   adminResetPasswordSchema,
+  adminUpdateUserSchema,
   changeUserRoleSchema,
   quotaResetSchema,
   updateUserStatusSchema,
   userListQuerySchema,
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
+  type AdminDeleteUserInput,
   type AdminResetPasswordInput,
+  type AdminUpdateUserInput,
   type AdminUserOverview,
   type AdminUserSummary,
   type QuotaResetInput,
@@ -73,6 +77,30 @@ export class UsersController {
     @Req() req: Request,
   ): Promise<AdminCreateUserResponse> {
     return this.users.create(body, this.actor(user, req));
+  }
+
+  @RequirePermissions('users.update')
+  @Patch(':id')
+  @ApiOperation({ summary: 'Perbaiki data profil peserta (nama/telepon)' })
+  update(
+    @Param('id') id: string,
+    @Body(zodPipe(adminUpdateUserSchema)) body: AdminUpdateUserInput,
+    @AuthUser() user: AuthPrincipal,
+    @Req() req: Request,
+  ): Promise<AdminUserSummary> {
+    return this.users.updateProfileByAdmin(id, body, this.actor(user, req));
+  }
+
+  @RequirePermissions('users.delete')
+  @Delete(':id')
+  @ApiOperation({ summary: 'Hapus akun peserta (hapus-lunak, riwayat tetap disimpan)' })
+  remove(
+    @Param('id') id: string,
+    @Body(zodPipe(adminDeleteUserSchema)) body: AdminDeleteUserInput,
+    @AuthUser() user: AuthPrincipal,
+    @Req() req: Request,
+  ): Promise<{ message: string }> {
+    return this.users.softDelete(id, body.reason, this.actor(user, req));
   }
 
   @RequirePermissions('users.suspend')

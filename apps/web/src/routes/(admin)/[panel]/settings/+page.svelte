@@ -83,7 +83,7 @@
 </script>
 
 <svelte:head>
-  <title>Pengaturan — Admin Web CAT</title>
+  <title>Pengaturan — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page adm-page--narrow">

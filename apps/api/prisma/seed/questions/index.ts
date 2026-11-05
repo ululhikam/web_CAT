@@ -6,7 +6,7 @@ import {
   countDistractors,
   directionDistractors,
   FIGURAL_KECERDASAN,
-  FIGURAL_TPA,
+  FIGURAL_TKK,
   figuralTextAnswer,
   figureAssetCode,
   layoutFor,
@@ -18,7 +18,7 @@ import { KECERDASAN_QUESTIONS, MULTI_KECERDASAN } from './kecerdasan';
 import { KECERMATAN_QUESTIONS } from './kecermatan';
 import { KEPRIBADIAN_QUESTIONS } from './kepribadian';
 import { PASS_HAND_QUESTIONS } from './pass-hand';
-import { TPA_MULTI_CHOICE, TPA_QUESTIONS } from './tpa';
+import { TKK_MULTI_CHOICE, TKK_QUESTIONS } from './tkk';
 import { TPK_QUESTIONS } from './tpk';
 import type { SeedDifficulty, SeedQuestionMedia } from './types';
 
@@ -28,7 +28,9 @@ import type { SeedDifficulty, SeedQuestionMedia } from './types';
  * Cakupan:
  *   PSIKOLOGI — Kecerdasan 100 + 3 multi-jawaban + 44 figural,
  *               Kepribadian 140, Kecermatan 500, Pass Hand 150
- *   TPA       — 87 pilihan tunggal + 3 multi-jawaban + 15 figural
+ *   TKK       — 87 pilihan tunggal + 3 multi-jawaban + 15 figural
+ *               (perangkat keras 20, perangkat lunak 18, jaringan 18,
+ *                keamanan 17, penalaran 14)
  *   TPK       — 100 soal (10 kelompok materi × 10)
  *
  * Semua soal berstatus PUBLISHED. `exam-question-source.ts` baru memakai bank
@@ -107,17 +109,29 @@ export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
   { path: 'tpk/manajemen', name: 'Manajemen & Kepemimpinan', parentPath: 'tpk', sortOrder: 8 },
   { path: 'tpk/situasi-tugas', name: 'Situasi Tugas', parentPath: 'tpk', sortOrder: 9 },
   { path: 'tpk/profesionalisme', name: 'Profesionalisme', parentPath: 'tpk', sortOrder: 10 },
-  { path: 'tpa', name: 'TPA', sortOrder: 2 },
-  { path: 'tpa/verbal', name: 'Verbal', parentPath: 'tpa', sortOrder: 1 },
-  { path: 'tpa/numerik', name: 'Numerik', parentPath: 'tpa', sortOrder: 2 },
-  { path: 'tpa/penalaran', name: 'Penalaran', parentPath: 'tpa', sortOrder: 3 },
-  { path: 'tpa/figural', name: 'Figural', parentPath: 'tpa', sortOrder: 4 },
+  { path: 'tkk', name: 'TKK', sortOrder: 2 },
+  {
+    path: 'tkk/perangkat-keras',
+    name: 'Perangkat Keras',
+    parentPath: 'tkk',
+    sortOrder: 1,
+  },
+  {
+    path: 'tkk/perangkat-lunak',
+    name: 'Perangkat Lunak',
+    parentPath: 'tkk',
+    sortOrder: 2,
+  },
+  { path: 'tkk/jaringan', name: 'Jaringan', parentPath: 'tkk', sortOrder: 3 },
+  { path: 'tkk/keamanan', name: 'Keamanan', parentPath: 'tkk', sortOrder: 4 },
+  { path: 'tkk/penalaran', name: 'Penalaran', parentPath: 'tkk', sortOrder: 5 },
+  { path: 'tkk/figural', name: 'Figural', parentPath: 'tkk', sortOrder: 6 },
 ];
 
 /* ------------------------------------------------------------------ payload */
 
-type SeedStageCode = 'PSIKOLOGI' | 'TPA' | 'TPK';
-type SeedSubtestCode = 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'PASS_HAND' | 'TPA' | 'TPK';
+type SeedStageCode = 'PSIKOLOGI' | 'TKK' | 'TPK';
+type SeedSubtestCode = 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'PASS_HAND' | 'TKK' | 'TPK';
 type SeedQuestionType =
   | 'SINGLE_CHOICE'
   | 'MULTI_CHOICE'
@@ -396,19 +410,19 @@ function buildKecerdasanMulti(): SeedQuestion[] {
   }));
 }
 
-/* ---------------------------------------------------------------------- tpa */
+/* ---------------------------------------------------------------------- tkk */
 
 /**
- * Soal TPA tertulis (`SINGLE_CHOICE`).
+ * Soal TKK tertulis (`SINGLE_CHOICE`).
  *
- * Subtes TPA dinilai `KEYED_CORRECT` di level subtes (lihat `exam.seed.ts`),
+ * Subtes TKK dinilai `KEYED_CORRECT` di level subtes (lihat `exam.seed.ts`),
  * jadi skor dihitung per himpunan jawaban — tidak ada kredit parsial.
  */
-function buildTpaChoices(): SeedQuestion[] {
-  return buildChoices('TPA', 'tpa', TPA_QUESTIONS).map((row) => ({
+function buildTkkChoices(): SeedQuestion[] {
+  return buildChoices('TKK', 'tkk', TKK_QUESTIONS).map((row) => ({
     publicCode: row.code,
-    stageCode: 'TPA',
-    subtestCode: 'TPA',
+    stageCode: 'TKK',
+    subtestCode: 'TKK',
     categoryPath: row.categoryPath,
     type: 'SINGLE_CHOICE',
     difficulty: row.difficulty,
@@ -430,17 +444,17 @@ function buildTpaChoices(): SeedQuestion[] {
 }
 
 /**
- * Soal TPA banyak-jawaban (`MULTI_CHOICE`, F4-05).
+ * Soal TKK banyak-jawaban (`MULTI_CHOICE`, F4-05).
  *
  * `scoringStrategy` per soal = `MULTI_CORRECT_PARTIAL` (metadata untuk admin);
  * penilaian sesungguhnya tetap memakai strategi subtes `KEYED_CORRECT`, yang
  * mensyaratkan himpunan terpilih sama persis dengan kunci.
  */
-function buildTpaMultiChoices(): SeedQuestion[] {
-  return buildMultiChoices('TPA-MC', 'tpa', TPA_MULTI_CHOICE).map((row) => ({
+function buildTkkMultiChoices(): SeedQuestion[] {
+  return buildMultiChoices('TKK-MC', 'tkk', TKK_MULTI_CHOICE).map((row) => ({
     publicCode: row.code,
-    stageCode: 'TPA',
-    subtestCode: 'TPA',
+    stageCode: 'TKK',
+    subtestCode: 'TKK',
     categoryPath: row.categoryPath,
     type: 'MULTI_CHOICE',
     difficulty: row.difficulty,
@@ -523,7 +537,7 @@ function buildFiguralImage(
     stageCode,
     subtestCode,
     categoryPath:
-      subtestCode === 'TPA' ? 'tpa/figural' : 'psikologi/kecerdasan/figural',
+      subtestCode === 'TKK' ? 'tkk/figural' : 'psikologi/kecerdasan/figural',
     type: 'IMAGE_CHOICE',
     difficulty: row.difficulty,
     stemText: row.stem,
@@ -565,7 +579,7 @@ function buildFiguralText(
     stageCode,
     subtestCode,
     categoryPath:
-      subtestCode === 'TPA' ? 'tpa/figural' : 'psikologi/kecerdasan/figural',
+      subtestCode === 'TKK' ? 'tkk/figural' : 'psikologi/kecerdasan/figural',
     type: 'SINGLE_CHOICE',
     difficulty: row.difficulty,
     stemText: row.stem,
@@ -607,8 +621,8 @@ function buildFiguralKecerdasan(): SeedQuestion[] {
   return buildFigural(FIGURAL_KECERDASAN, PSIKOLOGI, 'KECERDASAN');
 }
 
-function buildFiguralTpa(): SeedQuestion[] {
-  return buildFigural(FIGURAL_TPA, 'TPA', 'TPA');
+function buildFiguralTkk(): SeedQuestion[] {
+  return buildFigural(FIGURAL_TKK, 'TKK', 'TKK');
 }
 
 /** Seluruh soal realistis yang akan di-seed (fungsi murni, mudah diuji). */
@@ -621,9 +635,9 @@ export function buildSeedQuestions(): SeedQuestion[] {
     ...buildKecermatan(),
     ...buildPassHand(),
     ...buildTpk(),
-    ...buildTpaChoices(),
-    ...buildTpaMultiChoices(),
-    ...buildFiguralTpa(),
+    ...buildTkkChoices(),
+    ...buildTkkMultiChoices(),
+    ...buildFiguralTkk(),
   ];
 }
 
@@ -764,6 +778,21 @@ export async function seedQuestionBank(
 
   const categoryOf = (question: SeedQuestion): string | null =>
     categoryIds.get(question.categoryPath) ?? null;
+
+  // Soal DEMO & TPA lama tidak dipakai lagi. Keduanya dihapus-lunak
+  // (`deletedAt`), bukan sekadar diarsipkan: unique index
+  // `questions_active_dedupe_key` hanya mengabaikan baris yang `deleted_at`
+  // terisi. Soal TPA figural berbagi `dedupe_hash` dengan soal TKK
+  // penggantinya, sehingga tanpa hapus-lunak `createMany` akan melewatinya
+  // (`skipDuplicates`) dan penulisan opsi/media gagal dengan pelanggaran
+  // foreign key.
+  const retired = await prisma.question.updateMany({
+    where: {
+      OR: [{ publicCode: { startsWith: 'DEMO-' } }, { publicCode: { startsWith: 'TPA-' } }],
+      deletedAt: null,
+    },
+    data: { status: 'ARCHIVED', deletedAt: new Date() },
+  });
 
   const existing = await prisma.question.findMany({
     where: { publicCode: { in: questions.map((question) => question.publicCode) } },
@@ -906,9 +935,10 @@ export async function seedQuestionBank(
     }
   }
 
-  // Soal DEMO lama tidak dipakai lagi; diarsipkan agar riwayat tetap ada.
-  const archived = await prisma.question.updateMany({
-    where: { publicCode: { startsWith: 'DEMO-' }, status: { not: 'ARCHIVED' } },
+  // Soal DEMO & TPA lama sudah dihapus-lunak di awal seed; blok ini hanya
+  // menjaga perilaku lama (arsip tanpa hapus-lunak) untuk baris yang lolos.
+  await prisma.question.updateMany({
+    where: { publicCode: { startsWith: 'DEMO-' }, status: { not: 'ARCHIVED' }, deletedAt: null },
     data: { status: 'ARCHIVED' },
   });
 
@@ -923,7 +953,7 @@ export async function seedQuestionBank(
       toUpdate.length
     }) — ${[...perSubtest.entries()].map(([code, count]) => `${code} ${count}`).join(', ')}`,
   );
-  if (archived.count > 0) {
-    console.log(`  soal demo diarsipkan: ${archived.count}`);
+  if (retired.count > 0) {
+    console.log(`  soal DEMO/TPA lama disembunyikan: ${retired.count}`);
   }
 }

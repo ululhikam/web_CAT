@@ -17,7 +17,7 @@ const ANSWER_LINE =
 const EXPLANATION_START =
   /^\s*\**\s*(?:pembahasan|penjelasan|explanation|solution)\s*\**\s*[:=]\s*(.*)$/i;
 const SUBTEST_HEADING =
-  /^\s*\**\s*(?:sub\s*tes|bagian|tes)?\s*[:-]?\s*(KECERDASAN|KEPRIBADIAN|KECERMATAN|PAS+HAND|TPA|TPK)\s*\**\s*$/i;
+  /^\s*\**\s*(?:sub\s*tes|bagian|tes)?\s*[:-]?\s*(KECERDASAN|KEPRIBADIAN|KECERMATAN|PAS+HAND|TKK|TPA|TPK)\s*\**\s*$/i;
 const ANSWER_KEY_BLOCK =
   /^\s*\**\s*(?:kunci\s+jawaban|kunci(?:\s+jawaban)?|answer\s+key)\s*\**\s*[:=]?\s*(.*)$/i;
 const IMAGE_TOKEN = /\[\[IMG:(\d+)\]\]/g;
@@ -29,7 +29,9 @@ const SUBTEST_FROM_HEADING: Record<string, SubtestCode> = {
   KEPRIBADIAN: 'KEPRIBADIAN',
   KECERMATAN: 'KECERMATAN',
   PASSHAND: 'PASS_HAND',
-  TPA: 'TPA',
+  TKK: 'TKK',
+  // Alias lama: dokumen impor yang masih menulis "TPA" dipetakan ke subtes TKK.
+  TPA: 'TKK',
   TPK: 'TPK',
 };
 
@@ -38,14 +40,14 @@ const STAGE_OF: Record<SubtestCode, StageCode> = {
   KEPRIBADIAN: 'PSIKOLOGI',
   KECERMATAN: 'PSIKOLOGI',
   PASS_HAND: 'PSIKOLOGI',
-  TPA: 'TPA',
+  TKK: 'TKK',
   TPK: 'TPK',
 };
 
 /** Subtes yang sah per stage; dipakai validasi target impor. */
 export const SUBTEST_OF_STAGE_HINT: Record<StageCode, readonly SubtestCode[]> = {
   PSIKOLOGI: ['KECERDASAN', 'KEPRIBADIAN', 'KECERMATAN', 'PASS_HAND'],
-  TPA: ['TPA'],
+  TKK: ['TKK'],
   TPK: ['TPK'],
 };
 

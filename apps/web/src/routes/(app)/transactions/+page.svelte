@@ -71,7 +71,7 @@
 </script>
 
 <svelte:head>
-  <title>Riwayat transaksi — Web CAT</title>
+  <title>Riwayat transaksi — TES CAT</title>
 </svelte:head>
 
 <div class="page">

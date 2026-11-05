@@ -108,7 +108,7 @@
 </script>
 
 <svelte:head>
-  <title>Monitoring ujian -" Admin Web CAT</title>
+  <title>Monitoring ujian - Admin TES CAT</title>
 </svelte:head>
 
 <div class="page">

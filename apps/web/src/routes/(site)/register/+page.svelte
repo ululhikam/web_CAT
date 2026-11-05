@@ -47,7 +47,7 @@
 </script>
 
 <svelte:head>
-  <title>Daftar — Web CAT</title>
+  <title>Daftar — TES CAT</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 

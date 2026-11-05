@@ -152,7 +152,7 @@
 </script>
 
 <svelte:head>
-  <title>Ubah Soal — Admin Web CAT</title>
+  <title>Ubah Soal — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

@@ -29,7 +29,7 @@ export const envSchema = z.object({
 
   MAIL: z.enum(['console', 'resend']).default('console'),
   RESEND_API_KEY: z.string().optional(),
-  MAIL_FROM: z.string().default('Web CAT <no-reply@example.com>'),
+  MAIL_FROM: z.string().default('TES CAT <no-reply@example.com>'),
 
   STORAGE: z.enum(['dev', 'supabase']).default('dev'),
 

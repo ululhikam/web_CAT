@@ -77,21 +77,23 @@ describe('komposisi bank soal', () => {
     expect(only('KECERMATAN')).toHaveLength(500);
     expect(only('PASS_HAND')).toHaveLength(150);
     expect(only('TPK')).toHaveLength(100);
-    // F4-03/F4-04: TPA kini punya bank soal penuh, bukan hanya soal figural.
-    expect(only('TPA').length).toBeGreaterThanOrEqual(100);
+    // F4-03/F4-04: TKK kini punya bank soal penuh, bukan hanya soal figural.
+    expect(only('TKK').length).toBeGreaterThanOrEqual(100);
   });
 
-  it('TPA terbagi ke verbal, numerik, penalaran, dan figural', () => {
-    const tpa = only('TPA');
+  it('TKK terbagi ke perangkat keras, perangkat lunak, jaringan, keamanan, penalaran, dan figural', () => {
+    const tkk = only('TKK');
     const perCategory = new Map<string, number>();
-    for (const question of tpa) {
+    for (const question of tkk) {
       perCategory.set(question.categoryPath, (perCategory.get(question.categoryPath) ?? 0) + 1);
     }
 
-    expect(perCategory.get('tpa/verbal')).toBeGreaterThanOrEqual(35);
-    expect(perCategory.get('tpa/numerik')).toBeGreaterThanOrEqual(30);
-    expect(perCategory.get('tpa/penalaran')).toBeGreaterThanOrEqual(15);
-    expect(perCategory.get('tpa/figural')).toBeGreaterThanOrEqual(10);
+    expect(perCategory.get('tkk/perangkat-keras')).toBeGreaterThanOrEqual(20);
+    expect(perCategory.get('tkk/perangkat-lunak')).toBeGreaterThanOrEqual(18);
+    expect(perCategory.get('tkk/jaringan')).toBeGreaterThanOrEqual(18);
+    expect(perCategory.get('tkk/keamanan')).toBeGreaterThanOrEqual(17);
+    expect(perCategory.get('tkk/penalaran')).toBeGreaterThanOrEqual(14);
+    expect(perCategory.get('tkk/figural')).toBeGreaterThanOrEqual(10);
   });
 
   it('memakai kode publik unik', () => {
@@ -102,7 +104,7 @@ describe('komposisi bank soal', () => {
   it('pengecoh numerik sepadan besaran dengan kunci (bukan +1 pada angka ribuan)', () => {
     // Kunci ribuan (mis. harga Rp68.000) harus berpengecoh kelipatan 1.000;
     // `68.001` menandai kunci dan mustahil dipilih peserta.
-    const numeric = only('TPA').filter(
+    const numeric = only('TKK').filter(
       (question) => question.options.length === 5 && /^\d+$/.test(question.options.find((option) => option.isCorrect)?.contentText ?? ''),
     );
 
@@ -165,7 +167,7 @@ describe('bentuk soal', () => {
 
   it('soal pilihan tunggal punya tepat satu kunci dan lima opsi unik', () => {
     const textChoice = only('KECERDASAN')
-      .concat(only('TPK'), only('KECERMATAN'), only('TPA'))
+      .concat(only('TPK'), only('KECERMATAN'), only('TKK'))
       .filter((question) => question.type !== 'IMAGE_CHOICE' && question.type !== 'MULTI_CHOICE');
 
     for (const question of textChoice) {
@@ -207,10 +209,10 @@ describe('bentuk soal', () => {
 describe('kelengkapan media soal bergambar (F3-26)', () => {
   const imageChoice = questions.filter((question) => question.type === 'IMAGE_CHOICE');
 
-  it('seed memuat soal bergambar untuk Kecerdasan dan TPA', () => {
+  it('seed memuat soal bergambar untuk Kecerdasan dan TKK', () => {
     expect(imageChoice.length).toBeGreaterThanOrEqual(20);
     expect(new Set(imageChoice.map((question) => question.subtestCode))).toEqual(
-      new Set(['KECERDASAN', 'TPA']),
+      new Set(['KECERDASAN', 'TKK']),
     );
   });
 
@@ -274,10 +276,10 @@ describe('kelengkapan media soal bergambar (F3-26)', () => {
 describe('pilihan ganda banyak jawaban (F4-05)', () => {
   const multi = questions.filter((question) => question.type === 'MULTI_CHOICE');
 
-  it('minimal lima soal tersebar di Kecerdasan dan TPA', () => {
+  it('minimal lima soal tersebar di Kecerdasan dan TKK', () => {
     expect(multi.length).toBeGreaterThanOrEqual(5);
     expect(new Set(multi.map((question) => question.subtestCode))).toEqual(
-      new Set(['KECERDASAN', 'TPA']),
+      new Set(['KECERDASAN', 'TKK']),
     );
   });
 

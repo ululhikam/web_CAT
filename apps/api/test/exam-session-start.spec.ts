@@ -42,6 +42,21 @@ function duplicateKey(target: string[]): Prisma.PrismaClientKnownRequestError {
   });
 }
 
+/**
+ * Satu tes yang bank soalnya siap.
+ *
+ * F5-17: tanpa tes yang siap, `getEligibility` selalu menambahkan
+ * `EXAM_POOL_INSUFFICIENT` sehingga `startSession` berhenti sebelum membuat
+ * baris sesi — sebagian besar test di bawah justru ingin menguji jalur
+ * pembuatan sesi, jadi default-nya harus tes yang tersedia.
+ */
+const AVAILABLE_STAGES = [
+  {
+    code: 'PSIKOLOGI',
+    subtests: [{ code: 'KECERDASAN', questionCount: 100 }],
+  },
+];
+
 function buildService(options: {
   createError?: Prisma.PrismaClientKnownRequestError;
   pool?: Partial<QuestionPoolPort>;
@@ -50,11 +65,15 @@ function buildService(options: {
   access?: { allowed: boolean; code: string };
 }) {
   const tx = {
+    $executeRaw: vi.fn(async () => 1),
     examSession: {
+      count: vi.fn(async () => 0),
       create: vi.fn(async () => {
         throw options.createError;
       }),
     },
+    examSessionStage: { create: vi.fn(async () => ({ id: 'stage-1' })) },
+    examSessionSubtest: { create: vi.fn(async () => ({ id: 'subtest-1' })) },
   };
 
   const prisma = {
@@ -76,7 +95,7 @@ function buildService(options: {
       subtestTransition: 'on_open',
       violationPolicy: {},
     })),
-    getSessionStages: vi.fn(async () => options.stages ?? []),
+    getSessionStages: vi.fn(async () => options.stages ?? AVAILABLE_STAGES),
     requireSessionSnapshot: vi.fn(async () => SNAPSHOT),
   } as unknown as ExamConfigService;
 
@@ -193,7 +212,6 @@ describe('startSession — bank soal kurang (F4-09)', () => {
 
   it('alasan selain bank soal tetap memakai EXAM_SESSION_LOCKED + detail', async () => {
     const { service } = buildService({
-      stages: [],
       access: { allowed: false, code: 'SUBSCRIPTION_REQUIRED' },
     });
 

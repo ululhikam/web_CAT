@@ -457,11 +457,11 @@ const KEC_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
   },
 ];
 
-/* -------------------------------------------------------------------- TPA */
+/* -------------------------------------------------------------------- TKK */
 
-const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
+const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
   {
-    code: 'TPA-FIG-001',
+    code: 'TKK-FIG-001',
     family: 'series',
     seed: 100,
     difficulty: 'EASY',
@@ -470,7 +470,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TPA-FIG-002',
+    code: 'TKK-FIG-002',
     family: 'series',
     seed: 101,
     difficulty: 'MEDIUM',
@@ -479,7 +479,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TPA-FIG-003',
+    code: 'TKK-FIG-003',
     family: 'series',
     seed: 102,
     difficulty: 'MEDIUM',
@@ -488,7 +488,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TPA-FIG-004',
+    code: 'TKK-FIG-004',
     family: 'series',
     seed: 103,
     difficulty: 'HARD',
@@ -497,7 +497,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TPA-FIG-005',
+    code: 'TKK-FIG-005',
     family: 'rotation',
     seed: 100,
     difficulty: 'MEDIUM',
@@ -506,7 +506,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'rotasi'],
   },
   {
-    code: 'TPA-FIG-006',
+    code: 'TKK-FIG-006',
     family: 'rotation',
     seed: 101,
     difficulty: 'HARD',
@@ -515,7 +515,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'rotasi'],
   },
   {
-    code: 'TPA-FIG-007',
+    code: 'TKK-FIG-007',
     family: 'rotation',
     seed: 102,
     difficulty: 'HARD',
@@ -524,7 +524,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'rotasi'],
   },
   {
-    code: 'TPA-FIG-008',
+    code: 'TKK-FIG-008',
     family: 'mirror',
     seed: 100,
     difficulty: 'MEDIUM',
@@ -533,7 +533,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pencerminan'],
   },
   {
-    code: 'TPA-FIG-009',
+    code: 'TKK-FIG-009',
     family: 'mirror',
     seed: 101,
     difficulty: 'HARD',
@@ -542,7 +542,7 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pencerminan'],
   },
   {
-    code: 'TPA-FIG-010',
+    code: 'TKK-FIG-010',
     family: 'mirror',
     seed: 102,
     difficulty: 'HARD',
@@ -552,9 +552,9 @@ const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
   },
 ];
 
-const TPA_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
+const TKK_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
   {
-    code: 'TPA-FIG-011',
+    code: 'TKK-FIG-011',
     family: 'count',
     seed: 100,
     difficulty: 'EASY',
@@ -563,7 +563,7 @@ const TPA_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'hitung'],
   },
   {
-    code: 'TPA-FIG-012',
+    code: 'TKK-FIG-012',
     family: 'count',
     seed: 101,
     difficulty: 'MEDIUM',
@@ -572,7 +572,7 @@ const TPA_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'hitung'],
   },
   {
-    code: 'TPA-FIG-013',
+    code: 'TKK-FIG-013',
     family: 'direction',
     seed: 100,
     difficulty: 'EASY',
@@ -581,7 +581,7 @@ const TPA_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'arah'],
   },
   {
-    code: 'TPA-FIG-014',
+    code: 'TKK-FIG-014',
     family: 'direction',
     seed: 101,
     difficulty: 'MEDIUM',
@@ -590,7 +590,7 @@ const TPA_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'arah'],
   },
   {
-    code: 'TPA-FIG-015',
+    code: 'TKK-FIG-015',
     family: 'direction',
     seed: 102,
     difficulty: 'MEDIUM',
@@ -614,9 +614,9 @@ export const FIGURAL_KECERDASAN: readonly FiguralSeed[] = [
   ...withType(KEC_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
 ];
 
-export const FIGURAL_TPA: readonly FiguralSeed[] = [
-  ...withType(TPA_IMAGE, 'IMAGE_CHOICE'),
-  ...withType(TPA_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
+export const FIGURAL_TKK: readonly FiguralSeed[] = [
+  ...withType(TKK_IMAGE, 'IMAGE_CHOICE'),
+  ...withType(TKK_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
 ];
 
 /* ------------------------------------------------------- aset & kunci opsi */
@@ -637,7 +637,7 @@ export function figureAssetCode(spec: FigureSpec, variant: number): string {
 export function figureAssets(): FigureAssetRef[] {
   const byCode = new Map<string, FigureAssetRef>();
 
-  for (const row of [...FIGURAL_KECERDASAN, ...FIGURAL_TPA]) {
+  for (const row of [...FIGURAL_KECERDASAN, ...FIGURAL_TKK]) {
     const spec: FigureSpec = { family: row.family, seed: row.seed };
     const variants = row.type === 'IMAGE_CHOICE' ? [STEM_VARIANT, 0, 1, 2, 3] : [STEM_VARIANT];
 

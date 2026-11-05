@@ -9,12 +9,13 @@
   import { session } from '$lib/stores/session.svelte';
   import { examRunner } from '$lib/stores/examRunner.svelte';
   import { formatDateTime } from '$lib/format';
-  import type { ExamEligibility } from '@webcat/contracts';
+  import type { ExamEligibility, ExamStageOption, StageCode } from '@webcat/contracts';
 
   let eligibility = $state<ExamEligibility | null>(null);
   let loading = $state(true);
   let starting = $state(false);
   let acknowledged = $state(false);
+  let selectedStage = $state<StageCode | null>(null);
   let error = $state<string | null>(null);
 
   $effect(() => {
@@ -31,6 +32,10 @@
         eligibility = await apiRequest<ExamEligibility>('/exams/eligibility', {
           token: session.accessToken,
         });
+        // Bila hanya ada satu tes yang siap, langsung pilih agar peserta tidak
+        // perlu klik dua kali.
+        const available = (eligibility.stages ?? []).filter((stage) => stage.available);
+        if (!selectedStage && available.length === 1) selectedStage = available[0]!.code;
       } catch (cause) {
         if (!cancelled) error = apiErrorMessage(cause);
       } finally {
@@ -47,8 +52,16 @@
     examRunner.active?.session?.id ?? eligibility?.activeSessionId ?? null,
   );
   const activeStatus = $derived(examRunner.active?.session?.status ?? null);
-  const canStart = $derived(
-    Boolean(eligibility?.canStart) && !activeSessionId && acknowledged && !starting,
+  const stages = $derived<ExamStageOption[]>(eligibility?.stages ?? []);
+  const selected = $derived(stages.find((stage) => stage.code === selectedStage) ?? null);
+  const canStart = $derived(Boolean(selected?.available) && acknowledged && !starting);
+
+  /** Penghalang yang berlaku untuk seluruh tes (bukan kekurangan bank soal satu tes). */
+  const blockers = $derived(
+    (eligibility?.reasons ?? []).filter(
+      (reason) =>
+        reason !== 'EXAM_POOL_INSUFFICIENT' || !stages.some((stage) => stage.available),
+    ),
   );
 
   const REASON_LABELS: Record<string, string> = {
@@ -61,12 +74,18 @@
     EMAIL_NOT_VERIFIED: 'Verifikasi email Anda terlebih dahulu.',
   };
 
+  function selectStage(stage: ExamStageOption): void {
+    if (!stage.available) return;
+    selectedStage = stage.code;
+    error = null;
+  }
+
   async function startExam(): Promise<void> {
-    if (!canStart) return;
+    if (!canStart || !selectedStage) return;
     starting = true;
     error = null;
     try {
-      const result = await examRunner.startSession();
+      const result = await examRunner.startSession(selectedStage);
       const id = result.session?.id;
       if (id) await goto(`/exam/${id}`);
     } catch (cause) {
@@ -78,21 +97,21 @@
 </script>
 
 <svelte:head>
-  <title>Ujian - Web CAT</title>
+  <title>TES CAT - Ujian</title>
 </svelte:head>
 
 <div class="page">
   <header class="page__header">
     <div>
-      <h1 class="page__title">Ujian seleksi</h1>
+      <h1 class="page__title">Pilih tes</h1>
       <p class="muted">
-        Tiga tes berurutan: Psikologi, TPA, dan TPK. Setiap subtes memiliki timer server dan tidak
-        dapat dibuka ulang setelah berakhir.
+        Pilih salah satu tes di bawah ini. Setiap tes memiliki timer server sendiri dan tidak dapat
+        dibuka ulang setelah berakhir.
       </p>
     </div>
     {#if activeSessionId}
       <Badge tone="warning">Sesi berjalan</Badge>
-    {:else if eligibility?.canStart}
+    {:else if stages.some((stage) => stage.available)}
       <Badge tone="success">Siap dimulai</Badge>
     {:else}
       <Badge tone="neutral">Belum dapat dimulai</Badge>
@@ -137,100 +156,148 @@
       </div>
     </Card>
   {:else}
-    <div class="grid">
-      <Card title="Aturan penting" description="Baca sebelum memulai.">
-        <ul class="rules">
-          <li>
-            <strong>Hard lock waktu.</strong> Begitu timer subtes habis, semua jawaban berikutnya ditolak
-            server. Jawaban yang sudah terkirim tetap dinilai.
-          </li>
-          <li>
-            <strong>Berurutan.</strong> Subtes berikutnya hanya terbuka setelah subtes sebelumnya selesai.
-            Timer subtes baru mulai penuh saat Anda membukanya.
-          </li>
-          <li>
-            <strong>Sistem gugur.</strong> Nilai subtes di bawah ambang gugur dapat mengakhiri sesi. Data
-            subtes yang sudah dikerjakan tetap tersimpan.
-          </li>
-          <li>
-            <strong>Anti-kecurangan.</strong> Perpindahan tab, salin-tempel, keluar layar penuh, dan sinyal
-            mencurigakan dicatat server. Pelanggaran berulang dapat mengunci subtes atau menggugurkan
-            sesi.
-          </li>
-          <li>
-            <strong>Autosave.</strong> Setiap jawaban disimpan di perangkat lebih dulu, lalu dikirim ke
-            server. Jangan menutup tab saat indikator masih menyimpan.
-          </li>
+    {#if blockers.length > 0}
+      <Alert tone="warning" title="Anda belum dapat memulai">
+        <ul class="reasons">
+          {#each blockers as reason (reason)}
+            <li>{REASON_LABELS[reason] ?? reason}</li>
+          {/each}
         </ul>
-      </Card>
+      </Alert>
+    {/if}
 
-      <Card title="Kelayakan" description="Pemeriksaan otomatis dari server.">
-        {#if eligibility}
-          <dl class="facts">
-            <div>
-              <dt>Sesi hari ini</dt>
-              <dd>{eligibility.sessionsToday}</dd>
-            </div>
-            <div>
-              <dt>Langganan</dt>
-              <dd>
-                {#if eligibility.activeSubscription}
-                  {eligibility.activeSubscription.remainingDays} hari lagi
-                {:else}
-                  -
+    <div class="layout">
+      <section class="tests" aria-label="Daftar tes">
+        {#if stages.length === 0}
+          <Card title="Belum ada tes" description="Konfigurasi ujian belum tersedia.">
+            <p class="muted">Hubungi admin untuk melengkapi konfigurasi tes.</p>
+          </Card>
+        {:else}
+          <div class="tests__grid">
+            {#each stages as stage (stage.code)}
+              <button
+                type="button"
+                class="test-card"
+                class:test-card--active={selectedStage === stage.code}
+                class:test-card--disabled={!stage.available}
+                aria-pressed={selectedStage === stage.code}
+                disabled={!stage.available}
+                onclick={() => selectStage(stage)}
+              >
+                <div class="test-card__head">
+                  <h2 class="test-card__title">{stage.name}</h2>
+                  {#if !stage.available}
+                    <Badge tone="neutral">Belum siap</Badge>
+                  {:else if selectedStage === stage.code}
+                    <Badge tone="brand" solid>Dipilih</Badge>
+                  {:else}
+                    <Badge tone="info">Tersedia</Badge>
+                  {/if}
+                </div>
+                {#if stage.description}
+                  <p class="test-card__desc">{stage.description}</p>
                 {/if}
-              </dd>
-            </div>
-            {#if eligibility.activeSubscription}
-              <div>
-                <dt>Berakhir</dt>
-                <dd>{formatDateTime(eligibility.activeSubscription.endsAt)}</dd>
-              </div>
-            {/if}
-            {#if eligibility.nextAvailableAt}
-              <div>
-                <dt>Dapat memulai lagi</dt>
-                <dd>{formatDateTime(eligibility.nextAvailableAt)}</dd>
-              </div>
-            {/if}
-          </dl>
+                <dl class="test-card__meta">
+                  <div>
+                    <dt>Jumlah soal</dt>
+                    <dd>{stage.questionCount}</dd>
+                  </div>
+                  <div>
+                    <dt>Durasi</dt>
+                    <dd>{stage.durationMinutes} menit</dd>
+                  </div>
+                </dl>
+                {#if !stage.available}
+                  <p class="test-card__note">Bank soal tes ini belum mencukupi.</p>
+                {/if}
+              </button>
+            {/each}
+          </div>
 
-          {#if eligibility.reasons.length > 0}
-            <Alert tone="warning" title="Anda belum dapat memulai">
-              <ul class="reasons">
-                {#each eligibility.reasons as reason (reason)}
-                  <li>
-                    {REASON_LABELS[reason] ?? reason}
-                    <!-- F4-09: sebut subtes & jumlah kekurangan, bukan generik. -->
-                    {#if reason === 'EXAM_POOL_INSUFFICIENT' && eligibility.poolProblems.length > 0}
-                      <ul class="reasons reasons--detail">
-                        {#each eligibility.poolProblems as problem (problem.subtestCode)}
-                          <li>{problem.message}</li>
-                        {/each}
-                      </ul>
-                    {/if}
-                  </li>
-                {/each}
-              </ul>
-            </Alert>
-          {:else}
+          <div class="start">
             <label class="ack">
               <input type="checkbox" bind:checked={acknowledged} />
               <span>
-                Saya sudah membaca aturan, memahami hard lock waktu, dan siap memulai sesi.
+                Saya sudah membaca aturan, memahami hard lock waktu, dan siap memulai tes yang
+                dipilih.
               </span>
             </label>
             <div class="actions">
               <Button loading={starting} disabled={!canStart} onclick={startExam}>
-                Mulai ujian sekarang
+                Mulai tes sekarang
               </Button>
               <Button variant="secondary" href="/dashboard">Kembali ke ringkasan</Button>
             </div>
-          {/if}
-        {:else}
-          <p class="muted">Kelayakan tidak tersedia. Muat ulang halaman.</p>
+          </div>
         {/if}
-      </Card>
+      </section>
+
+      <aside class="side">
+        <Card title="Aturan penting" description="Baca sebelum memulai.">
+          <ul class="rules">
+            <li>
+              <strong>Hard lock waktu.</strong> Begitu timer subtes habis, semua jawaban berikutnya
+              ditolak server. Jawaban yang sudah terkirim tetap dinilai.
+            </li>
+            <li>
+              <strong>Berurutan.</strong> Subtes berikutnya hanya terbuka setelah subtes sebelumnya
+              selesai. Timer subtes baru mulai penuh saat Anda membukanya.
+            </li>
+            <li>
+              <strong>Sistem gugur.</strong> Nilai subtes di bawah ambang gugur dapat mengakhiri sesi.
+              Data subtes yang sudah dikerjakan tetap tersimpan.
+            </li>
+            <li>
+              <strong>Anti-kecurangan.</strong> Perpindahan tab, salin-tempel, keluar layar penuh, dan
+              sinyal mencurigakan dicatat server. Pelanggaran berulang dapat mengunci subtes atau
+              menggugurkan sesi.
+            </li>
+            <li>
+              <strong>Autosave.</strong> Setiap jawaban disimpan di perangkat lebih dulu, lalu dikirim
+              ke server. Jangan menutup tab saat indikator masih menyimpan.
+            </li>
+          </ul>
+        </Card>
+
+        {#if eligibility}
+          <Card title="Kelayakan" description="Pemeriksaan otomatis dari server.">
+            <dl class="facts">
+              <div>
+                <dt>Sesi hari ini</dt>
+                <dd>{eligibility.sessionsToday}</dd>
+              </div>
+              <div>
+                <dt>Langganan</dt>
+                <dd>
+                  {#if eligibility.activeSubscription}
+                    {eligibility.activeSubscription.remainingDays} hari lagi
+                  {:else}
+                    -
+                  {/if}
+                </dd>
+              </div>
+              {#if eligibility.activeSubscription}
+                <div>
+                  <dt>Berakhir</dt>
+                  <dd>{formatDateTime(eligibility.activeSubscription.endsAt)}</dd>
+                </div>
+              {/if}
+              {#if eligibility.nextAvailableAt}
+                <div>
+                  <dt>Dapat memulai lagi</dt>
+                  <dd>{formatDateTime(eligibility.nextAvailableAt)}</dd>
+                </div>
+              {/if}
+            </dl>
+            {#if selected}
+              <p class="muted text-sm">
+                Dipilih: <strong>{selected.name}</strong> — {selected.questionCount} soal, {selected
+                  .durationMinutes} menit.
+              </p>
+            {/if}
+          </Card>
+        {/if}
+      </aside>
     </div>
   {/if}
 </div>
@@ -240,7 +307,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
-    max-width: 980px;
+    max-width: 1180px;
   }
 
   .page__header {
@@ -255,8 +322,105 @@
     font-size: var(--text-2xl);
   }
 
-  .grid {
+  .layout {
     display: grid;
+    gap: var(--space-5);
+  }
+
+  .tests {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .tests__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .test-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    text-align: left;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease,
+      transform 120ms ease;
+  }
+
+  .test-card:hover:not(.test-card--disabled) {
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  .test-card--active {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  }
+
+  .test-card--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .test-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .test-card__title {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+
+  .test-card__desc {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .test-card__meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin: 0;
+  }
+
+  .test-card__meta dt {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .test-card__meta dd {
+    margin: var(--space-1) 0 0;
+    font-weight: 600;
+  }
+
+  .test-card__note {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-danger, #b42318);
+  }
+
+  .start {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-5);
   }
 
@@ -275,22 +439,15 @@
     color: var(--color-text);
   }
 
-  .reasons--detail {
-    gap: var(--space-1);
-    margin-top: var(--space-2);
-    padding-left: var(--space-4);
-    list-style: circle;
-  }
-
   .reasons {
-    margin-top: var(--space-2);
+    margin: 0;
   }
 
   .facts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: var(--space-4);
-    margin: 0 0 var(--space-4);
+    margin: 0 0 var(--space-3);
   }
 
   .facts dt {
@@ -328,7 +485,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-    margin-top: var(--space-4);
+    margin-top: var(--space-1);
   }
 
   .center-block {
@@ -341,9 +498,19 @@
     font-family: var(--font-mono);
   }
 
-  @media (min-width: 900px) {
-    .grid {
-      grid-template-columns: 1.2fr 1fr;
+  .text-sm {
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 760px) {
+    .tests__grid {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .layout {
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
       align-items: start;
     }
   }

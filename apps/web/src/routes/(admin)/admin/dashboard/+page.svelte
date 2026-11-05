@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard — Admin Web CAT</title>
+  <title>Dashboard — Admin TES CAT</title>
 </svelte:head>
 
 <div class="page">

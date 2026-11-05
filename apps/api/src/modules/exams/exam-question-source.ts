@@ -34,7 +34,7 @@ export interface MaterializedQuestionSeed {
 /**
  * Media opsional untuk soal fixture (F3-06).
  *
- * Fixture dipakai saat bank soal DB belum cukup (mis. TPA kosong di dev).
+ * Fixture dipakai saat bank soal DB belum cukup (mis. TKK kosong di dev).
  * Dengan spec ini, test dan seed tetap bisa menghasilkan soal bergambar tanpa
  * bergantung pada `question_media`.
  */
@@ -141,7 +141,13 @@ const KECERDASAN_TOPICS = [
   'Klasifikasi',
 ] as const;
 
-const TPA_TOPICS = ['Verbal', 'Numerik', 'Penalaran logis'] as const;
+const TKK_TOPICS = [
+  'Perangkat keras',
+  'Perangkat lunak',
+  'Jaringan',
+  'Keamanan siber',
+  'Aplikasi perkantoran',
+] as const;
 const TPK_TOPICS = [
   'Struktur organisasi Polri',
   'Hukum kepolisian',
@@ -326,12 +332,12 @@ function buildFixture(
     } else if (code === 'PASS_HAND') {
       snapshot = buildPassHand(rng, externalId, index);
     } else {
-      const topics = code === 'TPA' ? TPA_TOPICS : code === 'TPK' ? TPK_TOPICS : KECERDASAN_TOPICS;
+      const topics = code === 'TKK' ? TKK_TOPICS : code === 'TPK' ? TPK_TOPICS : KECERDASAN_TOPICS;
       snapshot = buildChoice(
         rng,
         externalId,
         topics[index % topics.length]!,
-        code === 'KECERDASAN' ? 'Tes Kecerdasan' : code === 'TPA' ? 'TPA' : 'TPK',
+        code === 'KECERDASAN' ? 'Tes Kecerdasan' : code === 'TKK' ? 'TKK' : 'TPK',
       );
     }
 

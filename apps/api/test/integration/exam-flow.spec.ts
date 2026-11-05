@@ -221,7 +221,7 @@ describe.skipIf(!integrationEnabled)('alur peserta (Postgres)', () => {
     });
 
     // 9. selesaikan 5 subtes sisanya dengan jawaban benar
-    for (const code of ['KEPRIBADIAN', 'KECERMATAN', 'PASS_HAND', 'TPA', 'TPK']) {
+    for (const code of ['KEPRIBADIAN', 'KECERMATAN', 'PASS_HAND', 'TKK', 'TPK']) {
       const target = findSubtest(finished.session!, code);
       await engine.sessions.openSubtest(user.id, sessionId, target.stageId, target.id);
       await fillCorrectAnswers(target.id);

@@ -44,7 +44,7 @@
 
 <svelte:head>
   <title>
-    {transaction?.invoiceNumber ?? 'Invoice'} — Web CAT
+    {transaction?.invoiceNumber ?? 'Invoice'} — TES CAT
   </title>
 </svelte:head>
 
@@ -64,8 +64,8 @@
     <article class="invoice">
       <header class="invoice__header">
         <div>
-          <p class="brand">Web CAT</p>
-          <p class="muted text-sm">Platform simulasi ujian Polri</p>
+          <p class="brand">TES CAT</p>
+          <p class="muted text-sm">Platform TES CAT ujian Polri</p>
         </div>
         <div class="invoice__meta">
           <p class="invoice__title">Invoice</p>

@@ -5,9 +5,9 @@
 <footer class="footer">
   <div class="container footer__grid">
     <div>
-      <p class="footer__brand">Web CAT</p>
+      <p class="footer__brand">TES CAT</p>
       <p class="footer__note">
-        Latihan simulasi ujian Polri: Psikologi, TPA, dan TPK dengan sistem gugur seperti seleksi
+        Latihan TES CAT ujian Polri: Psikologi, TKK, dan TPK dengan sistem gugur seperti seleksi
         sebenarnya. Bukan situs resmi Polri.
       </p>
     </div>
@@ -31,7 +31,7 @@
   </div>
 
   <div class="container footer__bottom">
-    <p>&copy; {year} Web CAT. Semua hak dilindungi.</p>
+    <p>&copy; {year} TES CAT. Semua hak dilindungi.</p>
     <p>Dibuat untuk persiapan seleksi Polri.</p>
   </div>
 </footer>

@@ -41,7 +41,7 @@
   const faqs = [
     {
       q: 'Apakah semua paket mendapat tiga tes sekaligus?',
-      a: 'Ya. Setiap paket membuka alur lengkap: Tes Psikologi (4 subtes), TPA, dan TPK, dengan aturan sistem gugur yang sama.',
+      a: 'Ya. Setiap paket membuka alur lengkap: Tes Psikologi (4 subtes), TKK, dan TPK, dengan aturan sistem gugur yang sama.',
     },
     {
       q: 'Bagaimana masa aktif dihitung?',
@@ -67,16 +67,16 @@
 </script>
 
 <svelte:head>
-  <title>Harga &amp; Paket Latihan Ujian — Web CAT</title>
+  <title>Harga &amp; Paket Latihan Ujian — TES CAT</title>
   <meta
     name="description"
-    content="Pilih paket latihan simulasi ujian Polri: Psikologi, TPA, dan TPK. Harga transparan, masa aktif fleksibel, tanpa biaya tersembunyi."
+    content="Pilih paket latihan TES CAT Polri: Psikologi, TKK, dan TPK. Harga transparan, masa aktif fleksibel, tanpa biaya tersembunyi."
   />
   <link rel="canonical" href={page.url.origin + '/pricing'} />
-  <meta property="og:title" content="Harga & Paket Latihan Ujian — Web CAT" />
+  <meta property="og:title" content="Harga & Paket Latihan Ujian — TES CAT" />
   <meta
     property="og:description"
-    content="Psikologi, TPA, dan TPK dalam satu alur latihan. Bandingkan paket dan mulai hari ini."
+    content="Psikologi, TKK, dan TPK dalam satu alur latihan. Bandingkan paket dan mulai hari ini."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={page.url.origin + '/pricing'} />
@@ -87,7 +87,7 @@
     <Badge tone="brand">Garansi akses sesuai masa aktif</Badge>
     <h1 class="hero__title">Pilih Paket Latihan Anda</h1>
     <p class="hero__lede">
-      Latihan ujian Polri lengkap: Psikologi, TPA, dan TPK — dengan timer per subtes dan sistem
+      Latihan ujian Polri lengkap: Psikologi, TKK, dan TPK — dengan timer per subtes dan sistem
       gugur seperti seleksi sebenarnya.
     </p>
     <Button href="#perbandingan" variant="secondary" size="sm">Lihat perbandingan</Button>
@@ -110,7 +110,7 @@
         <div>
           <p class="trial__title">{data.trial.name}</p>
           <p class="trial__body">
-            Satu sesi simulasi penuh tanpa biaya, tanpa pembahasan dan tanpa analisis per subtes.
+            Satu sesi TES CAT penuh tanpa biaya, tanpa pembahasan dan tanpa analisis per subtes.
           </p>
         </div>
         <Button variant="secondary" onclick={() => choosePlan(data.trial as Plan)}>

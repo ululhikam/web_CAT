@@ -11,10 +11,12 @@ import type {
   ProctoringEventType,
   SessionStatus,
   SessionSubtestSummary,
+  StageCode,
   ViolationAction,
 } from '@webcat/contracts';
 import { LOCK_REASONS } from '@webcat/contracts';
 import { ApiError, apiErrorMessage, apiRequest } from '$lib/api/client';
+import { createAnswerChurnTracker } from '$lib/exams/answer-churn';
 import { session } from '$lib/stores/session.svelte';
 import {
   assignClientSeq,
@@ -129,6 +131,12 @@ export class ExamRunnerStore {
    */
   private pendingMirror = new Map<string, PendingAnswer>();
   private clientSeqHighWater = 0;
+  /**
+   * F5-13: riwayat waktu perubahan jawaban per soal. Dipakai untuk mendeteksi
+   * "> 5 perubahan dalam 2 detik" — antrean offline menggabungkan perubahan
+   * pada satu soal, jadi polanya hanya terlihat di browser.
+   */
+  private churn = createAnswerChurnTracker();
   private onlineHandler: (() => void) | null = null;
   private offlineHandler: (() => void) | null = null;
 
@@ -227,11 +235,11 @@ export class ExamRunnerStore {
     });
   }
 
-  async startSession(): Promise<ActiveSessionResponse> {
+  async startSession(stageCode?: StageCode): Promise<ActiveSessionResponse> {
     return this.withLoading(async () => {
       const result = await apiRequest<ActiveSessionResponse>('/exams/sessions', {
         method: 'POST',
-        body: { acknowledgeRules: true },
+        body: { acknowledgeRules: true, ...(stageCode ? { stageCode } : {}) },
         token: session.accessToken,
       });
       this.applyActive(result);
@@ -335,6 +343,13 @@ export class ExamRunnerStore {
     if (!subtest || this.lockedReason) return;
 
     const elapsed = Math.max(0, Math.min(86_400_000, Math.round(timeSpentMs)));
+
+    // F5-13: jawaban PERTAMA untuk soal ini bukan "perubahan". Cek state
+    // sebelum baris berikut menimpa jawaban lama.
+    if (this.answers[questionId] !== undefined) {
+      this.trackAnswerChange(questionId);
+    }
+
     this.answers = { ...this.answers, [questionId]: payload };
     this.pendingMirror.set(questionId, {
       questionId,
@@ -562,6 +577,7 @@ export class ExamRunnerStore {
       this.applyActive(result);
       this.questions = [];
       this.answers = {};
+      this.churn.reset();
       return result;
     } catch (cause) {
       this.handleError(cause);
@@ -737,6 +753,22 @@ export class ExamRunnerStore {
 
   /* ------------------------------------------------------------------ internal */
 
+  /**
+   * F5-13: catat satu perubahan jawaban dan kirim sinyal bila melewati ambang.
+   *
+   * Ambangnya milik `countChangesInWindow` di kontrak (lima perubahan per dua
+   * detik). Sinyal dikirim SEKALI per ledakan lalu riwayat soal itu
+   * dikosongkan, supaya perubahan keenam tidak memicu event pada setiap
+   * perubahan berikutnya — ledakan baru dihitung dari nol.
+   */
+  private trackAnswerChange(questionId: string): void {
+    const changes = this.churn.record(questionId, Date.now());
+    if (changes <= 0) return;
+
+    this.churn.reset(questionId);
+    this.pushEvent('ANSWER_CHANGE_BURST', { questionId, changes });
+  }
+
   private async withLoading<T>(operation: () => Promise<T>): Promise<T> {
     this.loading = true;
     this.error = null;
@@ -775,6 +807,8 @@ export class ExamRunnerStore {
       this.expiryHandled = false;
       this.warning = null;
       this.actionTaken = null;
+      // F5-13: riwayat perubahan soal milik subtes lama tidak boleh terbawa.
+      this.churn.reset();
     }
   }
 

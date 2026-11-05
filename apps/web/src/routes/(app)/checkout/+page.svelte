@@ -178,7 +178,7 @@
 </script>
 
 <svelte:head>
-  <title>Checkout — Web CAT</title>
+  <title>Checkout — TES CAT</title>
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 

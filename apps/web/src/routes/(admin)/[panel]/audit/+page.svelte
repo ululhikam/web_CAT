@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
@@ -85,7 +85,7 @@
 </script>
 
 <svelte:head>
-  <title>Audit Log — Admin Web CAT</title>
+  <title>Audit Log — Admin TES CAT</title>
 </svelte:head>
 
 <div class="adm-page">

@@ -2,7 +2,7 @@
   "name": "web-cat",
   "version": "0.1.0",
   "private": true,
-  "description": "Platform simulasi ujian Polri (Psikologi, TPA, TPK) — NestJS + SvelteKit + Supabase di Vercel",
+  "description": "Platform TES CAT Polri (Psikologi, TKK, TPK) — NestJS + SvelteKit + Supabase di Vercel",
   "packageManager": "pnpm@11.12.0",
   "engines": {
     "node": ">=22"

@@ -68,7 +68,7 @@
 </script>
 
 <svelte:head>
-  <title>Perangkat — Web CAT</title>
+  <title>Perangkat — TES CAT</title>
 </svelte:head>
 
 <div class="page">

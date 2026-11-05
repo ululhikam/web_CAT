@@ -19,16 +19,16 @@ import type { PoolShortage } from '../ports/index';
 export * from './answer-anomaly';
 
 /** Kode tes (stage) — dibekukan sejak Phase 0. */
-export const STAGE_CODES = ['PSIKOLOGI', 'TPA', 'TPK'] as const;
+export const STAGE_CODES = ['PSIKOLOGI', 'TKK', 'TPK'] as const;
 export type StageCode = (typeof STAGE_CODES)[number];
 
-/** Kode subtes. TPA & TPK memakai satu subtes teknis agar satu jalur kode. */
+/** Kode subtes. TKK & TPK memakai satu subtes teknis agar satu jalur kode. */
 export const SUBTEST_CODES = [
   'KECERDASAN',
   'KEPRIBADIAN',
   'KECERMATAN',
   'PASS_HAND',
-  'TPA',
+  'TKK',
   'TPK',
 ] as const;
 export type SubtestCode = (typeof SUBTEST_CODES)[number];
@@ -42,7 +42,7 @@ export const SUBTEST_LABELS: Record<SubtestCode, string> = {
   KEPRIBADIAN: 'Kepribadian',
   KECERMATAN: 'Kecermatan',
   PASS_HAND: 'Pass Hand',
-  TPA: 'TPA',
+  TKK: 'TKK',
   TPK: 'TPK',
 };
 
@@ -191,6 +191,24 @@ export interface ExamSettingsView {
 
 /* ------------------------------------------------------------------ eligibility */
 
+/**
+ * Satu pilihan tes yang bisa dikerjakan peserta dari layar pemilihan tes.
+ * Dihitung dari konfigurasi aktif + ketersediaan bank soal, sehingga UI tidak
+ * perlu menebak nama/durabi tes.
+ */
+export interface ExamStageOption {
+  code: StageCode;
+  name: string;
+  description: string | null;
+  orderIndex: number;
+  questionCount: number;
+  durationMinutes: number;
+  /** `false` bila bank soal subtes di dalamnya belum memenuhi kuota. */
+  available: boolean;
+  /** Alasan teknis bila `available` bernilai `false`. */
+  reasons: string[];
+}
+
 export interface ExamEligibility {
   canStart: boolean;
   reasons: string[];
@@ -205,11 +223,21 @@ export interface ExamEligibility {
   nextAvailableAt: string | null;
   /** Sesi yang masih berjalan (bila ada) — klien wajib melanjutkan sesi ini. */
   activeSessionId: string | null;
+  /**
+   * Daftar tes yang dapat dipilih (Psikologi, TKK, TPK) beserta status
+   * ketersediaannya. Dipakai layar "Ujian CAT" untuk menampilkan pilihan tes.
+   */
+  stages: ExamStageOption[];
 }
 
 export const startExamSessionSchema = z.object({
   /** Konfirmasi eksplisit: peserta sudah membaca aturan & siap memulai. */
   acknowledgeRules: z.literal(true),
+  /**
+   * Tes yang dipilih. Bila diisi, sesi hanya memuat tes tersebut (bukan seluruh
+   * rangkaian). Bila kosong, seluruh rangkaian tes dijalankan seperti semula.
+   */
+  stageCode: z.enum(STAGE_CODES).optional(),
 });
 export type StartExamSessionInput = z.infer<typeof startExamSessionSchema>;
 

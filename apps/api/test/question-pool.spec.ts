@@ -27,11 +27,11 @@ describe('MockQuestionPool', () => {
   });
 
   it('menandai tepat satu opsi benar per soal', async () => {
-    const rows = await pool.sample('TPA', 2);
+    const rows = await pool.sample('TKK', 2);
 
     for (const row of rows) {
       expect(row.options.filter((option) => option.isCorrect)).toHaveLength(1);
-      expect(row.stageCode).toBe('TPA');
+      expect(row.stageCode).toBe('TKK');
     }
   });
 

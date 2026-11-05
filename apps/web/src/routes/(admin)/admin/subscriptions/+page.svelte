@@ -164,7 +164,7 @@
 </script>
 
 <svelte:head>
-  <title>Langganan — Admin Web CAT</title>
+  <title>Langganan — Admin TES CAT</title>
 </svelte:head>
 
 <div class="page">
