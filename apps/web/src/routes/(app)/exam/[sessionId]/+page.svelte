@@ -11,8 +11,10 @@
   import { examRunner } from '$lib/stores/examRunner.svelte';
   import { formatDateTime } from '$lib/format';
   import { examQuestionTileView } from '$lib/exams/render-adapter';
+  import type { TileMedia } from '$lib/exams/render-adapter';
   import { MediaPrefetcher, planMediaPreload } from '$lib/exams/media-preload';
   import ImageChoiceTiles from '$lib/components/questions/ImageChoiceTiles.svelte';
+  import MediaViewer from '$lib/components/media/MediaViewer.svelte';
   import type { ExamQuestion, ExamQuestionOption } from '@webcat/contracts';
 
   const sessionId = page.params.sessionId ?? '';
@@ -27,6 +29,18 @@
   let loadedQuestionId: string | null = null;
   let questionShownAt = Date.now();
   let advanceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /** F5-12 — gambar yang sedang diperbesar; `null` berarti viewer tertutup. */
+  let viewerSrc = $state<string | null>(null);
+  let viewerAlt = $state('Gambar soal');
+  let viewer = $state<{ rememberTrigger: (element: HTMLElement | null) => void } | null>(null);
+
+  /** Buka viewer dari gambar soal/opsi; fokus dikembalikan ke pemicunya. */
+  function openViewer(media: TileMedia, trigger?: HTMLElement | null): void {
+    viewer?.rememberTrigger(trigger ?? null);
+    viewerAlt = media.alt || 'Gambar soal';
+    viewerSrc = media.url;
+  }
 
   const question = $derived(examRunner.questions[index] ?? null);
   const subtest = $derived(examRunner.currentSubtest);
@@ -571,7 +585,16 @@
           {/if}
 
           {#each questionView?.stemMedia ?? [] as media (media.url)}
-            <img class="question__media" src={media.url} alt={media.alt || 'Gambar soal'} />
+            <!-- F5-12: klik gambar membuka viewer zoom/pan layar penuh. -->
+            <button
+              type="button"
+              class="question__media"
+              aria-label={`Perbesar gambar: ${media.alt || 'Gambar soal'}`}
+              title="Klik untuk memperbesar"
+              onclick={(event) => openViewer(media, event.currentTarget)}
+            >
+              <img src={media.url} alt={media.alt || 'Gambar soal'} />
+            </button>
           {/each}
 
           {#if question.type === 'IMAGE_CHOICE'}
@@ -588,6 +611,7 @@
                 const target = question.options.find((entry) => entry.label === option.label);
                 if (target) chooseOption(question, target);
               }}
+              onzoom={(media, trigger) => openViewer(media, trigger)}
             />
           {:else if question.type === 'PASS_HAND_COLUMN'}
             <div class="passhand">
@@ -819,8 +843,7 @@
   {#if confirmFinish}
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="finish-title">
       <div class="modal__panel">
-        <h2 id="finish-title">Selesaikan subtes?</h2>
-        <p class="muted">
+        <h2 id="finish-title">Selesaikan subtes?</h2>        <p class="muted">
           Subtes akan dinilai sekarang dan tidak dapat dibuka kembali. Pastikan semua jawaban sudah
           terkirim.
         </p>
@@ -852,6 +875,17 @@
     </div>
   {/if}
 {/if}
+
+<!--
+  F5-12 — satu viewer untuk semua gambar soal. `Esc` menutup, zoom 100%–400%,
+  drag untuk geser. Diletakkan di luar alur utama agar tumpang tindih halaman.
+-->
+<MediaViewer
+  bind:this={viewer}
+  src={viewerSrc}
+  alt={viewerAlt}
+  onclose={() => (viewerSrc = null)}
+/>
 
 <style>
   .page {
@@ -976,9 +1010,24 @@
   .question__media {
     display: block;
     max-width: 100%;
-    height: auto;
     margin-bottom: var(--space-4);
+    padding: 0;
+    border: 0;
+    background: transparent;
     border-radius: var(--radius-md);
+    cursor: zoom-in;
+  }
+
+  .question__media img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+  }
+
+  .question__media:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
   .options {

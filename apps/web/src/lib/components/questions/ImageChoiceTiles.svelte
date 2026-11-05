@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TileOption } from '$lib/exams/render-adapter';
+  import type { TileMedia, TileOption } from '$lib/exams/render-adapter';
 
   /**
    * Grid tile gambar untuk soal `IMAGE_CHOICE` — dipakai BERSAMA oleh runner
@@ -8,13 +8,19 @@
    * Sebelumnya markup tile disalin di dua tempat, sehingga placeholder, ukuran
    * gambar, teks alternatif, dan tata letak mobile bisa menyimpang tanpa
    * ketahuan. Sekarang keduanya memakai komponen ini; perbedaan kebutuhan
-   * hanya disalurkan lewat callback (`isActive`, `onselect`).
+   * hanya disalurkan lewat callback (`isActive`, `onselect`, `onzoom`).
+   *
+   * F5-12 menambahkan tombol perbesar di sudut tile. Tombolnya sengaja menjadi
+   * saudara `<button>` tile (bukan anak) karena tombol bersarang tidak sah, dan
+   * supaya klik tile tetap berarti "pilih jawaban ini".
    */
   interface Props {
     options: TileOption[];
     /** Opsi yang sedang dipilih; runner memakai `id`, pratinjau admin `label`. */
     isActive?: (option: TileOption) => boolean;
     onselect?: (option: TileOption) => void;
+    /** Bila diisi, setiap tile bergambar mendapat tombol perbesar. */
+    onzoom?: (media: TileMedia, trigger: HTMLElement) => void;
     /** Hanya pratinjau admin: tandai opsi yang berkunci. */
     showAnswerKey?: boolean;
     /** Huruf tile; default memakai `label` opsi. */
@@ -25,6 +31,7 @@
     options,
     isActive = () => false,
     onselect,
+    onzoom,
     showAnswerKey = false,
     letters = [],
   }: Props = $props();
@@ -32,32 +39,51 @@
 
 <div class="tiles" role="radiogroup" aria-label="Pilih satu gambar">
   {#each options as option, optionIndex (option.id ?? option.label)}
-    <button
-      type="button"
-      class="tile"
-      class:tile--active={isActive(option)}
-      class:tile--correct={showAnswerKey && option.isCorrect}
-      aria-pressed={isActive(option)}
-      onclick={() => onselect?.(option)}
-    >
-      <span class="tile__key">{letters[optionIndex] ?? option.label}</span>
-      {#if option.media[0]}
-        <img
-          class="tile__image"
-          src={option.media[0].url}
-          alt={option.media[0].alt || `Opsi ${option.label}`}
-          loading="lazy"
-        />
-      {:else}
-        <span class="tile__empty">Gambar belum tersedia</span>
+    <div class="tile-cell">
+      <button
+        type="button"
+        class="tile"
+        class:tile--active={isActive(option)}
+        class:tile--correct={showAnswerKey && option.isCorrect}
+        aria-pressed={isActive(option)}
+        onclick={() => onselect?.(option)}
+      >
+        <span class="tile__key">{letters[optionIndex] ?? option.label}</span>
+        {#if option.media[0]}
+          <img
+            class="tile__image"
+            src={option.media[0].url}
+            alt={option.media[0].alt || `Opsi ${option.label}`}
+            loading="lazy"
+          />
+        {:else}
+          <span class="tile__empty">Gambar belum tersedia</span>
+        {/if}
+        {#if option.text}
+          <span class="tile__caption">{option.text}</span>
+        {/if}
+        {#if showAnswerKey && option.isCorrect}
+          <span class="tile__badge">kunci</span>
+        {/if}
+      </button>
+
+      {#if onzoom && option.media[0]}
+        <button
+          type="button"
+          class="tile__zoom"
+          aria-label={`Perbesar gambar opsi ${option.label}`}
+          title="Perbesar gambar"
+          onclick={(event) => onzoom?.(option.media[0]!, event.currentTarget as HTMLElement)}
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+            <path
+              d="M11 4a7 7 0 1 0 4.2 12.6l4.1 4.1 1.4-1.4-4.1-4.1A7 7 0 0 0 11 4zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
       {/if}
-      {#if option.text}
-        <span class="tile__caption">{option.text}</span>
-      {/if}
-      {#if showAnswerKey && option.isCorrect}
-        <span class="tile__badge">kunci</span>
-      {/if}
-    </button>
+    </div>
   {/each}
 </div>
 
@@ -69,9 +95,16 @@
     margin-top: var(--space-4);
   }
 
+  /* Pembungkus relatif agar tombol perbesar menempel di sudut tile. */
+  .tile-cell {
+    position: relative;
+    display: flex;
+  }
+
   .tile {
     position: relative;
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
     gap: var(--space-2);
@@ -123,6 +156,27 @@
     width: 100%;
     max-height: 180px;
     object-fit: contain;
+  }
+
+  .tile__zoom {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: zoom-in;
+  }
+
+  .tile__zoom:hover,
+  .tile__zoom:focus-visible {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 
   .tile__empty {
