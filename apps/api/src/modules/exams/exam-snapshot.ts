@@ -114,6 +114,28 @@ function asViolationAction(value: unknown): ViolationAction | null {
 
 /* ------------------------------------------------------------------ snapshot soal */
 
+function parseMedia(value: unknown): SnapshotMedia | null {
+  const raw = asRecord(value);
+  const path = asString(raw.path);
+  if (!path) return null;
+  const role = raw.role === 'OPTION' || raw.role === 'EXPLANATION' ? raw.role : 'STEM';
+  return {
+    role,
+    // Snapshot lama tidak punya `assetId`/`optionId`; biarkan `undefined`/null
+    // agar jalur proyeksi tahu harus memakai `path` (fallback signed URL).
+    assetId: asString(raw.assetId) || undefined,
+    optionId: asNullableString(raw.optionId),
+    path,
+    alt: asNullableString(raw.alt),
+  };
+}
+
+function parseMediaList(value: unknown): SnapshotMedia[] {
+  return asArray(value)
+    .map(parseMedia)
+    .filter((entry): entry is SnapshotMedia => entry !== null);
+}
+
 function parseOption(value: unknown): SnapshotOption | null {
   const raw = asRecord(value);
   const id = asString(raw.id);
@@ -132,15 +154,9 @@ function parseOption(value: unknown): SnapshotOption | null {
     isCorrect: asBoolean(raw.isCorrect),
     scoreValue: asNumber(raw.scoreValue, 0),
     dimensionMap: Object.keys(dimensionMap).length > 0 ? dimensionMap : null,
+    // Snapshot lama tidak punya media per opsi → `[]`, bukan `undefined`.
+    media: parseMediaList(raw.media),
   };
-}
-
-function parseMedia(value: unknown): SnapshotMedia | null {
-  const raw = asRecord(value);
-  const path = asString(raw.path);
-  if (!path) return null;
-  const role = raw.role === 'OPTION' || raw.role === 'EXPLANATION' ? raw.role : 'STEM';
-  return { role, path, alt: asNullableString(raw.alt) };
 }
 
 function parseMissingElement(value: unknown): MissingElementSnapshot | null {
@@ -156,9 +172,7 @@ export function parseQuestionSnapshot(value: unknown): QuestionSnapshot {
   const options = asArray(raw.options)
     .map(parseOption)
     .filter((option): option is SnapshotOption => option !== null);
-  const media = asArray(raw.media)
-    .map(parseMedia)
-    .filter((entry): entry is SnapshotMedia => entry !== null);
+  const media = parseMediaList(raw.media);
   const columnNumbers = asArray(raw.columnNumbers)
     .map((entry) => (typeof entry === 'number' ? entry : Number(entry)))
     .filter((entry) => Number.isFinite(entry));

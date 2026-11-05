@@ -27,6 +27,7 @@ function option(input: Partial<SnapshotOption> & { label: string }): SnapshotOpt
     isCorrect: input.isCorrect ?? false,
     scoreValue: input.scoreValue ?? 0,
     dimensionMap: input.dimensionMap ?? null,
+    media: input.media ?? [],
   };
 }
 

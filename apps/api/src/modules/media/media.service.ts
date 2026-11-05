@@ -3,12 +3,14 @@ import {
   Injectable,
   NotFoundException,
   PayloadTooLargeException,
+  UnprocessableEntityException,
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import {
   MEDIA_MAX_BYTES,
+  MEDIA_MIN_DIMENSION,
   decodeCursor,
   encodeCursor,
   type MediaAssetView,
@@ -120,6 +122,19 @@ export class MediaService {
       throw new UnsupportedMediaTypeException({
         code: 'COMMON_VALIDATION_FAILED',
         message: 'Hanya PNG, JPEG, atau WebP yang diterima',
+      });
+    }
+
+    // F3-28: soal figural butuh gambar yang cukup besar agar pola terbaca.
+    // Dimensi minimum ini mencegah admin mengunggah ikon 32×32 lalu heran
+    // kenapa soalnya tidak bisa dijawab.
+    const probe = await sharp(file.buffer).metadata();
+    const width = probe.width ?? 0;
+    const height = probe.height ?? 0;
+    if (width < MEDIA_MIN_DIMENSION || height < MEDIA_MIN_DIMENSION) {
+      throw new UnprocessableEntityException({
+        code: 'COMMON_VALIDATION_FAILED',
+        message: `Gambar minimal ${MEDIA_MIN_DIMENSION}×${MEDIA_MIN_DIMENSION} piksel (sekarang ${width}×${height})`,
       });
     }
 
@@ -286,6 +301,25 @@ export class MediaService {
       mime: asset.mime,
       url: asset.data ? null : await this.storage.createSignedUrl(asset.storagePath, 900),
     };
+  }
+
+  /**
+   * Konten berdasarkan `storage_path` — dipakai `DevStorage` di pengembangan.
+   *
+   * Produksi tidak memakai ini: byte berada di bucket privat dan diambil lewat
+   * signed URL Supabase. Di dev, byte tersimpan di `media_assets.data`
+   * sehingga bisa langsung dialirkan.
+   */
+  async contentByPath(
+    storagePath: string,
+  ): Promise<{ data: Buffer; mime: string } | null> {
+    if (!storagePath) return null;
+    const asset = await this.prisma.mediaAsset.findUnique({
+      where: { storagePath },
+      select: { data: true, mime: true },
+    });
+    if (!asset?.data) return null;
+    return { data: Buffer.from(asset.data), mime: asset.mime };
   }
 
   async remove(id: string, actor: Actor): Promise<{ deleted: boolean }> {

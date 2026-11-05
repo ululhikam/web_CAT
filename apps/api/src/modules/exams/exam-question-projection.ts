@@ -8,7 +8,8 @@ import type {
 import { answerPayloadSchema } from '@webcat/contracts';
 import { STORAGE } from '../../core/ports/ports.module';
 import type { StoragePort } from '@webcat/contracts';
-import type { QuestionSnapshot, SnapshotOption } from '../scoring/scoring.types';
+import { buildMediaUrl } from '../media/media-signature';
+import type { QuestionSnapshot, SnapshotMedia, SnapshotOption } from '../scoring/scoring.types';
 import { parseQuestionSnapshot } from './exam-snapshot';
 
 /**
@@ -17,6 +18,14 @@ import { parseQuestionSnapshot } from './exam-snapshot';
  * Ini adalah SATU-SATUNYA jalur yang boleh mengubah snapshot server menjadi
  * DTO soal. Allowlist eksplisit: `isCorrect`, `dimensionMap`, `pairGroup`,
  * `missingElement.answer`, dan field kunci lain tidak pernah disalin.
+ *
+ * Media (F3-08):
+ *   - bila snapshot menyimpan `assetId`, URL dibuat dari `/api/v1/media/:id/content`
+ *     bertanda tangan HMAC (byte-nya memang ada di database);
+ *   - bila tidak (snapshot lama), jatuh ke `resolve(path)` milik `StoragePort`.
+ *
+ * Hanya media `STEM` dan media per opsi yang dikirim; `EXPLANATION` (pembahasan)
+ * sengaja dibuang karena itu materi admin, bukan materi ujian (F3-09).
  */
 
 export interface ProjectionRow {
@@ -29,30 +38,58 @@ export interface ProjectionRow {
 
 export type MediaUrlResolver = (path: string) => string;
 
-function optionView(option: SnapshotOption): ExamQuestionOption {
+/** TTL URL media ujian: 2 jam, lebih panjang dari subtes terpanjang (120 menit). */
+export const EXAM_MEDIA_TTL_SECONDS = 7_200;
+
+function mediaView(
+  entry: SnapshotMedia,
+  resolve: MediaUrlResolver,
+  secret: string,
+): ExamMediaRef {
+  return {
+    role: entry.role,
+    url: entry.assetId
+      ? buildMediaUrl(entry.assetId, secret, EXAM_MEDIA_TTL_SECONDS)
+      : resolve(entry.path),
+    alt: entry.alt,
+  };
+}
+
+function optionView(
+  option: SnapshotOption,
+  resolve: MediaUrlResolver,
+  secret: string,
+): ExamQuestionOption {
   return {
     id: option.id,
     label: option.label,
     text: option.text,
-    media: [],
+    media: option.media.map((entry) => mediaView(entry, resolve, secret)),
   };
 }
 
-function mediaViews(snapshot: QuestionSnapshot, resolve: MediaUrlResolver): ExamMediaRef[] {
-  return snapshot.media.map((entry) => ({
-    role: entry.role,
-    url: resolve(entry.path),
-    alt: entry.alt,
-  }));
+function mediaViews(
+  snapshot: QuestionSnapshot,
+  resolve: MediaUrlResolver,
+  secret: string,
+): ExamMediaRef[] {
+  // Peserta hanya perlu media stem; EXPLANATION tidak boleh bocor.
+  return snapshot.media
+    .filter((entry) => entry.role === 'STEM')
+    .map((entry) => mediaView(entry, resolve, secret));
 }
 
 /**
  * Fungsi murni proyeksi. `resolve` membuat URL media; pada unit test cukup
  * identitas. Tidak pernah menyentuh database.
+ *
+ * `secret` dipakai untuk menandatangani URL `/media/:id/content`. Default
+ * string kosong agar unit test lama tetap jalan tanpa menyiapkan env.
  */
 export function projectQuestion(
   row: ProjectionRow,
   resolve: MediaUrlResolver = (path) => path,
+  secret = '',
 ): ExamQuestion {
   const snapshot = parseQuestionSnapshot(row.snapshot);
   const columnNumbers = snapshot.columnNumbers ?? [];
@@ -87,9 +124,27 @@ export function projectQuestion(
       : null,
     scale: snapshot.scale,
     answer,
-    options: snapshot.options.map(optionView),
-    media: mediaViews(snapshot, resolve),
+    options: snapshot.options.map((option) => optionView(option, resolve, secret)),
+    media: mediaViews(snapshot, resolve, secret),
   };
+}
+
+/** Kumpulkan semua path media yang perlu di-resolve (stem + opsi). */
+function collectPaths(rows: ProjectionRow[]): Set<string> {
+  const paths = new Set<string>();
+  for (const row of rows) {
+    const snapshot = parseQuestionSnapshot(row.snapshot);
+    for (const media of snapshot.media) {
+      // Yang punya `assetId` tidak butuh signed URL storage.
+      if (!media.assetId) paths.add(media.path);
+    }
+    for (const option of snapshot.options) {
+      for (const media of option.media) {
+        if (!media.assetId) paths.add(media.path);
+      }
+    }
+  }
+  return paths;
 }
 
 @Injectable()
@@ -98,26 +153,27 @@ export class ExamQuestionProjection {
 
   /**
    * Memproyeksikan banyak soal sekaligus. URL media di-cache per path agar
-   * satu berkas tidak membuat banyak signed URL.
+   * satu berkas tidak membuat banyak signed URL — termasuk media per opsi
+   * (F3-10).
+   *
+   * `secret` diambil dari env JWT_ACCESS_SECRET (kunci yang sama dipakai
+   * `MediaService` untuk memverifikasi tanda tangan).
    */
-  async projectMany(rows: ProjectionRow[]): Promise<ExamQuestion[]> {
-    const paths = new Set<string>();
-    for (const row of rows) {
-      const snapshot = parseQuestionSnapshot(row.snapshot);
-      for (const media of snapshot.media) paths.add(media.path);
-    }
-
+  async projectMany(
+    rows: ProjectionRow[],
+    secret = process.env.JWT_ACCESS_SECRET ?? '',
+  ): Promise<ExamQuestion[]> {
     const resolved = new Map<string, string>();
     await Promise.all(
-      [...paths].map(async (path) => {
+      [...collectPaths(rows)].map(async (path) => {
         try {
-          resolved.set(path, await this.storage.createSignedUrl(path, 1_800));
+          resolved.set(path, await this.storage.createSignedUrl(path, EXAM_MEDIA_TTL_SECONDS));
         } catch {
           resolved.set(path, path);
         }
       }),
     );
 
-    return rows.map((row) => projectQuestion(row, (path) => resolved.get(path) ?? path));
+    return rows.map((row) => projectQuestion(row, (path) => resolved.get(path) ?? path, secret));
   }
 }

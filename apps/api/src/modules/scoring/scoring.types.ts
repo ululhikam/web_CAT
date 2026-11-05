@@ -19,11 +19,27 @@ export interface SnapshotOption {
   scoreValue: number;
   /** Kepribadian: vektor dimensi untuk opsi ini (boleh negatif). */
   dimensionMap: Record<string, number> | null;
+  /**
+   * Media yang menempel pada opsi ini (soal bergambar, mis. `IMAGE_CHOICE`).
+   *
+   * Default `[]` untuk snapshot lama yang dibuat sebelum Fase 3 — parser
+   * mengisinya sendiri sehingga pembaca tidak perlu cek `undefined`.
+   */
+  media: SnapshotMedia[];
 }
 
 export interface SnapshotMedia {
   role: 'STEM' | 'OPTION' | 'EXPLANATION';
-  /** Path storage; URL bertanda tangan dibuat saat proyeksi. */
+  /**
+   * `media_assets.id` — dasar URL `/api/v1/media/:id/content` (F3-17).
+   *
+   * Opsional karena snapshot lama hanya menyimpan `path` dan URL-nya dibuat
+   * lewat `StoragePort` (yang bisa 404 untuk aset hasil upload admin).
+   */
+  assetId?: string;
+  /** Diisi bila `role === 'OPTION'` agar media bisa dipetakan balik ke opsi. */
+  optionId?: string | null;
+  /** Path storage; fallback bila `assetId` tidak ada (snapshot lama). */
   path: string;
   alt: string | null;
 }
