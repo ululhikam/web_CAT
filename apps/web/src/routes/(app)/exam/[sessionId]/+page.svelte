@@ -11,6 +11,7 @@
   import { examRunner } from '$lib/stores/examRunner.svelte';
   import { formatDateTime } from '$lib/format';
   import { examQuestionTileView } from '$lib/exams/render-adapter';
+  import { MediaPrefetcher, planMediaPreload } from '$lib/exams/media-preload';
   import ImageChoiceTiles from '$lib/components/questions/ImageChoiceTiles.svelte';
   import type { ExamQuestion, ExamQuestionOption } from '@webcat/contracts';
 
@@ -48,6 +49,14 @@
    */
   const questionView = $derived(question ? examQuestionTileView(question) : null);
 
+  /**
+   * F5-11 — teks seluruh soal sudah ada di memori (`loadQuestions()` mengambil
+   * semua halaman saat subtes dibuka), jadi yang masih bisa membuat navigasi
+   * berhenti hanya unduhan gambar. Prefetcher menghangatkan media dua soal
+   * berikutnya sebelum peserta sampai ke sana.
+   */
+  const mediaPrefetcher = new MediaPrefetcher();
+
   $effect(() => {
     if (!session.user || !session.accessToken || booted) return;
     booted = true;
@@ -79,8 +88,24 @@
     if (!examRunner.currentSubtest) index = 0;
   });
 
+  /**
+   * F5-11: hangatkan gambar soal `index+1` dan `index+2` setiap kali soal
+   * berganti. `EXPLANATION` tidak pernah ikut (lihat adapter F3-09), dan URL
+   * yang sudah pernah diminta tidak diulang oleh `MediaPrefetcher`.
+   */
+  let prefetchedSubtestId: string | null = null;
+  $effect(() => {
+    const subtestId = examRunner.currentSubtest?.id ?? null;
+    if (subtestId !== prefetchedSubtestId) {
+      prefetchedSubtestId = subtestId;
+      mediaPrefetcher.reset();
+    }
+    mediaPrefetcher.prefetch(planMediaPreload(examRunner.questions, index));
+  });
+
   onDestroy(() => {
     if (advanceTimer) clearTimeout(advanceTimer);
+    mediaPrefetcher.reset();
   });
 
   async function boot(): Promise<void> {
