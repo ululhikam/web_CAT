@@ -10,6 +10,8 @@
   import { session } from '$lib/stores/session.svelte';
   import { examRunner } from '$lib/stores/examRunner.svelte';
   import { formatDateTime } from '$lib/format';
+  import { examQuestionTileView } from '$lib/exams/render-adapter';
+  import ImageChoiceTiles from '$lib/components/questions/ImageChoiceTiles.svelte';
   import type { ExamQuestion, ExamQuestionOption } from '@webcat/contracts';
 
   const sessionId = page.params.sessionId ?? '';
@@ -39,6 +41,12 @@
       : Math.round((examRunner.answeredCount / examRunner.totalQuestions) * 100),
   );
   const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  /**
+   * F3-15 — media soal dibaca lewat adapter yang sama dengan pratinjau admin,
+   * lalu digambar oleh `ImageChoiceTiles` yang juga dipakai pratinjau.
+   */
+  const questionView = $derived(question ? examQuestionTileView(question) : null);
 
   $effect(() => {
     if (!session.user || !session.accessToken || booted) return;
@@ -517,13 +525,26 @@
             <p class="question__stem">{question.stem}</p>
           {/if}
 
-          {#each question.media as media (media.url)}
-            {#if media.role === 'STEM'}
-              <img class="question__media" src={media.url} alt={media.alt ?? 'Gambar soal'} />
-            {/if}
+          {#each questionView?.stemMedia ?? [] as media (media.url)}
+            <img class="question__media" src={media.url} alt={media.alt || 'Gambar soal'} />
           {/each}
 
-          {#if question.type === 'PASS_HAND_COLUMN'}
+          {#if question.type === 'IMAGE_CHOICE'}
+            <!--
+              Soal figural: peserta memilih GAMBAR, bukan teks. Komponen tile
+              dipakai bersama pratinjau admin (F3-15) sehingga placeholder dan
+              tata letaknya tidak bisa berbeda antar layar.
+            -->
+            <ImageChoiceTiles
+              options={questionView?.options ?? []}
+              letters={optionLetters}
+              isActive={(option) => option.id !== null && isChosen(question, option.id)}
+              onselect={(option) => {
+                const target = question.options.find((entry) => entry.label === option.label);
+                if (target) chooseOption(question, target);
+              }}
+            />
+          {:else if question.type === 'PASS_HAND_COLUMN'}
             <div class="passhand">
               <p class="passhand__hint">
                 Jumlahkan angka atas dan bawah, lalu tulis digit terakhir (0-9).
@@ -582,7 +603,17 @@
                     onchange={() => toggleMulti(question, option)}
                   />
                   <span class="option__key">{optionLetters[optionIndex] ?? option.label}</span>
-                  <span class="option__text">{optionText(option)}</span>
+                  <span class="option__text">
+                    {optionText(option)}
+                    {#each option.media as media (media.url)}
+                      <img
+                        class="option__media"
+                        src={media.url}
+                        alt={media.alt ?? `Gambar opsi ${option.label}`}
+                        loading="lazy"
+                      />
+                    {/each}
+                  </span>
                 </label>
               {/each}
             </div>
@@ -609,7 +640,17 @@
                     onclick={() => chooseOption(question, option)}
                   >
                     <span class="option__key">{optionLetters[optionIndex] ?? option.label}</span>
-                    <span class="option__text mono">{optionText(option)}</span>
+                    <span class="option__text mono">
+                      {optionText(option)}
+                      {#each option.media as media (media.url)}
+                        <img
+                          class="option__media"
+                          src={media.url}
+                          alt={media.alt ?? `Gambar opsi ${option.label}`}
+                          loading="lazy"
+                        />
+                      {/each}
+                    </span>
                   </button>
                 {/each}
               </div>
@@ -649,7 +690,17 @@
                   onclick={() => chooseOption(question, option)}
                 >
                   <span class="option__key">{optionLetters[optionIndex] ?? option.label}</span>
-                  <span class="option__text">{optionText(option)}</span>
+                  <span class="option__text">
+                    {optionText(option)}
+                    {#each option.media as media (media.url)}
+                      <img
+                        class="option__media"
+                        src={media.url}
+                        alt={media.alt ?? `Gambar opsi ${option.label}`}
+                        loading="lazy"
+                      />
+                    {/each}
+                  </span>
                 </button>
               {/each}
             </div>
@@ -949,6 +1000,19 @@
     min-width: 0;
     overflow-wrap: anywhere;
   }
+
+  /* Media kecil di dalam opsi teks (soal bergambar pada SINGLE/MULTI/MISSING). */
+  .option__media {
+    display: block;
+    max-width: 100%;
+    max-height: 120px;
+    margin-top: var(--space-2);
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Soal figural: grid tile gambar (IMAGE_CHOICE) — lihat ImageChoiceTiles.svelte. */
 
   .likert {
     display: grid;
