@@ -177,7 +177,7 @@
       <div class="sidebar__brand">
         <a class="brand-link" href="/dashboard" onclick={() => (mobileDrawerOpen = false)}>
           <div class="brand-icon">
-            <span>RA</span>
+            <img src="/logo-badge.png" alt="" width="40" height="40" aria-hidden="true" />
           </div>
           {#if !sidebarCollapsed}
             <div class="brand-info">
@@ -594,13 +594,14 @@
     display: grid;
     place-items: center;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
   }
 
-  .brand-icon span {
-    font-size: 1.15rem;
-    font-weight: 900;
-    color: #4e73df;
-    letter-spacing: -0.04em;
+  .brand-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .brand-info {

@@ -2,7 +2,10 @@
 <html lang="id">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="%sveltekit.assets%/favicon.png" />
+    <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
+    <link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1d4ed8" />
     <meta name="format-detection" content="telephone=no" />
@@ -11,6 +14,30 @@
       name="description"
       content="Platform TES CAT (Computer Assisted Test) seleksi penerimaan Polri: Tes Psikologi, TKK, dan TPK dengan timer server dan sistem gugur."
     />
+
+    <!-- Open Graph — default global, judul boleh ditimpa per halaman -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TES CAT" />
+    <meta property="og:title" content="TES CAT — Ujian CAT Seleksi Polri" />
+    <meta
+      property="og:description"
+      content="Latihan TES CAT seleksi Polri: Psikologi, TKK, dan TPK dengan timer server, sistem gugur, dan nilai MS/TMS."
+    />
+    <meta property="og:url" content="https://tes-cat-mu.vercel.app/" />
+    <meta property="og:image" content="https://tes-cat-mu.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TES CAT" />
+    <meta property="og:locale" content="id_ID" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TES CAT — Ujian CAT Seleksi Polri" />
+    <meta
+      name="twitter:description"
+      content="Latihan TES CAT seleksi Polri: Psikologi, TKK, dan TPK dengan timer server, sistem gugur, dan nilai MS/TMS."
+    />
+    <meta name="twitter:image" content="https://tes-cat-mu.vercel.app/og.png" />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

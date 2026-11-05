@@ -5,7 +5,10 @@
 <footer class="footer">
   <div class="container footer__grid">
     <div>
-      <p class="footer__brand">TES CAT</p>
+      <div class="footer__brand-row">
+        <img src="/logo-mark.png" alt="" width="40" height="40" />
+        <p class="footer__brand">TES CAT</p>
+      </div>
       <p class="footer__note">
         Latihan TES CAT ujian Polri: Psikologi, TKK, dan TPK dengan sistem gugur seperti seleksi
         sebenarnya. Bukan situs resmi Polri.
@@ -47,6 +50,20 @@
   .footer__grid {
     display: grid;
     gap: var(--space-8);
+  }
+
+  .footer__brand-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .footer__brand-row img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
   }
 
   .footer__brand {

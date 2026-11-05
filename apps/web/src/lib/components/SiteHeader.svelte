@@ -22,9 +22,14 @@
 <header class="header">
   <div class="header__inner">
     <a class="brand" href="/" aria-label="TES CAT — Beranda">
-      <div class="brand__icon">
-        <span>CAT</span>
-      </div>
+      <img
+        class="brand__logo"
+        src="/logo-badge.png"
+        alt=""
+        width="36"
+        height="36"
+        aria-hidden="true"
+      />
       <div class="brand__text">
         <span class="brand__title">TES CAT</span>
         <span class="brand__sub">Portal Seleksi Polri</span>
@@ -78,17 +83,12 @@
     color: #0f172a;
   }
 
-  .brand__icon {
-    display: grid;
-    place-items: center;
+  .brand__logo {
+    display: block;
     width: 36px;
     height: 36px;
-    border-radius: 8px;
-    background: #1e3a8a;
-    color: #ffffff;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
+    object-fit: contain;
+    flex-shrink: 0;
   }
 
   .brand__text {

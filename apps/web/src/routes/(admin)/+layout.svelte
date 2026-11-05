@@ -136,7 +136,14 @@
     <aside class="sidebar" class:sidebar--open={drawerOpen} aria-label="Navigasi admin">
       <div class="sidebar__top">
         <a class="brand" href={base} onclick={() => (drawerOpen = false)}>
-          <span class="brand__mark" aria-hidden="true">RA</span>
+          <img
+            class="brand__mark"
+            src="/logo-badge.png"
+            alt=""
+            width="38"
+            height="38"
+            aria-hidden="true"
+          />
           <span class="brand__text">
             <span class="brand__name">TES CAT</span>
             <span class="brand__tag">{panelTitle}</span>
@@ -341,18 +348,9 @@
   .brand__mark {
     width: 38px;
     height: 38px;
-    background: #ffffff;
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    color: #4e73df;
-    font-weight: 900;
-    font-size: 14px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  }
-
-  .shell--super .brand__mark {
-    color: #6d28d9;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
   }
 
   .brand__text {
