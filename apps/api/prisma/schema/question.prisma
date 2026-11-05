@@ -156,6 +156,13 @@ model MediaAsset {
   /// Fallback penyimpanan biner saat StoragePort dev dipakai. Di produksi
   /// kolom ini NULL dan objek berada di bucket privat Supabase.
   data        Bytes?
+  /// Turunan thumbnail WebP (F5-15): sisi terpanjang maksimum 400 px.
+  /// NULL pada aset lama atau gambar yang sudah cukup kecil — penyaji lalu
+  /// memakai berkas asli, jadi tidak perlu backfill.
+  thumbData      Bytes? @map("thumb_data")
+  thumbWidth     Int?   @map("thumb_width")
+  thumbHeight    Int?   @map("thumb_height")
+  thumbSizeBytes Int?   @map("thumb_size_bytes")
   uploadedBy  String?  @map("uploaded_by") @db.Uuid
   createdAt   DateTime @default(now()) @map("created_at")
 

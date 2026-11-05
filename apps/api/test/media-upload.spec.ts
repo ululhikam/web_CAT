@@ -139,4 +139,33 @@ describe('MediaService.storeBuffer — dikecualikan dari ambang dimensi', () => 
       checksum: expect.stringMatching(/^[a-f0-9]{64}$/),
     });
   });
+
+  it('membuat turunan thumbnail untuk gambar besar (F5-15)', async () => {
+    const { service, created } = createService();
+    const buffer = await pngBuffer(800, 450);
+
+    const asset = await service.storeBuffer(buffer, 'image/png', null);
+
+    // Sisi terpanjang dipotong ke 400 px, rasio 16:9 dipertahankan.
+    expect(asset.thumbWidth).toBe(400);
+    expect(asset.thumbHeight).toBe(225);
+    expect(asset.thumbSizeBytes).toBeGreaterThan(0);
+    expect(asset.thumbData).toBeInstanceOf(Uint8Array);
+    // Turunan disimpan bersama baris aset, bukan di berkas terpisah.
+    expect(created[0]?.thumbWidth).toBe(400);
+    expect(created[0]?.thumbData).toBeInstanceOf(Uint8Array);
+  });
+
+  it('tidak membuat thumbnail untuk gambar yang sudah kecil (F5-15)', async () => {
+    const { service, created } = createService();
+    const buffer = await pngBuffer(320, 240);
+
+    const asset = await service.storeBuffer(buffer, 'image/png', null);
+
+    expect(asset.thumbData).toBeNull();
+    expect(asset.thumbWidth).toBeNull();
+    expect(asset.thumbHeight).toBeNull();
+    expect(asset.thumbSizeBytes).toBeNull();
+    expect(created[0]?.thumbData).toBeNull();
+  });
 });

@@ -82,6 +82,7 @@
       media = library.rows.map((asset: MediaAssetView) => ({
         id: asset.id,
         url: asset.url,
+        thumbUrl: asset.thumbUrl,
         altText: null,
       }));
     } catch (cause) {

@@ -19,6 +19,8 @@
   export interface MediaChoice {
     id: string;
     url: string;
+    /** Turunan kecil untuk grid; jatuh ke `url` bila belum tersedia (F5-15). */
+    thumbUrl?: string;
     altText: string | null;
   }
 
@@ -386,7 +388,7 @@
         <div class="media-grid">
           {#each mediaLibrary as asset (asset.id)}
             <div class="media-card">
-              <img src={asset.url} alt={asset.altText ?? ''} loading="lazy" />
+              <img src={asset.thumbUrl ?? asset.url} alt={asset.altText ?? ''} loading="lazy" />
               <div class="media-card__actions">
                 <button
                   type="button"

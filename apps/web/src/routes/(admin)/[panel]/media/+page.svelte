@@ -164,7 +164,7 @@
       {#each assets as asset (asset.id)}
         <li class="asset">
           <div class="asset__preview">
-            <img src={asset.url} alt="" loading="lazy" />
+            <img src={asset.thumbUrl} alt="" loading="lazy" />
           </div>
           <div class="asset__body">
             <p class="asset__name" title={asset.storagePath}>

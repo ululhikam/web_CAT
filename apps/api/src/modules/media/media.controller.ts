@@ -21,6 +21,7 @@ import {
   mediaConfirmSchema,
   mediaListQuerySchema,
   mediaUploadUrlSchema,
+  normalizeMediaVariant,
   type MediaAssetView,
   type MediaConfirmInput,
   type MediaListQuery,
@@ -98,9 +99,13 @@ export class MediaController {
 
   @RequirePermissions('questions.read')
   @Get(':id/preview')
-  @ApiOperation({ summary: 'Pratinjau media untuk admin' })
-  async preview(@Param('id') id: string, @Res() res: Response): Promise<void> {
-    const content = await this.media.contentForAdmin(id);
+  @ApiOperation({ summary: 'Pratinjau media untuk admin (opsional ?variant=thumb)' })
+  async preview(
+    @Param('id') id: string,
+    @Query('variant') variant: string | undefined,
+    @Res() res: Response,
+  ): Promise<void> {
+    const content = await this.media.contentForAdmin(id, normalizeMediaVariant(variant));
     if (content.data) {
       res.setHeader('content-type', content.mime);
       res.setHeader('cache-control', 'private, max-age=300');
@@ -140,14 +145,20 @@ export class MediaContentController {
   constructor(private readonly media: MediaService) {}
 
   @Get(':id/content')
-  @ApiOperation({ summary: 'Sajikan isi media melalui signed URL' })
+  @ApiOperation({ summary: 'Sajikan isi media melalui signed URL (opsional ?variant=thumb)' })
   async content(
     @Param('id') id: string,
     @Query('exp') exp: string,
     @Query('sig') sig: string,
+    @Query('variant') variant: string | undefined,
     @Res() res: Response,
   ): Promise<void> {
-    const content = await this.media.content(id, Number(exp), sig ?? '');
+    const content = await this.media.content(
+      id,
+      Number(exp),
+      sig ?? '',
+      normalizeMediaVariant(variant),
+    );
     if (content.data) {
       res.setHeader('content-type', content.mime);
       res.setHeader('cache-control', 'public, max-age=300, immutable');

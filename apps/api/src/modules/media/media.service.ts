@@ -13,12 +13,14 @@ import {
   MEDIA_MIN_DIMENSION,
   decodeCursor,
   encodeCursor,
+  needsThumbnail,
   type MediaAssetView,
   type MediaConfirmInput,
   type MediaListQuery,
   type MediaListResponse,
   type MediaUploadUrlInput,
   type MediaUploadUrlResponse,
+  type MediaVariant,
 } from '@webcat/contracts';
 import { AppConfigService } from '../../core/config/config.service';
 import { STORAGE } from '../../core/ports/ports.module';
@@ -27,12 +29,22 @@ import { Inject } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { computeChecksum } from '../questions/dedupe';
-import { buildMediaUrl, verifyMediaSignature } from './media-signature';
+import { buildAdminPreviewUrl, buildMediaUrl, verifyMediaSignature } from './media-signature';
+import { buildMediaThumbnail } from './media-thumbnail';
 
 interface Actor {
   id: string;
   ip?: string | null;
   userAgent?: string | null;
+}
+
+/** Hasil penyajian satu varian media. */
+export interface MediaContent {
+  data: Buffer | null;
+  mime: string;
+  url: string | null;
+  /** Varian yang benar-benar disajikan; `full` bila thumbnail tidak tersedia. */
+  variant: MediaVariant;
 }
 
 const EXTENSIONS: Record<string, string> = {
@@ -160,6 +172,10 @@ export class MediaService {
   /**
    * Dipakai impor dokumen untuk menyimpan gambar inline. Idempoten berdasarkan
    * checksum: gambar yang sama tidak diduplikasi.
+   *
+   * Sejak F5-15 turunan thumbnail juga dibuat di sini supaya grid admin tidak
+   * perlu mengolah berkas besar. Kegagalan membuat thumbnail tidak pernah
+   * menggagalkan penyimpanan — aset tanpa thumbnail tetap disajikan apa adanya.
    */
   async storeBuffer(
     buffer: Buffer,
@@ -175,6 +191,10 @@ export class MediaService {
     checksum: string;
     createdAt: Date;
     data?: Uint8Array | null;
+    thumbData?: Uint8Array | null;
+    thumbWidth?: number | null;
+    thumbHeight?: number | null;
+    thumbSizeBytes?: number | null;
     _count: { questionMedia: number };
   }> {
     const checksum = computeChecksum(buffer);
@@ -191,6 +211,12 @@ export class MediaService {
     const now = new Date();
     const storagePath = `media/${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, '0')}/${randomUUID()}.webp`;
 
+    // F5-15: hanya gambar yang lebih besar dari batas thumbnail yang butuh
+    // turunan; sisanya sudah cukup kecil sehingga aslinya dipakai langsung.
+    const thumb = needsThumbnail(metadata.width, metadata.height)
+      ? await buildMediaThumbnail(normalized)
+      : null;
+
     const asset = await this.prisma.mediaAsset.create({
       data: {
         storagePath,
@@ -200,6 +226,10 @@ export class MediaService {
         sizeBytes: normalized.length,
         checksum,
         data: normalized,
+        thumbData: thumb ? new Uint8Array(thumb.data) : null,
+        thumbWidth: thumb?.width ?? null,
+        thumbHeight: thumb?.height ?? null,
+        thumbSizeBytes: thumb?.data.length ?? null,
         uploadedBy: actorId,
       },
     });
@@ -258,11 +288,20 @@ export class MediaService {
     };
   }
 
+  /**
+   * Sajikan byte media sesuai varian (F5-15).
+   *
+   * `thumb` memakai turunan WebP bila ada; bila tidak (aset lama, atau gambar
+   * yang memang sudah kecil) berkas asli yang dikirim. Fallback ini disengaja:
+   * grid admin selalu mendapat gambar, bukan 404, dan klien tidak perlu tahu
+   * varian mana yang akhirnya dipakai.
+   */
   async content(
     id: string,
     expiresAt: number,
     signature: string,
-  ): Promise<{ data: Buffer | null; mime: string; url: string | null }> {
+    variant: MediaVariant = 'full',
+  ): Promise<MediaContent> {
     if (!verifyMediaSignature(id, expiresAt, signature, this.config.value.JWT_ACCESS_SECRET)) {
       throw new NotFoundException({
         code: 'MEDIA_NOT_FOUND',
@@ -278,17 +317,11 @@ export class MediaService {
       });
     }
 
-    return {
-      data: asset.data ? Buffer.from(asset.data) : null,
-      mime: asset.mime,
-      url: asset.data ? null : await this.storage.createSignedUrl(asset.storagePath, 900),
-    };
+    return this.resolveVariant(asset, variant);
   }
 
   /** Konten untuk pratinjau admin (sudah lolos guard permission). */
-  async contentForAdmin(
-    id: string,
-  ): Promise<{ data: Buffer | null; mime: string; url: string | null }> {
+  async contentForAdmin(id: string, variant: MediaVariant = 'full'): Promise<MediaContent> {
     const asset = await this.prisma.mediaAsset.findUnique({ where: { id } });
     if (!asset) {
       throw new NotFoundException({
@@ -296,10 +329,34 @@ export class MediaService {
         message: 'Media tidak ditemukan',
       });
     }
+    return this.resolveVariant(asset, variant);
+  }
+
+  /**
+   * Pilih byte yang dikirim untuk satu varian.
+   *
+   * Byte asli bisa berada di database (dev) atau di bucket privat (produksi).
+   * Thumbnail hanya disimpan di database, jadi bila byte asli tidak lokal dan
+   * turunan belum ada, permintaan dialihkan ke objek asli — bukan 404.
+   */
+  private async resolveVariant(
+    asset: {
+      storagePath: string;
+      mime: string;
+      data?: Uint8Array | null;
+      thumbData?: Uint8Array | null;
+    },
+    variant: MediaVariant,
+  ): Promise<MediaContent> {
+    if (variant === 'thumb' && asset.thumbData) {
+      return { data: Buffer.from(asset.thumbData), mime: 'image/webp', url: null, variant: 'thumb' };
+    }
+
     return {
       data: asset.data ? Buffer.from(asset.data) : null,
       mime: asset.mime,
       url: asset.data ? null : await this.storage.createSignedUrl(asset.storagePath, 900),
+      variant: 'full',
     };
   }
 
@@ -365,12 +422,21 @@ export class MediaService {
     data?: Uint8Array | null;
     _count: { questionMedia: number };
   }): MediaAssetView {
+    const secret = this.config.value.JWT_ACCESS_SECRET;
+
+    // Tanpa byte lokal (produksi/Supabase) pratinjau lewat endpoint admin yang
+    // meneruskan ke signed URL; thumbnail tetap diminta lewat `variant`.
+    const local = Boolean(row.data);
+    const url = local ? buildMediaUrl(row.id, secret) : buildAdminPreviewUrl(row.id, 'full');
+    const thumbUrl = local
+      ? buildMediaUrl(row.id, secret, 1800, 'thumb')
+      : buildAdminPreviewUrl(row.id, 'thumb');
+
     return {
       id: row.id,
       storagePath: row.storagePath,
-      url: row.data
-        ? buildMediaUrl(row.id, this.config.value.JWT_ACCESS_SECRET)
-        : `/api/v1/admin/media/${row.id}/preview`,
+      url,
+      thumbUrl,
       mime: row.mime,
       width: row.width,
       height: row.height,
