@@ -36,7 +36,7 @@ rilis publik.
 | --- | --- | --- | --- | --- |
 | F5-10 | Autosave IndexedDB + replay + `fetch keepalive` (bukan `sendBeacon`) | in-memory saja | Jawaban aman saat offline/refresh | 3 j |
 | F5-11 | Preload 2 soal berikutnya (teks + gambar) | belum ada | Navigasi tanpa jeda | 1 j |
-| F5-12 | Zoom/pan gambar figural | belum ada | Gambar kecil bisa diperbesar | 1,5 j |
+| F5-12 | Zoom/pan gambar figural ✅ | belum ada | Gambar kecil bisa diperbesar | 1,5 j |
 | F5-13 | Flag anomali waktu jawab | belum ada | `< 300 ms` (gambar), `< 150 ms` (Kecermatan) tercatat | 1 j |
 | F5-14 | Import ZIP gambar end-to-end | parser ada, UI belum | Pemetaan manual + laporan error | 2 j |
 | F5-15 | Varian WebP/thumbnail | satu ukuran | 2 varian per gambar | 1 j |
@@ -657,19 +657,79 @@ request yang berjalan saat peserta masih membaca soal sebelumnya.
 
 ---
 
-### F5-12 — Zoom/pan gambar figural
+### F5-12 — Zoom/pan gambar figural ✅
 
-Untuk soal figural detail (jaring-jaring kubus, pola kompleks), tambahkan
-viewer:
+**Kriteria selesai:** gambar 200×200 bisa diperbesar sampai 400% tanpa pecah
+berlebihan, dan `Esc` menutup viewer.
 
-- Klik gambar → modal layar penuh.
-- Pinch/scroll untuk zoom, drag untuk pan.
-- Tombol reset & close, aksesibel via keyboard (`Esc`).
+#### Kondisi awal (apa yang sebenarnya belum jalan)
 
-**Kriteria selesai**
+Gambar soal dirender sebagai `<img>` biasa di runner ujian
+(`/exam/[sessionId]`), termasuk stem soal figural dan tile opsi
+`IMAGE_CHOICE`. Tidak ada cara memperbesar: gambar mengecil mengikuti lebar
+kolom, sehingga detail jaring-jaring kubus atau pola kompleks tidak terbaca di
+layar 1366×768. `MediaViewer` belum ada; satu-satunya modal yang ada adalah
+konfirmasi selesai subtes.
 
-- Gambar 200×200 bisa diperbesar sampai 400% tanpa pecah berlebihan.
-- `Esc` menutup viewer.
+#### Yang dibangun
+
+- `apps/web/src/lib/exams/image-zoom.ts` — seluruh matematika viewer sebagai
+  fungsi murni: `clampZoom` (100%–400%), `nextZoom` (langkah 50%),
+  `zoomFromWheel`, `zoomFromPinch`, `zoomAtPoint` (jaga titik di bawah kursor),
+  `clampAxis`/`clampPan` (batas geser), `canZoomIn`/`canZoomOut`. Dipisah supaya
+  batas bisa diuji tanpa DOM.
+- `apps/web/src/lib/components/media/MediaViewer.svelte` — modal layar penuh
+  (`role="dialog"`, `aria-modal="true"`). Zoom lewat roda (listener
+  `{ passive: false }` supaya `preventDefault` bekerja), cubit dua jari, tombol
+  `+`/`−`, dan tombol keyboard `+`/`-`/`0`; geser lewat drag pointer atau tombol
+  panah; `Esc` menutup; fokus awal ke tombol Tutup dan kembali ke pemicu saat
+  ditutup; gulir halaman dikunci selama viewer terbuka.
+- `ImageChoiceTiles.svelte` — prop baru `onzoom`. Tombol perbesar diletakkan
+  sebagai **saudara** `<button>` tile di dalam `.tile-cell`, bukan anaknya:
+  tombol bersarang tidak sah, dan klik tile harus tetap berarti "pilih jawaban".
+- Runner ujian memakai satu `<MediaViewer>` global; gambar stem dibungkus
+  `<button class="question__media">` dan tile memakai `onzoom` yang sama.
+  Pratinjau admin (`ImageChoice.svelte`) memakai jalur identik.
+
+#### Keputusan yang diambil
+
+| Topik | Keputusan | Alasan |
+| --- | --- | --- |
+| Batas zoom | 100%–400% (`MAX_ZOOM = 4`) | Kriteria runbook menyebut 400%; di atas itu detail gambar sumber sudah habis dan yang terlihat hanya piksel |
+| `image-rendering` | `auto` (bukan `pixelated`) | Interpolasi halus membuat garis jaring-jaring tetap terbaca saat diperbesar |
+| Sumber gambar | URL resolusi penuh, bukan `thumbUrl` | Thumbnail 400 px diperbesar 400% akan pecah — kebalikan dari tujuan viewer |
+| Klik pada tile opsi | Tetap memilih jawaban | Zoom tersedia lewat tombol perbesar terpisah agar tidak ada aksi ganda |
+| Zoom saat gambar belum diukur | Aman: `baseSize` 0 berarti geser dikunci, zoom tetap jalan | `onload` tidak selalu terpanggil untuk gambar dari cache; diukur ulang lewat `requestAnimationFrame` |
+
+#### Bukti runtime (Chrome + DevTools Protocol)
+
+Harness `f512-viewer.mjs` login sebagai peserta, membuka
+`/exam/eb01b2e2-…`, lalu mencari soal bergambar lewat palet. Hasil **13/13**:
+
+| Langkah | Hasil |
+| --- | --- |
+| Klik gambar stem soal 4 → viewer | `[data-testid=media-viewer]` muncul; `role="dialog"`, `aria-modal="true"` |
+| `Esc` | viewer tertutup |
+| Klik `+` berulang | 6 langkah → `scale=4`, label `400%`, tombol `+` **nonaktif** di batas |
+| Ukuran gambar saat 400% | aset 256×256 natural → 1022×1022 CSS px, `image-rendering: auto` |
+| Drag 120×60 px | `translate(0px, 0px)` → `translate(-120px, -60px)` |
+| Reset | label `100%`, `transform: translate(0px, 0px) scale(1)` |
+| Tutup | viewer tertutup |
+| Tile `IMAGE_CHOICE` (soal tanpa stem) | 4 tile, tombol perbesar berlabel "Perbesar gambar opsi A"; membuka viewer |
+| Klik tile saat viewer tertutup | 1 tile `aria-pressed="true"`, viewer **tidak** terbuka |
+| Error runtime | `[]` |
+
+Test: 26 test `image-zoom.spec.ts` (batas zoom, langkah, roda, cubit, jangkar
+kursor, batas geser, tombol ujung rentang) + 5 test komponen tile yang sudah
+ada tetap lulus (`pnpm --filter @webcat/web test` → 14 berkas / 172 test).
+
+**Deviasi kecil:** kriteria menyebut gambar **200×200**, tetapi bank soal dev
+tidak punya aset berukuran itu (105 aset, 0 baris dengan `width = 200 and
+height = 200`). Bukti memakai aset soal figural yang tersedia, **256×256** —
+diperbesar dengan faktor yang sama (4×) menjadi 1022×1022 CSS px. Ketajaman
+hasil ditentukan oleh faktor perbesaran, bukan ukuran absolut, jadi 200×200
+akan berperilaku identik; yang diuji (`MAX_ZOOM = 4`, `image-rendering: auto`)
+tidak bergantung pada dimensi sumber.
 
 ---
 

@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 6 November 2026
-**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **13/16**
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **14/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 13 | 16 | `████████░░` 81% |
-| **Total** | | | **92** | **95** | **97%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 14 | 16 | █████████░ 88% |
+| **Total** | | | **93** | **95** | **98%** |
 
 ---
 
@@ -566,7 +566,7 @@ tidak ada lagi fallback senyap ke fixture.
 | --- | --- | --- | --- | --- |
 | F5-10 | Autosave IndexedDB (+ `fetch keepalive`, bukan `sendBeacon`) | ✅ | Antrean IndexedDB dipulihkan ke UI setelah refresh, disinkronkan ulang saat `online`, dan digabung per soal (satu baris per soal) agar jawaban terbaru tidak kalah dari yang lama. Bug turunan ditemukan & diperbaiki: `GET .../questions` mengembalikan `answer: null` karena `select` memakai `answerPayload` sementara proyeksi membaca `answer`. Bukti runtime Chrome/CDP **9/9** (offline 5 jawaban → IndexedDB → online → antrean 0 & tersimpan; autosave diblokir → 3 tertahan → refresh → 9→12 soal terjawab + "3 dipulihkan" → blokir dibuka → antrean 0). 21 test baru | 2026-11-05 |
 | F5-11 | Preload 2 soal berikutnya | ✅ | Hanya **media** yang di-prefetch (soal `index+1`/`index+2`, `EXPLANATION` dibuang); dilewati saat `saveData`/`2g`/`slow-2g`; URL tidak pernah diminta dua kali (batas 64 entri). Runtime Chrome/CDP **7/7**: soal 10 siap **18 ms** dengan `ownRequestsAfterClick = 0` vs soal 57 **764–1190 ms** dengan 5 request; tanpa error runtime. 20 test baru | 2026-11-06 |
-| F5-12 | Zoom/pan gambar figural | ⬜ | — | — |
+| F5-12 | Zoom/pan gambar figural | ✅ | `image-zoom.ts` (matematika murni, 26 test) + `MediaViewer.svelte` (modal `role="dialog"`, zoom 100%–400% lewat roda/cubit/tombol, pan drag & panah, `Esc` + fokus kembali ke pemicu). Stem gambar dibungkus tombol; tile `IMAGE_CHOICE` dapat tombol perbesar **saudara** tombol tile (bukan anak) supaya klik tile tetap memilih jawaban. Runtime Chrome/CDP **13/13**: soal 4 → viewer terbuka, `Esc` menutup, 6 langkah `+` → `scale=4`/`400%` dengan tombol nonaktif, aset 256×256 tampil 1022×1022 `image-rendering: auto`, drag `translate(0,0)` → `translate(-120,-60)`, Reset `100%`, Tutup menutup; tile: 4 tile + label "Perbesar gambar opsi A", tombol membuka viewer, klik tile tetap `aria-pressed="true"` tanpa viewer, error runtime `[]` | 2026-11-06 |
 | F5-13 | Flag anomali waktu jawab | ⬜ | — | — |
 | F5-14 | Import ZIP gambar end-to-end | ✅ | `admin/media/import/{preview,apply,questions,questions/resolve}`. Aturan murni di `packages/contracts/src/imports/media-zip.ts` (24 test) dipakai UI & API. Arsip >200 entri ditolak utuh; duplikat nama menandai **semua** berkas; metadata OS & non-gambar dibuang dari laporan; `apply` idempoten per `(soal, aset)`. Runtime API: preview ZIP 5 berkas → `importable 2 / duplicate 2`; apply 2 gambar ke `DEMO-TPA-IMG-001` STEM + opsi A → `attached 2`, diverifikasi di DB lalu dibersihkan. Runtime UI: unggah ZIP di `/super-admin/media/import` → ringkasan arsip + tabel 4 baris (2 "Nama ganda"). 13 test API + 24 test kontrak + 20 test draf | 2026-11-06 |
 | F5-15 | Varian WebP/thumbnail | ✅ | `?variant=thumb` pada URL bertanda tangan yang sama (varian **bukan** bagian HMAC). Thumbnail dibuat saat simpan hanya bila sisi terpanjang > 400 px, disimpan di kolom `thumb_*`; aset lama/`≤400 px` memakai byte asli (tidak pernah 404). Runtime: upload 1200×800 → full 55.880 B vs thumb 8.112 B, DB `thumb_size_bytes 8112`. Migrasi `20261106120000_f5_15_media_thumbnail` diterapkan. 7 test baru | 2026-11-06 |
@@ -586,6 +586,35 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-06 — Fase 5: F5-12 zoom/pan gambar figural
+
+**Dikerjakan:** F5-12
+**Hasil:** Fase 5 ✅ 14/16. Peserta bisa memperbesar gambar figural (stem maupun
+tile opsi) sampai 400% di modal layar penuh, menggeser, lalu menutup dengan
+`Esc`. Tracker: **93/95 = 98%**.
+
+**Bukti:**
+
+- `image-zoom.ts` — matematika murni (batas 100%–400%, langkah 50%, jangkar
+  kursor, batas geser); 26 test `image-zoom.spec.ts` lulus.
+- `pnpm --filter @webcat/web test` → 14 berkas / **172** test; `svelte-check`
+  0 error / 0 warning; eslint exit 0.
+- Runtime Chrome/CDP **13/13** (`f512-viewer.mjs`, sesi
+  `eb01b2e2-…`): soal 4 (stem 256×256) → klik membuka `role="dialog"`
+  `aria-modal="true"`; `Esc` menutup; 6 langkah `+` → `scale=4`, label `400%`,
+  tombol `+` nonaktif; gambar tampil 1022×1022 dengan `image-rendering: auto`;
+  drag `translate(0px,0px)` → `translate(-120px,-60px)`; Reset `100%` +
+  `scale(1)`; Tutup menutup; tile `IMAGE_CHOICE` punya tombol perbesar
+  berlabel ("Perbesar gambar opsi A") yang membuka viewer, sedangkan klik tile
+  tetap memilih jawaban (`aria-pressed="true"`, viewer tidak terbuka);
+  `errors = []`.
+
+**Hambatan:** gambar dari cache tidak selalu memicu `onload`, sehingga ukuran
+dasar (yang dipakai menghitung batas geser) diukur ulang lewat
+`requestAnimationFrame` setelah viewer terbuka.
+
+**Berikutnya:** F5-13 (flag anomali waktu jawab), lalu F5-16 (E2E Playwright).
 
 ### 2026-11-06 — Fase 5: F5-11, F5-14, F5-15 selesai
 
