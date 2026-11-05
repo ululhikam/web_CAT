@@ -77,19 +77,69 @@ export function singleCorrect(type: QuestionType): boolean {
   );
 }
 
+/**
+ * Opsi yang perlu dikirim ke server.
+ *
+ * Untuk `IMAGE_CHOICE` isi opsi adalah gambar, jadi `contentText` boleh kosong —
+ * yang menentukan apakah opsi dipakai adalah ada/tidaknya media `OPTION`
+ * dengan label tersebut. Tanpa pengecualian ini semua opsi soal bergambar
+ * terbuang saat submit dan server menolaknya.
+ */
+export function draftOptionsFor(draft: QuestionDraft): OptionDraft[] {
+  if (!usesOptions(draft.type)) return [];
+
+  const hasOptionMedia = (label: string): boolean =>
+    draft.media.some((media) => media.role === 'OPTION' && media.optionLabel === label);
+
+  return draft.options.filter(
+    (option) => option.contentText.trim().length > 0 || hasOptionMedia(option.label),
+  );
+}
+
+export interface DraftMediaIssues {
+  /** `true` bila soal bergambar belum punya satu pun media STEM. */
+  stemMissing: boolean;
+  /** Label opsi yang belum punya gambar. */
+  labelsWithoutMedia: string[];
+}
+
+/**
+ * Kelengkapan media soal bergambar (F3-29).
+ *
+ * Server tetap sumber kebenaran (`questionShapeIssues`), tetapi form perlu tahu
+ * lebih awal: admin harus melihat opsi mana yang belum bergambar sebelum menekan
+ * simpan, bukan setelah ditolak dengan pesan umum.
+ */
+export function draftMediaIssues(draft: QuestionDraft): DraftMediaIssues {
+  if (draft.type !== 'IMAGE_CHOICE') {
+    return { stemMissing: false, labelsWithoutMedia: [] };
+  }
+
+  const labelsWithMedia = new Set(
+    draft.media
+      .filter((media) => media.role === 'OPTION' && media.optionLabel)
+      .map((media) => media.optionLabel),
+  );
+
+  return {
+    stemMissing: !draft.media.some((media) => media.role === 'STEM'),
+    labelsWithoutMedia: draft.options
+      .map((option) => option.label)
+      .filter((label) => !labelsWithMedia.has(label)),
+  };
+}
+
 /** Ubah draft menjadi payload `questionCreateSchema`. */
 export function toPayload(draft: QuestionDraft): Record<string, unknown> {
-  const options = usesOptions(draft.type)
-    ? draft.options
-        .filter((option) => option.contentText.trim().length > 0)
-        .map((option, index) => ({
-          label: option.label,
-          contentText: option.contentText.trim(),
-          isCorrect: option.isCorrect,
-          scoreValue: option.scoreValue,
-          sortOrder: index,
-        }))
-    : [];
+  const options = draftOptionsFor(draft).map((option, index) => ({
+    label: option.label,
+    // Opsi bergambar boleh tanpa teks; jangan kirim string kosong agar kontrak
+    // memperlakukannya sebagai "tidak ada teks".
+    ...(option.contentText.trim() ? { contentText: option.contentText.trim() } : {}),
+    isCorrect: option.isCorrect,
+    scoreValue: option.scoreValue,
+    sortOrder: index,
+  }));
 
   return {
     publicCode: draft.publicCode.trim() || undefined,

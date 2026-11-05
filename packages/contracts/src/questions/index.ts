@@ -152,6 +152,34 @@ export function questionShapeIssues(input: QuestionShapeInput): string[] {
     }
   }
 
+  /**
+   * Soal bergambar (F3-27).
+   *
+   * Tanpa ini, admin bisa menyimpan `IMAGE_CHOICE` tanpa satu gambar pun dan
+   * peserta melihat deretan tile kosong. Aturannya:
+   *   - wajib ada minimal satu media `STEM`;
+   *   - SETIAP opsi wajib punya media `OPTION` (bukan hanya sebagian).
+   */
+  if (input.type === 'IMAGE_CHOICE') {
+    if (!input.media.some((media) => media.role === 'STEM')) {
+      issues.push('Soal bergambar wajib memiliki minimal satu gambar pada stem');
+    }
+
+    const labelsWithMedia = new Set(
+      input.media
+        .filter((media) => media.role === 'OPTION')
+        .map((media) => media.optionLabel)
+        .filter((label): label is string => Boolean(label)),
+    );
+    const labelsWithoutMedia = input.options
+      .map((option) => option.label)
+      .filter((label) => !labelsWithMedia.has(label));
+
+    if (labelsWithoutMedia.length > 0) {
+      issues.push(`Opsi ${labelsWithoutMedia.join(', ')} belum memiliki gambar`);
+    }
+  }
+
   return issues;
 }
 

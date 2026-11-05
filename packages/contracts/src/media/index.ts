@@ -6,6 +6,14 @@ export type MediaMime = (typeof MEDIA_MIME_TYPES)[number];
 
 export const MEDIA_MAX_BYTES = 5 * 1024 * 1024;
 
+/**
+ * Dimensi minimum gambar soal (F3-28).
+ *
+ * Soal figural menampilkan pola; gambar di bawah 200×200 px tidak terbaca saat
+ * diperkecil di tile runner, jadi ditolak sejak upload dengan pesan yang jelas.
+ */
+export const MEDIA_MIN_DIMENSION = 200;
+
 /** Langkah 1 upload langsung: minta signed upload URL. */
 export const mediaUploadUrlSchema = z.object({
   filename: z.string().trim().min(1).max(200),

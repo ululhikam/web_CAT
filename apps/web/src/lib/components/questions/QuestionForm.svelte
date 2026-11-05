@@ -8,6 +8,7 @@
   import Input from '@webcat/ui/components/Input.svelte';
   import QuestionRenderer from './QuestionRenderer.svelte';
   import {
+    draftMediaIssues,
     emptyDraft,
     singleCorrect,
     usesOptions,
@@ -88,6 +89,16 @@
 
   const optionsUsed = $derived(usesOptions(draft.type));
   const oneCorrect = $derived(singleCorrect(draft.type));
+
+  /**
+   * Kelengkapan media soal bergambar (F3-29).
+   *
+   * Server tetap menolak soal yang tidak lengkap (`questionShapeIssues`), tetapi
+   * admin perlu tahu lebih awal — sebelum menekan Simpan — opsi mana yang
+   * masih kosong.
+   */
+  const mediaIssues = $derived(draftMediaIssues(draft));
+  const missingMediaLabels = $derived(new Set(mediaIssues.labelsWithoutMedia));
 
   $effect(() => {
     const allowed = SUBTESTS[draft.stageCode] ?? [];
@@ -292,14 +303,20 @@
 
     {#if optionsUsed}
       <Card title="Opsi jawaban" description={oneCorrect ? 'Tandai tepat satu kunci.' : draft.type === 'LIKERT_STATEMENT' ? 'Skala 1–5 dengan bobot dimensi.' : 'Tandai semua kunci yang benar.'}>
+        {#if draft.type === 'IMAGE_CHOICE'}
+          <Alert tone="info" title="Soal bergambar">
+            Setiap opsi wajib punya gambar. Pasang gambar pada bagian Media di bawah
+            menggunakan tombol label opsi.
+          </Alert>
+        {/if}
         <div class="options">
           {#each draft.options as option, index (option.label)}
-            <div class="option">
+            <div class="option" class:option--missing-media={missingMediaLabels.has(option.label)}>
               <span class="option__label">{option.label}</span>
               <input
                 class="option__input"
                 type="text"
-                placeholder={draft.type === 'LIKERT_STATEMENT' ? 'Label skala, mis. Sangat setuju' : 'Teks opsi'}
+                placeholder={draft.type === 'LIKERT_STATEMENT' ? 'Label skala, mis. Sangat setuju' : draft.type === 'IMAGE_CHOICE' ? 'Teks opsi (opsional)' : 'Teks opsi'}
                 value={option.contentText}
                 oninput={(event) => {
                   const value = (event.currentTarget as HTMLInputElement).value;
@@ -308,6 +325,11 @@
                   );
                 }}
               />
+              {#if missingMediaLabels.has(option.label)}
+                <span class="option__media-warning" title="Opsi ini belum punya gambar">
+                  ⚠ belum bergambar
+                </span>
+              {/if}
               {#if draft.type !== 'LIKERT_STATEMENT'}
                 <label class="option__correct">
                   <input
@@ -336,6 +358,26 @@
             Tambah opsi
           </Button>
         </div>
+      </Card>
+    {/if}
+
+    {#if draft.type === 'IMAGE_CHOICE' && (mediaIssues.stemMissing || mediaIssues.labelsWithoutMedia.length > 0)}
+      <Card title="Kelengkapan gambar" description="Soal bergambar wajib lengkap sebelum bisa diterbitkan.">
+        {#if mediaIssues.stemMissing}
+          <Alert tone="warning" title="Gambar stem belum dipasang">
+            Soal bergambar wajib punya minimal satu gambar pada stem.
+          </Alert>
+        {/if}
+        {#if mediaIssues.labelsWithoutMedia.length > 0}
+          <Alert tone="warning" title="Opsi belum bergambar">
+            Opsi {mediaIssues.labelsWithoutMedia.join(', ')} belum memiliki gambar.
+          </Alert>
+        {/if}
+        {#if mediaLibrary.length === 0}
+          <Alert tone="info" title="Belum ada gambar di pustaka">
+            Unggah gambar terlebih dahulu di menu Media, lalu kembali ke form ini.
+          </Alert>
+        {/if}
       </Card>
     {/if}
 
@@ -492,6 +534,22 @@
     gap: var(--space-1);
     font-size: var(--text-xs);
     color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  /* F3-29: opsi yang belum punya gambar ditandai agar admin tahu apa yang
+     kurang sebelum menekan Simpan. */
+  .option--missing-media {
+    padding: 0.35rem 0.5rem;
+    border: 1px dashed var(--color-warning, #b45309);
+    border-radius: var(--radius-md);
+    background: var(--color-warning-soft, #fffbeb);
+  }
+
+  .option__media-warning {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-warning, #b45309);
     white-space: nowrap;
   }
 

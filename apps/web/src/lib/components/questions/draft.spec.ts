@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { emptyDraft, singleCorrect, toPayload, usesOptions, type QuestionDraft } from './draft';
+import {
+  draftMediaIssues,
+  draftOptionsFor,
+  emptyDraft,
+  singleCorrect,
+  toPayload,
+  usesOptions,
+  type QuestionDraft,
+} from './draft';
 
 function draft(overrides: Partial<QuestionDraft> = {}): QuestionDraft {
   return {
@@ -116,5 +124,117 @@ describe('toPayload', () => {
     expect(media[0]).toMatchObject({ role: 'STEM', sortOrder: 0 });
     expect(media[0]?.optionLabel).toBeUndefined();
     expect(media[1]).toMatchObject({ role: 'OPTION', optionLabel: 'A', sortOrder: 1 });
+  });
+});
+
+describe('draftOptionsFor — opsi bergambar (F3-29)', () => {
+  it('mempertahankan opsi tanpa teks bila opsi itu punya media', () => {
+    const value = draft({
+      type: 'IMAGE_CHOICE',
+      options: [
+        { label: 'A', contentText: '', isCorrect: true, scoreValue: 1 },
+        { label: 'B', contentText: '', isCorrect: false, scoreValue: 0 },
+        { label: 'C', contentText: 'teks', isCorrect: false, scoreValue: 0 },
+      ],
+      media: [
+        { mediaAssetId: 'asset-stem', role: 'STEM', optionLabel: '' },
+        { mediaAssetId: 'asset-a', role: 'OPTION', optionLabel: 'A' },
+        { mediaAssetId: 'asset-b', role: 'OPTION', optionLabel: 'B' },
+      ],
+    });
+
+    expect(draftOptionsFor(value).map((option) => option.label)).toEqual(['A', 'B', 'C']);
+  });
+
+  it('membuang opsi tanpa teks dan tanpa media', () => {
+    const value = draft({
+      type: 'IMAGE_CHOICE',
+      options: [
+        { label: 'A', contentText: '', isCorrect: true, scoreValue: 1 },
+        { label: 'B', contentText: '', isCorrect: false, scoreValue: 0 },
+      ],
+      media: [
+        { mediaAssetId: 'asset-stem', role: 'STEM', optionLabel: '' },
+        { mediaAssetId: 'asset-a', role: 'OPTION', optionLabel: 'A' },
+      ],
+    });
+
+    expect(draftOptionsFor(value).map((option) => option.label)).toEqual(['A']);
+  });
+
+  it('toPayload tidak mengirim contentText untuk opsi bergambar', () => {
+    const payload = toPayload(
+      draft({
+        type: 'IMAGE_CHOICE',
+        options: [{ label: 'A', contentText: '   ', isCorrect: true, scoreValue: 1 }],
+        media: [{ mediaAssetId: 'asset-a', role: 'OPTION', optionLabel: 'A' }],
+      }),
+    );
+
+    const options = payload.options as Array<Record<string, unknown>>;
+    expect(options).toHaveLength(1);
+    expect(options[0]).toEqual({ label: 'A', isCorrect: true, scoreValue: 1, sortOrder: 0 });
+  });
+});
+
+describe('draftMediaIssues — indikator "belum bergambar" (F3-29)', () => {
+  it('menyebut setiap opsi yang belum punya media', () => {
+    const value = draft({
+      type: 'IMAGE_CHOICE',
+      options: [
+        { label: 'A', contentText: '', isCorrect: true, scoreValue: 1 },
+        { label: 'B', contentText: '', isCorrect: false, scoreValue: 0 },
+        { label: 'C', contentText: '', isCorrect: false, scoreValue: 0 },
+      ],
+      media: [
+        { mediaAssetId: 'asset-stem', role: 'STEM', optionLabel: '' },
+        { mediaAssetId: 'asset-a', role: 'OPTION', optionLabel: 'A' },
+      ],
+    });
+
+    expect(draftMediaIssues(value)).toEqual({
+      stemMissing: false,
+      labelsWithoutMedia: ['B', 'C'],
+    });
+  });
+
+  it('menandai stem yang belum bergambar', () => {
+    const value = draft({
+      type: 'IMAGE_CHOICE',
+      options: [{ label: 'A', contentText: '', isCorrect: true, scoreValue: 1 }],
+      media: [{ mediaAssetId: 'asset-a', role: 'OPTION', optionLabel: 'A' }],
+    });
+
+    expect(draftMediaIssues(value)).toEqual({ stemMissing: true, labelsWithoutMedia: [] });
+  });
+
+  it('tidak mengeluh untuk tipe soal non-gambar', () => {
+    const value = draft({
+      type: 'SINGLE_CHOICE',
+      options: [
+        { label: 'A', contentText: 'Kekal', isCorrect: true, scoreValue: 1 },
+        { label: 'B', contentText: 'Sementara', isCorrect: false, scoreValue: 0 },
+      ],
+      media: [],
+    });
+
+    expect(draftMediaIssues(value)).toEqual({ stemMissing: false, labelsWithoutMedia: [] });
+  });
+
+  it('soal lengkap tidak menghasilkan peringatan', () => {
+    const value = draft({
+      type: 'IMAGE_CHOICE',
+      options: [
+        { label: 'A', contentText: '', isCorrect: true, scoreValue: 1 },
+        { label: 'B', contentText: '', isCorrect: false, scoreValue: 0 },
+      ],
+      media: [
+        { mediaAssetId: 'asset-stem', role: 'STEM', optionLabel: '' },
+        { mediaAssetId: 'asset-a', role: 'OPTION', optionLabel: 'A' },
+        { mediaAssetId: 'asset-b', role: 'OPTION', optionLabel: 'B' },
+      ],
+    });
+
+    expect(draftMediaIssues(value)).toEqual({ stemMissing: false, labelsWithoutMedia: [] });
   });
 });
