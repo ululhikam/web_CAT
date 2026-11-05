@@ -4,6 +4,7 @@ import type {
   AdminPlan,
   CreatePlanInput,
   Plan,
+  PlanDeleteResult,
   PlanFeature,
   UpdatePlanInput,
 } from '@webcat/contracts';
@@ -67,23 +68,34 @@ export class PlansService {
       status: row.status,
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
+      deletedAt: row.deletedAt ? row.deletedAt.toISOString() : null,
     };
   }
 
   /* ---------------------------------------------------------------- publik */
 
-  /** Paket publik untuk halaman pricing (fallback ke seed bila DB kosong). */
+  /**
+   * Paket publik untuk halaman pricing (fallback ke seed bila tabel belum
+   * pernah diisi).
+   *
+   * Penting: fallback hanya dipakai ketika tabel BENAR-BENAR kosong. Kalau
+   * admin menghapus semua paket (soft delete), halaman pricing harus kosong —
+   * bukan menampilkan lagi harga default yang sudah "dihapus".
+   */
   async listPublic(): Promise<Plan[]> {
     try {
       const rows = await this.prisma.subscriptionPlan.findMany({
-        where: { status: 'ACTIVE', isPublic: true },
+        where: { status: 'ACTIVE', isPublic: true, deletedAt: null },
         orderBy: [{ sortOrder: 'asc' }, { priceIdr: 'asc' }],
       });
-      if (rows.length === 0) {
+      if (rows.length > 0) return rows.map((row) => this.mapPlan(row));
+
+      const total = await this.prisma.subscriptionPlan.count();
+      if (total === 0) {
         this.logger.warn('subscription_plans kosong — memakai paket default');
         return [...DEFAULT_PLANS];
       }
-      return rows.map((row) => this.mapPlan(row));
+      return [];
     } catch (error) {
       this.logger.warn('Gagal membaca subscription_plans — memakai paket default', {
         message: error instanceof Error ? error.message : String(error),
@@ -92,10 +104,15 @@ export class PlansService {
     }
   }
 
-  /** Detail paket untuk halaman checkout (hanya yang aktif & publik). */
+  /** Detail paket untuk halaman checkout (hanya yang aktif, publik, & hidup). */
   async findPublicByCode(code: string): Promise<Plan | null> {
     const row = await this.prisma.subscriptionPlan.findFirst({
-      where: { code: code.trim().toUpperCase(), status: 'ACTIVE', isPublic: true },
+      where: {
+        code: code.trim().toUpperCase(),
+        status: 'ACTIVE',
+        isPublic: true,
+        deletedAt: null,
+      },
     });
     return row ? this.mapPlan(row) : null;
   }
@@ -112,6 +129,13 @@ export class PlansService {
     });
 
     if (!row) {
+      throw new AppError({
+        code: 'BILLING_PLAN_NOT_FOUND',
+        status: 404,
+        message: 'Paket tidak ditemukan',
+      });
+    }
+    if (row.deletedAt) {
       throw new AppError({
         code: 'BILLING_PLAN_NOT_FOUND',
         status: 404,
@@ -137,7 +161,7 @@ export class PlansService {
     const row = await this.prisma.subscriptionPlan.findUnique({
       where: { code: code.trim().toUpperCase() },
     });
-    if (!row) {
+    if (!row || row.deletedAt) {
       throw new AppError({
         code: 'BILLING_PLAN_NOT_FOUND',
         status: 404,
@@ -161,9 +185,15 @@ export class PlansService {
     return this.mapAdmin(row);
   }
 
-  /** Semua paket (termasuk DRAFT/ARCHIVED) untuk panel admin. */
-  async listAll(): Promise<AdminPlan[]> {
+  /**
+   * Semua paket untuk panel admin.
+   *
+   * Default hanya paket hidup; `includeDeleted` dipakai tab "Arsip" agar
+   * admin masih bisa me-restore. Paket terhapus tidak pernah ikut ke pricing.
+   */
+  async listAll(includeDeleted = false): Promise<AdminPlan[]> {
     const rows = await this.prisma.subscriptionPlan.findMany({
+      where: includeDeleted ? {} : { deletedAt: null },
       orderBy: [{ sortOrder: 'asc' }, { priceIdr: 'asc' }],
     });
     return rows.map((row) => this.mapAdmin(row));
@@ -172,13 +202,15 @@ export class PlansService {
   async create(input: CreatePlanInput, actor: ActorContext): Promise<AdminPlan> {
     const existing = await this.prisma.subscriptionPlan.findUnique({
       where: { code: input.code },
-      select: { id: true },
+      select: { id: true, deletedAt: true },
     });
     if (existing) {
       throw new AppError({
         code: 'BILLING_PLAN_CODE_EXISTS',
         status: 409,
-        message: `Kode paket ${input.code} sudah dipakai`,
+        message: existing.deletedAt
+          ? `Kode paket ${input.code} dipakai paket terarsip — pulihkan paket itu alih-alih membuat baru`
+          : `Kode paket ${input.code} sudah dipakai`,
       });
     }
 
@@ -219,6 +251,13 @@ export class PlansService {
         code: 'BILLING_PLAN_NOT_FOUND',
         status: 404,
         message: 'Paket tidak ditemukan',
+      });
+    }
+    if (current.deletedAt) {
+      throw new AppError({
+        code: 'BILLING_PLAN_ARCHIVED',
+        status: 409,
+        message: 'Paket sudah dihapus — pulihkan dulu sebelum diubah',
       });
     }
 
@@ -265,6 +304,113 @@ export class PlansService {
           status: current.status,
         },
       },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return this.mapAdmin(row);
+  }
+
+  /**
+   * Soft delete paket (F5-02).
+   *
+   * Tidak pernah menghapus baris: `transactions.plan_id` dan
+   * `subscriptions.plan_id` memakai ON DELETE SET NULL, jadi hapus fisik akan
+   * menghilangkan jejak paket pada riwayat pembayaran.
+   *
+   * Paket yang masih dipakai langganan aktif ditolak — pembeli akan melihat
+   * harga yang tidak bisa diperpanjang. Kegagalan itu sengaja eksplisit.
+   */
+  async remove(id: string, reason: string, actor: ActorContext): Promise<PlanDeleteResult> {
+    const current = await this.prisma.subscriptionPlan.findUnique({ where: { id } });
+    if (!current) {
+      throw new AppError({
+        code: 'BILLING_PLAN_NOT_FOUND',
+        status: 404,
+        message: 'Paket tidak ditemukan',
+      });
+    }
+    if (current.deletedAt) {
+      // Idempoten: menghapus dua kali bukan error bagi pemanggil.
+      return {
+        id: current.id,
+        code: current.code,
+        deleted: true,
+        deletedAt: current.deletedAt.toISOString(),
+      };
+    }
+
+    const activeSubscriptions = await this.prisma.subscription.count({
+      where: { planId: id, status: 'ACTIVE' },
+    });
+    if (activeSubscriptions > 0) {
+      throw new AppError({
+        code: 'BILLING_PLAN_IN_USE',
+        status: 409,
+        message: `Paket masih dipakai ${activeSubscriptions} langganan aktif`,
+      });
+    }
+
+    const deletedAt = new Date();
+    const row = await this.prisma.subscriptionPlan.update({
+      where: { id },
+      data: { deletedAt },
+    });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'plan.delete',
+      entityType: 'subscription_plan',
+      entityId: row.id,
+      metadata: {
+        code: row.code,
+        reason,
+        // Soft delete selalu disertai status non-publik agar paket tidak
+        // "hidup kembali" bila suatu saat `deletedAt` diabaikan query lain.
+        wasPublic: current.isPublic,
+        wasStatus: current.status,
+      },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return {
+      id: row.id,
+      code: row.code,
+      deleted: true,
+      deletedAt: deletedAt.toISOString(),
+    };
+  }
+
+  /** Batalkan soft delete (F5-02). Paket kembali ke status & publikasi semula. */
+  async restore(id: string, reason: string, actor: ActorContext): Promise<AdminPlan> {
+    const current = await this.prisma.subscriptionPlan.findUnique({ where: { id } });
+    if (!current) {
+      throw new AppError({
+        code: 'BILLING_PLAN_NOT_FOUND',
+        status: 404,
+        message: 'Paket tidak ditemukan',
+      });
+    }
+    if (!current.deletedAt) {
+      throw new AppError({
+        code: 'BILLING_PLAN_NOT_ARCHIVED',
+        status: 409,
+        message: 'Paket ini belum dihapus',
+      });
+    }
+
+    const row = await this.prisma.subscriptionPlan.update({
+      where: { id },
+      data: { deletedAt: null },
+    });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'plan.restore',
+      entityType: 'subscription_plan',
+      entityId: row.id,
+      metadata: { code: row.code, reason, status: row.status, isPublic: row.isPublic },
       ip: actor.ip ?? null,
       userAgent: actor.userAgent ?? null,
     });

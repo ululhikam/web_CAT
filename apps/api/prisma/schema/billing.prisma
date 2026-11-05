@@ -55,11 +55,18 @@ model SubscriptionPlan {
   status            PlanStatus @default(ACTIVE)
   createdAt         DateTime   @default(now()) @map("created_at")
   updatedAt         DateTime   @updatedAt @map("updated_at")
+  /**
+   * Soft delete (F5-02). Paket yang sudah dipakai transaksi/langganan tidak
+   * boleh dihapus fisik karena riwayat pembayaran harus tetap terbaca; baris
+   * hanya disembunyikan dari pembeli dan panel.
+   */
+  deletedAt         DateTime?  @map("deleted_at")
 
   subscriptions Subscription[]
   transactions  Transaction[]
 
   @@index([status, isPublic, sortOrder])
+  @@index([deletedAt])
   @@map("subscription_plans")
 }
 

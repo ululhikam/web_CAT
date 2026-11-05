@@ -1,11 +1,27 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   createPlanSchema,
+  deletePlanSchema,
+  restorePlanSchema,
   updatePlanSchema,
   type AdminPlan,
   type CreatePlanInput,
+  type DeletePlanInput,
+  type PlanDeleteResult,
+  type RestorePlanInput,
   type UpdatePlanInput,
 } from '@webcat/contracts';
 import { AuthUser } from '../../core/auth/decorators/current-user.decorator';
@@ -35,9 +51,9 @@ export class AdminPlansController {
 
   @RequirePermissions('billing.read')
   @Get()
-  @ApiOperation({ summary: 'Daftar semua paket (termasuk DRAFT/ARCHIVED)' })
-  list(): Promise<AdminPlan[]> {
-    return this.plans.listAll();
+  @ApiOperation({ summary: 'Daftar paket (default tanpa paket terhapus)' })
+  list(@Query('includeDeleted') includeDeleted?: string): Promise<AdminPlan[]> {
+    return this.plans.listAll(includeDeleted === 'true' || includeDeleted === '1');
   }
 
   @RequirePermissions('billing.read')
@@ -68,5 +84,29 @@ export class AdminPlansController {
     @Req() req: Request,
   ): Promise<AdminPlan> {
     return this.plans.update(id, body, this.actor(user, req));
+  }
+
+  @RequirePermissions('billing.write')
+  @Delete(':id')
+  @ApiOperation({ summary: 'Soft delete paket (wajib alasan, masuk audit)' })
+  remove(
+    @Param('id') id: string,
+    @Body(zodPipe(deletePlanSchema)) body: DeletePlanInput,
+    @AuthUser() user: AuthPrincipal,
+    @Req() req: Request,
+  ): Promise<PlanDeleteResult> {
+    return this.plans.remove(id, body.reason, this.actor(user, req));
+  }
+
+  @RequirePermissions('billing.write')
+  @Post(':id/restore')
+  @ApiOperation({ summary: 'Pulihkan paket yang di-soft-delete' })
+  restore(
+    @Param('id') id: string,
+    @Body(zodPipe(restorePlanSchema)) body: RestorePlanInput,
+    @AuthUser() user: AuthPrincipal,
+    @Req() req: Request,
+  ): Promise<AdminPlan> {
+    return this.plans.restore(id, body.reason, this.actor(user, req));
   }
 }

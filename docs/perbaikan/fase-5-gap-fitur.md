@@ -83,21 +83,46 @@ langsung terlihat di `/pricing`").
 
 ### F5-02 — CRUD plan admin
 
-Endpoint admin untuk plan sudah ada? Periksa `admin-*.controller.ts`. Yang
-kurang adalah **UI** dan validasi:
+Endpoint admin sudah ada (`admin-plans.controller.ts`: GET/POST/PATCH), tetapi
+tabelnya **belum punya `deleted_at`** sehingga "hapus" tidak mungkin tanpa
+kehilangan riwayat. UI-nya juga masih baca-saja dan justru memanggil endpoint
+publik.
 
-| Bagian | Kebutuhan |
-| --- | --- |
-| Daftar | tabel plan + status aktif |
-| Form | nama, harga, durasi, fitur, `isActive` |
-| Hapus | soft delete (`deletedAt`), bukan hard delete |
-| Audit | setiap perubahan tercatat (`audit.record`) |
+| Bagian | Kebutuhan | Status |
+| --- | --- | --- |
+| Skema | `subscription_plans.deleted_at` + index | ✅ migrasi `20261105140000_f5_02_plan_soft_delete` |
+| Daftar | tabel plan, tab aktif vs arsip | ✅ `[panel]/plans/+page.svelte` |
+| Form | kode, nama, tagline, harga, coret, durasi, fitur, badge, urutan, status, publik | ✅ |
+| Hapus | soft delete + wajib alasan; tolak bila ada langganan `ACTIVE` | ✅ `DELETE /admin/plans/:id` |
+| Pulihkan | `POST /admin/plans/:id/restore` + alasan | ✅ |
+| Audit | `plan.create` / `plan.update` / `plan.delete` / `plan.restore` | ✅ |
+
+**Keputusan desain**
+
+1. **Soft delete, bukan hard delete.** `transactions.plan_id` dan
+   `subscriptions.plan_id` memakai `ON DELETE SET NULL`; hapus fisik akan
+   menghilangkan nama paket dari riwayat pembayaran lama.
+2. **`code` tetap UNIQUE termasuk baris terhapus.** Kode paket yang pernah
+   dipakai transaksi tidak boleh dipakai ulang agar audit tidak ambigu. Pesan
+   error mengarahkan admin untuk *restore* paket lama.
+3. **Fallback `DEFAULT_PLANS` hanya saat tabel benar-benar kosong.** Kalau
+   semua paket dihapus admin, `/pricing` harus kosong — bukan menampilkan lagi
+   harga default yang sudah "dihapus". Dijaga test regresi.
+4. **Paket terhapus tidak bisa di-`PATCH`** (`BILLING_PLAN_ARCHIVED`) agar
+   admin sadar harus restore dulu; mencegah "edit hantu" pada data arsip.
+5. **`includeDeleted=true`** pada `GET /admin/plans` dipakai tab Arsip. Default
+   tetap hanya paket hidup.
+
+**Kenapa `DELETE` membawa body.** Alasan hapus wajib masuk audit, dan
+`DELETE …/plans/:id` dengan `{ "reason": "..." }` lebih jujur daripada
+menyembunyikan alasan di query string (yang mudah hilang di log proxy).
 
 **Kriteria selesai**
 
-- Admin bisa membuat, mengubah, menonaktifkan plan.
-- Perubahan langsung terlihat di `/pricing` (tanpa deploy).
-- Setiap perubahan punya entri audit.
+- Admin bisa membuat, mengubah, menonaktifkan plan. ✅
+- Perubahan langsung terlihat di `/pricing` (tanpa deploy). ✅ (`cacheTtlMs: 0`
+  dari F5-01; panel memakai `cacheTtlMs: 0`)
+- Setiap perubahan punya entri audit. ✅ (`plan.*`)
 
 ---
 

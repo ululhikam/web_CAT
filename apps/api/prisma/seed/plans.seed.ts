@@ -147,6 +147,11 @@ export async function seedPlans(prisma: PrismaClient): Promise<void> {
         isPopular: plan.isPopular,
         isPublic: plan.isPublic,
         sortOrder: plan.sortOrder,
+        // Seed = keadaan yang diinginkan untuk dataset demo, jadi paket yang
+        // pernah di-soft-delete admin ikut hidup lagi. Tanpa ini, `db:seed`
+        // menjadi tidak idempoten dan test integrasi bisa mewarisi paket
+        // terarsip dari run sebelumnya (`subscription_plans` tidak di-truncate).
+        deletedAt: null,
       },
       create: {
         code: plan.code,

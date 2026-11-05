@@ -332,7 +332,7 @@ tidak ada lagi fallback senyap ke fixture.
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
 | F5-01 | Pulihkan `/pricing` | ✅ | Dipulihkan dari `e0b23fd^` (`(site)/pricing/*`, `PlanCard.svelte`), migrasi `$app/stores`→`$app/state`, tautan nav dikembalikan. Bukti runtime dua arah: DB `MONTHLY=151000` → halaman `Rp 151.000` (149.000 hilang), lalu revert `149000` → `Rp 149.000` (151.000 hilang). 6 test `page.server.spec.ts` + 3 test `PlanCard.spec.ts` | 2026-11-05 |
-| F5-02 | CRUD plan admin | ⬜ | — | — |
+| F5-02 | CRUD plan admin | ✅ | `subscription_plans.deleted_at` (migrasi `20261105140000_f5_02_plan_soft_delete`), `DELETE /admin/plans/:id` + `POST /:id/restore` (wajib alasan), `GET ?includeDeleted=true`. UI `[panel]/plans` kini CRUD penuh (form + tab Arsip), sebelumnya baca-saja & memakai endpoint publik. Audit `plan.create/update/delete/restore` | 2026-11-05 |
 | F5-03 | Detail user admin | ⬜ | — | — |
 | F5-04 | Detail transaksi admin | ⬜ | — | — |
 | F5-05 | Worker job queue terjadwal | ⬜ | — | — |
@@ -365,6 +365,29 @@ tidak ada lagi fallback senyap ke fixture.
 >    jadi harga baru bisa tertahan ~75 dtk. Kini `cacheTtlMs: 0`; dijaga test
 >    regresi "harga baru langsung terlihat".
 
+#### Verifikasi penutup F5-02 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `prisma migrate deploy` | ✅ migrasi `20261105140000_f5_02_plan_soft_delete` diterapkan; `\d subscription_plans` memuat `deleted_at` + `subscription_plans_deleted_at_idx` |
+| `vitest run test/billing/plans.service.spec.ts` | ✅ **15/15** (termasuk soft delete, restore, tolak paket terarsip, fallback pricing) |
+| `vitest run` (API penuh) | ✅ 34 berkas / **329** test |
+| `vitest run` (web penuh) | ✅ 7 berkas / **57** test (termasuk 11 `plans-draft.spec.ts`) |
+| `tsc --noEmit` (API) · `tsc -p tsconfig.build.json` | ✅ exit 0 keduanya |
+| `svelte-check --tsconfig ./tsconfig.json` | ✅ **0 error**, 64 warning (hanya `dashboard/+page.svelte`) |
+| `eslint src --max-warnings 0` | ✅ exit 0 |
+| Uji HTTP nyata (API `dist` + DB dev) | ✅ **16/16** cek: create → 201 dan langsung muncul di `GET /plans`; `PATCH` harga 123000→133000 langsung terlihat; `DELETE` → hilang dari `/admin/plans` default, tetap ada di `?includeDeleted=true`, hilang dari `GET /plans` **dan** HTML `/pricing`; `PATCH` paket terhapus → 409 `BILLING_PLAN_ARCHIVED`; kode dipakai ulang → 409 `BILLING_PLAN_CODE_EXISTS`; `POST /restore` → kembali muncul |
+| Audit `audit_logs` | ✅ 5 baris `plan.*` untuk paket uji: `plan.create`, `plan.update`, `plan.delete` (2×), `plan.restore`, masing-masing dengan `reason` di `metadata` |
+| DB akhir | ✅ baris uji dihapus fisik (0 referensi `transactions`/`subscriptions`); tabel kembali 6 paket `deleted_at` NULL, harga 0/49000/89000/149000/399000/0 |
+
+> **Kenapa soft delete, bukan `status = ARCHIVED`.** `status` sudah dipakai untuk
+> alur editorial (DRAFT → ACTIVE → ARCHIVED). Menghapus lewat `status` akan
+> membuat "arsip" dan "dihapus" tak terbedakan, padahal hanya yang terakhir yang
+> harus hilang dari `/pricing` dan dari daftar default admin.
+>
+> **Kenapa `DELETE` membawa body.** Alasan hapus wajib masuk audit; body JSON
+> lebih aman daripada query string yang sering dipangkas log proxy.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
@@ -391,6 +414,55 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5: F5-02 selesai
+
+**Dikerjakan:** F5-02
+**Hasil:** Fase 5 ✅ 2/16. Panel admin kini bisa membuat, mengubah, menghapus
+(soft), dan memulihkan paket; semua perubahan langsung terlihat di `/pricing`
+dan tercatat di audit. Tracker: **81/95 = 85%**.
+
+**Bukti:**
+
+- Migrasi `20261105140000_f5_02_plan_soft_delete`: `subscription_plans.deleted_at`
+  + `subscription_plans_deleted_at_idx`, diterapkan ke DB dev. Diverifikasi
+  dengan `\d subscription_plans`.
+- API: `DELETE /admin/plans/:id` (wajib `reason`) dan
+  `POST /admin/plans/:id/restore`, plus `GET /admin/plans?includeDeleted=true`.
+  Seluruh jalur baca publik (`listPublic`, `findPublicByCode`,
+  `requirePurchasable`, `requireAnyByCode`) menyaring `deletedAt: null`.
+- Web: `[panel]/plans/+page.svelte` ditulis ulang dari baca-saja (yang bahkan
+  memanggil endpoint publik) menjadi CRUD penuh dengan tab Paket/Arsip.
+  Logika form murni dipisah ke `$lib/admin/plans-draft.ts` (11 test).
+- Uji HTTP nyata 16/16: create/patch/delete/restore, propagasi ke `GET /plans`
+  dan HTML `/pricing`, plus dua penolakan yang benar (`PATCH` paket terhapus →
+  409 `BILLING_PLAN_ARCHIVED`, kode terarsip dipakai ulang → 409
+  `BILLING_PLAN_CODE_EXISTS`).
+- Audit: `plan.create`, `plan.update`, `plan.delete`, `plan.restore` — 5 baris
+  terbukti ada di `audit_logs` dengan `reason` di `metadata`.
+- Gerbang mutu: API 329 test / web 57 test, `tsc` 0, `svelte-check` 0 error,
+  `eslint --max-warnings 0` exit 0.
+
+**Keputusan penting:**
+
+1. Hapus = soft delete. `transactions.plan_id` & `subscriptions.plan_id`
+   memakai `ON DELETE SET NULL`, jadi hapus fisik akan menghapus jejak paket
+   pada riwayat pembayaran.
+2. `code` tetap UNIQUE termasuk baris terhapus → kode yang pernah dipakai
+   transaksi tidak bisa dipakai ulang; admin diarahkan memakai *restore*.
+3. Fallback `DEFAULT_PLANS` hanya saat tabel benar-benar kosong, supaya
+   "hapus semua paket" menghasilkan pricing kosong (bukan harga default).
+4. `plans.seed.ts` ikut mengosongkan `deletedAt` supaya `db:seed` idempoten dan
+   test integrasi tidak mewarisi paket terarsip (`subscription_plans` tidak
+   di-truncate oleh helper test).
+
+**Hambatan:** — (catatan: ada dua perubahan working tree yang bukan hasil kerja
+sesi ini — `apps/api/package.json` skrip `dev` dan `apps/api/scripts/dev-server.mjs`
+— sengaja tidak disentuh/di-commit.)
+
+**Berikutnya:** F5-03 / F5-04 — detail user & transaksi admin.
+
+---
 
 ### 2026-11-05 — Fase 5 dimulai (F5-01)
 

@@ -191,6 +191,32 @@ export interface AdminPlan {
   status: PlanStatusValue;
   createdAt: string;
   updatedAt: string;
+  /** Terisi bila paket sudah di-soft-delete (F5-02). */
+  deletedAt: string | null;
+}
+
+/**
+ * Body `POST /admin/plans/:id/restore` (F5-02).
+ * Restore wajib beralasan agar audit bisa menjelaskan kenapa paket hidup lagi.
+ */
+export const restorePlanSchema = z.object({
+  reason: z.string().trim().min(3, 'Alasan wajib diisi').max(500),
+});
+export type RestorePlanInput = z.infer<typeof restorePlanSchema>;
+
+/** Body `DELETE /admin/plans/:id` (F5-02) — soft delete, bukan hapus fisik. */
+export const deletePlanSchema = z.object({
+  reason: z.string().trim().min(3, 'Alasan wajib diisi').max(500),
+});
+export type DeletePlanInput = z.infer<typeof deletePlanSchema>;
+
+/** Hasil soft delete / restore paket. */
+export interface PlanDeleteResult {
+  id: string;
+  code: string;
+  /** Selalu `true`: delete paket bersifat arsip, tidak menghapus riwayat. */
+  deleted: boolean;
+  deletedAt: string;
 }
 
 /* ------------------------------------------------------------------ admin: transaksi */
