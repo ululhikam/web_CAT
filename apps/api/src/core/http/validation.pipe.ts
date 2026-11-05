@@ -20,7 +20,8 @@ export function zodPipe<S extends ZodTypeAny>(schema: S) {
 
 @Injectable()
 export class ZodValidationPipe<T> implements PipeTransform<unknown, T> {
-  constructor(private readonly schema: ZodTypeAny) {}
+  /** Publik agar generator OpenAPI bisa membaca skema yang sama (lihat `openapi.ts`). */
+  constructor(readonly schema: ZodTypeAny) {}
 
   transform(value: unknown, _metadata: ArgumentMetadata): T {
     try {

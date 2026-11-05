@@ -14,7 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import {
   MEDIA_MAX_BYTES,
@@ -35,6 +35,7 @@ import { RequirePermissions } from '../../core/auth/decorators/permissions.decor
 import { EmailVerifiedGuard } from '../../core/auth/email-verified.guard';
 import { JwtAuthGuard } from '../../core/auth/jwt-auth.guard';
 import { PermissionsGuard } from '../../core/auth/permissions.guard';
+import { ApiFileFields } from '../../core/http/api-file-fields.decorator';
 import { zodPipe } from '../../core/http/validation.pipe';
 import { MediaService } from './media.service';
 
@@ -51,6 +52,7 @@ export class MediaController {
 
   @RequirePermissions('questions.read')
   @Get()
+  @ApiOperation({ summary: 'Daftar aset media dengan filter' })
   list(
     @Query(zodPipe(mediaListQuerySchema)) query: MediaListQuery,
   ): Promise<MediaListResponse> {
@@ -59,6 +61,7 @@ export class MediaController {
 
   @RequirePermissions('questions.write')
   @Post('upload-url')
+  @ApiOperation({ summary: 'Buat signed URL untuk unggah media' })
   @HttpCode(200)
   uploadUrl(
     @Body(zodPipe(mediaUploadUrlSchema)) body: MediaUploadUrlInput,
@@ -68,6 +71,7 @@ export class MediaController {
 
   @RequirePermissions('questions.write')
   @Post('confirm')
+  @ApiOperation({ summary: 'Konfirmasi unggahan media' })
   @HttpCode(200)
   confirm(
     @Body(zodPipe(mediaConfirmSchema)) body: MediaConfirmInput,
@@ -79,8 +83,10 @@ export class MediaController {
 
   @RequirePermissions('questions.write')
   @Post('upload')
+  @ApiOperation({ summary: 'Unggah media langsung (multipart)' })
   @HttpCode(201)
   @ApiConsumes('multipart/form-data')
+  @ApiFileFields('file')
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: MEDIA_MAX_BYTES } }))
   upload(
     @UploadedFile() file: Express.Multer.File,
@@ -92,6 +98,7 @@ export class MediaController {
 
   @RequirePermissions('questions.read')
   @Get(':id/preview')
+  @ApiOperation({ summary: 'Pratinjau media untuk admin' })
   async preview(@Param('id') id: string, @Res() res: Response): Promise<void> {
     const content = await this.media.contentForAdmin(id);
     if (content.data) {
@@ -109,6 +116,7 @@ export class MediaController {
 
   @RequirePermissions('questions.write')
   @Delete(':id')
+  @ApiOperation({ summary: 'Hapus aset media' })
   @HttpCode(200)
   remove(
     @Param('id') id: string,
@@ -132,6 +140,7 @@ export class MediaContentController {
   constructor(private readonly media: MediaService) {}
 
   @Get(':id/content')
+  @ApiOperation({ summary: 'Sajikan isi media melalui signed URL' })
   async content(
     @Param('id') id: string,
     @Query('exp') exp: string,

@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   bulkQuestionActionSchema,
@@ -53,24 +53,28 @@ export class QuestionsController {
 
   @RequirePermissions('questions.read')
   @Get()
+  @ApiOperation({ summary: 'Daftar soal dengan filter dan pagination' })
   list(@Query(zodPipe(questionListQuerySchema)) query: QuestionListQuery): Promise<QuestionListResponse> {
     return this.questions.list(query);
   }
 
   @RequirePermissions('questions.read')
   @Get('stats')
+  @ApiOperation({ summary: 'Statistik bank soal per kategori dan tipe' })
   stats(): Promise<QuestionStatsResponse> {
     return this.questions.stats();
   }
 
   @RequirePermissions('questions.write')
   @Post('preview')
+  @ApiOperation({ summary: 'Pratinjau render soal sebelum disimpan' })
   preview(@Body(zodPipe(questionPreviewSchema)) body: QuestionPreviewInput): Promise<QuestionPreviewResult> {
     return this.questions.preview(body);
   }
 
   @RequirePermissions('questions.publish')
   @Post('bulk-action')
+  @ApiOperation({ summary: 'Aksi massal publish, arsip, atau hapus soal' })
   bulkAction(
     @Body(zodPipe(bulkQuestionActionSchema)) body: BulkQuestionActionInput,
     @AuthUser() user: AuthPrincipal,
@@ -81,6 +85,7 @@ export class QuestionsController {
 
   @RequirePermissions('questions.write')
   @Post()
+  @ApiOperation({ summary: 'Buat soal baru' })
   create(
     @Body(zodPipe(questionCreateSchema)) body: QuestionCreateInput,
     @AuthUser() user: AuthPrincipal,
@@ -91,12 +96,14 @@ export class QuestionsController {
 
   @RequirePermissions('questions.read')
   @Get(':id')
+  @ApiOperation({ summary: 'Detail soal beserta lampiran media' })
   detail(@Param('id') id: string): Promise<QuestionView> {
     return this.questions.getById(id);
   }
 
   @RequirePermissions('questions.write')
   @Patch(':id')
+  @ApiOperation({ summary: 'Ubah soal' })
   update(
     @Param('id') id: string,
     @Body(zodPipe(questionUpdateSchema)) body: QuestionUpdateInput,
@@ -108,6 +115,7 @@ export class QuestionsController {
 
   @RequirePermissions('questions.write')
   @Delete(':id')
+  @ApiOperation({ summary: 'Hapus soal' })
   remove(
     @Param('id') id: string,
     @AuthUser() user: AuthPrincipal,
@@ -118,6 +126,7 @@ export class QuestionsController {
 
   @RequirePermissions('questions.publish')
   @Post(':id/publish')
+  @ApiOperation({ summary: 'Publikasikan soal' })
   publish(
     @Param('id') id: string,
     @AuthUser() user: AuthPrincipal,
@@ -128,6 +137,7 @@ export class QuestionsController {
 
   @RequirePermissions('questions.write')
   @Post(':id/media')
+  @ApiOperation({ summary: 'Lampirkan media ke soal' })
   attachMedia(
     @Param('id') id: string,
     @Body(zodPipe(mediaAttachSchema)) body: MediaAttachInput,
@@ -139,6 +149,7 @@ export class QuestionsController {
 
   @RequirePermissions('questions.write')
   @Delete(':id/media/:mediaId')
+  @ApiOperation({ summary: 'Lepas media dari soal' })
   detachMedia(
     @Param('id') id: string,
     @Param('mediaId') mediaId: string,

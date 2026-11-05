@@ -394,6 +394,101 @@ efektif dari DB.
 
 ---
 
+### F5-09 — Dokumentasi API produksi ✅
+
+Masalah sebenarnya bukan "belum ada Swagger" — `/api/docs` sudah ada sejak awal.
+Masalahnya dokumentasi itu **tidak bisa dipakai**:
+
+1. Halaman `/api/docs` **tampil kosong**. Middleware header keamanan global
+   memasang `content-security-policy: default-src 'none'`, sehingga CSS/JS
+   Swagger UI (`./docs/swagger-ui-*.js`) diblokir browser. Dibuktikan lewat
+   Chrome DevTools Protocol: `document.querySelectorAll('.opblock').length === 0`.
+2. Dokumen berisi **120 operasi tanpa satu pun `requestBody`**. Controller
+   memvalidasi body dengan `@Body(zodPipe(schema))`, sedangkan `@nestjs/swagger`
+   hanya mengenali DTO berbasis class. Akibatnya semua endpoint tulis
+   terdokumentasi tanpa bentuk request.
+3. Tidak ada schema respons, tidak ada deskripsi tag, dan 70 dari 120 operasi
+   tidak punya ringkasan.
+4. Dokumentasi hanya aktif bila `NODE_ENV !== 'production'`, jadi tidak ada
+   dokumentasi untuk API produksi.
+
+**Solusi**
+
+`apps/api/src/core/http/openapi.ts` membangun dokumen dari metadata rute:
+
+| Langkah | Detail |
+| --- | --- |
+| Pindai controller | `ModulesContainer` → semua kelas controller terdaftar |
+| Baca rute | `PATH_METADATA`, `METHOD_METADATA`, `DECORATORS.API_EXCLUDE_*` |
+| Baca skema Zod | `ROUTE_ARGS_METADATA` → pipe `ZodValidationPipe` (`BODY`/`QUERY`) |
+| Konversi | `zod-to-json-schema` (`target: openApi3`, `$refStrategy: 'none'`) |
+| Query | Skema objek dipecah menjadi parameter `in: query` (nama + `required`) |
+| Multipart | `@ApiConsumes('multipart/form-data')` + `@ApiFileFields('file', 'assets')` → field biner digabung dengan field dari skema Zod |
+| Envelope | Setiap 2xx memakai `$ref: SuccessEnvelope`; `401/403/422/429/500` memakai `ErrorEnvelope` |
+| Metadata | `x-public`, `x-required-permissions`, `x-rate-limit` dari decorator yang sama dengan guard |
+| Tag | 25 tag terpakai didaftarkan otomatis dengan deskripsi (`TAG_DESCRIPTIONS`) |
+
+Karena skema dibaca dari pipe yang benar-benar dipakai `zodPipe`, dokumentasi
+tidak bisa "basi": mengubah skema validasi otomatis mengubah dokumen.
+
+**Ringkasan operasi**
+
+70 operasi yang belum punya ringkasan diberi `@ApiOperation({ summary })` di
+controller masing-masing (bukan peta terpusat), sehingga Swagger UI menampilkan
+judul yang bisa dibaca. Diverifikasi: 120/120 operasi punya summary.
+
+**CSP halaman dokumentasi**
+
+Respons API biasa tetap `default-src 'none'`. Halaman `/api/docs*` memakai CSP
+terpisah karena Swagger UI memuat asetnya sendiri dan memakai `<style>` inline:
+
+```
+default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';
+script-src 'self'; font-src 'self' data:; connect-src 'self';
+frame-ancestors 'none'; base-uri 'none'
+```
+
+`'unsafe-inline'` hanya untuk `style-src` (bawaan paket Swagger UI), bukan
+`script-src`. Respons JSON tetap tidak boleh memuat style/script apa pun.
+
+**Ketersediaan di produksi**
+
+`/api/docs` dan `/api/docs-json` aktif di semua environment; set
+`API_DOCS_ENABLED=false` untuk mematikannya.
+
+**Artefak & anti-drift**
+
+| Berkas | Isi |
+| --- | --- |
+| `docs/api/openapi.json` | Spesifikasi lengkap: 103 path, 120 operasi, 4 schema |
+| `docs/api/README.md` | Panduan auth, CSRF, envelope, error code, rate limit, pagination |
+| `apps/api/scripts/openapi.ts` | Generator + mode `--check` |
+
+```bash
+pnpm --filter @webcat/api docs:openapi        # tulis artefak
+pnpm --filter @webcat/api docs:openapi:check  # gagal bila artefak ≠ kode
+```
+
+Generator dijalankan dari hasil build (`node dist/scripts/openapi.js`) karena
+`tsx`/esbuild tidak meng-emit decorator metadata; tanpa metadata itu container
+Nest gagal dibuat. Skrip tidak menghubungi database.
+
+**Kriteria selesai**
+
+- Swagger/OpenAPI diperbarui. ✅ 103 path / 120 operasi; `requestBody` naik dari
+  **0 → 51**, parameter query dari 0 → 17, schema komponen dari 0 → 4,
+  operasi tanpa summary dari 70 → 0.
+- Dokumentasi bisa dipakai. ✅ Chrome CDP pada `http://127.0.0.1:3000/api/docs`:
+  `opblocks: 120`, `tags: 25`, `swaggerUiPresent: true`, `console errors: []`.
+- Tidak ada `$ref` menggantung. ✅ seluruh `$ref` menunjuk
+  `SuccessEnvelope`/`ErrorEnvelope`/`ErrorBody`/`ResponseMeta` yang ada.
+- Anti-drift. ✅ `docs:openapi:check` lulus; test `test/openapi.spec.ts` (11 test)
+  memeriksa summary/tag/operationId/2xx/429/500, `x-public` vs `security`,
+  resolusi `$ref`, kelengkapan deskripsi tag, konversi Zod → JSON Schema, dan
+  bentuk multipart (field berkas + field skema).
+
+---
+
 ### F5-10 — Autosave IndexedDB
 
 Saat ini jawaban hanya disimpan di memori + dikirim ke server. Bila koneksi
@@ -510,5 +605,6 @@ Manual:
 4. `feat(ops): jadwalkan worker + metrik backlog (F5-05)`
 5. `feat(security): rate limit + CSRF + CSP (F5-06, F5-07)`
 6. `feat(web): dashboard peserta dari API (F5-08)`
-7. `feat(web): autosave IndexedDB + sendBeacon (F5-10)`
-8. `test(e2e): alur ujian Playwright (F5-16)`
+7. `docs(api): OpenAPI sinkron + Swagger UI produksi (F5-09)`
+8. `feat(web): autosave IndexedDB + sendBeacon (F5-10)`
+9. `test(e2e): alur ujian Playwright (F5-16)`

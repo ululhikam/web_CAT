@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **8/16**
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **9/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 8 | 16 | `█████░░░░░` 50% |
-| **Total** | | | **87** | **95** | **92%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 9 | 16 | `██████░░░░` 56% |
+| **Total** | | | **88** | **95** | **93%** |
 
 ---
 
@@ -339,7 +339,7 @@ tidak ada lagi fallback senyap ke fixture.
 | F5-06 | Rate limit API | ✅ | Guard per-rute yang ada ditambah default global `RATE_LIMIT_GLOBAL_PER_MINUTE` (600/menit): per pengguna login, anonim per IP. 429 menyertakan `Retry-After`. Uji limit 5: request ke-6 → 429; login ke-11 → 429; 6 request `/auth/me` dengan IP berbeda tetap 429 (scope user); limit default 600 tidak memblokir trafik normal. 7 test baru | 2026-11-05 |
 | F5-07 | CSRF + CSP | ✅ | CSRF double-submit: cookie `webcat_csrf` (non-httpOnly) + header `x-csrf-token`, ditulis/dirotasi bersama `webcat_rt`, dihapus saat logout; `CsrfGuard` global setelah `JwtAuthGuard`, mengecualikan GET/HEAD/OPTIONS, Bearer, dan request tanpa cookie refresh; sesi lama hanya boleh `POST /auth/refresh`. CSP SvelteKit `mode: 'hash'` (aman untuk halaman ter-cache) + header keamanan API. Uji HTTP nyata 9/9; hash script inline cocok di `/`, `/login`, `/pricing`, `/dashboard`, `/exam/<id>`; 11 test `csrf.spec.ts` | 2026-11-05 |
 | F5-08 | Dashboard peserta dari API | ✅ | Data contoh (`subtestProgress`, `recentSessions`, `notices`) dihapus; dashboard kini membaca `/subscriptions/me`, `/exams/stats`, dan `/exams/history?limit=5`. `ExamStatsView.totalPassingScore` ditambahkan (dari `exam_settings`) sehingga ambang lulus tidak lagi hardcode 60/61. Helper murni `lib/dashboard/summary.ts` + 15 test. Bukti runtime browser (Chrome/DevTools): 4 kartu, langganan "Aktif 30 Hari", empty state grafik/subtes, tanpa error, dev **dan** build produksi | 2026-11-05 |
-| F5-09 | Dokumentasi API produksi | ⬜ | — | — |
+| F5-09 | Dokumentasi API produksi | ✅ | `/api/docs` sebelumnya **kosong** (CSP `default-src 'none'` memblokir aset Swagger UI) dan 120 operasi tanpa `requestBody` karena `@nestjs/swagger` tidak mengenali `zodPipe`. `apps/api/src/core/http/openapi.ts` memindai `PATH_METADATA`/`METHOD_METADATA`/`ROUTE_ARGS_METADATA` dan mengonversi skema Zod via `zod-to-json-schema`: `requestBody` **0→51**, parameter query **0→17**, schema komponen **0→4**, operasi tanpa summary **70→0** (70 `@ApiOperation` di controller), 25 tag berdeskripsi, envelope `SuccessEnvelope`/`ErrorEnvelope` + `x-public`/`x-required-permissions`/`x-rate-limit`. CSP `/api/docs*` dipisah; docs aktif di semua environment (`API_DOCS_ENABLED=false` untuk mematikan). Artefak `docs/api/openapi.json` (103 path/120 operasi) + `docs/api/README.md`, generator `docs:openapi` / `docs:openapi:check` (anti-drift, dipanggil CI). Bukti: CDP `opblocks: 120`, `tags: 25`, `console errors: []`; 11 test `openapi.spec.ts`; API **39 berkas / 381 test** | 2026-11-05 |
 
 #### Verifikasi penutup F5-01 (5 Nov 2026)
 
@@ -484,6 +484,34 @@ tidak ada lagi fallback senyap ke fixture.
 > supaya "ambang lulus" mengikuti `exam_settings` dan tidak pernah menyimpang
 > dari aturan ujian yang berlaku.
 
+#### Verifikasi penutup F5-09 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run test/openapi.spec.ts` | ✅ **11/11** (konversi Zod→JSON Schema, query, path; artefak: summary/tag/operationId/2xx/429/500, `x-public` vs `security`, resolusi `$ref`, deskripsi tag, envelope sukses, bentuk multipart) |
+| `vitest run` (API penuh) | ✅ 39 berkas / **381** test |
+| `tsc --noEmit` · `tsc -p tsconfig.build.json` (API) | ✅ exit 0 keduanya |
+| `eslint src --max-warnings 0` (API) | ✅ exit 0 |
+| `node dist/scripts/openapi.js --check` | ✅ `OpenAPI sinkron dengan kode.` |
+| Artefak `docs/api/openapi.json` | ✅ 103 path, **120** operasi, 4 schema; `requestBody` 51 (dari 0), operasi dengan query 17 (dari 0), tanpa summary **0** (dari 70), tag 25 semuanya berdeskripsi, `$ref` menggantung **0** |
+| Audit metadata keamanan | ✅ 19 publik / 101 privat / 85 dengan permission; **0** ketidakcocokan antara `x-public` dan `security` |
+| `GET /api/docs-json` | ✅ **200**, `content-security-policy` longgar khusus docs |
+| `GET /api/v1/health/live` | ✅ **200**, CSP tetap `default-src 'none'; frame-ancestors 'none'` (tidak ikut longgar) |
+| Render `/api/docs` (Chrome + DevTools Protocol) | ✅ `opblocks: 120`, `tags: 25`, `swaggerUiPresent: true`, judul `Web CAT API`, `console errors: []` |
+
+> **Kenapa CSP dipisah, bukan dilonggarkan global.** Respons API adalah JSON;
+> `default-src 'none'` adalah pertahanan yang benar untuk itu. Yang butuh aset
+> adalah halaman dokumentasi, jadi hanya `/api/docs*` yang mendapat CSP sendiri —
+> dan `'unsafe-inline'` hanya di `style-src` (bawaan paket Swagger UI), tidak
+> pernah di `script-src`.
+
+> **Kenapa generator dijalankan dari `dist`.** `tsx`/esbuild tidak meng-emit
+> decorator metadata, sehingga container Nest gagal dibuat ("undefined
+> dependency"). Generator karena itu memakai hasil `tsc`. Skrip tidak menghubungi
+> database: `NestFactory.create()` tidak menjalankan `onModuleInit`, dan
+> placeholder env disediakan agar `docs:openapi:check` bisa jalan di CI tanpa
+> `.env`.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
@@ -510,6 +538,38 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5: F5-09 selesai
+
+**Dikerjakan:** F5-09
+**Hasil:** Fase 5 ✅ 9/16. Dokumentasi API bisa dipakai dan sinkron dengan kode:
+`/api/docs` benar-benar ter-render, setiap endpoint tulis punya bentuk request
+yang berasal dari skema Zod yang sama dengan validasi runtime, dan artefak
+`docs/api/openapi.json` dijaga CI. Tracker: **88/95 = 93%**.
+
+**Bukti:**
+
+- `apps/api/src/core/http/openapi.ts` (baru) memindai `ModulesContainer` →
+  `PATH_METADATA`/`METHOD_METADATA` → `ROUTE_ARGS_METADATA` untuk membaca pipe
+  `ZodValidationPipe` pada `BODY`/`QUERY`, lalu mengonversinya dengan
+  `zod-to-json-schema` (`target: 'openApi3'`, `$refStrategy: 'none'`).
+- `requestBody` naik **0 → 51**, parameter query **0 → 17**, schema komponen
+  **0 → 4** (`SuccessEnvelope`, `ErrorEnvelope`, `ErrorBody`, `ResponseMeta`),
+  operasi tanpa summary **70 → 0**, tag **25** semuanya berdeskripsi.
+- `main.ts`: CSP dipisah. `/api/docs*` mendapat CSP sendiri; respons API tetap
+  `default-src 'none'`. Dokumentasi aktif di semua environment, dimatikan
+  dengan `API_DOCS_ENABLED=false`.
+- `apps/api/scripts/openapi.ts` + `docs:openapi` / `docs:openapi:check`
+  (dijalankan dari `dist`, tanpa koneksi DB, placeholder env untuk CI), dan
+  langkah CI baru yang gagal bila artefak tidak sinkron.
+- `docs/api/openapi.json` (103 path / 120 operasi) dan `docs/api/README.md`
+  (auth, CSRF, envelope, kode error, rate limit, pagination, cara menambah
+  endpoint).
+- Uji runtime: `/api/docs-json` 200 dengan CSP docs, `/api/v1/health/live` tetap
+  CSP ketat; Chrome CDP pada `/api/docs` → `opblocks: 120`, `tags: 25`,
+  `console errors: []`.
+- Regresi: API **39 berkas / 381 test** lulus, `eslint --max-warnings 0` bersih,
+  `tsc` (dev & build) bersih.
 
 ### 2026-11-05 — Fase 5: F5-08 selesai
 

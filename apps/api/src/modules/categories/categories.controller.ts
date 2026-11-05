@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   categoryCreateSchema,
@@ -44,12 +44,14 @@ export class CategoriesController {
 
   @RequirePermissions('questions.read')
   @Get()
+  @ApiOperation({ summary: 'Daftar kategori dan subtes bank soal' })
   list(@Query(zodPipe(categoryListQuerySchema)) query: CategoryListQuery): Promise<CategoryNode[]> {
     return this.categories.list(query);
   }
 
   @RequirePermissions('questions.write')
   @Post()
+  @ApiOperation({ summary: 'Buat kategori baru' })
   create(
     @Body(zodPipe(categoryCreateSchema)) body: CategoryCreateInput,
     @AuthUser() user: AuthPrincipal,
@@ -60,6 +62,7 @@ export class CategoriesController {
 
   @RequirePermissions('questions.write')
   @Patch(':id')
+  @ApiOperation({ summary: 'Ubah kategori' })
   update(
     @Param('id') id: string,
     @Body(zodPipe(categoryUpdateSchema)) body: CategoryUpdateInput,
@@ -71,6 +74,7 @@ export class CategoriesController {
 
   @RequirePermissions('questions.write')
   @Delete(':id')
+  @ApiOperation({ summary: 'Hapus kategori (soft delete)' })
   remove(
     @Param('id') id: string,
     @AuthUser() user: AuthPrincipal,

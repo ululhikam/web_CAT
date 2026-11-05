@@ -5,6 +5,6 @@
     "declaration": false,
     "declarationMap": false
   },
-  "include": ["src/**/*.ts", "api/**/*.ts"],
+  "include": ["src/**/*.ts", "api/**/*.ts", "scripts/openapi.ts"],
   "exclude": ["node_modules", "dist", "test", "**/*.spec.ts"]
 }

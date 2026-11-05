@@ -14,7 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import {
   IMPORT_MAX_BYTES,
@@ -40,6 +40,7 @@ import { RequirePermissions } from '../../core/auth/decorators/permissions.decor
 import { EmailVerifiedGuard } from '../../core/auth/email-verified.guard';
 import { JwtAuthGuard } from '../../core/auth/jwt-auth.guard';
 import { PermissionsGuard } from '../../core/auth/permissions.guard';
+import { ApiFileFields } from '../../core/http/api-file-fields.decorator';
 import { zodPipe } from '../../core/http/validation.pipe';
 import { ImportsService } from './imports.service';
 
@@ -70,6 +71,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get()
+  @ApiOperation({ summary: 'Daftar batch impor bank soal' })
   list(
     @Query(zodPipe(importListQuerySchema)) query: ImportListQuery,
     @AuthUser() user: AuthPrincipal,
@@ -79,6 +81,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get('template.xlsx')
+  @ApiOperation({ summary: 'Unduh template XLSX impor' })
   async template(@Res() res: Response): Promise<void> {
     const buffer = await this.imports.template();
     res.setHeader(
@@ -92,8 +95,10 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Post()
+  @ApiOperation({ summary: 'Unggah berkas impor bank soal' })
   @HttpCode(201)
   @ApiConsumes('multipart/form-data')
+  @ApiFileFields('file', 'assets')
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -130,12 +135,14 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get(':id')
+  @ApiOperation({ summary: 'Detail batch impor' })
   detail(@Param('id') id: string, @AuthUser() user: AuthPrincipal): Promise<ImportJobView> {
     return this.imports.getById(id, user);
   }
 
   @RequirePermissions('questions.import')
   @Get(':id/preview')
+  @ApiOperation({ summary: 'Pratinjau item hasil parsing' })
   preview(
     @Param('id') id: string,
     @Query(zodPipe(importPreviewQuerySchema)) query: ImportPreviewQuery,
@@ -146,6 +153,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Post(':id/preview')
+  @ApiOperation({ summary: 'Jalankan ulang parsing dan pratinjau' })
   @HttpCode(200)
   previewPost(
     @Param('id') id: string,
@@ -157,6 +165,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Patch(':id/items/:itemId')
+  @ApiOperation({ summary: 'Koreksi satu item impor' })
   updateItem(
     @Param('id') id: string,
     @Param('itemId') itemId: string,
@@ -169,6 +178,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Post(':id/commit')
+  @ApiOperation({ summary: 'Commit item impor terpilih ke bank soal' })
   @HttpCode(200)
   commit(
     @Param('id') id: string,
@@ -181,6 +191,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Post(':id/cancel')
+  @ApiOperation({ summary: 'Batalkan batch impor' })
   @HttpCode(200)
   cancel(
     @Param('id') id: string,
@@ -192,6 +203,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get(':id/errors')
+  @ApiOperation({ summary: 'Daftar error item impor' })
   errors(
     @Param('id') id: string,
     @AuthUser() user: AuthPrincipal,
@@ -201,6 +213,7 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get(':id/errors.csv')
+  @ApiOperation({ summary: 'Unduh laporan error impor (CSV)' })
   async errorsCsv(
     @Param('id') id: string,
     @AuthUser() user: AuthPrincipal,

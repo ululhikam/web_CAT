@@ -1,5 +1,5 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../core/auth/decorators/public.decorator';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
@@ -11,6 +11,7 @@ export class HealthController {
   /** Liveness: proses hidup. Tidak menyentuh DB. */
   @Public()
   @Get('live')
+  @ApiOperation({ summary: 'Liveness: proses hidup' })
   live(): { status: 'ok'; uptime: number; version: string } {
     return {
       status: 'ok',
@@ -22,6 +23,7 @@ export class HealthController {
   /** Readiness: DB dapat dijangkau. Dipakai Vercel health check. */
   @Public()
   @Get('ready')
+  @ApiOperation({ summary: 'Readiness: dependensi siap' })
   async ready(): Promise<{ status: 'ok' | 'degraded'; database: string; latencyMs: number }> {
     const start = Date.now();
     try {

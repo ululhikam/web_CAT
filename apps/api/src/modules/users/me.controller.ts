@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   avatarUploadSchema,
@@ -40,11 +40,13 @@ export class UsersMeController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Ambil profil saya' })
   profile(@AuthUser() user: AuthPrincipal): Promise<AdminUserSummary> {
     return this.users.findById(user.id);
   }
 
   @Patch()
+  @ApiOperation({ summary: 'Ubah profil saya' })
   update(
     @Body(zodPipe(updateProfileSchema)) body: UpdateProfileInput,
     @AuthUser() user: AuthPrincipal,
@@ -54,6 +56,7 @@ export class UsersMeController {
   }
 
   @Patch('password')
+  @ApiOperation({ summary: 'Ubah password saya' })
   @HttpCode(200)
   password(
     @Body(zodPipe(changePasswordSchema)) body: ChangePasswordInput,
@@ -63,6 +66,7 @@ export class UsersMeController {
   }
 
   @Post('avatar')
+  @ApiOperation({ summary: 'Unggah avatar saya' })
   @HttpCode(201)
   avatar(
     @Body(zodPipe(avatarUploadSchema)) body: AvatarUploadInput,
@@ -82,6 +86,7 @@ export class MeProfileController {
   constructor(private readonly users: UsersService) {}
 
   @Get('profile')
+  @ApiOperation({ summary: 'Alias profil saya untuk klien lama' })
   profile(@AuthUser() user: AuthPrincipal): Promise<AdminUserSummary> {
     return this.users.findById(user.id);
   }

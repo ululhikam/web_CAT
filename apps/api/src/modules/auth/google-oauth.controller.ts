@@ -7,7 +7,7 @@ import {
   Res,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { ERROR_CODES } from '@webcat/contracts';
 import { AppConfigService } from '../../core/config/config.service';
@@ -32,6 +32,7 @@ export class GoogleOAuthController {
 
   @Public()
   @Get()
+  @ApiOperation({ summary: 'Mulai login dengan Google (redirect ke consent)' })
   start(@Res() res: Response): void {
     if (!this.oauth.isConfigured()) {
       throw new ServiceUnavailableException({
@@ -58,6 +59,7 @@ export class GoogleOAuthController {
    */
   @Public()
   @Get('callback')
+  @ApiOperation({ summary: 'Callback Google OAuth: tukar kode lalu redirect ke web' })
   async callback(
     @Query('code') code: string | undefined,
     @Query('state') state: string | undefined,

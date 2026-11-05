@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   adminCreateUserSchema,
@@ -44,18 +44,21 @@ export class UsersController {
 
   @RequirePermissions('users.read')
   @Get()
+  @ApiOperation({ summary: 'Daftar peserta dengan filter dan pagination' })
   list(@Query(zodPipe(userListQuerySchema)) query: UserListQuery) {
     return this.users.list(query);
   }
 
   @RequirePermissions('users.read')
   @Get(':id/overview')
+  @ApiOperation({ summary: 'Ringkasan 360 derajat user: langganan, ujian, pembayaran' })
   overview(@Param('id') id: string): Promise<AdminUserOverview> {
     return this.users.overview(id);
   }
 
   @RequirePermissions('users.read')
   @Get(':id')
+  @ApiOperation({ summary: 'Detail akun peserta' })
   detail(@Param('id') id: string): Promise<AdminUserSummary> {
     return this.users.findById(id);
   }
@@ -63,6 +66,7 @@ export class UsersController {
   /** Jalur utama pembuatan akun peserta (tanpa self-registration). */
   @RequirePermissions('users.create')
   @Post()
+  @ApiOperation({ summary: 'Buat akun peserta manual dan kirim undangan' })
   create(
     @Body(zodPipe(adminCreateUserSchema)) body: AdminCreateUserInput,
     @AuthUser() user: AuthPrincipal,
@@ -73,6 +77,7 @@ export class UsersController {
 
   @RequirePermissions('users.suspend')
   @Patch(':id/status')
+  @ApiOperation({ summary: 'Aktifkan atau tangguhkan akun peserta' })
   updateStatus(
     @Param('id') id: string,
     @Body(zodPipe(updateUserStatusSchema))
@@ -85,6 +90,7 @@ export class UsersController {
 
   @RequirePermissions('roles.manage')
   @Patch(':id/role')
+  @ApiOperation({ summary: 'Ubah role pengguna (khusus SUPER_ADMIN)' })
   changeRole(
     @Param('id') id: string,
     @Body(zodPipe(changeUserRoleSchema))
@@ -97,6 +103,7 @@ export class UsersController {
 
   @RequirePermissions('users.password.reset')
   @Post(':id/reset-password')
+  @ApiOperation({ summary: 'Reset password pengguna oleh admin' })
   resetPassword(
     @Param('id') id: string,
     @Body(zodPipe(adminResetPasswordSchema)) body: AdminResetPasswordInput,
@@ -109,6 +116,7 @@ export class UsersController {
   /** Membebaskan kuota harian dengan meng-void sesi ujian hari ini (ber-audit). */
   @RequirePermissions('exams.recompute')
   @Post(':id/quota-reset')
+  @ApiOperation({ summary: 'Reset kuota percobaan ujian pengguna' })
   resetQuota(
     @Param('id') id: string,
     @Body(zodPipe(quotaResetSchema)) body: QuotaResetInput,

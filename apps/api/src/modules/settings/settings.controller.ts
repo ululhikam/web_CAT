@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import {
   updatePlatformSettingsSchema,
@@ -28,12 +28,14 @@ export class SettingsController {
 
   @RequirePermissions('settings.write')
   @Get()
+  @ApiOperation({ summary: 'Ambil pengaturan platform' })
   get(): Promise<PlatformSettingsView> {
     return this.settings.view();
   }
 
   @RequirePermissions('settings.write')
   @Patch()
+  @ApiOperation({ summary: 'Ubah pengaturan platform (masuk audit)' })
   update(
     @Body(zodPipe(updatePlatformSettingsSchema)) body: UpdatePlatformSettingsInput,
     @AuthUser() user: AuthPrincipal,

@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   auditLogQuerySchema,
   type AuditLogItem,
@@ -22,6 +22,7 @@ export class AuditController {
 
   @RequirePermissions('audit.read')
   @Get()
+  @ApiOperation({ summary: 'Daftar jejak audit dengan filter' })
   list(
     @Query(zodPipe(auditLogQuerySchema)) query: AuditLogQuery,
   ): Promise<CursorPage<AuditLogItem>> {

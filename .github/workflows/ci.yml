@@ -71,6 +71,12 @@ jobs:
           # karena adapter-vercel memerlukan symlink yang tidak tersedia.
           VERCEL: ''
 
+      # Gagal bila `docs/api/openapi.json` tidak lagi cocok dengan controller
+      # dan skema Zod. Generator menyediakan placeholder env sendiri, jadi
+      # tidak butuh database maupun secret asli.
+      - name: OpenAPI sinkron dengan kode
+        run: pnpm --filter @webcat/api docs:openapi:check
+
   # ---------------------------------------------------------------------------
   # Test integrasi terhadap PostgreSQL nyata (F2-09).
   #

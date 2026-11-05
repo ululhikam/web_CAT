@@ -1,11 +1,28 @@
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { loadLocalEnv } from './core/config/load-env';
+import { buildOpenApiDocument } from './core/http/openapi';
 import { requestIdMiddleware } from './core/http/request-id';
 import { getLogger } from './core/logger/logger';
+
+/**
+ * CSP untuk respons API biasa: hanya JSON/berkas, tidak ada sumber eksternal.
+ */
+const API_CSP = "default-src 'none'; frame-ancestors 'none'";
+
+/**
+ * CSP khusus halaman Swagger UI (`/api/docs`). Swagger UI memuat asetnya
+ * sendiri (`self`) dan memakai `<style>` inline bawaan paketnya, jadi
+ * `style-src` harus mengizinkan inline. Tanpa pengecualian ini halaman
+ * dokumentasi tampil kosong karena seluruh aset diblokir `default-src 'none'`.
+ */
+const DOCS_CSP =
+  "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; " +
+  "script-src 'self'; font-src 'self' data:; connect-src 'self'; " +
+  "frame-ancestors 'none'; base-uri 'none'";
 
 // Muat `.env` sebelum AppConfigService membaca process.env.
 loadLocalEnv();
@@ -34,17 +51,20 @@ export async function createApp(): Promise<NestExpressApplication> {
   express.disable('x-powered-by');
 
   // Header keamanan untuk semua respons API. API hanya mengirim JSON/berkas,
-  // jadi CSP ketat tanpa sumber eksternal.
+  // jadi CSP ketat tanpa sumber eksternal. Halaman dokumentasi
+  // (`/api/docs`) adalah pengecualian: Swagger UI memuat CSS/JS-nya sendiri
+  // dan memakai `<style>` inline, sehingga butuh CSP yang lebih longgar.
   express.use(
     (
-      _req: unknown,
+      req: { path?: string },
       res: { setHeader: (name: string, value: string) => void },
       next: () => void,
     ) => {
+      const isDocs = typeof req.path === 'string' && req.path.startsWith('/api/docs');
       res.setHeader('x-content-type-options', 'nosniff');
       res.setHeader('x-frame-options', 'DENY');
       res.setHeader('referrer-policy', 'no-referrer');
-      res.setHeader('content-security-policy', "default-src 'none'; frame-ancestors 'none'");
+      res.setHeader('content-security-policy', isDocs ? DOCS_CSP : API_CSP);
       next();
     },
   );
@@ -61,18 +81,15 @@ export async function createApp(): Promise<NestExpressApplication> {
 
   app.setGlobalPrefix('api/v1');
 
-  if (process.env.NODE_ENV !== 'production') {
-    const config = new DocumentBuilder()
-      .setTitle('Web CAT API')
-      .setDescription(
-        'Simulasi ujian Polri — Tes Psikologi (Kecerdasan, Kepribadian, Kecermatan, Pass Hand), TPA, TPK.',
-      )
-      .setVersion('0.1.0')
-      .addBearerAuth()
-      .build();
-    const document = SwaggerModule.createDocument(app, config);
+  // Dokumentasi OpenAPI selalu tersedia (dev maupun produksi) kecuali
+  // dimatikan eksplisit lewat `API_DOCS_ENABLED=false`. Dokumen dibangun dari
+  // metadata controller + skema Zod, jadi tidak bisa "basi" terhadap
+  // implementasi. Lihat `core/http/openapi.ts`.
+  if (process.env.API_DOCS_ENABLED !== 'false') {
+    const document = buildOpenApiDocument(app);
     SwaggerModule.setup('api/docs', app, document, {
-      swaggerOptions: { persistAuthorization: true },
+      swaggerOptions: { persistAuthorization: true, displayRequestDuration: true },
+      customSiteTitle: 'Web CAT API',
     });
   }
 

@@ -1,5 +1,5 @@
 import { Controller, Get, NotFoundException, Query, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { AppConfigService } from '../../core/config/config.service';
 import { Public } from '../../core/auth/decorators/public.decorator';
@@ -26,6 +26,7 @@ export class DevStorageController {
   ) {}
 
   @Get('content')
+  @ApiOperation({ summary: 'Sajikan berkas storage lokal (mode dev)' })
   async content(@Query('path') path: string, @Res() res: Response): Promise<void> {
     if (this.config.value.STORAGE !== 'dev') {
       throw new NotFoundException({

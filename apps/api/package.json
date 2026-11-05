@@ -27,7 +27,9 @@
     "db:ping": "tsx scripts/db-ping.ts",
     "db:stats": "tsx scripts/db-stats.ts",
     "pool:coverage": "tsx scripts/pool-coverage.ts",
-    "cron:run": "tsx scripts/cron-run.ts"
+    "cron:run": "tsx scripts/cron-run.ts",
+    "docs:openapi": "pnpm build && node dist/scripts/openapi.js",
+    "docs:openapi:check": "pnpm build && node dist/scripts/openapi.js --check"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -50,7 +52,8 @@
     "rxjs": "^7.8.1",
     "sharp": "^0.35.5",
     "unpdf": "^2.1.0",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zod-to-json-schema": "^3.25.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

@@ -10,7 +10,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import {
   activateInviteSchema,
@@ -58,6 +58,7 @@ export class AuthController {
   @Public()
   @RateLimit({ limit: 5, windowSeconds: 3600 })
   @Post('register')
+  @ApiOperation({ summary: 'Registrasi akun peserta dan kirim kode verifikasi email' })
   register(@Body(zodPipe(registerSchema)) body: RegisterInput) {
     return this.auth.register(body);
   }
@@ -66,6 +67,7 @@ export class AuthController {
   @RateLimit({ limit: 10, windowSeconds: 900 })
   @HttpCode(200)
   @Post('verify-email')
+  @ApiOperation({ summary: 'Verifikasi email dengan kode 6 digit' })
   verifyEmail(@Body(zodPipe(verifyEmailSchema)) body: VerifyEmailInput) {
     return this.auth.verifyEmail(body);
   }
@@ -74,6 +76,7 @@ export class AuthController {
   @RateLimit({ limit: 3, windowSeconds: 900 })
   @HttpCode(200)
   @Post('resend-verification')
+  @ApiOperation({ summary: 'Kirim ulang kode verifikasi email' })
   resendVerification(@Body(zodPipe(resendVerificationSchema)) body: { email: string }) {
     return this.auth.resendVerification(body.email);
   }
@@ -82,6 +85,7 @@ export class AuthController {
   @RateLimit({ limit: 10, windowSeconds: 900 })
   @HttpCode(200)
   @Post('login')
+  @ApiOperation({ summary: 'Login email + password (set cookie refresh dan CSRF)' })
   async login(
     @Body(zodPipe(loginSchema)) body: LoginInput,
     @Req() req: Request,
@@ -96,6 +100,7 @@ export class AuthController {
   @RateLimit({ limit: 60, windowSeconds: 900 })
   @HttpCode(200)
   @Post('refresh')
+  @ApiOperation({ summary: 'Perbarui access token dari cookie refresh (rotasi token)' })
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const result = await this.auth.refresh(this.refreshTokenFrom(req), this.meta(req));
     setRefreshCookie(res, this.config, result.refreshToken);
@@ -105,6 +110,7 @@ export class AuthController {
   @Public()
   @HttpCode(200)
   @Post('logout')
+  @ApiOperation({ summary: 'Logout sesi saat ini dan hapus cookie' })
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.auth.logout(this.refreshTokenFrom(req));
     clearRefreshCookie(res, this.config);
@@ -115,6 +121,7 @@ export class AuthController {
   @RateLimit({ limit: 3, windowSeconds: 900 })
   @HttpCode(200)
   @Post('forgot-password')
+  @ApiOperation({ summary: 'Minta kode reset password' })
   forgotPassword(@Body(zodPipe(forgotPasswordSchema)) body: { email: string }) {
     return this.auth.forgotPassword(body.email);
   }
@@ -123,6 +130,7 @@ export class AuthController {
   @RateLimit({ limit: 5, windowSeconds: 900 })
   @HttpCode(200)
   @Post('reset-password')
+  @ApiOperation({ summary: 'Reset password memakai kode verifikasi' })
   resetPassword(@Body(zodPipe(resetPasswordSchema)) body: ResetPasswordInput) {
     return this.auth.resetPassword(body);
   }
@@ -131,6 +139,7 @@ export class AuthController {
   @RateLimit({ limit: 5, windowSeconds: 900 })
   @HttpCode(200)
   @Post('activate-invite')
+  @ApiOperation({ summary: 'Aktivasi akun undangan dari admin' })
   activateInvite(@Body(zodPipe(activateInviteSchema)) body: ActivateInviteInput) {
     return this.auth.activateInvite(body);
   }
@@ -139,6 +148,7 @@ export class AuthController {
   @AllowUnverifiedEmail()
   @UseGuards(JwtAuthGuard)
   @Get('me')
+  @ApiOperation({ summary: 'Profil singkat pengguna yang sedang login' })
   me(@AuthUser() user: AuthPrincipal) {
     return this.auth.me(user.id);
   }
@@ -147,6 +157,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Post('change-password')
+  @ApiOperation({ summary: 'Ubah password dengan verifikasi password lama' })
   changePassword(
     @AuthUser() user: AuthPrincipal,
     @Body(zodPipe(changePasswordSchema)) body: ChangePasswordInput,
@@ -158,6 +169,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Post('logout-all')
+  @ApiOperation({ summary: 'Logout dari semua perangkat' })
   logoutAll(@AuthUser() user: AuthPrincipal) {
     return this.auth.logoutAll(user.id);
   }
@@ -166,6 +178,7 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('sessions')
+  @ApiOperation({ summary: 'Daftar sesi login aktif' })
   sessions(@AuthUser() user: AuthPrincipal) {
     return this.auth.listSessions(user.id, user.sessionId);
   }
@@ -173,6 +186,7 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete('sessions/:id')
+  @ApiOperation({ summary: 'Cabut satu sesi login berdasarkan id' })
   revokeSession(@AuthUser() user: AuthPrincipal, @Param('id') id: string) {
     return this.auth.revokeSession(user.id, id);
   }
