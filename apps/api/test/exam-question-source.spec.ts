@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { AppConfigService } from '../src/core/config/config.service';
 import type { PrismaService } from '../src/core/prisma/prisma.service';
 import {
   applyFixtureMedia,
@@ -386,5 +387,79 @@ describe('ExamQuestionSource — soal di ujung pool tetap terpilih', () => {
     const second = await source.prepare(input);
 
     expect(second.map((seed) => seed.externalId)).toEqual(first.map((seed) => seed.externalId));
+  });
+});
+
+/* ------------------------------------------- F4-08: fallback tidak lagi senyap */
+
+/** ConfigService tiruan: hanya `value.QUESTION_POOL` yang dibaca sumber soal. */
+function fakeConfig(questionPool: 'dev' | 'db'): AppConfigService {
+  return { value: { QUESTION_POOL: questionPool } } as unknown as AppConfigService;
+}
+
+describe('ExamQuestionSource — mode pool eksplisit (F4-08)', () => {
+  it('QUESTION_POOL=db + bank kurang → 503 EXAM_POOL_INSUFFICIENT dengan rincian', async () => {
+    const source = new ExamQuestionSource(fakeDb({ questions: [dbQuestion] }), fakeConfig('db'));
+
+    await expect(
+      source.prepare({
+        subtestSessionId: 'sesi-db',
+        subtestCode: 'KECERDASAN',
+        count: 5,
+      }),
+    ).rejects.toMatchObject({
+      code: 'EXAM_POOL_INSUFFICIENT',
+      status: 503,
+      details: {
+        subtestCode: 'KECERDASAN',
+        required: 5,
+        available: 1,
+        missing: 4,
+      },
+    });
+  });
+
+  it('QUESTION_POOL=db + bank cukup → memakai database, bukan fixture', async () => {
+    const source = new ExamQuestionSource(fakeDb({ questions: [dbQuestion] }), fakeConfig('db'));
+
+    const prepared = await source.resolve({
+      subtestSessionId: 'sesi-db-2',
+      subtestCode: 'KECERDASAN',
+      count: 1,
+    });
+
+    expect(prepared.kind).toBe('database');
+    expect(prepared.available).toBe(1);
+    expect(prepared.seeds[0]?.externalId).toBe(dbQuestion.publicCode);
+  });
+
+  it('QUESTION_POOL=dev → fixture dipakai tetapi dilaporkan sebagai peringatan', async () => {
+    const source = new ExamQuestionSource(fakeDb({ questions: [] }), fakeConfig('dev'));
+
+    const prepared = await source.resolve({
+      subtestSessionId: 'sesi-dev',
+      subtestCode: 'KECERDASAN',
+      count: 3,
+    });
+
+    expect(prepared.kind).toBe('fixture');
+    expect(prepared.available).toBe(0);
+    expect(prepared.seeds).toHaveLength(3);
+    expect(prepared.seeds.every((seed) => seed.externalId.startsWith('DEV-'))).toBe(true);
+  });
+
+  it('tanpa injeksi config, perilaku mengikuti env QUESTION_POOL', async () => {
+    const previous = process.env.QUESTION_POOL;
+
+    process.env.QUESTION_POOL = 'db';
+    try {
+      const source = new ExamQuestionSource(fakeDb({ questions: [] }));
+      await expect(
+        source.prepare({ subtestSessionId: 'sesi-env', subtestCode: 'KECERDASAN', count: 2 }),
+      ).rejects.toMatchObject({ code: 'EXAM_POOL_INSUFFICIENT' });
+    } finally {
+      if (previous === undefined) delete process.env.QUESTION_POOL;
+      else process.env.QUESTION_POOL = previous;
+    }
   });
 });

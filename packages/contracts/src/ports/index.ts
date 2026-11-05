@@ -26,11 +26,29 @@ export interface AccessPolicyPort {
   assertCanContinue(userId: string): Promise<void>;
 }
 
+/**
+ * F4-09 — rincian satu subtes yang bank soalnya belum memenuhi kuota.
+ *
+ * Dikembalikan `QuestionPoolPort.validate()` agar pemanggil bisa menyebut
+ * subtes mana yang kurang dan berapa banyak, bukan sekadar "pool tidak siap".
+ */
+export interface PoolShortage {
+  subtestCode: string;
+  required: number;
+  available: number;
+  missing: number;
+  /** Kalimat siap tampil (dipakai endpoint kelayakan & error start sesi). */
+  message: string;
+}
+
 export interface PoolStatus {
   ready: boolean;
   available: number;
   required: number;
+  /** Dipertahankan untuk konsumen lama; selalu sinkron dengan `problems`. */
   missingSubtestCodes: string[];
+  /** Rincian kekurangan; kosong saat `ready`. */
+  problems: PoolShortage[];
 }
 
 export interface DifficultyMix {

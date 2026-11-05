@@ -14,6 +14,7 @@ describe('MockQuestionPool', () => {
       available: 100,
       required: 100,
       missingSubtestCodes: [],
+      problems: [],
     });
   });
 
@@ -133,5 +134,49 @@ describe('PrismaQuestionPool', () => {
     expect(status.available).toBe(40);
     expect(status.required).toBe(100);
     expect(status.missingSubtestCodes).toEqual(['KECERDASAN']);
+  });
+
+  /* ------------------------------------------------------------- F4-09 */
+
+  it('F4-09: status siap tidak membawa problems', async () => {
+    const fakePrisma = {
+      question: { count: vi.fn().mockResolvedValue(500) },
+    } as unknown as PrismaService;
+
+    const status = await new PrismaQuestionPool(fakePrisma).validate('KECERMATAN', 500);
+
+    expect(status.ready).toBe(true);
+    expect(status.problems).toEqual([]);
+  });
+
+  it('F4-09: kekurangan membawa subtes, angka, dan pesan yang bisa dibaca', async () => {
+    const fakePrisma = {
+      question: { count: vi.fn().mockResolvedValue(412) },
+    } as unknown as PrismaService;
+
+    const status = await new PrismaQuestionPool(fakePrisma).validate('KECERMATAN', 500);
+
+    expect(status.problems).toEqual([
+      {
+        subtestCode: 'KECERMATAN',
+        required: 500,
+        available: 412,
+        missing: 88,
+        message: 'Subtes Kecermatan: tersedia 412 soal, dibutuhkan 500 (kurang 88 soal).',
+      },
+    ]);
+    // `missingSubtestCodes` tetap sinkron untuk konsumen lama.
+    expect(status.missingSubtestCodes).toEqual(status.problems.map((entry) => entry.subtestCode));
+  });
+
+  it('F4-09: kode subtes tak dikenal tetap ditampilkan apa adanya', async () => {
+    const fakePrisma = {
+      question: { count: vi.fn().mockResolvedValue(0) },
+    } as unknown as PrismaService;
+
+    const status = await new PrismaQuestionPool(fakePrisma).validate('SUBTES_BARU', 10);
+
+    expect(status.problems[0]?.message).toContain('SUBTES_BARU');
+    expect(status.problems[0]?.missing).toBe(10);
   });
 });

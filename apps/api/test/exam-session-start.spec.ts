@@ -42,7 +42,13 @@ function duplicateKey(target: string[]): Prisma.PrismaClientKnownRequestError {
   });
 }
 
-function buildService(options: { createError: Prisma.PrismaClientKnownRequestError }) {
+function buildService(options: {
+  createError?: Prisma.PrismaClientKnownRequestError;
+  pool?: Partial<QuestionPoolPort>;
+  stages?: Array<{ code: string; subtests: Array<{ code: string; questionCount: number }> }>;
+  /** F4-09: menguji bahwa alasan selain bank soal tetap memakai jalur generik. */
+  access?: { allowed: boolean; code: string };
+}) {
   const tx = {
     examSession: {
       create: vi.fn(async () => {
@@ -70,17 +76,20 @@ function buildService(options: { createError: Prisma.PrismaClientKnownRequestErr
       subtestTransition: 'on_open',
       violationPolicy: {},
     })),
-    getSessionStages: vi.fn(async () => []),
+    getSessionStages: vi.fn(async () => options.stages ?? []),
     requireSessionSnapshot: vi.fn(async () => SNAPSHOT),
   } as unknown as ExamConfigService;
 
   const accessPolicy = {
-    check: vi.fn(async () => ({ allowed: true })),
+    check: vi.fn(async () => options.access ?? { allowed: true }),
     assertCanStartExam: vi.fn(async () => undefined),
   } as unknown as AccessPolicyPort;
 
   const questionPool = {
-    validate: vi.fn(async () => ({ ready: true, available: 1, required: 1, missingSubtestCodes: [] })),
+    validate: vi.fn(
+      async () => ({ ready: true, available: 1, required: 1, missingSubtestCodes: [], problems: [] }),
+    ),
+    ...options.pool,
   } as unknown as QuestionPoolPort;
 
   const service = new ExamSessionService(
@@ -118,6 +127,80 @@ describe('startSession — pemetaan P2002', () => {
     await expect(service.startSession('user-1')).rejects.toMatchObject({
       code: 'EXAM_SESSION_ALREADY_TODAY',
       status: 409,
+    });
+  });
+});
+
+/* --------------------------------------------------- F4-09: pesan kekurangan */
+
+const SHORTAGE = {
+  subtestCode: 'KECERMATAN',
+  required: 500,
+  available: 412,
+  missing: 88,
+  message: 'Subtes Kecermatan: tersedia 412 soal, dibutuhkan 500 (kurang 88 soal).',
+};
+
+const STAGES_WITH_KECERMATAN = [
+  {
+    code: 'PSIKOLOGI',
+    subtests: [{ code: 'KECERMATAN', questionCount: 500 }],
+  },
+];
+
+describe('startSession — bank soal kurang (F4-09)', () => {
+  function buildWithShortage() {
+    return buildService({
+      stages: STAGES_WITH_KECERMATAN,
+      pool: {
+        validate: vi.fn(async () => ({
+          ready: false,
+          available: 412,
+          required: 500,
+          missingSubtestCodes: ['KECERMATAN'],
+          problems: [SHORTAGE],
+        })),
+      },
+    });
+  }
+
+  it('kelayakan membawa poolProblems berisi subtes & kekurangan', async () => {
+    const { service } = buildWithShortage();
+
+    const eligibility = await service.getEligibility('user-1');
+
+    expect(eligibility.canStart).toBe(false);
+    expect(eligibility.reasons).toEqual(['EXAM_POOL_INSUFFICIENT']);
+    expect(eligibility.poolProblems).toEqual([SHORTAGE]);
+  });
+
+  it('startSession menolak dengan message spesifik, bukan EXAM_SESSION_LOCKED', async () => {
+    const { service } = buildWithShortage();
+
+    await expect(service.startSession('user-1')).rejects.toMatchObject({
+      code: 'EXAM_POOL_INSUFFICIENT',
+      status: 409,
+      message: SHORTAGE.message,
+      details: {
+        subtestCode: 'KECERMATAN',
+        required: 500,
+        available: 412,
+        missing: 88,
+        problems: [SHORTAGE],
+      },
+    });
+  });
+
+  it('alasan selain bank soal tetap memakai EXAM_SESSION_LOCKED + detail', async () => {
+    const { service } = buildService({
+      stages: [],
+      access: { allowed: false, code: 'SUBSCRIPTION_REQUIRED' },
+    });
+
+    await expect(service.startSession('user-1')).rejects.toMatchObject({
+      code: 'EXAM_SESSION_LOCKED',
+      status: 409,
+      details: { reasons: ['SUBSCRIPTION_REQUIRED'] },
     });
   });
 });

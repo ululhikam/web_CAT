@@ -5,7 +5,13 @@ import type {
   PoolStatus,
   QuestionPoolPort,
 } from '@webcat/contracts';
+import { SUBTEST_LABELS, type SubtestCode } from '@webcat/contracts';
 import { PrismaService } from '../../prisma/prisma.service';
+
+/** Label subtes untuk pesan; kode tak dikenal tetap ditampilkan apa adanya. */
+function subtestLabel(code: string): string {
+  return SUBTEST_LABELS[code as SubtestCode] ?? code;
+}
 
 /**
  * Implementasi nyata `QuestionPoolPort` (gate G2).
@@ -27,11 +33,27 @@ export class PrismaQuestionPool implements QuestionPoolPort {
       },
     });
 
+    const ready = available >= count;
+    const missing = ready ? 0 : count - available;
+
     return {
-      ready: available >= count,
+      ready,
       available,
       required: count,
-      missingSubtestCodes: available >= count ? [] : [subtestCode],
+      missingSubtestCodes: ready ? [] : [subtestCode],
+      // F4-09: satu-satunya tempat pesan kekurangan dirumuskan, supaya
+      // `/exams/eligibility` dan `startSession` memakai kalimat yang sama.
+      problems: ready
+        ? []
+        : [
+            {
+              subtestCode,
+              required: count,
+              available,
+              missing,
+              message: `Subtes ${subtestLabel(subtestCode)}: tersedia ${available} soal, dibutuhkan ${count} (kurang ${missing} soal).`,
+            },
+          ],
     };
   }
 

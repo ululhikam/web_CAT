@@ -14,8 +14,16 @@
  *   - `ACCESS_POLICY`  → `DevAccessPolicy`
  *   - `QUESTION_POOL`  → `MockQuestionPool`
  *   - `STORAGE`        → `DevStorage`
+ *
+ * F4-08: mode pool untuk materialisasi soal **dinyatakan eksplisit** di sini
+ * (`fixtureConfig`), tidak lagi mewarisi `QUESTION_POOL` dari `.env`. Tanpa itu,
+ * mengubah `.env` menjadi `db` membuat seluruh test integrasi gagal karena DB uji
+ * memang di-`TRUNCATE` dan tidak memuat bank soal. Test integrasi menguji mesin
+ * sesi, bukan isi bank — jadi fixture adalah pilihan yang disengaja, dan
+ * dipilih lewat config, bukan lewat fallback senyap.
  */
 import type { PrismaClient } from '@prisma/client';
+import type { AppConfigService } from '../../src/core/config/config.service';
 import type { PrismaService } from '../../src/core/prisma/prisma.service';
 import { DevAccessPolicy } from '../../src/core/ports/impl/dev-access-policy';
 import { DevStorage } from '../../src/core/ports/impl/dev-storage';
@@ -41,6 +49,12 @@ function asPrismaService(prisma: PrismaClient): PrismaService {
   return prisma as unknown as PrismaService;
 }
 
+/**
+ * Config tiruan untuk `ExamQuestionSource`: paksa `dev` supaya materialisasi
+ * memakai fixture deterministik, bukan bank soal DB uji yang sudah di-TRUNCATE.
+ */
+const fixtureConfig = { value: { QUESTION_POOL: 'dev' } } as unknown as AppConfigService;
+
 export interface ExamEngine {
   prisma: PrismaService;
   config: ExamConfigService;
@@ -60,7 +74,7 @@ export function createExamEngine(prismaClient: PrismaClient): ExamEngine {
   const scoring = new ScoringService();
   const config = new ExamConfigService(prisma, audit);
   const finalizer = new ExamFinalizerService(prisma, scoring, audit);
-  const questionSource = new ExamQuestionSource(prisma);
+  const questionSource = new ExamQuestionSource(prisma, fixtureConfig);
   const projection = new ExamQuestionProjection(new DevStorage());
   const sessions = new ExamSessionService(
     prisma,

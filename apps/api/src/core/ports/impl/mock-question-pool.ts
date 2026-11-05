@@ -20,6 +20,7 @@ export class MockQuestionPool implements QuestionPoolPort {
       available: count,
       required: count,
       missingSubtestCodes: [],
+      problems: [],
     };
   }
 

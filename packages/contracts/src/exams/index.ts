@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { PoolShortage } from '../ports/index';
 
 /**
  * ============================================================================
@@ -29,6 +30,19 @@ export const SUBTEST_CODES = [
   'TPK',
 ] as const;
 export type SubtestCode = (typeof SUBTEST_CODES)[number];
+
+/**
+ * Nama tampilan subtes — dipakai pada pesan yang dibaca manusia (mis. kekurangan
+ * bank soal) supaya tidak menampilkan kode mentah seperti `PASS_HAND`.
+ */
+export const SUBTEST_LABELS: Record<SubtestCode, string> = {
+  KECERDASAN: 'Kecerdasan',
+  KEPRIBADIAN: 'Kepribadian',
+  KECERMATAN: 'Kecermatan',
+  PASS_HAND: 'Pass Hand',
+  TPA: 'TPA',
+  TPK: 'TPK',
+};
 
 export const SESSION_STATUSES = [
   'CREATED',
@@ -178,6 +192,12 @@ export interface ExamSettingsView {
 export interface ExamEligibility {
   canStart: boolean;
   reasons: string[];
+  /**
+   * F4-09: subtes yang bank soalnya belum cukup, lengkap dengan angka
+   * kebutuhan/ketersediaan supaya peserta (dan admin) tahu persis apa yang
+   * kurang, bukan sekadar "bank soal belum mencukupi".
+   */
+  poolProblems: PoolShortage[];
   activeSubscription: { endsAt: string; remainingDays: number } | null;
   sessionsToday: number;
   nextAvailableAt: string | null;

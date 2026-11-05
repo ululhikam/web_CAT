@@ -1,7 +1,9 @@
 import { createHash } from 'node:crypto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import type { ExamQuestionType, SubtestCode } from '@webcat/contracts';
 import type { Prisma } from '@prisma/client';
+import { AppConfigService } from '../../core/config/config.service';
+import { AppError } from '../../core/http/app-error';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { QuestionSnapshot, SnapshotMedia, SnapshotOption } from '../scoring/scoring.types';
 
@@ -11,7 +13,8 @@ import type { QuestionSnapshot, SnapshotMedia, SnapshotOption } from '../scoring
  * Prioritas:
  *   1. Bank soal database (`questions` status PUBLISHED) — dipakai begitu B2
  *      mengisi pool (gate G2).
- *   2. Fixture deterministik B3 — dipakai selama pool DB belum tersedia.
+ *   2. Fixture deterministik B3 — hanya saat `QUESTION_POOL=dev`, dan SELALU
+ *      dicatat di log (F4-08).
  *
  * Keduanya menghasilkan bentuk yang sama: snapshot server-only yang memuat
  * kunci jawaban. Snapshot inilah yang disimpan per sesi sehingga hasil tidak
@@ -506,11 +509,31 @@ function mapDbQuestion(row: QuestionRow, position: number): MaterializedQuestion
 /** Klien database yang boleh dipakai: root client atau klien transaksi. */
 export type ExamDbClient = Prisma.TransactionClient | PrismaService;
 
+/**
+ * Asal soal yang dipakai `prepare()`.
+ *
+ * Dipisahkan dari hasil agar pemanggil (dan log) bisa membedakan "bank soal
+ * cukup" dari "fixture dipakai karena pool kurang" tanpa membaca isi snapshot.
+ */
+export type QuestionSourceKind = 'database' | 'fixture';
+
+export interface PreparedQuestions {
+  kind: QuestionSourceKind;
+  seeds: MaterializedQuestionSeed[];
+  /** Jumlah soal PUBLISHED yang tersedia; 0 bila query gagal/kosong. */
+  available: number;
+}
+
 /* ------------------------------------------------------------------ service */
 
 @Injectable()
 export class ExamQuestionSource {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(ExamQuestionSource.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly config?: AppConfigService,
+  ) {}
 
   /**
    * Menyiapkan soal untuk satu subtes sesi. Deterministik terhadap
@@ -520,6 +543,12 @@ export class ExamQuestionSource {
    * `db` WAJIB diteruskan bila dipanggil dari dalam `$transaction`. Memakai
    * root client di dalam transaksi akan meminjam koneksi kedua dari pool
    * (`connection_limit=1`) sehingga transaksi saling menunggu dan timeout.
+   *
+   * F4-08: fallback fixture tidak lagi senyap.
+   *   - `QUESTION_POOL=db` + soal kurang → `503 EXAM_POOL_INSUFFICIENT`
+   *     (lebih baik peserta ditolak di awal daripada mengerjakan soal karangan).
+   *   - `QUESTION_POOL=dev` → fixture dipakai, tetapi SELALU dicatat di log
+   *     sebagai peringatan yang menyebut subtes, kebutuhan, dan ketersediaan.
    */
   async prepare(
     input: {
@@ -531,22 +560,72 @@ export class ExamQuestionSource {
     },
     db: ExamDbClient = this.prisma,
   ): Promise<MaterializedQuestionSeed[]> {
+    const prepared = await this.resolve(input, db);
+    return prepared.seeds;
+  }
+
+  /** Varian `prepare()` yang juga mengembalikan asal soal (untuk log/tes). */
+  async resolve(
+    input: {
+      subtestSessionId: string;
+      subtestCode: SubtestCode;
+      count: number;
+      fixtureMedia?: FixtureMediaResolver;
+    },
+    db: ExamDbClient = this.prisma,
+  ): Promise<PreparedQuestions> {
     const dbQuestions = await this.loadFromDatabase(
       input.subtestCode,
       input.count,
       db,
       input.subtestSessionId,
     );
+
     if (dbQuestions.length >= input.count) {
       const rng = createRng(hashSeed(input.subtestSessionId));
-      return shuffle(rng, dbQuestions).map((row, index) => mapDbQuestion(row, index + 1));
+      return {
+        kind: 'database',
+        available: dbQuestions.length,
+        seeds: shuffle(rng, dbQuestions).map((row, index) => mapDbQuestion(row, index + 1)),
+      };
     }
-    return buildFixture(
-      input.subtestCode,
-      input.count,
-      input.subtestSessionId,
-      input.fixtureMedia,
-    );
+
+    const detail = `${input.subtestCode}: butuh ${input.count}, tersedia ${dbQuestions.length}`;
+    if (this.isStrictPool()) {
+      this.logger.error(`Bank soal kurang dan QUESTION_POOL=db — ${detail}`);
+      throw new AppError({
+        code: 'EXAM_POOL_INSUFFICIENT',
+        status: 503,
+        message: `Bank soal subtes ${input.subtestCode} belum memenuhi kuota`,
+        details: {
+          subtestCode: input.subtestCode,
+          required: input.count,
+          available: dbQuestions.length,
+          missing: input.count - dbQuestions.length,
+        },
+      });
+    }
+
+    this.logger.warn(`Fallback fixture dipakai (QUESTION_POOL=dev) — ${detail}`);
+    return {
+      kind: 'fixture',
+      available: dbQuestions.length,
+      seeds: buildFixture(
+        input.subtestCode,
+        input.count,
+        input.subtestSessionId,
+        input.fixtureMedia,
+      ),
+    };
+  }
+
+  /**
+   * Mode ketat ditentukan `QUESTION_POOL`. Bila konfigurasi tidak diinjeksi
+   * (mis. skrip/tes), dibaca dari env agar perilakunya sama dengan runtime.
+   */
+  private isStrictPool(): boolean {
+    if (this.config) return this.config.value.QUESTION_POOL === 'db';
+    return process.env.QUESTION_POOL === 'db';
   }
 
   private async loadFromDatabase(

@@ -199,7 +199,17 @@
             <Alert tone="warning" title="Anda belum dapat memulai">
               <ul class="reasons">
                 {#each eligibility.reasons as reason (reason)}
-                  <li>{REASON_LABELS[reason] ?? reason}</li>
+                  <li>
+                    {REASON_LABELS[reason] ?? reason}
+                    <!-- F4-09: sebut subtes & jumlah kekurangan, bukan generik. -->
+                    {#if reason === 'EXAM_POOL_INSUFFICIENT' && eligibility.poolProblems.length > 0}
+                      <ul class="reasons reasons--detail">
+                        {#each eligibility.poolProblems as problem (problem.subtestCode)}
+                          <li>{problem.message}</li>
+                        {/each}
+                      </ul>
+                    {/if}
+                  </li>
                 {/each}
               </ul>
             </Alert>
@@ -263,6 +273,13 @@
 
   .rules strong {
     color: var(--color-text);
+  }
+
+  .reasons--detail {
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+    padding-left: var(--space-4);
+    list-style: circle;
   }
 
   .reasons {

@@ -10,6 +10,7 @@ import type {
   ExamQuestionPage,
   HeartbeatResponse,
   LockReason,
+  PoolShortage,
   QuestionPoolPort,
   SessionStatus,
   SessionSubtestSummary,
@@ -108,11 +109,17 @@ export class ExamSessionService {
     if (sessionsToday >= settings.maxSessionsPerDay) reasons.add('DAILY_LIMIT_REACHED');
 
     const stages = await this.config.getSessionStages();
+    const poolProblems: PoolShortage[] = [];
     for (const stage of stages) {
       for (const subtest of stage.subtests) {
         try {
           const pool = await this.questionPool.validate(subtest.code, subtest.questionCount);
-          if (!pool.ready) reasons.add('EXAM_POOL_INSUFFICIENT');
+          if (!pool.ready) {
+            reasons.add('EXAM_POOL_INSUFFICIENT');
+            // F4-09: teruskan rincian yang sudah dirumuskan pool, bukan
+            // sekadar kode alasan.
+            poolProblems.push(...(pool.problems ?? []));
+          }
         } catch {
           reasons.add('EXAM_POOL_INSUFFICIENT');
         }
@@ -127,6 +134,7 @@ export class ExamSessionService {
     return {
       canStart: reasons.size === 0,
       reasons: [...reasons],
+      poolProblems,
       activeSubscription: access.endsAt
         ? {
             endsAt: access.endsAt.toISOString(),
@@ -172,6 +180,29 @@ export class ExamSessionService {
 
   /* ------------------------------------------------------------------ start */
 
+  /**
+   * F4-09: satu bentuk error untuk semua jalur "bank soal kurang", supaya
+   * klien menerima `message` yang bisa dibaca dan `details.problems` lengkap.
+   */
+  private poolInsufficientError(problems: PoolShortage[]): AppError {
+    const first = problems[0];
+
+    return new AppError({
+      code: 'EXAM_POOL_INSUFFICIENT',
+      status: 409,
+      message:
+        first?.message ??
+        'Bank soal belum mencukupi untuk memulai ujian. Hubungi admin untuk melengkapi bank soal.',
+      details: {
+        subtestCode: first?.subtestCode ?? null,
+        required: first?.required ?? null,
+        available: first?.available ?? null,
+        missing: first?.missing ?? null,
+        problems,
+      },
+    });
+  }
+
   async startSession(userId: string): Promise<ActiveSessionResponse> {
     const eligibility = await this.getEligibility(userId);
     if (eligibility.activeSessionId) {
@@ -190,12 +221,17 @@ export class ExamSessionService {
         details: { nextAvailableAt: eligibility.nextAvailableAt },
       });
     }
+    // F4-09: bila satu-satunya penghalang adalah bank soal, jawab dengan
+    // rincian subtes & kekurangannya — bukan `EXAM_SESSION_LOCKED` generik.
+    if (eligibility.reasons.length === 1 && eligibility.reasons[0] === 'EXAM_POOL_INSUFFICIENT') {
+      throw this.poolInsufficientError(eligibility.poolProblems);
+    }
     if (!eligibility.canStart) {
       throw new AppError({
         code: 'EXAM_SESSION_LOCKED',
         status: 409,
         message: 'Anda belum dapat memulai sesi ujian',
-        details: { reasons: eligibility.reasons },
+        details: { reasons: eligibility.reasons, poolProblems: eligibility.poolProblems },
       });
     }
 
@@ -209,12 +245,7 @@ export class ExamSessionService {
       for (const subtest of stage.subtests) {
         const pool = await this.questionPool.validate(subtest.code, subtest.questionCount);
         if (!pool.ready) {
-          throw new AppError({
-            code: 'EXAM_POOL_INSUFFICIENT',
-            status: 409,
-            message: 'Bank soal belum mencukupi untuk memulai ujian',
-            details: { subtestCode: subtest.code, ...pool },
-          });
+          throw this.poolInsufficientError(pool.problems ?? []);
         }
       }
     }
