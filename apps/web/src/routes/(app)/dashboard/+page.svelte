@@ -7,7 +7,22 @@
   import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
   import { apiRequest, apiErrorMessage } from '$lib/api/client';
   import { session } from '$lib/stores/session.svelte';
-  import type { SubscriptionSummary } from '@webcat/contracts';
+  import { formatDate } from '$lib/format';
+  import {
+    buildDashboardSummary,
+    buildTrendPoints,
+    formatExamDate,
+    formatScore,
+    sessionBadge,
+    type SessionRow,
+  } from '$lib/dashboard/summary';
+  import type { ExamHistoryItem, ExamStatsView, SubscriptionSummary } from '@webcat/contracts';
+
+  interface HistoryPage {
+    items: ExamHistoryItem[];
+    nextCursor: string | null;
+    hasMore: boolean;
+  }
 
   const SUB_CACHE_KEY = 'webcat_sub_cache';
 
@@ -23,7 +38,12 @@
 
   const cachedSub = readCachedSub();
   let subscription = $state<SubscriptionSummary | null>(cachedSub);
+  let stats = $state<ExamStatsView | null>(null);
+  let history = $state<ExamHistoryItem[]>([]);
   let loading = $state(!cachedSub);
+  // Data ujian selalu diambil ulang; pisahkan agar kartu langganan yang sudah
+  // ter-cache tidak menampilkan "0 sesi" sebelum respons API tiba.
+  let examsLoading = $state(true);
   let error = $state<string | null>(null);
 
   $effect(() => {
@@ -40,20 +60,28 @@
       if (untrack(() => !subscription)) loading = true;
       error = null;
       try {
-        const result = await apiRequest<SubscriptionSummary | null>('/subscriptions/me', {
-          token,
-          cacheTtlMs: 20000,
-        });
-        if (!cancelled) {
-          subscription = result;
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem(SUB_CACHE_KEY, JSON.stringify(result));
-          }
+        const [sub, statsResult, historyPage] = await Promise.all([
+          apiRequest<SubscriptionSummary | null>('/subscriptions/me', {
+            token,
+            cacheTtlMs: 0,
+          }),
+          apiRequest<ExamStatsView>('/exams/stats', { token, cacheTtlMs: 0 }),
+          apiRequest<HistoryPage>('/exams/history?limit=5', { token, cacheTtlMs: 0 }),
+        ]);
+        if (cancelled) return;
+        subscription = sub;
+        stats = statsResult;
+        history = historyPage.items;
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(SUB_CACHE_KEY, JSON.stringify(sub));
         }
       } catch (cause) {
         if (!cancelled && untrack(() => !subscription)) error = apiErrorMessage(cause);
       } finally {
-        if (!cancelled) loading = false;
+        if (!cancelled) {
+          loading = false;
+          examsLoading = false;
+        }
       }
     })();
 
@@ -62,104 +90,26 @@
     };
   });
 
-  const isActive = $derived(subscription?.status === 'ACTIVE');
-
-  // Progress Bar items (mirroring "Products Sold" from referensdashboard.png)
-  const subtestProgress = [
-    { name: 'Psikologi - Kecerdasan', current: 76, total: 90, color: '#f6c23e' },
-    { name: 'Psikologi - Kepribadian', current: 52, total: 60, color: '#1cc88a' },
-    { name: 'TPA - Potensi Akademik', current: 85, total: 100, color: '#e74a3b' },
-    { name: 'TPK - Pengetahuan Kepolisian', current: 78, total: 100, color: '#36b9cc' },
-    { name: 'Kecermatan & Pass Hand', current: 10, total: 10, color: '#4e73df' },
-  ];
-
-  // Invoice / Exam Sessions Table
-  const recentSessions = [
-    {
-      id: 'RA-5821',
-      title: 'Tryout Akbar Bintara PTU #1',
-      module: 'Psikologi + TPA + TPK',
-      score: '78.50',
-      status: 'Lulus (MS)',
-      statusTone: 'success' as const,
-      date: '04 Nov 2026',
-      duration: '180 Menit',
-      correct: '157 dari 200',
-    },
-    {
-      id: 'RA-5820',
-      title: 'Simulasi Mandiri Akpol #4',
-      module: 'Tes Potensi Akademik',
-      score: '84.00',
-      status: 'Lulus (MS)',
-      statusTone: 'success' as const,
-      date: '02 Nov 2026',
-      duration: '90 Menit',
-      correct: '84 dari 100',
-    },
-    {
-      id: 'RA-5819',
-      title: 'Latihan Kilat Kecermatan',
-      module: 'Kecermatan Kolom 1-10',
-      score: '71.20',
-      status: 'Lulus (MS)',
-      statusTone: 'success' as const,
-      date: '31 Okt 2026',
-      duration: '10 Menit',
-      correct: '450 dari 500',
-    },
-    {
-      id: 'RA-5818',
-      title: 'Simulasi Pengetahuan Kepolisian',
-      module: 'UU No. 2/2002 & Etika',
-      score: '58.00',
-      status: 'Gugur (TMS)',
-      statusTone: 'danger' as const,
-      date: '28 Okt 2026',
-      duration: '60 Menit',
-      correct: '58 dari 100',
-    },
-    {
-      id: 'RA-5817',
-      title: 'Diagnostic Test Awal',
-      module: 'Paket Lengkap 3 Modul',
-      score: '62.40',
-      status: 'Selesai',
-      statusTone: 'info' as const,
-      date: '25 Okt 2026',
-      duration: '180 Menit',
-      correct: '125 dari 200',
-    },
-  ];
-
-  // Notices
-  const notices = [
-    {
-      sender: 'Panitia Seleksi Polri',
-      badge: 'Resmi',
-      text: 'Ambang batas nilai kelulusan minimal Tes Psikologi ditetapkan 61.00.',
-      time: '12m ago',
-    },
-    {
-      sender: 'Sistem Keamanan Server',
-      badge: 'Sesi',
-      text: 'Sesi login tunggal aktif pada peramban ini. Jangan membagikan token akses.',
-      time: '1h ago',
-    },
-    {
-      sender: 'Pengawas Simulasi CAT',
-      badge: 'Info',
-      text: 'Timer per subtes bersifat otomatis dan langsung mengunci ketika waktu berakhir.',
-      time: '3h ago',
-    },
-  ];
+  const isActive = $derived(subscription?.status === 'ACTIVE' && (subscription?.remainingDays ?? 0) > 0);
+  const summary = $derived(buildDashboardSummary(stats, history));
+  const trendPoints = $derived(buildTrendPoints(summary.trend));
+  const trendPolyline = $derived(trendPoints.map((point) => `${point.x},${point.y}`).join(' '));
+  const trendArea = $derived(
+    trendPoints.length === 0
+      ? ''
+      : `${trendPoints[0]?.x ?? 0},250 ${trendPolyline} ${trendPoints.at(-1)?.x ?? 0},250`,
+  );
+  // Garis ambang lulus mengikuti `exam_settings` dari API, bukan angka hardcode.
+  const thresholdY = $derived(
+    250 - (Math.min(100, Math.max(0, summary.totalPassingScore)) / 100) * 210,
+  );
 
   /* ------------------------------------------------------------------ DETAIL MODAL */
   let detailModalOpen = $state(false);
-  let selectedSession = $state<(typeof recentSessions)[number] | null>(null);
+  let selectedSession = $state<SessionRow | null>(null);
 
-  function openDetailModal(sess: (typeof recentSessions)[number]) {
-    selectedSession = sess;
+  function openDetailModal(row: SessionRow) {
+    selectedSession = row;
     detailModalOpen = true;
   }
 </script>
@@ -196,13 +146,17 @@
         <div class="stat-value">
           {#if loading}
             <Spinner size={16} />
+          {:else if isActive}
+            Aktif
+          {:else if subscription}
+            Berakhir
           {:else}
-            {isActive ? 'Aktif' : 'Kedaluwarsa'}
+            Belum berlangganan
           {/if}
         </div>
         <div class="stat-trend stat-trend--up">
-          <span>↑ 3.48%</span>
-          <span class="trend-text">Terverifikasi sistem</span>
+          <span>{subscription?.planName ?? 'Paket trial / manual'}</span>
+          <span class="trend-text">dari server</span>
         </div>
       </div>
       <div class="stat-card__right stat-icon--blue">
@@ -222,8 +176,8 @@
           {/if}
         </div>
         <div class="stat-trend stat-trend--up">
-          <span>↑ 12%</span>
-          <span class="trend-text">Akses penuh modul</span>
+          <span>{subscription ? formatDate(subscription.endsAt) : '—'}</span>
+          <span class="trend-text">berakhir</span>
         </div>
       </div>
       <div class="stat-card__right stat-icon--green">
@@ -231,14 +185,20 @@
       </div>
     </div>
 
-    <!-- Card 3: TAHAPAN SIMULASI -->
+    <!-- Card 3: TOTAL SESI -->
     <div class="stat-card">
       <div class="stat-card__left">
-        <span class="stat-label">TAHAPAN SIMULASI</span>
-        <div class="stat-value">3 Modul (6 Subtes)</div>
+        <span class="stat-label">TOTAL SESI</span>
+        <div class="stat-value">
+          {#if examsLoading}
+            <Spinner size={16} />
+          {:else}
+            {summary.totalSessions}
+          {/if}
+        </div>
         <div class="stat-trend stat-trend--up">
-          <span>↑ 20.4%</span>
-          <span class="trend-text">Standar resmi Mabes</span>
+          <span>{summary.completedSessions} selesai · {summary.eliminatedSessions} gugur</span>
+          <span class="trend-text">dari /exams/stats</span>
         </div>
       </div>
       <div class="stat-card__right stat-icon--cyan">
@@ -246,14 +206,20 @@
       </div>
     </div>
 
-    <!-- Card 4: KEAMANAN SESI -->
+    <!-- Card 4: SKOR TERBAIK -->
     <div class="stat-card">
       <div class="stat-card__left">
-        <span class="stat-label">KEAMANAN SESI</span>
-        <div class="stat-value">1 Perangkat</div>
+        <span class="stat-label">SKOR TERBAIK</span>
+        <div class="stat-value">
+          {#if examsLoading}
+            <Spinner size={16} />
+          {:else}
+            {formatScore(summary.bestScore)}
+          {/if}
+        </div>
         <div class="stat-trend stat-trend--down">
-          <span>Aktif</span>
-          <span class="trend-text">Proteksi anti-curang</span>
+          <span>rata-rata {formatScore(summary.averageScore)}</span>
+          <span class="trend-text">skala 0–100</span>
         </div>
       </div>
       <div class="stat-card__right stat-icon--orange">
@@ -268,7 +234,7 @@
       <span class="banner-tag">SIMULASI MANDIRI &amp; TRYOUT AKBAR</span>
       <h2 class="banner-title">Uji Kesiapan Seleksi Anda dengan Sistem CAT Asli</h2>
       <p class="banner-desc">
-        Dilengkapi pengatur waktu terpisah per subtes, bobot penilaian resmi, serta pendeteksi ambang batas kelulusan Memenuhi Syarat (MS) minimal 61.00.
+        Dilengkapi pengatur waktu terpisah per subtes, bobot penilaian resmi, serta pendeteksi ambang batas kelulusan Memenuhi Syarat (MS) sesuai pengaturan ujian.
       </p>
       <div class="banner-buttons">
         <button class="btn-primary-launch" type="button" onclick={() => goto('/simulation')}>
@@ -285,180 +251,242 @@
 
   <!-- MAIN SECTION ROW: 70% Monthly Recap Report (Chart) & 30% Products Sold (Progress Bars) -->
   <div class="content-row" id="latihan">
-    <!-- LEFT CARD: Monthly Recap Report (Area Chart with SVG gradient) -->
+    <!-- LEFT CARD: Skor perkembangan dari /exams/stats -->
     <div class="card-box card-box--chart">
       <div class="card-box__header">
-        <h2 class="card-box__title">Monthly Recap Report (Skor Perkembangan)</h2>
-        <span class="header-badge">Target MS: 61.00</span>
+        <h2 class="card-box__title">Perkembangan Skor</h2>
+        {#if stats}
+          <span class="header-badge">Ambang lulus {formatScore(summary.totalPassingScore)}</span>
+        {/if}
       </div>
 
       <div class="chart-container">
-        <svg viewBox="0 0 650 280" class="chart-svg" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#4e73df" stop-opacity="0.45" />
-              <stop offset="100%" stop-color="#4e73df" stop-opacity="0.02" />
-            </linearGradient>
-          </defs>
+        {#if examsLoading}
+          <div class="chart-empty"><Spinner size={22} label="Memuat grafik" /></div>
+        {:else if trendPoints.length === 0}
+          <div class="chart-empty">Belum ada skor. Selesaikan satu sesi untuk melihat tren.</div>
+        {:else}
+          <svg viewBox="0 0 650 280" class="chart-svg" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4e73df" stop-opacity="0.45" />
+                <stop offset="100%" stop-color="#4e73df" stop-opacity="0.02" />
+              </linearGradient>
+            </defs>
 
-          <!-- Horizontal Grid Lines -->
-          <line x1="50" y1="40" x2="620" y2="40" stroke="#eaecf4" stroke-dasharray="3,3" />
-          <line x1="50" y1="95" x2="620" y2="95" stroke="#eaecf4" stroke-dasharray="3,3" />
-          <line x1="50" y1="150" x2="620" y2="150" stroke="#eaecf4" stroke-dasharray="3,3" />
-          <line x1="50" y1="205" x2="620" y2="205" stroke="#eaecf4" stroke-dasharray="3,3" />
-          <line x1="50" y1="250" x2="620" y2="250" stroke="#eaecf4" />
+            <!-- Horizontal Grid Lines -->
+            <line x1="50" y1="40" x2="620" y2="40" stroke="#eaecf4" stroke-dasharray="3,3" />
+            <line x1="50" y1="95" x2="620" y2="95" stroke="#eaecf4" stroke-dasharray="3,3" />
+            <line x1="50" y1="150" x2="620" y2="150" stroke="#eaecf4" stroke-dasharray="3,3" />
+            <line x1="50" y1="205" x2="620" y2="205" stroke="#eaecf4" stroke-dasharray="3,3" />
+            <line x1="50" y1="250" x2="620" y2="250" stroke="#eaecf4" />
 
-          <!-- Y-Axis Labels -->
-          <text x="40" y="45" class="axis-label" text-anchor="end">100</text>
-          <text x="40" y="100" class="axis-label" text-anchor="end">75</text>
-          <text x="40" y="155" class="axis-label" text-anchor="end">50</text>
-          <text x="40" y="210" class="axis-label" text-anchor="end">25</text>
-          <text x="40" y="254" class="axis-label" text-anchor="end">0</text>
+            <!-- Y-Axis Labels -->
+            <text x="40" y="45" class="axis-label" text-anchor="end">100</text>
+            <text x="40" y="100" class="axis-label" text-anchor="end">75</text>
+            <text x="40" y="155" class="axis-label" text-anchor="end">50</text>
+            <text x="40" y="210" class="axis-label" text-anchor="end">25</text>
+            <text x="40" y="254" class="axis-label" text-anchor="end">0</text>
 
-          <!-- Passing Grade Threshold Line at 61 (Y: 125) -->
-          <line x1="50" y1="125" x2="620" y2="125" stroke="#e74a3b" stroke-dasharray="4,4" stroke-width="1.5" />
-          <text x="615" y="120" class="threshold-label" text-anchor="end">Batas Lulus MS: 61.00</text>
+            <!-- Garis ambang lulus dari `exam_settings` -->
+            <line
+              x1="50"
+              y1={thresholdY}
+              x2="620"
+              y2={thresholdY}
+              stroke="#e74a3b"
+              stroke-dasharray="4,4"
+              stroke-width="1.5"
+            />
+            <text x="615" y={thresholdY - 5} class="threshold-label" text-anchor="end">
+              Batas lulus: {formatScore(summary.totalPassingScore)}
+            </text>
 
-          <!-- Chart Area Path -->
-          <path
-            d="M 60 240
-               C 100 210, 110 180, 140 185
-               C 170 190, 190 220, 220 170
-               C 250 120, 280 160, 310 135
-               C 340 110, 360 170, 400 150
-               C 440 130, 460 70, 500 85
-               C 540 100, 550 120, 580 50
-               L 580 250 L 60 250 Z"
-            fill="url(#areaGrad)"
-          />
+            <!-- Area & garis dari data nyata -->
+            <polygon points={trendArea} fill="url(#areaGrad)" />
+            <polyline
+              points={trendPolyline}
+              fill="none"
+              stroke="#4e73df"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
 
-          <!-- Chart Line -->
-          <path
-            d="M 60 240
-               C 100 210, 110 180, 140 185
-               C 170 190, 190 220, 220 170
-               C 250 120, 280 160, 310 135
-               C 340 110, 360 170, 400 150
-               C 440 130, 460 70, 500 85
-               C 540 100, 550 120, 580 50"
-            fill="none"
-            stroke="#4e73df"
-            stroke-width="3.5"
-            stroke-linecap="round"
-          />
+            <!-- Titik + skor -->
+            {#each trendPoints as point (point.examDate + point.score)}
+              <circle cx={point.x} cy={point.y} r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
+              <text x={point.x} y={point.y - 12} class="point-label" text-anchor="middle">
+                {formatScore(point.score)}
+              </text>
+            {/each}
 
-          <!-- Dot Markers -->
-          <circle cx="60" cy="240" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-          <circle cx="140" cy="185" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-          <circle cx="220" cy="170" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-          <circle cx="310" cy="135" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-          <circle cx="400" cy="150" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-          <circle cx="500" cy="85" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-          <circle cx="580" cy="50" r="5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
-
-          <!-- X-Axis Labels -->
-          <text x="60" y="270" class="axis-label" text-anchor="middle">Jan</text>
-          <text x="170" y="270" class="axis-label" text-anchor="middle">Mar</text>
-          <text x="280" y="270" class="axis-label" text-anchor="middle">Mei</text>
-          <text x="400" y="270" class="axis-label" text-anchor="middle">Jul</text>
-          <text x="500" y="270" class="axis-label" text-anchor="middle">Sep</text>
-          <text x="580" y="270" class="axis-label" text-anchor="middle">Nov</text>
-        </svg>
+            <!-- X-Axis Labels (maks 6 tanggal) -->
+            {#each trendPoints.filter((_, index) => trendPoints.length <= 6 || index % Math.ceil(trendPoints.length / 6) === 0) as point (point.examDate + 'x')}
+              <text x={point.x} y="270" class="axis-label" text-anchor="middle">
+                {formatExamDate(point.examDate).split(' ').slice(0, 2).join(' ')}
+              </text>
+            {/each}
+          </svg>
+        {/if}
       </div>
     </div>
 
-    <!-- RIGHT CARD: Products Sold / Cakupan Modul Soal -->
+    <!-- RIGHT CARD: Cakupan subtes dari /exams/stats -->
     <div class="card-box card-box--progress">
       <div class="card-box__header">
         <h2 class="card-box__title">Cakupan Modul</h2>
-        <span class="btn-filter-pill">Standar Mabes</span>
+        <span class="btn-filter-pill">Rata-rata per subtes</span>
       </div>
 
       <div class="progress-list">
-        {#each subtestProgress as item (item.name)}
-          <div class="progress-item">
-            <div class="progress-item__header">
-              <span class="progress-item__name">{item.name}</span>
-              <span class="progress-item__count">{item.current} of {item.total} Soal</span>
+        {#if examsLoading}
+          <div class="chart-empty"><Spinner size={20} label="Memuat subtes" /></div>
+        {:else if summary.perSubtest.length === 0}
+          <p class="empty-note">Belum ada jawaban yang dinilai.</p>
+        {:else}
+          {#each summary.perSubtest as item (item.code)}
+            <div class="progress-item">
+              <div class="progress-item__header">
+                <span class="progress-item__name">{item.label}</span>
+                <span class="progress-item__count">
+                  {item.averagePercentage === null ? '—' : `${item.averagePercentage.toFixed(2)}%`}
+                  · {item.attempts}×
+                </span>
+              </div>
+              <div class="progress-track">
+                <div
+                  class="progress-fill"
+                  style="width: {Math.min(100, Math.max(0, item.averagePercentage ?? 0))}%;"
+                  class:progress-fill--weak={summary.weakestSubtest?.code === item.code}
+                ></div>
+              </div>
             </div>
-            <div class="progress-track">
-              <div
-                class="progress-fill"
-                style="width: {(item.current / item.total) * 100}%; background-color: {item.color};"
-              ></div>
-            </div>
-          </div>
-        {/each}
+          {/each}
+        {/if}
       </div>
 
       <div class="card-box__footer">
-        <button class="link-view-more" type="button" onclick={() => goto('/simulation')}>Uji Kemampuan Sekarang &gt;</button>
+        {#if summary.weakestSubtest}
+          <span class="weakest">
+            Terlemah: {summary.weakestSubtest.label}
+            ({summary.weakestSubtest.averagePercentage?.toFixed(2)}%)
+          </span>
+        {:else}
+          <button class="link-view-more" type="button" onclick={() => goto('/exam')}>
+            Uji Kemampuan Sekarang &gt;
+          </button>
+        {/if}
       </div>
     </div>
   </div>
 
-  <!-- BOTTOM SECTION ROW: Invoice Table & Notices -->
+  <!-- BOTTOM SECTION ROW: Riwayat sesi & ringkasan -->
   <div class="content-row" id="riwayat">
-    <!-- LEFT: Invoice / Riwayat Sesi Ujian Table -->
+    <!-- LEFT: Riwayat Sesi Ujian dari /exams/history -->
     <div class="card-box card-box--table">
       <div class="card-box__header">
-        <h2 class="card-box__title">Riwayat Sesi Ujian (Tryout History)</h2>
-        <button class="btn-action-red" type="button" onclick={() => goto('/simulation')}>Mulai Ujian Baru &gt;</button>
+        <h2 class="card-box__title">Riwayat Sesi Ujian</h2>
+        <button class="btn-action-red" type="button" onclick={() => goto('/exam')}>
+          Mulai Ujian Baru &gt;
+        </button>
       </div>
 
-      <div class="table-responsive">
-        <table class="ruang-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Nama Simulasi</th>
-              <th>Cakupan Modul</th>
-              <th>Nilai</th>
-              <th>Status</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each recentSessions as sess (sess.id)}
+      {#if examsLoading}
+        <div class="chart-empty"><Spinner size={20} label="Memuat riwayat" /></div>
+      {:else if summary.sessions.length === 0}
+        <div class="chart-empty">
+          <p>Belum ada sesi ujian.</p>
+          <button class="btn-table-action" type="button" onclick={() => goto('/exam')}>
+            Mulai sesi pertama
+          </button>
+        </div>
+      {:else}
+        <div class="table-responsive">
+          <table class="ruang-table">
+            <thead>
               <tr>
-                <td class="col-id">#{sess.id}</td>
-                <td class="col-name">{sess.title}</td>
-                <td class="col-meta">{sess.module}</td>
-                <td class="col-score"><strong>{sess.score}</strong></td>
-                <td>
-                  <Badge tone={sess.statusTone}>{sess.status}</Badge>
-                </td>
-                <td>
-                  <button class="btn-table-action" type="button" onclick={() => openDetailModal(sess)}>
-                    Detail
-                  </button>
-                </td>
+                <th>Tanggal</th>
+                <th>Nilai</th>
+                <th>Status</th>
+                <th>Aksi</th>
               </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {#each summary.sessions as sess (sess.sessionId)}
+                <tr>
+                  <td class="col-name">{formatExamDate(sess.examDate)}</td>
+                  <td class="col-score"><strong>{formatScore(sess.score)}</strong></td>
+                  <td>
+                    <Badge tone={sessionBadge(sess.status, sess.passed).tone}>
+                      {sessionBadge(sess.status, sess.passed).label}
+                    </Badge>
+                  </td>
+                  <td>
+                    <button class="btn-table-action" type="button" onclick={() => openDetailModal(sess)}>
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-box__footer">
+          <button class="link-view-more" type="button" onclick={() => goto('/history')}>
+            Lihat semua riwayat &gt;
+          </button>
+        </div>
+      {/if}
     </div>
 
-    <!-- RIGHT: Message From Customer / Petunjuk & Pengumuman -->
+    <!-- RIGHT: ringkasan akun -->
     <div class="card-box card-box--notices">
       <div class="notice-header">
-        <h2 class="notice-title">Pengumuman &amp; Petunjuk</h2>
+        <h2 class="notice-title">Ringkasan Akun</h2>
       </div>
 
       <div class="notice-list">
-        {#each notices as n (n.sender)}
-          <div class="notice-item">
-            <div class="notice-avatar">P</div>
-            <div class="notice-content">
-              <div class="notice-top">
-                <span class="notice-sender">{n.sender}</span>
-                <span class="notice-time">{n.time}</span>
-              </div>
-              <p class="notice-text">{n.text}</p>
+        <div class="notice-item">
+          <div class="notice-avatar">{(session.user?.fullName ?? '?').slice(0, 1).toUpperCase()}</div>
+          <div class="notice-content">
+            <div class="notice-top">
+              <span class="notice-sender">{session.user?.fullName ?? 'Peserta'}</span>
             </div>
+            <p class="notice-text">{session.user?.email ?? '—'}</p>
           </div>
-        {/each}
+        </div>
+        <div class="notice-item">
+          <div class="notice-avatar">S</div>
+          <div class="notice-content">
+            <div class="notice-top">
+              <span class="notice-sender">Tingkat kelulusan</span>
+            </div>
+            <p class="notice-text">
+              {summary.passRate.toFixed(2)}% dari {summary.completedSessions} sesi selesai.
+            </p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-avatar">T</div>
+          <div class="notice-content">
+            <div class="notice-top">
+              <span class="notice-sender">Skor terakhir</span>
+            </div>
+            <p class="notice-text">{formatScore(summary.lastScore)} (skala 0–100).</p>
+          </div>
+        </div>
+        <div class="notice-item">
+          <div class="notice-avatar">A</div>
+          <div class="notice-content">
+            <div class="notice-top">
+              <span class="notice-sender">Aturan ujian</span>
+            </div>
+            <p class="notice-text">
+              Timer per subtes berjalan otomatis; subtes terkunci saat waktu habis.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -481,8 +509,8 @@
     <div class="modal-dialog modal-dialog--sm" role="document">
       <div class="modal-header">
         <div class="exam-title-wrap">
-          <div class="exam-badge-cat">SCORECARD RIWAYAT #{selectedSession.id}</div>
-          <h2 class="exam-title">{selectedSession.title}</h2>
+          <div class="exam-badge-cat">SESI #{selectedSession.sessionId.slice(0, 8)}</div>
+          <h2 class="exam-title">{formatExamDate(selectedSession.examDate)}</h2>
         </div>
         <button class="btn-close-modal" type="button" onclick={() => (detailModalOpen = false)} aria-label="Tutup">
           <AdminIcon name="close" size={20} />
@@ -492,39 +520,39 @@
       <div class="modal-body">
         <div class="detail-summary-card">
           <div class="detail-score-box">
-            <span class="detail-score-val">{selectedSession.score}</span>
-            <span class="detail-score-lbl">Skor Kumulatif</span>
+            <span class="detail-score-val">{formatScore(selectedSession.score)}</span>
+            <span class="detail-score-lbl">Skor Total</span>
           </div>
           <div class="detail-meta-list">
             <div class="meta-row">
-              <span class="meta-key">Status Kelulusan:</span>
-              <Badge tone={selectedSession.statusTone}>{selectedSession.status}</Badge>
+              <span class="meta-key">Status:</span>
+              <Badge tone={sessionBadge(selectedSession.status, selectedSession.passed).tone}>
+                {sessionBadge(selectedSession.status, selectedSession.passed).label}
+              </Badge>
             </div>
             <div class="meta-row">
-              <span class="meta-key">Tanggal Pengerjaan:</span>
-              <span class="meta-val">{selectedSession.date}</span>
+              <span class="meta-key">Tanggal:</span>
+              <span class="meta-val">{formatExamDate(selectedSession.examDate)}</span>
             </div>
-            <div class="meta-row">
-              <span class="meta-key">Durasi Ujian:</span>
-              <span class="meta-val">{selectedSession.duration}</span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-key">Jawaban Tepat:</span>
-              <span class="meta-val">{selectedSession.correct}</span>
-            </div>
+            {#if selectedSession.eliminatedSubtestCode}
+              <div class="meta-row">
+                <span class="meta-key">Gugur di subtes:</span>
+                <span class="meta-val">{selectedSession.eliminatedSubtestCode}</span>
+              </div>
+            {/if}
           </div>
         </div>
 
-        <div class="detail-recommendation">
-          <div class="rec-title">Rekomendasi Pelatih:</div>
-          <p class="rec-desc">
-            Pertahankan akurasi pada subtes Kecerdasan dan TPA. Tingkatkan kecepatan kerja pada subtes Kecermatan kolom angka hilang untuk mengamankan perangkingan kuota daerah.
-          </p>
-        </div>
-
         <div class="detail-actions">
-          <button class="btn-finish-exam" type="button" onclick={() => { detailModalOpen = false; goto('/simulation'); }}>
-            Latihan Simulasi Serupa
+          <button
+            class="btn-finish-exam"
+            type="button"
+            onclick={() => {
+              detailModalOpen = false;
+              if (selectedSession) goto(`/results/${selectedSession.sessionId}`);
+            }}
+          >
+            Lihat hasil lengkap
           </button>
           <button class="btn-nav-prev" type="button" onclick={() => (detailModalOpen = false)}>
             Tutup
@@ -796,6 +824,39 @@
     font-weight: 600;
   }
 
+  .point-label {
+    font-size: 10.5px;
+    fill: #4e73df;
+    font-weight: 800;
+  }
+
+  .chart-empty {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
+    color: #858796;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 1.5rem;
+  }
+
+  .empty-note {
+    margin: 0;
+    color: #858796;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .weakest {
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #e74a3b;
+  }
+
   .threshold-label {
     font-size: 10px;
     fill: #e74a3b;
@@ -843,6 +904,11 @@
   .progress-fill {
     height: 100%;
     border-radius: 999px;
+    background: #4e73df;
+  }
+
+  .progress-fill--weak {
+    background: #e74a3b;
   }
 
   .card-box__footer {
@@ -910,19 +976,9 @@
     color: #5a5c69;
   }
 
-  .col-id {
-    font-weight: 750;
-    color: #4e73df;
-  }
-
   .col-name {
     font-weight: 700;
     color: #2e384d;
-  }
-
-  .col-meta {
-    font-size: 12px;
-    color: #858796;
   }
 
   .btn-table-action {
@@ -995,11 +1051,6 @@
   .notice-sender {
     font-weight: 750;
     color: #2e384d;
-  }
-
-  .notice-time {
-    color: #b7b9cc;
-    font-size: 11px;
   }
 
   .notice-text {
@@ -1166,28 +1217,6 @@
 
   .meta-key { color: #718096; }
   .meta-val { font-weight: 750; color: #2e384d; }
-
-  .detail-recommendation {
-    background: #ebf8ff;
-    border-left: 4px solid #3182ce;
-    padding: 0.85rem 1rem;
-    border-radius: 0 6px 6px 0;
-    margin-bottom: 1.5rem;
-  }
-
-  .rec-title {
-    font-size: 12px;
-    font-weight: 800;
-    color: #2b6cb0;
-    margin-bottom: 0.25rem;
-  }
-
-  .rec-desc {
-    margin: 0;
-    font-size: 12.5px;
-    color: #2d3748;
-    line-height: 1.5;
-  }
 
   .detail-actions {
     display: flex;

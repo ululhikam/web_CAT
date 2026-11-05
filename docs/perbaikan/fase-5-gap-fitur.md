@@ -339,21 +339,58 @@ nonce yang disuntikkan lewat `app.html`.
 
 ---
 
-### F5-08 — Dashboard peserta
+### F5-08 — Dashboard peserta ✅
 
-Ganti data mock dengan API nyata:
+Dashboard sebelumnya menampilkan angka contoh yang ditulis langsung di template
+(`subtestProgress`, `recentSessions`, `notices`). Sekarang seluruh isinya berasal
+dari API peserta.
 
-| Kartu | Sumber |
+| Bagian | Sumber data |
 | --- | --- |
-| Sesi terakhir | `GET /exams/history` |
-| Skor rata-rata | agregasi `history` |
-| Subtes terlemah | agregasi skor per subtes |
-| Langganan | `GET /me/subscription` |
+| Status langganan + sisa masa aktif | `GET /subscriptions/me` (`status`, `planName`, `endsAt`, `remainingDays`) |
+| Total sesi (selesai/gugur) | `GET /exams/stats` (`totalSessions`, `completedSessions`, `eliminatedSessions`) |
+| Skor terbaik + rata-rata | `GET /exams/stats` (`bestScore`, `averageScore`) |
+| Grafik tren + garis ambang lulus | `GET /exams/stats` (`trend`, `totalPassingScore`) |
+| Cakupan per subtes + subtes terlemah | `GET /exams/stats` (`perSubtest`) |
+| Riwayat 5 sesi terakhir + modal detail | `GET /exams/history?limit=5` |
+
+**Perubahan kontrak**
+
+`ExamStatsView` mendapat field `totalPassingScore` (`exam_settings.total_passing_score`,
+0–100). Sebelumnya template menulis ambang 60/61 secara hardcode, sehingga nilai
+yang terlihat bisa berbeda dari aturan ujian yang benar-benar berlaku.
+`ResultsService` menyuntikkan `ExamConfigService` dan mengembalikan pengaturan
+efektif dari DB.
+
+**Keputusan desain**
+
+1. **Satu endpoint agregat untuk semua kartu ujian.** `/exams/stats` sudah
+   menghitung rata-rata, terbaik, tren, dan per-subtes di server; dashboard tidak
+   mengagregasi ulang riwayat di klien (kecuali 5 baris tabel).
+2. **Panel "Pengumuman" palsu diganti "Ringkasan Akun".** Pengumuman contoh
+   berisi timestamp dan angka karangan; diganti ringkasan yang seluruh isinya
+   berasal dari sesi/statistik nyata (tingkat kelulusan, skor terakhir, aturan
+   ujian).
+3. **`cacheTtlMs: 0`.** Dashboard adalah halaman pertama setelah login; angka
+   lama (mis. sisa hari) lebih membingungkan daripada satu request tambahan.
+   Hanya kartu langganan yang memakai cache `sessionStorage` untuk render instan,
+   dan cache itu tidak dipakai untuk kartu ujian (`examsLoading` terpisah) agar
+   tidak ada "0 sesi" palsu sebelum respons tiba.
+4. **Helper murni di `lib/dashboard/summary.ts`.** Pengurutan subtes (paling
+   lemah = rata-rata non-null terendah), pemetaan tren ke koordinat SVG, label
+   status, dan format skor diuji tanpa merender Svelte.
 
 **Kriteria selesai**
 
-- Semua angka berasal dari API; tidak ada nilai hardcode.
-- Saat belum ada sesi, tampil empty state yang jelas.
+- Semua angka berasal dari API; tidak ada nilai hardcode. ✅ angka contoh
+  (`subtestProgress`, `recentSessions`, `notices`) dihapus; ambang lulus kini
+  `totalPassingScore` dari `exam_settings`. Bukti runtime: respons
+  `GET /exams/stats` memuat `totalPassingScore: 60`, dan halaman merender
+  "Ambang lulus 60" dari field itu.
+- Saat belum ada sesi, tampil empty state yang jelas. ✅ DB dev berisi 0
+  `exam_sessions`: dashboard menampilkan "TOTAL SESI 0", "SKOR TERBAIK —",
+  "Belum ada skor. Selesaikan satu sesi untuk melihat tren.", dan
+  "Belum ada jawaban yang dinilai." tanpa error.
 
 ---
 

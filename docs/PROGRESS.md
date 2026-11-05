@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **7/16**
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **8/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 7 | 16 | `████░░░░░░` 44% |
-| **Total** | | | **86** | **95** | **91%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 8 | 16 | `█████░░░░░` 50% |
+| **Total** | | | **87** | **95** | **92%** |
 
 ---
 
@@ -338,7 +338,7 @@ tidak ada lagi fallback senyap ke fixture.
 | F5-05 | Worker job queue terjadwal | ✅ | `vercel.json` sudah memanggil `process-jobs` tiap menit + guard `CRON_SECRET`; ditambahkan `JobQueueService.stats()`, `GET /internal/cron/backlog` (pending/running/failed/umur tertua + threshold + alert), dan `logger.warn` saat backlog melewati `JOB_BACKLOG_ALERT_THRESHOLD` (default 100). `process-jobs` kini mengembalikan `details.backlog`/`backlogAlert`. 8 test baru; bukti runtime 12/12 | 2026-11-05 |
 | F5-06 | Rate limit API | ✅ | Guard per-rute yang ada ditambah default global `RATE_LIMIT_GLOBAL_PER_MINUTE` (600/menit): per pengguna login, anonim per IP. 429 menyertakan `Retry-After`. Uji limit 5: request ke-6 → 429; login ke-11 → 429; 6 request `/auth/me` dengan IP berbeda tetap 429 (scope user); limit default 600 tidak memblokir trafik normal. 7 test baru | 2026-11-05 |
 | F5-07 | CSRF + CSP | ✅ | CSRF double-submit: cookie `webcat_csrf` (non-httpOnly) + header `x-csrf-token`, ditulis/dirotasi bersama `webcat_rt`, dihapus saat logout; `CsrfGuard` global setelah `JwtAuthGuard`, mengecualikan GET/HEAD/OPTIONS, Bearer, dan request tanpa cookie refresh; sesi lama hanya boleh `POST /auth/refresh`. CSP SvelteKit `mode: 'hash'` (aman untuk halaman ter-cache) + header keamanan API. Uji HTTP nyata 9/9; hash script inline cocok di `/`, `/login`, `/pricing`, `/dashboard`, `/exam/<id>`; 11 test `csrf.spec.ts` | 2026-11-05 |
-| F5-08 | Dashboard peserta dari API | ⬜ | — | — |
+| F5-08 | Dashboard peserta dari API | ✅ | Data contoh (`subtestProgress`, `recentSessions`, `notices`) dihapus; dashboard kini membaca `/subscriptions/me`, `/exams/stats`, dan `/exams/history?limit=5`. `ExamStatsView.totalPassingScore` ditambahkan (dari `exam_settings`) sehingga ambang lulus tidak lagi hardcode 60/61. Helper murni `lib/dashboard/summary.ts` + 15 test. Bukti runtime browser (Chrome/DevTools): 4 kartu, langganan "Aktif 30 Hari", empty state grafik/subtes, tanpa error, dev **dan** build produksi | 2026-11-05 |
 | F5-09 | Dokumentasi API produksi | ⬜ | — | — |
 
 #### Verifikasi penutup F5-01 (5 Nov 2026)
@@ -462,6 +462,28 @@ tidak ada lagi fallback senyap ke fixture.
 > disuntik lewat `{@html}` tidak ikut di-hash SvelteKit sehingga pasti melanggar
 > `script-src 'self'`. Meta/OG tetap ada; lihat runbook F5-07.
 
+#### Verifikasi penutup F5-08 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run` (web penuh) | ✅ 9 berkas / **85** test (termasuk 15 test `summary.spec.ts`) |
+| `vitest run` (API penuh) | ✅ 38 berkas / **370** test (tidak ada regresi dari `ExamConfigService` baru) |
+| `tsc --noEmit` · `tsc -p tsconfig.build.json` (API) | ✅ exit 0 keduanya |
+| `svelte-check --tsconfig ./tsconfig.json` | ✅ **0 error, 0 warning** (6 selector CSS tak terpakai dihapus) |
+| `eslint src --max-warnings 0` (API & web) | ✅ exit 0 keduanya |
+| `vite build` (adapter-node) | ✅ sukses; build produksi diuji lewat proxy `:4174` |
+| `GET /exams/stats` (HTTP nyata, user demo) | ✅ 200 dengan `totalPassingScore: 60`, `totalSessions: 0`, `averageScore: null`, `trend: []`, `perSubtest: []` |
+| `GET /exams/history?limit=5` | ✅ 200 `[]` (DB dev 0 sesi) |
+| `GET /subscriptions/me` | ✅ 200, `planName: "Bulanan"`, `status: ACTIVE`, `remainingDays: 30` |
+| Render browser (Chrome headless + DevTools, dev `:5173`) | ✅ 4 kartu tampil; "Aktif · Bulanan", "30 Hari · 5 Desember 2026"; "Ambang lulus 60" dari API; "Belum ada skor…" & "Belum ada jawaban yang dinilai."; "Ringkasan Akun"; **tidak ada** teks `61.00`; tanpa galat |
+| Render browser (build produksi + proxy `/api` di `:4174`) | ✅ hasil sama (`DASHBOARD_BROWSER_OK`) |
+| CSP `/dashboard` (dev & produksi) | ✅ 1 script inline, hash cocok dengan `script-src` (tetap aman setelah rewrite) |
+
+> **Keputusan:** angka contoh di template dihapus, bukan di-*flag*. Satu-satunya
+> angka baru yang ditambahkan adalah `totalPassingScore` ke `ExamStatsView` —
+> supaya "ambang lulus" mengikuti `exam_settings` dan tidak pernah menyimpang
+> dari aturan ujian yang berlaku.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
@@ -488,6 +510,34 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5: F5-08 selesai
+
+**Dikerjakan:** F5-08
+**Hasil:** Fase 5 ✅ 8/16. Dashboard peserta tidak lagi menampilkan angka
+contoh: seluruh kartu, grafik tren, cakupan subtes, dan tabel riwayat dibaca
+dari API. Tracker: **87/95 = 92%**.
+
+**Bukti:**
+
+- `apps/web/src/lib/dashboard/summary.ts` (baru) memegang transformasi murni:
+  agregat kartu, urutan subtes (terlemah = rata-rata non-null terendah),
+  koordinat tren SVG, label status, format skor. 15 test.
+- Mock `subtestProgress`, `recentSessions`, dan `notices` dihapus dari
+  `dashboard/+page.svelte`; pengumuman karangan diganti panel "Ringkasan Akun".
+- `ExamStatsView.totalPassingScore` ditambahkan; `ResultsService` menyuntikkan
+  `ExamConfigService` sehingga ambang lulus berasal dari `exam_settings`
+  (DB dev: **60.00**), bukan hardcode 60/61.
+- `cacheTtlMs: 0` untuk ketiga request; `examsLoading` dipisah dari cache
+  langganan agar tidak muncul "0 sesi" sebelum data ujian tiba.
+- Uji HTTP nyata: stats/history/subscription 200 dengan bentuk sesuai kontrak.
+- Bukti render di browser sungguhan (Chrome + DevTools Protocol) pada dev
+  `:5173` **dan** build produksi: `DASHBOARD_BROWSER_OK` — 4 kartu, langganan
+  aktif 30 hari, ambang lulus dari API, empty state grafik & subtes, tanpa galat.
+- 6 selector CSS tak terpakai dihapus → `svelte-check` 0 error 0 warning.
+
+**Hambatan:** —
+**Berikutnya:** F5-09 — dokumentasi API produksi.
 
 ### 2026-11-05 — Fase 5: F5-07 selesai
 

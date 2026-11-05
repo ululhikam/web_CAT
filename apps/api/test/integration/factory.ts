@@ -93,7 +93,7 @@ export function createExamEngine(prismaClient: PrismaClient): ExamEngine {
     questionSource,
     projection,
     sessions,
-    results: new ResultsService(prisma, sessions, finalizer, audit),
+    results: new ResultsService(prisma, sessions, finalizer, audit, config),
     proctoring: new ProctoringService(prisma, finalizer, audit),
     scoring,
     audit,

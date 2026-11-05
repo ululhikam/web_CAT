@@ -21,6 +21,7 @@ import { AppError } from '../../core/http/app-error';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { computeEndsAt } from '../exams/exam-clock';
+import { ExamConfigService } from '../exams/exam-config.service';
 import { ExamFinalizerService } from '../exams/exam-finalizer.service';
 import { ExamSessionService } from '../exams/exam-session.service';
 import {
@@ -67,6 +68,7 @@ export class ResultsService {
     private readonly sessions: ExamSessionService,
     private readonly finalizer: ExamFinalizerService,
     private readonly audit: AuditService,
+    private readonly config: ExamConfigService,
   ) {}
 
   /* ------------------------------------------------------------------ peserta */
@@ -236,12 +238,15 @@ export class ResultsService {
   }
 
   async stats(userId: string): Promise<ExamStatsView> {
-    const rows = await this.prisma.examSession.findMany({
-      where: { userId, voidedAt: null },
-      orderBy: { createdAt: 'desc' },
-      take: 100,
-      include: { subtests: true },
-    });
+    const [rows, settings] = await Promise.all([
+      this.prisma.examSession.findMany({
+        where: { userId, voidedAt: null },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+        include: { subtests: true },
+      }),
+      this.config.getSettings(),
+    ]);
 
     const completed = rows.filter((row) => row.status === 'COMPLETED');
     const eliminated = rows.filter((row) => row.status === 'ELIMINATED');
@@ -269,6 +274,7 @@ export class ResultsService {
     }
 
     return {
+      totalPassingScore: settings.totalPassingScore,
       totalSessions: rows.length,
       completedSessions: completed.length,
       eliminatedSessions: eliminated.length,

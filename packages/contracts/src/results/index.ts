@@ -96,6 +96,8 @@ export const historyQuerySchema = z.object({
 export type HistoryQuery = z.infer<typeof historyQuerySchema>;
 
 export interface ExamStatsView {
+  /** Ambang batas kelulusan total dari `exam_settings` (0–100). */
+  totalPassingScore: number;
   totalSessions: number;
   completedSessions: number;
   eliminatedSessions: number;
