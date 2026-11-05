@@ -442,9 +442,11 @@
   /* LAYOUT SHELL */
   .app-layout {
     display: flex;
+    min-height: 100vh;
     min-height: 100dvh;
     background: #f8f9fc;
     font-family: inherit;
+    overflow-x: clip;
   }
 
   /* BACKDROP */
@@ -466,7 +468,7 @@
 
   /* SIDEBAR (RuangAdmin Pure White with Blue Brand Header) */
   .sidebar {
-    width: 250px;
+    width: clamp(15rem, 24vw, 17.5rem);
     background: #ffffff;
     border-right: 1px solid #eaecf4;
     display: flex;
@@ -482,6 +484,11 @@
       top: 0;
       bottom: 0;
       left: 0;
+      width: min(86vw, 20rem);
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: auto;
+      padding-bottom: env(safe-area-inset-bottom);
       transform: translateX(-100%);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
@@ -519,9 +526,9 @@
   }
 
   .sidebar__brand {
-    height: 70px;
+    min-height: clamp(3.25rem, 8.5dvh, 4.5rem);
     background: #4e73df;
-    padding: 0 1.25rem;
+    padding: 0 clamp(0.85rem, 2.5vw, 1.25rem);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -704,17 +711,18 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+    overflow-x: clip;
   }
 
   /* TOPBAR (RuangAdmin Indigo Banner) */
   .topbar {
-    height: 70px;
+    min-height: clamp(3.25rem, 8.5dvh, 4.5rem);
     background: #4e73df;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.5rem;
+    padding: 0 clamp(0.75rem, 2.5vw, 1.5rem);
     position: sticky;
     top: 0;
     z-index: 80;
@@ -853,14 +861,16 @@
   /* DROPDOWN PANELS */
   .dropdown-panel {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 0.6rem);
     right: 0;
+    max-height: calc(100dvh - 5.5rem);
     background: #ffffff;
     border: 1px solid #e3e6f0;
     border-radius: 8px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     z-index: 120;
     animation: fadeIn 0.15s ease;
+    overflow: hidden;
   }
 
   @keyframes fadeIn {
@@ -870,11 +880,11 @@
 
   .dropdown-panel--notif,
   .dropdown-panel--message {
-    width: 330px;
+    width: min(92vw, 330px);
   }
 
   .dropdown-panel--user {
-    width: 250px;
+    width: min(88vw, 250px);
   }
 
   .dropdown-header {
@@ -903,7 +913,7 @@
   }
 
   .dropdown-list {
-    max-height: 280px;
+    max-height: min(42dvh, 17.5rem);
     overflow-y: auto;
   }
 
@@ -1025,19 +1035,21 @@
   /* PAGE CONTENT */
   .page-content {
     flex: 1;
-    padding: 1.75rem;
+    padding: clamp(0.85rem, 3.5vw, 1.75rem);
     max-width: 1350px;
     width: 100%;
     margin: 0 auto;
+    overflow-x: clip;
   }
 
   @media (max-width: 640px) {
     .page-content {
-      padding: 1rem;
+      padding: clamp(0.65rem, 2.5vw, 1rem);
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
 
     .topbar {
-      padding: 0 0.75rem;
+      padding: 0 clamp(0.6rem, 2.5vw, 0.85rem);
     }
 
     .topbar__right {

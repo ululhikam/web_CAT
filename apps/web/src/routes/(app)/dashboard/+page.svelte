@@ -846,7 +846,9 @@
   .dashboard-page {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: clamp(0.9rem, 3dvh, 1.5rem);
+    min-width: 0;
+    overflow-x: clip;
   }
 
   /* PAGE HEADER */
@@ -859,7 +861,7 @@
   }
 
   .page-title {
-    font-size: 1.65rem;
+    font-size: clamp(1.25rem, 2.2vw + 0.7rem, 1.65rem);
     font-weight: 850;
     color: #2c3e50;
     margin: 0;
@@ -973,8 +975,8 @@
   /* 4 STAT CARDS GRID */
   .stat-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.85rem, 2.5vw, 1.5rem);
   }
 
   @media (max-width: 1100px) {
@@ -1086,8 +1088,8 @@
   }
 
   .chart-container {
-    padding: 1.25rem;
-    height: 300px;
+    padding: clamp(0.65rem, 2vw, 1.25rem);
+    height: clamp(11rem, 34dvh, 18.75rem);
   }
 
   .chart-svg {
@@ -1326,11 +1328,24 @@
     backdrop-filter: blur(3px);
   }
 
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+      max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+    backdrop-filter: blur(3px);
+  }
+
   .modal-dialog {
     background: #ffffff;
     width: 100%;
-    max-width: 950px;
+    max-width: min(950px, 100%);
     max-height: 90vh;
+    max-height: 90dvh;
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
     display: flex;
@@ -1855,15 +1870,15 @@
     .btn-nav-next,
     .btn-finish-sidebar {
       justify-content: center;
-      min-height: 44px;
+      min-height: clamp(2.75rem, 6dvh, 3rem);
     }
 
     .banner-tryout {
-      padding: 1.1rem;
+      padding: clamp(0.9rem, 3.5vw, 1.25rem);
     }
 
     .banner-title {
-      font-size: 1.15rem;
+      font-size: clamp(1rem, 4vw, 1.15rem);
     }
 
     .banner-buttons {
@@ -1881,7 +1896,7 @@
     }
 
     .chart-container {
-      height: 220px;
+      height: clamp(10rem, 28dvh, 14rem);
       padding: 0.75rem;
     }
 
@@ -1894,11 +1909,12 @@
     }
 
     .modal-body {
-      padding: 1rem;
+      padding: clamp(0.8rem, 2.5vw, 1rem);
     }
 
     .modal-dialog {
       max-height: 94vh;
+      max-height: 94dvh;
     }
   }
 </style>

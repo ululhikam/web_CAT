@@ -431,4 +431,56 @@
   .login-footer a:hover {
     text-decoration: underline;
   }
+
+  /* --- Mobile: form login tampil duluan, hero disembunyikan --- */
+  @media (max-width: 959px) {
+    .auth-wrap {
+      min-height: calc(100vh - 4.5rem);
+      min-height: calc(100dvh - 4.5rem);
+      align-items: flex-start;
+      padding: clamp(0.75rem, 3dvh, 1.5rem) clamp(0.65rem, 4vw, 1.25rem);
+    }
+
+    .auth-container {
+      max-width: 30rem;
+      gap: 0;
+    }
+
+    .auth-hero {
+      display: none;
+    }
+
+    .login-card {
+      padding: clamp(1rem, 4dvh, 2rem);
+      gap: clamp(0.75rem, 2.5dvh, 1.25rem);
+      border-radius: var(--radius-lg);
+    }
+
+    .login-title {
+      font-size: clamp(1.15rem, 5vw, 1.35rem);
+    }
+
+    .login-lede {
+      font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    }
+
+    .login-form {
+      gap: clamp(0.6rem, 2dvh, 1rem);
+    }
+
+    :global(.login-form .btn) {
+      min-height: clamp(2.75rem, 6dvh, 3rem);
+      font-size: clamp(0.85rem, 3.5vw, 0.95rem);
+    }
+
+    .login-footer {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  @media (max-width: 380px) {
+    .login-card {
+      padding: 0.85rem;
+    }
+  }
 </style>
