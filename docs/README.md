@@ -2,6 +2,10 @@
 
 | Berkas                                               | Isi                                                   |
 | ---------------------------------------------------- | ----------------------------------------------------- |
+| [RENCANA-PERBAIKAN.md](RENCANA-PERBAIKAN.md)         | Ringkasan strategi perbaikan + bukti temuan           |
+| [BREAKDOWN-FASE.md](BREAKDOWN-FASE.md)               | Peta fase & daftar runbook                            |
+| [PROGRESS.md](PROGRESS.md)                           | Tracker progres & log harian                          |
+| [perbaikan/](perbaikan/00-INDEX.md)                  | Runbook eksekusi per fase (langkah + verifikasi)      |
 | [LAPORAN-PEKERJAAN.md](LAPORAN-PEKERJAAN.md)         | Laporan pekerjaan Fase 0 lengkap dengan tanggal & jam |
 | [LAPORAN-B1.md](LAPORAN-B1.md)                       | Laporan branch B1: identitas, RBAC, sesi, audit       |
 | [SUPABASE-SETUP.md](SUPABASE-SETUP.md)               | Menyambungkan aplikasi ke Supabase (env + migrasi)    |

@@ -11,6 +11,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "smoke:cat": "tsx scripts/smoke-cat.ts",
     "prisma:generate": "prisma generate --schema prisma/schema",
     "prisma:validate": "prisma validate --schema prisma/schema",
     "prisma:migrate": "prisma migrate dev --schema prisma/schema",
@@ -22,6 +24,7 @@
     "env:check": "tsx scripts/env-check.ts",
     "db:guard": "tsx scripts/db-guard.ts",
     "db:ping": "tsx scripts/db-ping.ts",
+    "db:stats": "tsx scripts/db-stats.ts",
     "cron:run": "tsx scripts/cron-run.ts"
   },
   "dependencies": {

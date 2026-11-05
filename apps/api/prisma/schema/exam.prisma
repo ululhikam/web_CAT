@@ -178,7 +178,7 @@ model ExamSessionSubtest {
   lock         SubtestLock?
   questions    ExamSessionQuestion[]
 
-  @@unique([sessionId, orderIndex])
+  @@index([sessionId, orderIndex])
   @@unique([sessionId, subtestId])
   @@index([status, endsAt])
   @@map("exam_session_subtests")

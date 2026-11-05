@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import type {
   AccessPolicyPort,
@@ -79,6 +79,8 @@ const DAY_MS = 86_400_000;
 
 @Injectable()
 export class ExamSessionService {
+  private readonly logger = new Logger(ExamSessionService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ExamConfigService,
@@ -263,11 +265,28 @@ export class ExamSessionService {
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new AppError({
-          code: 'EXAM_SESSION_ALREADY_TODAY',
-          status: 409,
-          message: 'Sesi ujian hari ini sudah pernah dibuat',
-        });
+        const target = Array.isArray(error.meta?.target) ? (error.meta.target as string[]) : [];
+        const constraint = typeof error.meta?.constraint === 'string' ? error.meta.constraint : '';
+
+        // Hanya unique index sesi harian yang berarti "kuota hari ini habis".
+        // Constraint lain (mis. bug skema) tidak boleh disamarkan jadi 409 —
+        // itulah yang dulu menyembunyikan B1 (`session_id`, `order_index`).
+        const isDailySessionLimit =
+          constraint === 'exam_sessions_user_exam_date_active_key' ||
+          (target.includes('user_id') && target.includes('exam_date'));
+
+        if (isDailySessionLimit) {
+          throw new AppError({
+            code: 'EXAM_SESSION_ALREADY_TODAY',
+            status: 409,
+            message: 'Sesi ujian hari ini sudah pernah dibuat',
+          });
+        }
+
+        this.logger.error(
+          `P2002 tak terduga saat membuat sesi ujian (target: ${target.join(', ') || constraint || 'tidak diketahui'})`,
+          error.stack,
+        );
       }
       throw error;
     }
@@ -411,46 +430,55 @@ export class ExamSessionService {
       config.subtestTransition === 'immediate' && previousEndedAt ? previousEndedAt : now;
     const endsAt = computeEndsAt(startedAt, subtestConfig.durationMinutes);
 
-    await this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${subtest.id}))`;
+    await this.prisma.$transaction(
+      async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${subtest.id}))`;
 
-      const fresh = await tx.examSessionSubtest.findUnique({
-        where: { id: subtest.id },
-        include: { lock: true },
-      });
-      if (!fresh) {
-        throw new NotFoundException({
-          code: 'EXAM_SESSION_NOT_FOUND',
-          message: 'Subtes sesi tidak ditemukan',
+        const fresh = await tx.examSessionSubtest.findUnique({
+          where: { id: subtest.id },
+          include: { lock: true },
         });
-      }
-      if (fresh.status === 'ACTIVE' || TERMINAL_SUBTEST.includes(asSubtestStatus(fresh.status))) {
-        return;
-      }
+        if (!fresh) {
+          throw new NotFoundException({
+            code: 'EXAM_SESSION_NOT_FOUND',
+            message: 'Subtes sesi tidak ditemukan',
+          });
+        }
+        if (
+          fresh.status === 'ACTIVE' ||
+          TERMINAL_SUBTEST.includes(asSubtestStatus(fresh.status))
+        ) {
+          return;
+        }
 
-      await this.materializeQuestions(tx, fresh.id, fresh.subtestCode, subtestConfig);
+        await this.materializeQuestions(tx, fresh.id, fresh.subtestCode, subtestConfig);
 
-      await tx.examSessionSubtest.update({
-        where: { id: fresh.id },
-        data: {
-          status: 'ACTIVE',
-          startedAt,
-          endsAt,
-          configSnapshot: subtestConfig as unknown as Prisma.InputJsonValue,
-        },
-      });
-      await tx.examSessionStage.update({
-        where: { id: stage.id },
-        data: {
-          status: 'IN_PROGRESS',
-          startedAt: stage.startedAt ?? now,
-        },
-      });
-      await tx.examSession.update({
-        where: { id: row.id },
-        data: { status: 'IN_PROGRESS' },
-      });
-    });
+        await tx.examSessionSubtest.update({
+          where: { id: fresh.id },
+          data: {
+            status: 'ACTIVE',
+            startedAt,
+            endsAt,
+            configSnapshot: subtestConfig as unknown as Prisma.InputJsonValue,
+          },
+        });
+        await tx.examSessionStage.update({
+          where: { id: stage.id },
+          data: {
+            status: 'IN_PROGRESS',
+            startedAt: stage.startedAt ?? now,
+          },
+        });
+        await tx.examSession.update({
+          where: { id: row.id },
+          data: { status: 'IN_PROGRESS' },
+        });
+      },
+      // Materialisasi 500 soal (KECERMATAN) butuh lebih dari batas default
+      // Prisma (5 s). Ini batas pengaman, bukan penutup masalah B2 — akar
+      // masalahnya adalah pemakaian klien transaksi di `materializeQuestions`.
+      { timeout: 20_000, maxWait: 10_000 },
+    );
 
     if (now.getTime() >= endsAt.getTime()) {
       await this.finalizer.finalizeSubtest(subtest.id, { reason: 'TIME_EXPIRED', now });
@@ -477,11 +505,16 @@ export class ExamSessionService {
     });
     if (existing >= config.questionCount) return;
 
-    const seeds = await this.questionSource.prepare({
-      subtestSessionId,
-      subtestCode: subtestCode as SubtestCode,
-      count: config.questionCount,
-    });
+    const seeds = await this.questionSource.prepare(
+      {
+        subtestSessionId,
+        subtestCode: subtestCode as SubtestCode,
+        count: config.questionCount,
+      },
+      // Wajib memakai `tx`: root client akan meminjam koneksi kedua dan
+      // deadlock saat `connection_limit=1` (B2).
+      tx,
+    );
 
     await tx.examSessionQuestion.createMany({
       data: seeds.map((seed) => ({
@@ -733,58 +766,65 @@ export class ExamSessionService {
       });
     }
 
-    await this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${subtest.id}))`;
+    await this.prisma.$transaction(
+      async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${subtest.id}))`;
 
-      for (const item of valid) {
-        const existing = await tx.examAnswerEvent.findUnique({
-          where: {
-            sessionQuestionId_clientSeq: {
+        for (const item of valid) {
+          const existing = await tx.examAnswerEvent.findUnique({
+            where: {
+              sessionQuestionId_clientSeq: {
+                sessionQuestionId: item.questionId,
+                clientSeq: input.clientSeq,
+              },
+            },
+            select: { id: true },
+          });
+          if (existing) {
+            saved.push(item.questionId);
+            continue;
+          }
+
+          await tx.examSessionQuestion.update({
+            where: { id: item.questionId },
+            data: {
+              answerPayload: item.payload as unknown as Prisma.InputJsonValue,
+              answeredAt: now,
+              revision: { increment: 1 },
+              timeSpentMs: { increment: item.timeSpentMs },
+            },
+          });
+
+          await tx.examAnswerEvent.create({
+            data: {
               sessionQuestionId: item.questionId,
               clientSeq: input.clientSeq,
+              answerPayload: item.payload as unknown as Prisma.InputJsonValue,
+              answeredAt: now,
             },
-          },
-          select: { id: true },
-        });
-        if (existing) {
+          });
+
           saved.push(item.questionId);
-          continue;
         }
 
-        await tx.examSessionQuestion.update({
-          where: { id: item.questionId },
-          data: {
-            answerPayload: item.payload as unknown as Prisma.InputJsonValue,
-            answeredAt: now,
-            revision: { increment: 1 },
-            timeSpentMs: { increment: item.timeSpentMs },
-          },
+        const allQuestions = await tx.examSessionQuestion.findMany({
+          where: { subtestSessionId: subtest.id },
+          select: { answerPayload: true },
         });
-
-        await tx.examAnswerEvent.create({
-          data: {
-            sessionQuestionId: item.questionId,
-            clientSeq: input.clientSeq,
-            answerPayload: item.payload as unknown as Prisma.InputJsonValue,
-            answeredAt: now,
-          },
+        const answeredCount = allQuestions.filter(
+          (question) => question.answerPayload !== null,
+        ).length;
+        await tx.examSessionSubtest.update({
+          where: { id: subtest.id },
+          data: { answeredCount },
         });
-
-        saved.push(item.questionId);
-      }
-
-      const allQuestions = await tx.examSessionQuestion.findMany({
-        where: { subtestSessionId: subtest.id },
-        select: { answerPayload: true },
-      });
-      const answeredCount = allQuestions.filter(
-        (question) => question.answerPayload !== null,
-      ).length;
-      await tx.examSessionSubtest.update({
-        where: { id: subtest.id },
-        data: { answeredCount },
-      });
-    });
+      },
+      // Satu batch maksimal 50 jawaban = ±100 query. Pada Supabase remote
+      // (RTT ±100 ms) itu melewati batas default Prisma 5 s sehingga transaksi
+      // ditutup paksa di tengah jalan. Batas ini memberi ruang, bukan menutupi
+      // masalah: jumlah query tetap dijaga oleh `max(50)` di kontrak.
+      { timeout: 30_000, maxWait: 10_000 },
+    );
 
     const total = await this.prisma.examSessionQuestion.count({
       where: { subtestSessionId: subtest.id },

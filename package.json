@@ -15,6 +15,8 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:integration": "pnpm --filter @webcat/api test:integration",
+    "smoke:cat": "pnpm --filter @webcat/api smoke:cat",
     "format": "prettier --write \"**/*.{ts,tsx,svelte,js,mjs,json,md,prisma,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,svelte,js,mjs,json,md,prisma,css}\"",
     "db:generate": "pnpm --filter @webcat/api prisma:generate",
@@ -27,8 +29,11 @@
     "env:check": "pnpm --filter @webcat/api env:check",
     "db:guard": "pnpm --filter @webcat/api db:guard",
     "db:ping": "pnpm --filter @webcat/api db:ping",
+    "db:stats": "pnpm --filter @webcat/api db:stats",
     "cron:run": "pnpm --filter @webcat/api cron:run",
     "fixtures:generate": "pnpm --filter @webcat/mocks generate",
+    "progress": "node scripts/progress.mjs",
+    "progress:check": "node scripts/progress.mjs --check",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {

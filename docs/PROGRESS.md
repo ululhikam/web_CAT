@@ -1,0 +1,440 @@
+# PROGRESS — Perbaikan WebCAT
+
+**Terakhir diperbarui:** 5 November 2026
+**Status keseluruhan:** 🟡 Fase 0 & Fase 1 selesai — Fase 2 (integration test) sedang dikerjakan
+**Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
+**Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
+
+---
+
+## Cara memperbarui tracker ini
+
+1. Ubah **satu** kolom status pada tabel fase terkait.
+2. Isi **Bukti** dengan perintah/hasil nyata (mis. `pnpm test` → 232 lulus).
+3. Isi **Tanggal** (format `YYYY-MM-DD`).
+4. Perbarui angka di **Dashboard**.
+5. Tambahkan satu entri di **Log Harian**.
+
+### Legenda status
+
+| Simbol | Arti |
+| --- | --- |
+| ⬜ | Belum dikerjakan |
+| 🟨 | Sedang dikerjakan |
+| ✅ | Selesai & terverifikasi |
+| ⛔ | Terblokir (tulis alasannya di kolom Bukti) |
+| ➖ | Dibatalkan (tulis alasannya) |
+
+> **Aturan:** ✅ hanya boleh dipakai bila kriteria selesai di runbook fase
+> benar-benar terbukti. "Kode sudah ditulis" bukan alasan untuk ✅.
+
+---
+
+## Dashboard
+
+| Fase | Nama | Prioritas | Selesai | Total | Progres |
+| --- | --- | --- | --- | --- | --- |
+| 0 | Persiapan & jaring pengaman | P0 | 10 | 10 | `██████████` 100% |
+| 1 | Alur CAT fungsional (B1 & B2) | P0 | 19 | 19 | `██████████` 100% |
+| 2 | Integration test & anti-regresi | P0 | 0 | 10 | `░░░░░░░░░░` 0% |
+| 3 | Soal bergambar end-to-end | P1 | 0 | 31 | `░░░░░░░░░░` 0% |
+| 4 | Bank soal & konten | P1 | 0 | 9 | `░░░░░░░░░░` 0% |
+| 5 | Gap fitur P1/P2 | P1/P2 | 0 | 16 | `░░░░░░░░░░` 0% |
+| **Total** | | | **29** | **95** | **31%** |
+
+---
+
+## Baseline (diisi sebelum perubahan pertama)
+
+### Lingkungan
+
+| Item | Nilai |
+| --- | --- |
+| Branch kerja | `fix/cat-fase-1` (dibuat dari `main` @ `939eba3`) |
+| Commit awal | `1fa5d52` → `939eba3 feat(seed): bank soal realistis 990 soal` |
+| Node | 22.x (sesuai `engines`) |
+| pnpm | `11.12.0` |
+| `DATABASE_URL` | pooler Supabase (`pgbouncer=true&connection_limit=1`), DB `postgres` |
+| `DATABASE_URL_TEST` | DB terpisah **`webcat_test`** di project Supabase yang sama (session pooler 5432) |
+| `ACCESS_POLICY` / `QUESTION_POOL` / `STORAGE` | `dev` / `dev` / `supabase` |
+| Supabase project | `qlgnodnlsthywuhzrbhg` |
+
+> **Catatan penting:** DB `webcat_test` dibuat di project Supabase yang sama
+> (bukan project kedua, karena kredensial mengikuti `.env`). Isolasi dilakukan
+> di level **database**, bukan project. `pnpm test:integration` melakukan
+> `TRUNCATE`, dan helper menolak jalan bila `DATABASE_URL_TEST` menunjuk
+> database aplikasi. Konsekuensi: test integrasi memakai `connection_limit`
+> pooler yang sama, sehingga perilaku pooler saat runtime tetap representatif.
+
+### Gerbang mutu
+
+| Gerbang | Perintah | Hasil | Tanggal |
+| --- | --- | --- | --- |
+| Test | `pnpm test` | 5 task turbo; **API 30 file / 253 test**, web 1 file / 12 test, contracts 4 file / 25 test, mocks 1 file / 5 test — semua hijau (total 295 test) | 2026-11-05 |
+| Typecheck | `pnpm typecheck` | 6 task; web `svelte-check` **0 error / 64 warning**, api `tsc` 0 error | 2026-11-05 |
+| Lint | `pnpm lint` | 6 task sukses (0 warning, `--max-warnings 0`) | 2026-11-05 |
+| Build | `pnpm build` | 3 task sukses (contracts, api, web) | 2026-11-05 |
+| Test integrasi | `pnpm test:integration` | 1 file / 2 test lulus (`webcat_test`) | 2026-11-05 |
+| Smoke CAT | `pnpm smoke:cat` | **LULUS** — 6/6 subtes COMPLETED, total 100, cleanup bersih | 2026-11-05 |
+
+### Data database (baseline `webcat_test` + dev, 2026-11-05)
+
+| Tabel | Dev (`postgres`) | DB uji (`webcat_test`) |
+| --- | --- | --- |
+| `users` | 6 | 0 |
+| `questions` | 1007 (**993 PUBLISHED**) | 0 |
+| `subscription_plans` | 6 | 6 (hasil `ensureMasterData`) |
+| `exam_stages` | 3 | 3 |
+| `subtests` | 6 | 6 |
+| `exam_settings` | 1 | 1 |
+| `exam_sessions` | 0 | 0 |
+| `exam_session_subtests` | 0 | 0 |
+| `media_assets` | 0 | 0 |
+| `question_media` | 0 | 0 |
+| Duplikat `(session_id, order_index)` | **0** | **0** |
+
+Distribusi soal per subtes (dev):
+
+| Subtes | PUBLISHED | DRAFT | ARCHIVED |
+| --- | --- | --- | --- |
+| `KECERDASAN` | 100 | 8 | 1 |
+| `KEPRIBADIAN` | 143 | 0 | 1 |
+| `KECERMATAN` | 500 | 0 | 1 |
+| `PASS_HAND` | 150 | 0 | 1 |
+| `TPA` | **0** | 0 | 2 |
+| `TPK` | 100 | 0 | 0 |
+
+Distribusi tipe soal: `SINGLE_CHOICE` 209, `MULTI_CHOICE` 1, `IMAGE_CHOICE` 1,
+`LIKERT_STATEMENT` 144, `MISSING_ELEMENT` 501, `PASS_HAND_COLUMN` 151.
+
+> Artinya: bank soal **sudah ter-seed** (berbeda dari audit awal yang mencatat
+> 14 soal / 0 PUBLISHED). Sisa kekurangan bank soal hanya **TPA (0 PUBLISHED)**
+> dan **TPA belum ada di seed**. `media_assets`/`question_media` masih 0 →
+> Fase 3 (soal bergambar) belum punya konten sama sekali.
+
+---
+
+## Fase 0 — Persiapan & jaring pengaman
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F0-01 | Bersihkan `_tmp_*.ts` | ✅ | `Get-ChildItem apps\api -Filter "_tmp_*.ts"` → 0 berkas | 2026-11-05 |
+| F0-02 | Commit seed bank soal yang belum masuk git | ✅ | commit `939eba3` — 9 file seed + `test/question-seed.spec.ts` | 2026-11-05 |
+| F0-03 | Buat branch kerja | ✅ | `git branch --show-current` → `fix/cat-fase-1` | 2026-11-05 |
+| F0-04 | Catat baseline gerbang mutu | ✅ | lihat tabel Baseline di atas (lint 6 task, typecheck 0 error, test 251, build 3 task) | 2026-11-05 |
+| F0-05 | Siapkan `DATABASE_URL_TEST` | ✅ | DB terpisah `webcat_test` di project Supabase yang sama; ditambahkan ke `.env` + `.env.example` | 2026-11-05 |
+| F0-06 | Migrasi ke DB uji | ✅ | `prisma migrate deploy` → 5 migrasi; `information_schema` → 38 tabel, `_prisma_migrations` 5 baris | 2026-11-05 |
+| F0-07 | Helper integration test | ✅ | `test/integration/setup.ts` + `setup.spec.ts`; `pnpm test:integration` → 1 file / 2 test lulus | 2026-11-05 |
+| F0-08 | Cek duplikat `(session_id, order_index)` | ✅ | query `GROUP BY 1,2 HAVING count(*)>1` → 0 baris di DB dev | 2026-11-05 |
+| F0-09 | Script `test:integration` & `smoke:cat` | ✅ | `pnpm smoke:cat` exit 0; `pnpm test:integration` exit 0 | 2026-11-05 |
+| F0-10 | Catat baseline isi database | ✅ | lihat tabel Data database di atas (questions 1007 / 993 PUBLISHED, TPA 0) | 2026-11-05 |
+
+**Gate keluar:** semua ✅ dan baseline terisi.
+
+> **Status Fase 0: ✅ SELESAI (2026-11-05).** Semua 10 task terbukti; lihat kolom
+> Bukti. DB uji `webcat_test` sudah dimigrasi (38 tabel, 5 migrasi).
+
+---
+
+## Fase 1 — Alur CAT fungsional
+
+### 1A — Blocker B1 (`order_index`)
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F1-01 | Ubah unique index → index biasa | ✅ | `exam.prisma:181` → `@@index([sessionId, orderIndex])`; `pnpm db:validate` → "The schemas at prisma\schema are valid" | 2026-11-05 |
+| F1-02 | Buat migrasi | ✅ | `migrations/20261105100000_fix_exam_session_subtest_order_index/migration.sql` (`DROP INDEX ..._key` + `CREATE INDEX ..._idx`) | 2026-11-05 |
+| F1-03 | Terapkan migrasi ke DB dev | ✅ | `pnpm db:deploy` → "All migrations have been successfully applied" (6 migrasi); `pg_indexes` dev + `webcat_test` → `..._order_index_idx`, index unik lama hilang | 2026-11-05 |
+| F1-04 | Sempitkan handler `P2002` | ✅ | `exam-session.service.ts:266-288`: hanya `exam_sessions_user_exam_date_active_key` / target `(user_id, exam_date)` → 409; selain itu `logger.error` + rethrow. `Logger` di L82 | 2026-11-05 |
+| F1-05 | Unit test pemetaan error | ✅ | `test/exam-session-start.spec.ts` → 2 test lulus (P2002 lain diteruskan & dicatat; P2002 harian → 409) | 2026-11-05 |
+| F1-06 | Verifikasi runtime start sesi | ✅ | `POST /exams/sessions` `{acknowledgeRules:true}` → **201**, 6 baris `exam_session_subtests` dengan `order_index` `[1,2,3,4,1,1]` | 2026-11-05 |
+
+### 1B — Blocker B2 (deadlock transaksi)
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F1-07 | `prepare(input, db)` + `loadFromDatabase(db)` | ✅ | `exam-question-source.ts:396` (`ExamDbClient`), `prepare` L413, `loadFromDatabase` L429; query memakai `db.question` | 2026-11-05 |
+| F1-08 | `materializeQuestions` memakai `tx` | ✅ | `exam-session.service.ts:508` → `this.questionSource.prepare({...}, tx)` | 2026-11-05 |
+| F1-09 | Naikkan batas transaksi | ✅ | `openSubtest` L480 `{timeout:20_000,maxWait:10_000}`; `autosave` L826 `{timeout:30_000,maxWait:10_000}` (ditemukan saat smoke: transaksi 5 s habis untuk 50 jawaban) | 2026-11-05 |
+| F1-10 | Audit `$transaction` + root client | ✅ | Skrip audit paren-matching atas 22 `$transaction` interaktif di `apps/api/src` → **0** pemakaian `this.prisma.*` di dalam callback. `exam-question-projection.ts:111` & `exam-finalizer.service.ts:68` memakai bentuk array (bukan interaktif) | 2026-11-05 |
+| F1-11 | (Opsional) materialisasi di luar transaksi | ➖ | Tidak diperlukan: `open` KECERMATAN (500 soal) selesai **3.495 ms** di dalam transaksi `tx` dengan batas 20 s | 2026-11-05 |
+
+### 1C — Verifikasi alur manual
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F1-12 | Start session | ✅ | 201; 6 subtes (PSIKOLOGI 4 + TPA 1 + TPK 1) | 2026-11-05 |
+| F1-13 | Open KECERDASAN | ✅ | 201 dalam 3.318 ms; 100 baris `exam_session_questions` (position 1..100) | 2026-11-05 |
+| F1-14 | Questions 2 halaman | ✅ | 200, 20 item, `meta.total=100`, `meta.nextCursor=20`; tidak ada `isCorrect`/`dimensionMap` di respons | 2026-11-05 |
+| F1-15 | Autosave + replay `clientSeq` | ✅ | Kirim 2× `clientSeq=1` → dua 200; DB 1 event & 1 `client_seq` (idempoten). Smoke: 50 jawaban/batch, replay `clientSeq=0` OK untuk semua subtes | 2026-11-05 |
+| F1-16 | Heartbeat + events | ✅ | `POST /heartbeat` → 201 (`remainingMs` valid); `POST /events` TAB_BLUR → 201 `accepted:1` | 2026-11-05 |
+| F1-17 | Finish + result | ✅ | `POST /finish` → 201 dalam 3.426 ms; `GET /exams/sessions/:id/result` mengembalikan `ExamResultView` | 2026-11-05 |
+| F1-18 | 6 subtes selesai | ✅ | `pnpm smoke:cat` → 6/6 COMPLETED (open 3,1–3,7 s; finish 1,6–6,7 s), tiap subtes 100% & lulus; sesi `COMPLETED`, total 100 (ambang 60) | 2026-11-05 |
+| F1-19 | Cleanup data uji | ✅ | smoke menghapus sesinya sendiri: sisa `exam_sessions` 0, `exam_session_subtests` 0, `exam_session_questions` 0 | 2026-11-05 |
+
+**Gate keluar:** ✅ `POST /sessions` dan `POST /open` berhasil untuk keenam subtes;
+`exam_sessions` kembali 0 setelah cleanup.
+
+> **Status Fase 1: ✅ SELESAI (2026-11-05).** B1 & B2 terbukti beres di runtime,
+> bukan hanya di unit test. Bug tambahan ditemukan & diperbaiki: timeout 5 s pada
+> transaksi `autosave` saat 50 jawaban dikirim ke Supabase remote.
+
+---
+
+## Fase 2 — Integration test & anti-regresi
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F2-01 | Factory data uji | ⬜ | — | — |
+| F2-02 | Spec `startSession` | ⬜ | — | — |
+| F2-03 | Spec kuota harian | ⬜ | — | — |
+| F2-04 | Spec `openSubtest` KECERDASAN | ⬜ | — | — |
+| F2-05 | Spec `openSubtest` KECERMATAN 500 | ⬜ | — | — |
+| F2-06 | Spec alur penuh | ⬜ | — | — |
+| F2-07 | Spec autosave idempoten | ⬜ | — | — |
+| F2-08 | Script `smoke:cat` | ⬜ | — | — |
+| F2-09 | Job CI integrasi | ⬜ | — | — |
+| F2-10 | Dokumentasi cara menjalankan | ⬜ | — | — |
+
+**Gate keluar:** `pnpm test:integration` dan `pnpm smoke:cat` hijau.
+
+---
+
+## Fase 3 — Soal bergambar
+
+### 3A — Snapshot & materialisasi
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F3-01 | `SnapshotMedia.optionId` + `assetId` | ⬜ | — | — |
+| F3-02 | `SnapshotOption.media` | ⬜ | — | — |
+| F3-03 | Parser toleran snapshot lama | ⬜ | — | — |
+| F3-04 | `QuestionRow` memuat `optionId`/`assetId` | ⬜ | — | — |
+| F3-05 | `mapDbQuestion` mengelompokkan media opsi | ⬜ | — | — |
+| F3-06 | Builder fixture menerima media | ⬜ | — | — |
+| F3-07 | Unit test materialisasi media | ⬜ | — | — |
+
+### 3B — Proyeksi
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F3-08 | `optionView` mengirim media opsi | ⬜ | — | — |
+| F3-09 | Saring `EXPLANATION` dari DTO ujian | ⬜ | — | — |
+| F3-10 | Cache URL media opsi | ⬜ | — | — |
+| F3-11 | Unit test proyeksi media | ⬜ | — | — |
+
+### 3C — Runner
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F3-12 | Render media opsi | ⬜ | — | — |
+| F3-13 | Cabang `IMAGE_CHOICE` (tile) | ⬜ | — | — |
+| F3-14 | CSS media & tile | ⬜ | — | — |
+| F3-15 | (Opsional) satukan renderer via adapter | ⬜ | — | — |
+| F3-16 | Test komponen `ImageChoice` | ⬜ | — | — |
+
+### 3D — URL & penyajian berkas
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F3-17 | Proyeksi pakai `buildMediaUrl(assetId)` | ⬜ | — | — |
+| F3-18 | `DevStorage` URL benar-benar dilayani | ⬜ | — | — |
+| F3-19 | TTL URL ≥ durasi subtes | ⬜ | — | — |
+| F3-20 | Test akses media 200 | ⬜ | — | — |
+
+### 3E — Konten bergambar
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F3-21 | Aset gambar figural WebP | ⬜ | — | — |
+| F3-22 | `seedMediaAssets` (dedupe) | ⬜ | — | — |
+| F3-23 | 30–40 `IMAGE_CHOICE` (Kecerdasan) | ⬜ | — | — |
+| F3-24 | 15 soal figural TPA | ⬜ | — | — |
+| F3-25 | Seed menulis `question_media` | ⬜ | — | — |
+| F3-26 | Test kelengkapan media soal | ⬜ | — | — |
+
+### 3F — Validasi & UI admin
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F3-27 | Validasi `IMAGE_CHOICE` wajib media | ⬜ | — | — |
+| F3-28 | Validasi dimensi min 200×200 | ⬜ | — | — |
+| F3-29 | Indikator opsi belum bergambar di form admin | ⬜ | — | — |
+| F3-30 | Test kontrak + upload | ⬜ | — | — |
+| F3-31 | Uji visual runner dengan soal figural | ⬜ | — | — |
+
+**Gate keluar:** ≥ 30 `IMAGE_CHOICE` PUBLISHED; soal figural tampil di runner
+dan dinilai benar.
+
+---
+
+## Fase 4 — Bank soal & konten
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F4-01 | Jalankan `pnpm db:seed` | ⬜ | — | — |
+| F4-02 | Verifikasi kuota per subtes | ⬜ | — | — |
+| F4-03 | Bank TPA 100 soal | ⬜ | — | — |
+| F4-04 | Daftarkan TPA di seed | ⬜ | — | — |
+| F4-05 | Tambah `MULTI_CHOICE` | ⬜ | — | — |
+| F4-06 | Test `pair_group` Kepribadian | ⬜ | — | — |
+| F4-07 | Aktifkan `QUESTION_POOL=db` | ⬜ | — | — |
+| F4-08 | Hapus/perjelas fallback fixture | ⬜ | — | — |
+| F4-09 | Health check kuota | ⬜ | — | — |
+
+**Gate keluar:** semua subtes PUBLISHED & kuota penuh; tidak ada fallback.
+
+---
+
+## Fase 5 — Gap fitur
+
+### P1
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F5-01 | Pulihkan `/pricing` | ⬜ | — | — |
+| F5-02 | CRUD plan admin | ⬜ | — | — |
+| F5-03 | Detail user admin | ⬜ | — | — |
+| F5-04 | Detail transaksi admin | ⬜ | — | — |
+| F5-05 | Worker job queue terjadwal | ⬜ | — | — |
+| F5-06 | Rate limit API | ⬜ | — | — |
+| F5-07 | CSRF + CSP | ⬜ | — | — |
+| F5-08 | Dashboard peserta dari API | ⬜ | — | — |
+| F5-09 | Dokumentasi API produksi | ⬜ | — | — |
+
+### P2
+
+| ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
+| --- | --- | --- | --- | --- |
+| F5-10 | Autosave IndexedDB + `sendBeacon` | ⬜ | — | — |
+| F5-11 | Preload 2 soal berikutnya | ⬜ | — | — |
+| F5-12 | Zoom/pan gambar figural | ⬜ | — | — |
+| F5-13 | Flag anomali waktu jawab | ⬜ | — | — |
+| F5-14 | Import ZIP gambar end-to-end | ⬜ | — | — |
+| F5-15 | Varian WebP/thumbnail | ⬜ | — | — |
+| F5-16 | E2E Playwright alur ujian | ⬜ | — | — |
+
+---
+
+## Log Harian
+
+Format entri:
+
+```
+### YYYY-MM-DD
+**Dikerjakan:** F1-01, F1-02
+**Hasil:** migrasi dibuat & diterapkan
+**Bukti:** `prisma migrate status` → up to date
+**Hambatan:** —
+**Berikutnya:** F1-04
+```
+
+### 2026-11-05 — Fase 1 selesai
+
+**Dikerjakan:** F1-01 … F1-19
+**Hasil:** Fase 1 ✅ (19/19). B1 & B2 beres dan terbukti di runtime. Peserta bisa
+menyelesaikan keenam subtes sampai hasil akhir.
+
+**Bukti:**
+
+- `POST /exams/sessions` → **201**, 6 baris `exam_session_subtests` `order_index`
+  `[1,2,3,4,1,1]` (B1 hilang).
+- `POST .../open` KECERDASAN → **201** dalam 3.673 ms, 100 soal termaterialisasi (B2 hilang).
+- `pnpm smoke:cat` → LULUS: 6/6 subtes COMPLETED, tiap subtes 100% & lulus,
+  sesi `COMPLETED` total 100 (ambang 60), lalu cleanup → `exam_sessions` 0.
+- Autosave idempoten: kirim 2× `clientSeq=1` → 1 baris `exam_answer_events`.
+- `pg_indexes` dev & `webcat_test` → `exam_session_subtests_session_id_order_index_idx`.
+
+**Bug tambahan ditemukan & diperbaiki:** transaksi `autosave` melewati batas
+default Prisma 5 s saat 50 jawaban dikirim ke Supabase remote (error
+`Transaction API error: Transaction not found`). Batas dinaikkan ke 30 s dan
+diberi alasan di komentar.
+
+**Hambatan:** —
+**Berikutnya:** Fase 2 — F2-01 (factory data uji) → F2-09 (job CI).
+
+---
+
+### 2026-11-05 — Fase 0 selesai
+
+**Dikerjakan:** F0-01 … F0-10
+**Hasil:** Fase 0 ✅ (10/10). Baseline gerbang mutu dan isi DB tercatat; DB uji
+`webcat_test` siap; helper integration test + script npm aktif.
+
+**Bukti:**
+
+- `pnpm lint` → 6 task sukses · `pnpm typecheck` → 6 task, 0 error (64 warning
+  svelte-check) · `pnpm test` → 5 task, API 29 file/251 test · `pnpm build` → 3 task.
+- `pnpm test:integration` → 1 file / 2 test lulus terhadap `webcat_test`
+  (38 tabel, 5 migrasi).
+- `pnpm smoke:cat` → exit 0.
+- `pnpm db:stats` → questions 1007 (993 PUBLISHED), TPA 0 PUBLISHED,
+  duplikat `(session_id, order_index)` = 0.
+- Commit seed `939eba3`; branch `fix/cat-fase-1` aktif.
+
+**Hambatan:** Docker tidak tersedia → DB uji dibuat sebagai database terpisah
+di project Supabase yang sama (sesuai instruksi memakai `.env`).
+
+**Berikutnya:** F1-01 → F1-02 → F1-03 (fix B1), lalu F1-07 → F1-08 (fix B2).
+
+---
+
+### 2026-11-05
+
+**Dikerjakan:** audit + penyusunan rencana (belum ada perubahan kode)
+**Hasil:**
+
+- Membuktikan 2 blocker CAT lewat uji runtime: B1 (`P2002` pada
+  `exam_session_subtests`) dan B2 (deadlock transaksi `openSubtest`).
+- Membuktikan rantai soal bergambar putus di 4 titik: snapshot, materialisasi,
+  proyeksi, dan runner. Ditambah 3 masalah penyajian berkas media.
+- Menyusun runbook per fase (`docs/perbaikan/`), `BREAKDOWN-FASE.md`,
+  `RENCANA-PERBAIKAN.md`, dan tracker ini.
+
+**Bukti:**
+
+- `POST /exams/sessions` → 409 `EXAM_SESSION_ALREADY_TODAY`; `exam_sessions` = 0 baris.
+- `POST .../open` → 500 `Transaction already closed ... timeout 5000 ms`.
+  Uji terukur: transaksi-dalam-transaksi 186 ms OK; root-di-dalam-transaksi 4178 ms timeout.
+- DB: `media_assets` 0, `question_media` 0, soal PUBLISHED 0.
+
+**Hambatan:** subagent tidak tersedia (kuota), verifikasi dilakukan manual.
+**Berikutnya:** F0-01 → F0-02 → F1-01.
+
+---
+
+## Keputusan yang Perlu Diambil
+
+| # | Pertanyaan | Opsi | Keputusan | Tanggal |
+| --- | --- | --- | --- | --- |
+| 1 | Strategi perbaikan `order_index` | (A) index non-unik / (B) `orderIndex` global | **A** (disarankan) | — |
+| 2 | Materialisasi soal | (A) dalam tx dengan `prepare(tx)` / (B) di luar tx | **A** dulu, B bila masih lambat | — |
+| 3 | Penyajian media | (A) unggah ke bucket / (B) `/media/:id/content` | **B** (disarankan) | — |
+| 4 | Uji alur penuh 6 subtes | (A) jawab benar / (B) flag dev bypass passing | belum diputuskan | — |
+| 5 | Commit seed bank soal yang belum masuk git | (A) commit terpisah / (B) buang | **A** | — |
+| 6 | DB uji integrasi | (A) Supabase kedua / (B) Docker Postgres lokal | **Supabase, DB terpisah `webcat_test`** di project yang sama — Docker tidak tersedia, `.env` dipakai apa adanya | 2026-11-05 |
+| 7 | Renderer runner vs admin | (A) satukan via adapter / (B) dua jalur | belum diputuskan | — |
+
+---
+
+## Ringkasan Bukti Teknis
+
+Rujukan cepat agar konteks tidak hilang bila sesi baru dimulai.
+
+| Temuan | Lokasi | Bukti |
+| --- | --- | --- |
+| B1 index unik | `apps/api/prisma/schema/exam.prisma:181` | `@@unique([sessionId, orderIndex])` vs data `[1,2,3,4,1,1]` |
+| B1 pemetaan error | `exam-session.service.ts:264-272` | semua `P2002` → `EXAM_SESSION_ALREADY_TODAY` |
+| B2 root client dalam tx | `exam-question-source.ts:420` | `this.prisma.question.findMany` dipanggil dari `$transaction` |
+| B2 titik panggil | `exam-session.service.ts:480` | `this.questionSource.prepare(...)` |
+| B2 batas transaksi | `exam-session.service.ts:414` | `$transaction` tanpa `timeout`/`maxWait` |
+| Media opsi hilang (snapshot) | `scoring/scoring.types.ts` | `SnapshotOption` tanpa `media` |
+| Media opsi hilang (materialisasi) | `exam-question-source.ts:378` | `media: row.media.map(({role, path, alt}))` — `optionId` dibuang |
+| Media opsi hilang (proyeksi) | `exam-question-projection.ts:32` | `media: []` hardcode |
+| Media opsi tidak dirender | `apps/web/src/routes/(app)/exam/[sessionId]/+page.svelte:585` | hanya `optionText(option)` |
+| Media stem terbatas | idem:520 | hanya `role === 'STEM'` |
+| `IMAGE_CHOICE` jatuh ke teks | idem (cabang `{:else}`) | tidak ada cabang gambar |
+| Byte media tidak di bucket | `media.service.ts:149-190` | `data: normalized`, tanpa unggah storage |
+| `DevStorage` tanpa route | `core/ports/impl/dev-storage.ts:10,16` | `/dev-storage/...` tidak ada controller |
+| Seed tanpa gambar | `apps/api/prisma/seed/questions/*` | 0 `IMAGE_CHOICE`, 0 media |
+| Seed tanpa TPA | `seed/questions/index.ts` | `SeedSubtestCode` tanpa `TPA` |

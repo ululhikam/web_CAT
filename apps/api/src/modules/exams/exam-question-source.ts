@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import type { ExamQuestionType, SubtestCode } from '@webcat/contracts';
+import type { Prisma } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { QuestionSnapshot, SnapshotOption } from '../scoring/scoring.types';
 
@@ -391,6 +392,9 @@ function mapDbQuestion(row: QuestionRow, position: number): MaterializedQuestion
   };
 }
 
+/** Klien database yang boleh dipakai: root client atau klien transaksi. */
+export type ExamDbClient = Prisma.TransactionClient | PrismaService;
+
 /* ------------------------------------------------------------------ service */
 
 @Injectable()
@@ -401,13 +405,20 @@ export class ExamQuestionSource {
    * Menyiapkan soal untuk satu subtes sesi. Deterministik terhadap
    * `subtestSessionId` + kode subtes sehingga materialisasi ulang menghasilkan
    * urutan yang sama (idempoten).
+   *
+   * `db` WAJIB diteruskan bila dipanggil dari dalam `$transaction`. Memakai
+   * root client di dalam transaksi akan meminjam koneksi kedua dari pool
+   * (`connection_limit=1`) sehingga transaksi saling menunggu dan timeout.
    */
-  async prepare(input: {
-    subtestSessionId: string;
-    subtestCode: SubtestCode;
-    count: number;
-  }): Promise<MaterializedQuestionSeed[]> {
-    const dbQuestions = await this.loadFromDatabase(input.subtestCode, input.count);
+  async prepare(
+    input: {
+      subtestSessionId: string;
+      subtestCode: SubtestCode;
+      count: number;
+    },
+    db: ExamDbClient = this.prisma,
+  ): Promise<MaterializedQuestionSeed[]> {
+    const dbQuestions = await this.loadFromDatabase(input.subtestCode, input.count, db);
     if (dbQuestions.length >= input.count) {
       const rng = createRng(hashSeed(input.subtestSessionId));
       return shuffle(rng, dbQuestions).map((row, index) => mapDbQuestion(row, index + 1));
@@ -415,9 +426,13 @@ export class ExamQuestionSource {
     return buildFixture(input.subtestCode, input.count, input.subtestSessionId);
   }
 
-  private async loadFromDatabase(code: SubtestCode, count: number): Promise<QuestionRow[]> {
+  private async loadFromDatabase(
+    code: SubtestCode,
+    count: number,
+    db: ExamDbClient = this.prisma,
+  ): Promise<QuestionRow[]> {
     try {
-      const rows = await this.prisma.question.findMany({
+      const rows = await db.question.findMany({
         where: {
           subtestCode: code,
           status: 'PUBLISHED',
