@@ -416,8 +416,13 @@ async function cleanup(sessionId: string): Promise<void> {
   ]);
   log(
     'bersihkan',
-    `hapus ${deleted.count} sesi — sisa: sesi ${sessions}, subtes ${subtestRows}, soal ${questions}`,
+    `hapus ${deleted.count} sesi — sisa di DB: sesi ${sessions}, subtes ${subtestRows}, soal ${questions}`,
   );
+  // Sisa > 0 berarti ada sesi milik pengguna lain. Itu bukan kegagalan smoke,
+  // tetapi membuat baseline tidak bersih — beri peringatan eksplisit.
+  if (sessions > 0) {
+    log('ingatkan', 'masih ada sesi ujian lain di database; baseline tidak bersih');
+  }
 }
 
 /* ------------------------------------------------------------------ main */

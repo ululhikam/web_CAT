@@ -6,6 +6,7 @@
 | [BREAKDOWN-FASE.md](BREAKDOWN-FASE.md)               | Peta fase & daftar runbook                            |
 | [PROGRESS.md](PROGRESS.md)                           | Tracker progres & log harian                          |
 | [perbaikan/](perbaikan/00-INDEX.md)                  | Runbook eksekusi per fase (langkah + verifikasi)      |
+| [perbaikan/README-test.md](perbaikan/README-test.md) | Cara menjalankan test integrasi & smoke CAT           |
 | [LAPORAN-PEKERJAAN.md](LAPORAN-PEKERJAAN.md)         | Laporan pekerjaan Fase 0 lengkap dengan tanggal & jam |
 | [LAPORAN-B1.md](LAPORAN-B1.md)                       | Laporan branch B1: identitas, RBAC, sesi, audit       |
 | [SUPABASE-SETUP.md](SUPABASE-SETUP.md)               | Menyambungkan aplikasi ke Supabase (env + migrasi)    |

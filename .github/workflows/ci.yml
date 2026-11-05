@@ -71,12 +71,72 @@ jobs:
           # karena adapter-vercel memerlukan symlink yang tidak tersedia.
           VERCEL: ''
 
+  # ---------------------------------------------------------------------------
+  # Test integrasi terhadap PostgreSQL nyata (F2-09).
+  #
+  # Kenapa job terpisah: `verify` sengaja tidak menyentuh database, sedangkan
+  # job ini membuat DB, menjalankan migrasi, lalu TRUNCATE tabel transaksional.
+  #
+  # Kenapa dua nama database: helper `test/integration/setup.ts` menolak
+  # berjalan bila `DATABASE_URL_TEST` menunjuk database yang sama dengan
+  # `DATABASE_URL`/`DIRECT_URL` (pengaman agar data demo tidak terhapus).
+  # Jadi DATABASE_URL memakai nama lain (`webcat_ci`) yang tidak pernah
+  # dihubungi; hanya step migrasi yang diarahkan ke DB uji.
+  # ---------------------------------------------------------------------------
+  integration:
+    name: Integration (Postgres)
+    runs-on: ubuntu-latest
+    needs: verify
+    timeout-minutes: 25
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: webcat_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:test@localhost:5432/webcat_ci
+      DIRECT_URL: postgresql://postgres:test@localhost:5432/webcat_ci
+      DATABASE_URL_TEST: postgresql://postgres:test@localhost:5432/webcat_test
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Prisma generate
+        run: pnpm db:generate
+
+      - name: Build contracts
+        run: pnpm --filter @webcat/contracts build
+
+      - name: Migrasi ke database uji
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/webcat_test
+          DIRECT_URL: postgresql://postgres:test@localhost:5432/webcat_test
+        run: pnpm db:deploy
+
+      - name: Test integrasi
+        run: pnpm test:integration
+
   contract-diff:
     name: Prisma migration drift
     runs-on: ubuntu-latest
     needs: verify
     if: ${{ secrets.SHADOW_DATABASE_URL != '' }}
-
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟡 Fase 0 & Fase 1 selesai — Fase 2 (integration test) sedang dikerjakan
+**Status keseluruhan:** 🟡 Fase 0, 1 & 2 selesai — Fase 3 (soal bergambar) berikutnya
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -36,11 +36,11 @@
 | --- | --- | --- | --- | --- | --- |
 | 0 | Persiapan & jaring pengaman | P0 | 10 | 10 | `██████████` 100% |
 | 1 | Alur CAT fungsional (B1 & B2) | P0 | 19 | 19 | `██████████` 100% |
-| 2 | Integration test & anti-regresi | P0 | 0 | 10 | `░░░░░░░░░░` 0% |
+| 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 0 | 31 | `░░░░░░░░░░` 0% |
 | 4 | Bank soal & konten | P1 | 0 | 9 | `░░░░░░░░░░` 0% |
 | 5 | Gap fitur P1/P2 | P1/P2 | 0 | 16 | `░░░░░░░░░░` 0% |
-| **Total** | | | **29** | **95** | **31%** |
+| **Total** | | | **39** | **95** | **41%** |
 
 ---
 
@@ -74,8 +74,8 @@
 | Typecheck | `pnpm typecheck` | 6 task; web `svelte-check` **0 error / 64 warning**, api `tsc` 0 error | 2026-11-05 |
 | Lint | `pnpm lint` | 6 task sukses (0 warning, `--max-warnings 0`) | 2026-11-05 |
 | Build | `pnpm build` | 3 task sukses (contracts, api, web) | 2026-11-05 |
-| Test integrasi | `pnpm test:integration` | 1 file / 2 test lulus (`webcat_test`) | 2026-11-05 |
-| Smoke CAT | `pnpm smoke:cat` | **LULUS** — 6/6 subtes COMPLETED, total 100, cleanup bersih | 2026-11-05 |
+| Test integrasi | `pnpm test:integration` | **4 file / 14 test lulus** (`webcat_test`, 70,9 s) | 2026-11-05 |
+| Smoke CAT | `pnpm smoke:cat` | **LULUS 2× berturut-turut** — 6/6 subtes COMPLETED, total 100, cleanup → sesi 0 / subtes 0 / soal 0 | 2026-11-05 |
 
 ### Data database (baseline `webcat_test` + dev, 2026-11-05)
 
@@ -185,18 +185,24 @@ Distribusi tipe soal: `SINGLE_CHOICE` 209, `MULTI_CHOICE` 1, `IMAGE_CHOICE` 1,
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F2-01 | Factory data uji | ⬜ | — | — |
-| F2-02 | Spec `startSession` | ⬜ | — | — |
-| F2-03 | Spec kuota harian | ⬜ | — | — |
-| F2-04 | Spec `openSubtest` KECERDASAN | ⬜ | — | — |
-| F2-05 | Spec `openSubtest` KECERMATAN 500 | ⬜ | — | — |
-| F2-06 | Spec alur penuh | ⬜ | — | — |
-| F2-07 | Spec autosave idempoten | ⬜ | — | — |
-| F2-08 | Script `smoke:cat` | ⬜ | — | — |
-| F2-09 | Job CI integrasi | ⬜ | — | — |
-| F2-10 | Dokumentasi cara menjalankan | ⬜ | — | — |
+| F2-01 | Factory data uji | ✅ | `test/integration/factory.ts`: `createExamEngine()` merakit `ExamSessionService`/`ExamConfigService`/`ExamFinalizerService`/`ExamQuestionSource`/`ExamQuestionProjection`/`ResultsService`/`ProctoringService` + `DevAccessPolicy`/`MockQuestionPool`/`DevStorage` di atas `DATABASE_URL_TEST`; `createExamUser()` membuat peserta role USER status ACTIVE. Terbukti: `exam-start.spec.ts` F2-01 lulus | 2026-11-05 |
+| F2-02 | Spec `startSession` | ✅ | `exam-start.spec.ts` → 3 stage, 6 subtes urut `[KECERDASAN, KEPRIBADIAN, KECERMATAN, PASS_HAND, TPA, TPK]`, subtes pertama `READY` sisanya `LOCKED`; `order_index` `[1,2,3,4,1,1]` (regresi B1) | 2026-11-05 |
+| F2-03 | Spec kuota harian | ✅ | Sesi aktif kedua → 409 `EXAM_SESSION_ACTIVE_EXISTS`; sesi selesai di hari sama → 409 `EXAM_SESSION_ALREADY_TODAY`; hari berikutnya boleh | 2026-11-05 |
+| F2-04 | Spec `openSubtest` KECERDASAN | ✅ | `exam-open.spec.ts` → status `ACTIVE`, 100 baris `exam_session_questions` position 1..100 `external_id` unik, durasi `ends_at − started_at` = 120 menit, buka 3× idempoten tetap 100 soal & 1 subtes ACTIVE; subtes berikutnya ditolak 409 `EXAM_STAGE_LOCKED` | 2026-11-05 |
+| F2-05 | Spec `openSubtest` KECERMATAN 500 | ✅ | 500 soal termaterialisasi **2.587 ms** (< 5 s); subtes lain tetap 0 soal — jaring pengaman B2 | 2026-11-05 |
+| F2-06 | Spec alur penuh | ✅ | `exam-flow.spec.ts` → start → open → questions 2 halaman (100 id unik, tanpa `isCorrect`/`dimensionMap`/`pairGroup`) → autosave 2×50 → heartbeat → proctoring `accepted:1` → finish KECERDASAN 100% lulus → result ditolak 409 selama sesi berjalan → 5 subtes sisa → sesi `COMPLETED` total 100 lulus → result + history | 2026-11-05 |
+| F2-07 | Spec autosave idempoten | ✅ | Replay `clientSeq=7` → `saved` sama, `exam_answer_events` tetap 10 baris; `clientSeq=8` → 20 event (revisi) tetapi 100 baris soal | 2026-11-05 |
+| F2-08 | Script `smoke:cat` | ✅ | `pnpm smoke:cat` dijalankan **2× berturut-turut** → keduanya `LULUS` exit 0, 6/6 subtes COMPLETED total 100, cleanup → sesi 0 / subtes 0 / soal 0 | 2026-11-05 |
+| F2-09 | Job CI integrasi | ✅ | `.github/workflows/ci.yml` job `integration` (`needs: verify`, service `postgres:17`, migrasi ke `webcat_test`, `pnpm test:integration`) | 2026-11-05 |
+| F2-10 | Dokumentasi cara menjalankan | ✅ | `docs/perbaikan/README-test.md` (setup DB, migrasi, perintah, cakupan test, troubleshooting) + tautan di `docs/README.md` | 2026-11-05 |
 
-**Gate keluar:** `pnpm test:integration` dan `pnpm smoke:cat` hijau.
+**Gate keluar:** ✅ `pnpm test:integration` **4 file / 14 test lulus** (70,9 s) dan
+`pnpm smoke:cat` LULUS 2× berturut-turut dengan baseline bersih.
+
+> **Status Fase 2: ✅ SELESAI (2026-11-05).** Bug B1 & B2 kini punya test
+> anti-regresi yang menyentuh PostgreSQL nyata — bukan fake Prisma. `pnpm test`
+> tetap tidak menyentuh database karena `test/integration/**` dikecualikan di
+> `vitest.config.ts`.
 
 ---
 
@@ -328,6 +334,39 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 2 selesai
+
+**Dikerjakan:** F2-01 … F2-10
+**Hasil:** Fase 2 ✅ (10/10). B1 & B2 kini dijaga test yang menyentuh PostgreSQL
+nyata, bukan fake Prisma.
+
+**Bukti:**
+
+- `pnpm test:integration` → **4 file / 14 test lulus** (70,9 s) terhadap
+  `webcat_test`.
+- `exam-start.spec.ts`: 3 stage / 6 subtes urut benar, `order_index`
+  `[1,2,3,4,1,1]` (regresi B1), `READY` + 5×`LOCKED`, kuota harian 409.
+- `exam-open.spec.ts`: 100 soal + timer 120 menit + buka 3× idempoten;
+  KECERMATAN 500 soal **2.587 ms** (< 5 s) — jaring pengaman B2.
+- `exam-flow.spec.ts`: alur penuh sampai `result` + `history`; replay
+  `clientSeq` tidak menduplikasi (10 → 10 event, `clientSeq` baru → 20).
+- `pnpm smoke:cat` **2× berturut-turut LULUS** (exit 0), cleanup → sesi 0,
+  subtes 0, soal 0.
+- `.github/workflows/ci.yml` job `integration` (postgres:17) + dokumentasi
+  `docs/perbaikan/README-test.md`.
+
+**Temuan:** `exam_sessions_user_exam_date_active_key` bersifat parsial
+(`WHERE voided_at IS NULL`), jadi sesi yang di-*void* tidak memblokir sesi baru —
+perilaku ini sekarang terkunci lewat test kuota harian.
+
+**Hambatan:** Docker tidak tersedia di mesin lokal; test integrasi memakai
+database Supabase kedua (`webcat_test`). CI memakai `postgres:17` sehingga
+tidak terpengaruh.
+
+**Berikutnya:** Fase 3 — soal bergambar (F3-01 … F3-31).
+
+---
 
 ### 2026-11-05 — Fase 1 selesai
 
