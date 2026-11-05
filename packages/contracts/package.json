@@ -31,6 +31,14 @@
       "types": "./dist/exams/index.d.ts",
       "default": "./dist/exams/index.js"
     },
+    "./results": {
+      "types": "./dist/results/index.d.ts",
+      "default": "./dist/results/index.js"
+    },
+    "./proctoring": {
+      "types": "./dist/proctoring/index.d.ts",
+      "default": "./dist/proctoring/index.js"
+    },
     "./ports": {
       "types": "./dist/ports/index.d.ts",
       "default": "./dist/ports/index.js"

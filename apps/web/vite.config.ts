@@ -12,6 +12,15 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@webcat/contracts'],
   },
+  build: {
+    // Workspace package di-resolve ke `packages/contracts/dist` (di luar
+    // node_modules), jadi plugin CommonJS default tidak menyentuhnya. Tanpa
+    // ini, named export runtime seperti `STAGE_CODES` tidak terdeteksi.
+    commonjsOptions: {
+      include: [/node_modules/, /packages[\\/]contracts[\\/]dist/],
+      transformMixedEsModules: true,
+    },
+  },
   server: {
     port: 5173,
     proxy: {

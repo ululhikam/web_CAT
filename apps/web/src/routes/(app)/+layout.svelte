@@ -20,10 +20,16 @@
 
   const nav = [
     { href: '/dashboard', label: 'Ringkasan' },
+    { href: '/exam', label: 'Ujian' },
+    { href: '/history', label: 'Riwayat' },
     { href: '/subscription', label: 'Langganan' },
   ] as const;
 
   let current = $derived($page.url.pathname);
+
+  function isActive(href: string): boolean {
+    return current === href || current.startsWith(`${href}/`);
+  }
 </script>
 
 <svelte:head>
@@ -44,7 +50,7 @@
         {#each nav as item (item.href)}
           <a
             class="sidebar__link"
-            class:sidebar__link--active={current === item.href}
+            class:sidebar__link--active={isActive(item.href)}
             href={item.href}>{item.label}</a
           >
         {/each}
@@ -53,6 +59,8 @@
           <p class="sidebar__section">Admin</p>
           <a class="sidebar__link" href="/admin/users">Pengguna</a>
           <a class="sidebar__link" href="/admin/plans">Paket</a>
+          <a class="sidebar__link" href="/admin/exams">Konfigurasi ujian</a>
+          <a class="sidebar__link" href="/admin/monitoring">Monitoring</a>
         {/if}
       </nav>
 

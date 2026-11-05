@@ -86,6 +86,8 @@ model ExamSetting {
   maxSessionsPerDay   Int      @default(1) @map("max_sessions_per_day")
   gracePeriodShortMs  Int      @default(3000) @map("grace_period_short_ms")
   gracePeriodLongMs   Int      @default(8000) @map("grace_period_long_ms")
+  /// on_open | immediate — kapan timer subtes berikutnya mulai berjalan.
+  subtestTransition   String   @default("on_open") @map("subtest_transition")
   violationPolicy     Json     @map("violation_policy")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
@@ -100,6 +102,9 @@ model ExamSession {
   totalScore    Decimal?      @map("total_score") @db.Decimal(8, 4)
   passed        Boolean?
   scoringVersion Int          @default(1) @map("scoring_version")
+  /// Subtes yang menyebabkan gugur (null bila tidak gugur).
+  eliminatedSubtestCode SubtestCode? @map("eliminated_subtest_code")
+  eliminationReason String?    @map("elimination_reason")
   configSnapshot Json         @map("config_snapshot")
   startedAt     DateTime?     @map("started_at")
   finishedAt    DateTime?     @map("finished_at")
@@ -114,6 +119,7 @@ model ExamSession {
   proctoring   ProctoringEvent[]
 
   @@index([userId, startedAt(sort: Desc)])
+  @@index([userId, examDate])
   @@index([status])
   @@index([examDate])
   @@map("exam_sessions")
@@ -153,6 +159,13 @@ model ExamSessionSubtest {
   maxScore     Decimal?      @map("max_score") @db.Decimal(10, 4)
   percentage   Decimal?      @db.Decimal(8, 4)
   passed       Boolean?
+  answeredCount Int          @default(0) @map("answered_count")
+  correctCount  Int          @default(0) @map("correct_count")
+  wrongCount    Int          @default(0) @map("wrong_count")
+  blankCount    Int          @default(0) @map("blank_count")
+  consistencyIndex Decimal?  @map("consistency_index") @db.Decimal(8, 4)
+  /// Snapshot konfigurasi subtes saat dibuka (durasi, bobot, ambang, strategi).
+  configSnapshot Json?       @map("config_snapshot")
   startedAt    DateTime?     @map("started_at")
   endsAt       DateTime?     @map("ends_at")
   finishedAt   DateTime?     @map("finished_at")
@@ -188,16 +201,28 @@ model SubtestLock {
 model ExamSessionQuestion {
   id               String  @id @default(uuid()) @db.Uuid
   subtestSessionId String  @map("subtest_session_id") @db.Uuid
-  questionId       String  @map("question_id") @db.Uuid
+  /// Relasi opsional: sampai gate G2 pool soal dibaca dari port (mock/fixture),
+  /// sehingga baris bank soal belum tentu ada di database.
+  questionId       String? @map("question_id") @db.Uuid
+  /// Kode publik soal dari pool — kunci idempotensi materialisasi.
+  externalId       String  @map("external_id")
   position         Int
   columnIndex      Int?    @map("column_index")
   optionOrder      Json    @map("option_order")
+  /// Snapshot konten + kunci saat subtes dibuka (server-only; tidak pernah
+  /// dikirim ke klien). Penilaian selalu memakai snapshot ini.
+  snapshot         Json    @map("snapshot")
+  /// Jawaban terakhir (hasil UPSERT autosave). Null = belum dijawab.
+  answerPayload    Json?   @map("answer_payload")
+  answeredAt       DateTime? @map("answered_at")
+  revision         Int     @default(0)
+  timeSpentMs      Int     @default(0) @map("time_spent_ms")
 
   subtestSession ExamSessionSubtest @relation(fields: [subtestSessionId], references: [id], onDelete: Cascade)
-  question       Question           @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  question       Question?          @relation(fields: [questionId], references: [id], onDelete: Restrict)
   answers        ExamAnswerEvent[]
 
-  @@unique([subtestSessionId, questionId])
+  @@unique([subtestSessionId, externalId])
   @@unique([subtestSessionId, position])
   @@index([subtestSessionId, columnIndex, position])
   @@map("exam_session_questions")

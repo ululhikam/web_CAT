@@ -19,6 +19,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { HealthModule } from './modules/health/health.module';
+import { ScoringModule } from './modules/scoring/scoring.module';
+import { ExamsModule } from './modules/exams/exams.module';
+import { ProctoringModule } from './modules/proctoring/proctoring.module';
+import { ResultsModule } from './modules/results/results.module';
 
 /**
  * Root module — modular monolith.
@@ -44,6 +48,10 @@ import { HealthModule } from './modules/health/health.module';
     UsersModule,
     BillingModule,
     HealthModule,
+    ScoringModule,
+    ExamsModule,
+    ProctoringModule,
+    ResultsModule,
     CronModule,
   ],
   providers: [

@@ -44,6 +44,15 @@
         <a href="/admin/plans" class:is-active={page.url.pathname.startsWith('/admin/plans')}>
           Paket
         </a>
+        <a href="/admin/exams" class:is-active={page.url.pathname.startsWith('/admin/exams')}>
+          Ujian
+        </a>
+        <a
+          href="/admin/monitoring"
+          class:is-active={page.url.pathname.startsWith('/admin/monitoring')}
+        >
+          Monitoring
+        </a>
         <a href="/dashboard">Ke dashboard</a>
       </nav>
     </header>
