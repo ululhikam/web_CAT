@@ -599,6 +599,64 @@ Idempotensi di DB setelah uji: `exam_answer_events` 20 baris / 12 soal unik,
 
 ---
 
+### F5-11 — Preload 2 soal berikutnya ✅
+
+**Kriteria selesai:** navigasi tanpa jeda.
+
+#### Kondisi awal (apa yang sebenarnya belum jalan)
+
+Rancangan mengasumsikan soal diambil per halaman, sehingga soal berikutnya perlu
+diambil lebih awal. Kenyataannya `loadQuestions()` **sudah** mengambil seluruh
+halaman (`limit=50` + cursor sampai `nextCursor === null`) saat subtes dibuka,
+jadi teks soal ada di memori dan berpindah soal tidak pernah memicu request teks.
+
+Yang masih menimbulkan jeda adalah **gambar**. Runner baru meminta
+`/media/:id/content` ketika `<img>` dirender untuk soal yang sedang tampil
+(`ImageChoiceTiles` memakai `loading="lazy"`, media stem dan opsi memakai
+`<img>` biasa). Pada koneksi lambat, soal figural tampil dengan kotak kosong
+sampai unduhan selesai — persis "jeda" yang dimaksud kriteria.
+
+#### Solusi
+
+| Berkas | Perubahan |
+| --- | --- |
+| `lib/exams/media-preload.ts` (baru) | Fungsi murni `questionMediaUrls()` (media stem + opsi, `EXPLANATION` dibuang, URL duplikat dihapus) dan `planMediaPreload()` (indeks `index+1..index+ahead`, maksimal 2, digabung tanpa duplikat). Kelas `MediaPrefetcher` menghangatkan gambar lewat `new Image()` + `decode()` |
+| `routes/(app)/exam/[sessionId]/+page.svelte` | `$effect` memanggil `planMediaPreload()` setiap `index`/daftar soal berubah, lalu `mediaPrefetcher.prefetch()`; instance direset saat berpindah subtes dan saat halaman ditinggalkan |
+
+Catatan teknis:
+
+- Soal **sekarang** tidak ikut di-prefetch; `<img>`-nya sudah memulai unduhan
+  sendiri. Yang dihangatkan hanya dua soal berikutnya.
+- Endpoint media mengirim `cache-control: public, max-age=300, immutable`
+  (`media.controller.ts`), jadi saat soal berikutnya tampil, `<img>`-nya memakai
+  entri HTTP cache — tidak ada request baru.
+- `fetchPriority` **tidak** dipakai: nilainya tidak berpengaruh pada
+  `new Image()` yang tidak masuk layout, dan sempat membuat prefetch berhenti
+  di sebagian browser. Urutan URL (soal terdekat dulu) yang menjaga prioritas.
+- Prefetch dilewati bila `navigator.connection.saveData === true` atau
+  `effectiveType` termasuk `slow-2g`/`2g`; menghemat kuota peserta lebih penting
+  daripada navigasi instan.
+- Prefetch bersifat "best effort": `decode()` yang gagal diabaikan, dan URL yang
+  sama tidak pernah diminta dua kali dalam satu sesi halaman (batas 64 entri
+  agar memori tidak tumbuh tanpa henti).
+
+#### Bukti runtime (Chrome + DevTools Protocol)
+
+Harness: login peserta → buka runner → duduk di soal 9, lalu bandingkan dua
+navigasi pada jaringan yang diperlambat (`300 ms`, `100 kB/s`):
+
+| Langkah | Hasil |
+| --- | --- |
+| Duduk di soal 9 (warmFrom) | **5 request media** baru dipicu prefetch untuk soal 10–11 sebelum tombol ditekan |
+| Tekan "Berikutnya" → soal 10 | **18 ms** sampai 5 gambar siap; `ownRequestsAfterClick = 0` (semua dari cache) |
+| Pembanding: lompat ke soal 57 (belum pernah diminta) | **764–1190 ms** sampai 5 gambar siap; `ownRequestsAfterClick = 5` |
+| Error runtime | `[]` |
+
+Selisih ~40–65× pada jaringan lambat; satu-satunya biaya prefetch adalah 5
+request yang berjalan saat peserta masih membaca soal sebelumnya.
+
+---
+
 ### F5-12 — Zoom/pan gambar figural
 
 Untuk soal figural detail (jaring-jaring kubus, pola kompleks), tambahkan
@@ -627,6 +685,135 @@ Data `timeSpentMs` sudah dikirim saat autosave. Tambahkan pencatatan anomali:
 
 Simpan sebagai event proctoring (`exam_answer_events` atau tabel anomali),
 **jangan** otomatis menggugurkan peserta.
+
+---
+
+### F5-14 — Impor ZIP media + pemetaan manual ✅
+
+**Kriteria selesai:** admin bisa mengunggah sekumpulan gambar dan menetapkan
+sendiri berkas mana milik soal/opsi mana, tanpa salah pasang.
+
+#### Kondisi awal (apa yang sebenarnya belum jalan)
+
+Impor soal lewat spreadsheet sudah bisa membawa gambar (`image_stem_1`, dst.),
+tetapi selalu **membuat soal baru**. Bank soal yang sudah ada tidak punya jalan
+untuk menambal gambar yang hilang: admin harus membuka soal satu per satu dan
+mengunggah gambar lewat form. Untuk paket 100 soal figural itu ratusan unggahan
+manual, dan tidak ada cara memeriksa hasilnya sebelum menulis.
+
+#### Solusi
+
+| Berkas | Perubahan |
+| --- | --- |
+| `packages/contracts/src/imports/media-zip.ts` (baru) | Aturan murni: `scanMediaZipEntries()` (klasifikasi OK/UNSUPPORTED/TOO_LARGE/DUPLICATE/UNSAFE_PATH/EMPTY), `validateMediaZipMappings()` (cocokkan nama berkas ↔ kode soal ↔ label opsi), `mediaZipApplySchema`, `suggestMediaZipTarget()` (tebak target dari nama `fig-016-stem.png`) |
+| `apps/api/src/modules/imports/media-zip.service.ts` (baru) | Baca ZIP (JSZip), panggil fungsi kontrak, simpan lewat `MediaService.storeBuffer()` (ikut membuat thumbnail F5-15), lalu `questionMedia.create()` |
+| `apps/api/src/modules/imports/media-zip.controller.ts` (baru) | `POST admin/media/import/preview`, `POST admin/media/import/apply`, `GET admin/media/import/questions`, `POST admin/media/import/questions/resolve` |
+| `apps/web/src/routes/(admin)/[panel]/media/import/+page.svelte` (baru) | UI 3 langkah: unggah → periksa tabel → petakan & terapkan |
+| `apps/web/src/lib/admin/media-zip-draft.ts` (baru) | State draf pemetaan murni (dipakai UI dan unit test) |
+
+Catatan teknis:
+
+- **Duplikat nama menandai semua berkas**, bukan hanya yang kedua: `a/gambar.png`
+  dan `b/gambar.png` sama-sama `DUPLICATE` karena pemetaan memakai basename —
+  kalau hanya salah satu ditandai, admin bisa memetakan berkas yang salah tanpa
+  sadar.
+- Arsip dengan lebih dari **200 entri ditolak utuh** (`TOO_MANY_ENTRIES`), tidak
+  dipotong diam-diam.
+- Berkas metadata OS (`__MACOSX/`, `.DS_Store`, `Thumbs.db`, `desktop.ini`, path
+  berawalan titik) dan berkas non-gambar dibuang dari laporan, bukan dijadikan
+  error — ZIP buatan Finder/Windows selalu membawanya.
+- Path tidak aman (`../`, absolut) dilaporkan `UNSAFE_PATH` dan tidak pernah
+  ditulis ke disk; isi ZIP hanya dibaca ke memori.
+- `apply` idempoten per `(soal, aset)`: menjalankan ZIP yang sama dua kali
+  menghasilkan `skipped`, bukan lampiran ganda. Gambar **berbeda** pada soal yang
+  sama tetap boleh ditambahkan karena satu soal bisa punya beberapa gambar.
+- Baris yang gagal tidak menghentikan baris lain; `errors` selalu dikembalikan
+  lengkap agar admin bisa memperbaiki tanpa mengulang seluruh unggahan.
+- Tidak ada `ImportJob` yang dibuat: tidak ada soal baru, jadi tidak perlu status
+  REVIEW.
+
+#### Bukti runtime (API nyata, DB dev)
+
+| Langkah | Hasil |
+| --- | --- |
+| `POST /admin/media/import/preview` dengan ZIP 5 berkas (`catatan.txt` + `a/duplikat.png` + `b/duplikat.png` + `tpa-fig-001-stem.png` + `tpa-fig-001-opt-a.png`; 4 dilaporkan) | `summary { entries: 4, importable: 2, duplicate: 2 }`; kedua `duplikat.png` berstatus `DUPLICATE`; `catatan.txt` tidak muncul di laporan |
+| `POST /admin/media/import/questions/resolve` body `["TPA-FIG-001","tidak-ada-xyz"]` | hanya `TPA-FIG-001` (`afc19cc0-7386-4b23-927a-457181113af5`, opsi A–D) |
+| `POST /admin/media/import/apply` (2 gambar → `DEMO-TPA-IMG-001` STEM + opsi A) | `{ imported: 2, attached: 2, skipped: 0, questionsUpdated: 1, errors: [] }` |
+| DB setelah apply | 2 baris `question_media` (STEM + OPTION A) dan 2 aset baru; keduanya otomatis punya thumbnail (320×420→400×262 4.700 B, 520×520→400×400 5.376 B) |
+| Bersih-bersih | 2 baris `question_media` + 2 aset dihapus; kembali ke 235 lampiran / 105 aset |
+
+Bukti UI (Chrome + DevTools Protocol, `:5173`, login `SUPER_ADMIN`): buka
+`/super-admin/media/import` lewat tautan sidebar, lalu unggah `f5-import.zip`
+lewat `<input type="file">` (bukan memanggil API langsung). Halaman berpindah
+ke langkah petakan dan menampilkan **Ringkasan arsip**: `f5-import.zip`,
+4 berkas, 2 siap dipetakan, 0 sudah dipetakan, 2 belum bertarget. Tabel
+"Petakan berkas" berisi 4 baris — dua baris `duplikat.png` berstatus **Nama
+ganda** dengan keterangan "Nama berkas sama dengan berkas lain di ZIP; ganti
+salah satu nama.", dua lainnya (`tpa-fig-001-opt-a.png`, `tpa-fig-001-stem.png`)
+berstatus **Siap**. Satu-satunya respons non-2xx adalah `401 /auth/refresh`
+saat pemulihan sesi di navigasi penuh; tidak ada error lain.
+
+> Catatan operasional: bila halaman impor 500 dengan pesan "does not provide
+> an export named …", itu cache pre-bundel Vite yang basi setelah `dist`
+> kontrak dibangun ulang — hapus `apps/web/node_modules/.vite/deps` dan
+> restart dev server. Bukan bug kode.
+
+---
+
+### F5-15 — Varian WebP/thumbnail ✅
+
+**Kriteria selesai:** grid media & pratinjau tidak perlu mengunduh berkas besar.
+
+#### Kondisi awal (apa yang sebenarnya belum jalan)
+
+Semua media disimpan sebagai satu berkas WebP ukuran penuh dan dilayani apa
+adanya. Halaman daftar media dan panel pemilihan gambar merender banyak
+thumbnail 64–200 px, tetapi setiap kotak mengunduh berkas asli — satu halaman
+bank soal bisa menarik puluhan megabita hanya untuk melihat gambar kecil.
+
+#### Solusi
+
+| Berkas | Perubahan |
+| --- | --- |
+| `packages/contracts/src/media/index.ts` | `MEDIA_VARIANTS = ['full','thumb']`, `normalizeMediaVariant()`, `needsThumbnail()` (sisi terpanjang > `MEDIA_THUMBNAIL_MAX_DIMENSION` = 400 px), field `thumbUrl` pada `MediaAssetView` |
+| `apps/api/src/modules/media/media-thumbnail.ts` (baru) | `buildMediaThumbnail()` memakai sharp: resize `fit: inside`, WebP kualitas 70, `withoutEnlargement` |
+| `apps/api/src/modules/media/media.service.ts` | `storeBuffer()` membuat thumbnail saat simpan (kegagalan thumbnail tidak menggagalkan penyimpanan); `resolveVariant()` memilih byte sesuai `?variant` |
+| `apps/api/src/modules/media/media.controller.ts` | `?variant=` pada `GET media/:id/content` dan `GET admin/media/:id/preview` |
+| `apps/api/prisma/schema/question.prisma` + migrasi `20261106120000_f5_15_media_thumbnail` | Kolom `thumb_data`, `thumb_width`, `thumb_height`, `thumb_size_bytes` (semua nullable) |
+
+Catatan teknis:
+
+- **Varian bukan bagian dari HMAC.** URL bertanda tangan tetap satu;
+  `?variant=thumb` ditambahkan setelah tanda tangan dan tidak mengubah
+  `exp`/`sig`. Kalau varian ikut di-HMAC, setiap gambar butuh dua URL bertanda
+  tangan dan cache CDN terbelah tanpa manfaat keamanan (byte-nya sama-sama
+  publik).
+- Thumbnail dibuat **saat simpan**, bukan saat diminta, supaya request baca tetap
+  satu query tanpa CPU sharp.
+- Aset lama tidak di-backfill: selama `thumb_data` kosong, `?variant=thumb`
+  mengembalikan byte asli (fallback), **tidak pernah 404**.
+- Gambar yang sudah ≤ 400 px tidak dibuatkan turunan karena hasilnya bisa lebih
+  besar dari aslinya.
+- Respons tetap `cache-control: public, max-age=300, immutable` untuk kedua
+  varian.
+
+#### Bukti runtime (API nyata, DB dev)
+
+| Langkah | Hasil |
+| --- | --- |
+| `POST /admin/media/upload` `f5-big.png` 1200×800 | respons memuat `thumbUrl` yang tepat sama dengan `url + "&variant=thumb"`; `sizeBytes` 55.880 |
+| `GET url` (full) | `200`, `image/webp`, **55.880 byte**, `cache-control: public, max-age=300, immutable` |
+| `GET url&variant=thumb` | `200`, `image/webp`, **8.112 byte** (6,9× lebih kecil), header cache sama |
+| DB aset tersebut | `thumb_width 400`, `thumb_height 267`, `thumb_size_bytes 8112`, `octet_length(thumb_data) = 8112` |
+| Aset kecil 256×256 (tanpa turunan) | `thumb_size_bytes` NULL; `?variant=thumb` mengembalikan **3.032 byte** (byte asli) — fallback bekerja |
+| Migrasi | `prisma migrate deploy` mencatat `20261106120000_f5_15_media_thumbnail`; kolom `thumb_*` ada di `information_schema` |
+
+Bukti UI (Chrome + DevTools Protocol): grid media admin
+`/super-admin/media` merender 30 gambar dan meminta thumbnail lewat
+`/api/v1/media/<id>/content?exp=…&sig=…&variant=thumb` (terpantau 15 request
+`variant=thumb` pada muatan pertama; sisanya menyusul saat digulir karena
+`loading="lazy"`). Kolom `src` pada kartu media dan pemilih media di form soal
+kini memakai `thumbUrl` (jatuh ke `url` bila kosong).
 
 ---
 

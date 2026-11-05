@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
-**Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **9/16**
+**Terakhir diperbarui:** 6 November 2026
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **13/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 10 | 16 | `██████░░░░` 63% |
-| **Total** | | | **89** | **95** | **94%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 13 | 16 | `████████░░` 81% |
+| **Total** | | | **92** | **95** | **97%** |
 
 ---
 
@@ -538,16 +538,38 @@ tidak ada lagi fallback senyap ke fixture.
 > jawaban yang sudah tersimpan tidak pernah tampil setelah refresh, sehingga
 > kriteria F5-10 tidak mungkin terbukti.
 
+#### Verifikasi penutup F5-11 / F5-14 / F5-15 (6 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run` (web penuh) | ✅ 13 berkas / **146** test (`media-preload.spec.ts` 20 test baru) |
+| `vitest run` (API penuh) | ✅ 41 berkas / **411** test (`media-thumbnail.spec.ts` 7, `media-zip-import.spec.ts` 13 baru) |
+| `vitest run` (contracts) | ✅ 6 berkas / **55** test (`media-zip.spec.ts` 24 test baru) |
+| `tsc --noEmit` (API) · `svelte-check` (web) | ✅ exit 0 · **0 error, 0 warning** |
+| `eslint src --max-warnings 0` (API & web) | ✅ exit 0 keduanya |
+| F5-11 runtime (Chrome + CDP, `:5173`, throttle 300 ms/100 kB/s) | ✅ duduk di soal 9 → **5 request media** prefetch soal 10–11; "Berikutnya" → soal 10 siap dalam **18 ms**, `ownRequestsAfterClick = 0`; pembanding soal 57 (belum di-prefetch) **764–1190 ms** dengan `ownRequestsAfterClick = 5`; `window.__cdpErrors = []`; harness 7/7 lulus |
+| F5-14 runtime (API nyata + DB dev) | ✅ `preview` ZIP 5 entri → `{entries:4, importable:2, duplicate:2}` dan **kedua** `duplikat.png` (folder `a/` & `b/`) `DUPLICATE`; `questions/resolve` `["TPA-FIG-001","tidak-ada-xyz"]` → hanya `TPA-FIG-001` (opsi A–D); `apply` 2 gambar → `DEMO-TPA-IMG-001` STEM + opsi A → `{imported:2, attached:2, skipped:0, questionsUpdated:1, errors:[]}`; 2 baris `question_media` + 2 aset terverifikasi di DB, lalu dibersihkan kembali (235 lampiran / 105 aset) |
+| F5-14 runtime UI (Chrome + CDP) | ✅ unggah `f5-import.zip` lewat halaman `/super-admin/media/import` → "Ringkasan arsip" 4 berkas (2 siap dipetakan, 2 belum bertarget) dan tabel "Petakan berkas" 4 baris; dua `duplikat.png` berstatus **Nama ganda**, dua berkas `tpa-fig-001-*` berstatus **Siap** |
+| F5-15 runtime (API nyata + DB dev) | ✅ upload `f5-big.png` 1200×800 → `thumbUrl` = `url + "&variant=thumb"`; `full` **55.880 byte** vs `thumb` **8.112 byte** (keduanya `image/webp`, `cache-control: public, max-age=300, immutable`); DB `thumb_width 400 / thumb_height 267 / thumb_size_bytes 8112 / octet_length(thumb_data) 8112`; aset 256×256 tanpa turunan → `?variant=thumb` mengembalikan 3.032 byte (fallback, bukan 404) |
+| Migrasi `20261106120000_f5_15_media_thumbnail` | ✅ `prisma migrate status` → no pending; `information_schema` memuat `thumb_data/thumb_width/thumb_height/thumb_size_bytes`; tercatat di `_prisma_migrations` |
+| F5-15 runtime UI (Chrome + CDP) | ✅ grid media admin meminta `…/content?exp=…&sig=…&variant=thumb` (15 request `variant=thumb` terpantau pada muatan pertama, sisanya menyusul saat digulir karena `loading="lazy"`) |
+| API `dist` dijalankan ulang | ✅ rute `admin/media/import/*` aktif (401 tanpa token, bukan 404); `?variant=thumb` dilayani |
+
+> **Deviasi F5-11:** `fetchPriority` tidak dipakai — tidak berpengaruh pada
+> `new Image()` di luar layout. **Deviasi F5-15:** varian **tidak** ikut HMAC;
+> `?variant=thumb` ditambahkan setelah tanda tangan supaya satu URL tetap sah
+> untuk dua ukuran.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
 | F5-10 | Autosave IndexedDB (+ `fetch keepalive`, bukan `sendBeacon`) | ✅ | Antrean IndexedDB dipulihkan ke UI setelah refresh, disinkronkan ulang saat `online`, dan digabung per soal (satu baris per soal) agar jawaban terbaru tidak kalah dari yang lama. Bug turunan ditemukan & diperbaiki: `GET .../questions` mengembalikan `answer: null` karena `select` memakai `answerPayload` sementara proyeksi membaca `answer`. Bukti runtime Chrome/CDP **9/9** (offline 5 jawaban → IndexedDB → online → antrean 0 & tersimpan; autosave diblokir → 3 tertahan → refresh → 9→12 soal terjawab + "3 dipulihkan" → blokir dibuka → antrean 0). 21 test baru | 2026-11-05 |
-| F5-11 | Preload 2 soal berikutnya | ⬜ | — | — |
+| F5-11 | Preload 2 soal berikutnya | ✅ | Hanya **media** yang di-prefetch (soal `index+1`/`index+2`, `EXPLANATION` dibuang); dilewati saat `saveData`/`2g`/`slow-2g`; URL tidak pernah diminta dua kali (batas 64 entri). Runtime Chrome/CDP **7/7**: soal 10 siap **18 ms** dengan `ownRequestsAfterClick = 0` vs soal 57 **764–1190 ms** dengan 5 request; tanpa error runtime. 20 test baru | 2026-11-06 |
 | F5-12 | Zoom/pan gambar figural | ⬜ | — | — |
 | F5-13 | Flag anomali waktu jawab | ⬜ | — | — |
-| F5-14 | Import ZIP gambar end-to-end | ⬜ | — | — |
-| F5-15 | Varian WebP/thumbnail | ⬜ | — | — |
+| F5-14 | Import ZIP gambar end-to-end | ✅ | `admin/media/import/{preview,apply,questions,questions/resolve}`. Aturan murni di `packages/contracts/src/imports/media-zip.ts` (24 test) dipakai UI & API. Arsip >200 entri ditolak utuh; duplikat nama menandai **semua** berkas; metadata OS & non-gambar dibuang dari laporan; `apply` idempoten per `(soal, aset)`. Runtime API: preview ZIP 5 berkas → `importable 2 / duplicate 2`; apply 2 gambar ke `DEMO-TPA-IMG-001` STEM + opsi A → `attached 2`, diverifikasi di DB lalu dibersihkan. Runtime UI: unggah ZIP di `/super-admin/media/import` → ringkasan arsip + tabel 4 baris (2 "Nama ganda"). 13 test API + 24 test kontrak + 20 test draf | 2026-11-06 |
+| F5-15 | Varian WebP/thumbnail | ✅ | `?variant=thumb` pada URL bertanda tangan yang sama (varian **bukan** bagian HMAC). Thumbnail dibuat saat simpan hanya bila sisi terpanjang > 400 px, disimpan di kolom `thumb_*`; aset lama/`≤400 px` memakai byte asli (tidak pernah 404). Runtime: upload 1200×800 → full 55.880 B vs thumb 8.112 B, DB `thumb_size_bytes 8112`. Migrasi `20261106120000_f5_15_media_thumbnail` diterapkan. 7 test baru | 2026-11-06 |
 | F5-16 | E2E Playwright alur ujian | ⬜ | — | — |
 
 ---
@@ -564,6 +586,49 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-06 — Fase 5: F5-11, F5-14, F5-15 selesai
+
+**Dikerjakan:** F5-11, F5-14, F5-15
+**Hasil:** Fase 5 ✅ 13/16. Navigasi antar soal tidak lagi menunggu unduhan
+gambar (prefetch 2 soal ke depan), admin bisa menambal gambar bank soal lewat
+satu ZIP + pemetaan manual, dan grid media memakai varian thumbnail 400 px
+sehingga tidak lagi menarik berkas penuh. Tracker: **92/95 = 97%**.
+
+**Bukti:**
+
+- `pnpm --filter @webcat/web test` → 13 berkas / **146** test; `svelte-check`
+  0 error / 0 warning; eslint exit 0.
+- `pnpm --filter @webcat/api test` → 41 berkas / **411** test; `tsc --noEmit`
+  exit 0; eslint exit 0.
+- `vitest` contracts → 6 berkas / **55** test.
+- F5-11 runtime Chrome/CDP **7/7**: soal 10 siap **18 ms** (`ownRequestsAfterClick
+  = 0`, 5 request prefetch sebelumnya) vs soal 57 **764–1190 ms**
+  (`ownRequestsAfterClick = 5`); `window.__cdpErrors = []`.
+- F5-14 runtime API nyata: `preview` ZIP 5 entri → `{entries:4, importable:2,
+  duplicate:2}` (kedua `duplikat.png` ditandai), `resolve` hanya mengembalikan
+  kode yang ada, `apply` 2 gambar → `{imported:2, attached:2, skipped:0,
+  questionsUpdated:1}`; 2 baris `question_media` terverifikasi di DB lalu
+  dibersihkan (kembali 235 lampiran / 105 aset).
+- F5-15 runtime API nyata: upload 1200×800 → `full` **55.880 B** vs `thumb`
+  **8.112 B** (`image/webp` keduanya, header cache sama); DB `thumb_width 400`,
+  `thumb_height 267`, `thumb_size_bytes 8112`; aset 256×256 → `?variant=thumb`
+  mengembalikan byte asli (fallback).
+- F5-14/F5-15 runtime UI (Chrome + CDP): halaman
+  `/super-admin/media/import` menerima ZIP lewat `<input type="file">` dan
+  menampilkan "Ringkasan arsip" 4 berkas (2 siap dipetakan) + tabel 4 baris
+  dengan dua **Nama ganda**; grid media admin meminta `…&variant=thumb`.
+- Migrasi `20261106120000_f5_15_media_thumbnail` → `prisma migrate status`
+  "no pending", kolom `thumb_*` ada di `information_schema`.
+
+**Hambatan:** API sempat 500 pada `/media/:id/content` karena Prisma Client sudah
+memuat kolom `thumb_*` sementara migrasi belum diterapkan; juga
+`/auth/refresh` gagal (`Transaction API error`) saat API memakai pooler
+transaksi 6543. Diatasi dengan menerapkan migrasi dan menjalankan API memakai
+`DIRECT_URL` (sesi 5432).
+
+**Berikutnya:** F5-12 (zoom/pan gambar figural) dan F5-13 (flag anomali waktu
+jawab), lalu F5-16 (E2E Playwright).
 
 ### 2026-11-05 — Fase 5: F5-10 selesai
 
