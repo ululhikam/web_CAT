@@ -23,6 +23,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Folder `build` adalah output adapter-node saat `pnpm build`. Di Windows
+    // file-nya bisa terkunci sehingga watcher gagal `scandir` dan dev server
+    // mati. Jangan pernah ikut memantau artefak build.
+    watch: {
+      ignored: ['**/build/**'],
+    },
     proxy: {
       '/api': {
         target: process.env.API_URL ?? 'http://localhost:3000',
