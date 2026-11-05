@@ -226,6 +226,22 @@ async function executeRequest<T>(
     );
   }
 
+  // Endpoint berhalaman mengirim `data` sebagai array dan metadata pagination
+  // di `meta` (lihat ResponseInterceptor API). Kembalikan bentuk `CursorPage`
+  // agar pemanggil bisa memakai `items`, `nextCursor`, dan `hasMore`.
+  if (
+    Array.isArray(envelope.data) &&
+    envelope.meta &&
+    ('nextCursor' in envelope.meta || 'hasMore' in envelope.meta)
+  ) {
+    return {
+      items: envelope.data,
+      nextCursor: (envelope.meta.nextCursor as string | null | undefined) ?? null,
+      hasMore: envelope.meta.hasMore === true,
+      ...(typeof envelope.meta.total === 'number' ? { total: envelope.meta.total } : {}),
+    } as T;
+  }
+
   return envelope.data as T;
 }
 

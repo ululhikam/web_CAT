@@ -146,7 +146,7 @@
   <!-- ROLE BANNER (RuangAdmin Notification Pill) -->
   {#if session.isSuperAdmin}
     <div class="role-banner role-banner--super">
-      <div class="banner-icon">👑</div>
+      <div class="banner-icon"><AdminIcon name="shield" size={24} /></div>
       <div class="banner-body">
         <strong>Akses Sistem Penuh: SUPER_ADMINISTRATOR</strong>
         <p>Anda memiliki hak akses tertinggi untuk konfigurasi platform, audit log, manajemen staf admin, dan paket langganan.</p>
@@ -155,7 +155,7 @@
     </div>
   {:else}
     <div class="role-banner role-banner--admin">
-      <div class="banner-icon">🛡️</div>
+      <div class="banner-icon"><AdminIcon name="shield" size={24} /></div>
       <div class="banner-body">
         <strong>Akses Operasional: ADMINISTRATOR CAT</strong>
         <p>Fokus operasional harian: kurasi bank soal, import berkas, verifikasi data peserta, dan aktivasi paket ujian.</p>
@@ -432,7 +432,7 @@
             <div class="audit-list">
               {#each recentAudit as item (item.id)}
                 <div class="audit-item">
-                  <div class="audit-avatar">⚡</div>
+                  <div class="audit-avatar"><AdminIcon name="audit" size={18} /></div>
                   <div class="audit-body">
                     <div class="audit-top">
                       <strong class="audit-action">{item.action}</strong>

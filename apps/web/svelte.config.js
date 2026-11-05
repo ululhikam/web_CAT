@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import vercel from '@sveltejs/adapter-vercel';
 import node from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
@@ -27,6 +28,12 @@ const config = {
     alias: {
       // Paket komponen dipakai langsung dari source (tanpa build step).
       '@webcat/ui': '../../packages/ui/src',
+      // `@webcat/contracts` dibangun sebagai CommonJS untuk API NestJS,
+      // sedangkan SSR SvelteKit berjalan sebagai ESM. Arahkan ke sumber
+      // TypeScript agar Vite tidak mengeksekusi `exports` CJS di runtime SSR.
+      '@webcat/contracts': fileURLToPath(
+        new URL('../../packages/contracts/src/index.ts', import.meta.url),
+      ),
     },
   },
 };

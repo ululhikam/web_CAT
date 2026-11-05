@@ -78,7 +78,7 @@
 </script>
 
 <svelte:head>
-  <title>Ujian -" Web CAT</title>
+  <title>Ujian - Web CAT</title>
 </svelte:head>
 
 <div class="page">

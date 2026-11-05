@@ -1,5 +1,6 @@
-<script lang="ts">
-  import { onDestroy, untrack } from 'svelte';
+﻿<script lang="ts">
+  import { untrack } from 'svelte';
+  import { goto } from '$app/navigation';
   import Badge from '@webcat/ui/components/Badge.svelte';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
@@ -153,143 +154,9 @@
     },
   ];
 
-  /* ------------------------------------------------------------------ INTERACTIVE SIMULATOR */
-  let simulasiModalOpen = $state(false);
+  /* ------------------------------------------------------------------ DETAIL MODAL */
   let detailModalOpen = $state(false);
   let selectedSession = $state<(typeof recentSessions)[number] | null>(null);
-
-  // Bank Soal CAT Polri untuk Simulasi Interaktif
-  const catExamQuestions = [
-    {
-      id: 1,
-      module: 'Tes Psikologi — Penalaran Logis',
-      stem: 'Semua perwira Polri wajib menjunjung tinggi etika profesi dan integritas dinas. Inspektur Polisi Dua Arya adalah seorang perwira Polri. Kesimpulan yang sah adalah...',
-      options: [
-        { key: 'A', text: 'Inspektur Polisi Dua Arya tidak terikat kode etik kepolisian.' },
-        { key: 'B', text: 'Inspektur Polisi Dua Arya wajib menjunjung tinggi etika profesi dan integritas dinas.' },
-        { key: 'C', text: 'Sebagian perwira Polri diperbolehkan mengabaikan integritas bila mendesak.' },
-        { key: 'D', text: 'Inspektur Polisi Dua Arya hanya terikat aturan administrasi biasa.' },
-      ],
-      correctKey: 'B',
-      explanation: 'Silogisme kategorik premis mayor dan minor mutlak: Semua P adalah Q; X adalah P; maka X adalah Q.',
-    },
-    {
-      id: 2,
-      module: 'Tes Potensi Akademik — Hubungan Kata (Analogi)',
-      stem: 'POLISI : HUKUM = HAKIM : ...',
-      options: [
-        { key: 'A', text: 'Pengadilan' },
-        { key: 'B', text: 'Keadilan' },
-        { key: 'C', text: 'Terdakwa' },
-        { key: 'D', text: 'Vonis' },
-      ],
-      correctKey: 'B',
-      explanation: 'Polisi bertugas menegakkan hukum; Hakim bertugas menegakkan keadilan.',
-    },
-    {
-      id: 3,
-      module: 'Tes Pengetahuan Kepolisian (TPK)',
-      stem: 'Berdasarkan Undang-Undang No. 2 Tahun 2002 Pasal 13, tugas pokok Kepolisian Negara Republik Indonesia adalah...',
-      options: [
-        { key: 'A', text: 'Memelihara keamanan dan ketertiban masyarakat, menegakkan hukum, serta memberikan perlindungan, pengayoman, dan pelayanan kepada masyarakat.' },
-        { key: 'B', text: 'Menjaga pertahanan teritorial kedaulatan negara dari ancaman invasi militer asing.' },
-        { key: 'C', text: 'Melakukan penuntutan perkara pidana umum di hadapan majelis persidangan pengadilan negeri.' },
-        { key: 'D', text: 'Menetapkan vonis dan putusan hukum terhadap setiap pelaku pelanggaran tindak pidana.' },
-      ],
-      correctKey: 'A',
-      explanation: 'Pasal 13 UU No. 2 Tahun 2002 tegas menyebutkan tiga tupoksi pokok Polri.',
-    },
-    {
-      id: 4,
-      module: 'Tes Psikologi — Deret Logika Numerik',
-      stem: 'Tentukan angka kelanjutan dari pola deret berikut: 3, 7, 15, 31, 63, ...',
-      options: [
-        { key: 'A', text: '125' },
-        { key: 'B', text: '127' },
-        { key: 'C', text: '129' },
-        { key: 'D', text: '131' },
-      ],
-      correctKey: 'B',
-      explanation: 'Pola: (n × 2) + 1. Jadi 63 × 2 + 1 = 126 + 1 = 127.',
-    },
-    {
-      id: 5,
-      module: 'Tes Pengetahuan Kepolisian — Wewenang Polri',
-      stem: 'Tindakan kepolisian yang dilakukan demi kepentingan umum berdasarkan penilaian perwira atau anggota Polri di lapangan dinamakan kewenangan...',
-      options: [
-        { key: 'A', text: 'Diskresi Kepolisian' },
-        { key: 'B', text: 'Imunitas Hukum' },
-        { key: 'C', text: 'Hak Prerogatif' },
-        { key: 'D', text: 'Penyelidikan Tertutup' },
-      ],
-      correctKey: 'A',
-      explanation: 'Pasal 18 ayat (1) UU No. 2/2002 mengatur kewenangan diskresi demi kepentingan umum.',
-    },
-  ];
-
-  let currentQuestionIndex = $state(0);
-  let answers = $state<Record<number, string>>({});
-  let doubts = $state<Record<number, boolean>>({});
-  let examFinished = $state(false);
-  let timeRemaining = $state(600); // 10 menit
-  let timerInterval: ReturnType<typeof setInterval> | null = null;
-
-  function startExam() {
-    currentQuestionIndex = 0;
-    answers = {};
-    doubts = {};
-    examFinished = false;
-    timeRemaining = 600;
-    simulasiModalOpen = true;
-
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      if (timeRemaining > 0) {
-        timeRemaining -= 1;
-      } else {
-        finishExam();
-      }
-    }, 1000);
-  }
-
-  function finishExam() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
-    examFinished = true;
-  }
-
-  function closeExamModal() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
-    simulasiModalOpen = false;
-  }
-
-  onDestroy(() => {
-    if (timerInterval) clearInterval(timerInterval);
-  });
-
-  const formattedTime = $derived(() => {
-    const mins = Math.floor(timeRemaining / 60);
-    const secs = timeRemaining % 60;
-    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  });
-
-  const currentQ = $derived(catExamQuestions[currentQuestionIndex]);
-  const answeredCount = $derived(Object.keys(answers).length);
-
-  const examScore = $derived(() => {
-    let correct = 0;
-    catExamQuestions.forEach((q, idx) => {
-      if (answers[idx] === q.correctKey) correct += 1;
-    });
-    return Math.round((correct / catExamQuestions.length) * 100);
-  });
-
-  const isPassing = $derived(examScore() >= 61);
 
   function openDetailModal(sess: (typeof recentSessions)[number]) {
     selectedSession = sess;
@@ -298,7 +165,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard Peserta — Web CAT POLRI</title>
+  <title>Dashboard Peserta - Web CAT POLRI</title>
 </svelte:head>
 
 <div class="dashboard-page">
@@ -309,9 +176,9 @@
       <p class="page-subtitle">Portal latihan dan evaluasi terpadu berbasis Computer Assisted Test (CAT) Polri.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-start-cat" type="button" onclick={startExam}>
+      <button class="btn-start-cat" type="button" onclick={() => goto('/simulation')}>
         <AdminIcon name="shield" size={17} />
-        <span>Mulai Ujian CAT</span>
+        <span>Mulai Simulasi CAT</span>
       </button>
     </div>
   </div>
@@ -385,7 +252,7 @@
         <span class="stat-label">KEAMANAN SESI</span>
         <div class="stat-value">1 Perangkat</div>
         <div class="stat-trend stat-trend--down">
-          <span>🛡 Aktif</span>
+          <span>Aktif</span>
           <span class="trend-text">Proteksi anti-curang</span>
         </div>
       </div>
@@ -404,7 +271,7 @@
         Dilengkapi pengatur waktu terpisah per subtes, bobot penilaian resmi, serta pendeteksi ambang batas kelulusan Memenuhi Syarat (MS) minimal 61.00.
       </p>
       <div class="banner-buttons">
-        <button class="btn-primary-launch" type="button" onclick={startExam}>
+        <button class="btn-primary-launch" type="button" onclick={() => goto('/simulation')}>
           <AdminIcon name="shield" size={17} />
           <span>Mulai Simulasi CAT Sekarang</span>
         </button>
@@ -525,7 +392,7 @@
       </div>
 
       <div class="card-box__footer">
-        <button class="link-view-more" type="button" onclick={startExam}>Uji Kemampuan Sekarang &gt;</button>
+        <button class="link-view-more" type="button" onclick={() => goto('/simulation')}>Uji Kemampuan Sekarang &gt;</button>
       </div>
     </div>
   </div>
@@ -536,7 +403,7 @@
     <div class="card-box card-box--table">
       <div class="card-box__header">
         <h2 class="card-box__title">Riwayat Sesi Ujian (Tryout History)</h2>
-        <button class="btn-action-red" type="button" onclick={startExam}>Mulai Ujian Baru &gt;</button>
+        <button class="btn-action-red" type="button" onclick={() => goto('/simulation')}>Mulai Ujian Baru &gt;</button>
       </div>
 
       <div class="table-responsive">
@@ -597,191 +464,6 @@
   </div>
 </div>
 
-<!-- ================================================================== CAT EXAM SIMULATOR MODAL -->
-{#if simulasiModalOpen}
-  <div class="modal-backdrop" onclick={closeExamModal} role="dialog" aria-modal="true">
-    <div class="modal-dialog" onclick={(e) => e.stopPropagation()} role="document">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <div class="exam-title-wrap">
-          <div class="exam-badge-cat">SIMULASI CAT POLRI</div>
-          <h2 class="exam-title">{currentQ.module}</h2>
-        </div>
-        <div class="exam-timer-wrap">
-          <div class="timer-box">
-            <AdminIcon name="clock" size={17} />
-            <span class="timer-digits">{formattedTime()}</span>
-          </div>
-          <button class="btn-close-modal" type="button" onclick={closeExamModal} aria-label="Tutup">
-            <AdminIcon name="close" size={20} />
-          </button>
-        </div>
-      </div>
-
-      <!-- Modal Body -->
-      {#if !examFinished}
-        <div class="modal-body">
-          <div class="exam-layout">
-            <!-- Left: Question Panel -->
-            <div class="question-panel">
-              <div class="question-meta">
-                <span class="q-number">Soal Nomor {currentQuestionIndex + 1} dari {catExamQuestions.length}</span>
-                <label class="q-doubt-check">
-                  <input
-                    type="checkbox"
-                    checked={doubts[currentQuestionIndex] ?? false}
-                    onchange={(e) => {
-                      doubts[currentQuestionIndex] = (e.target as HTMLInputElement).checked;
-                    }}
-                  />
-                  <span>Tandai Ragu-Ragu</span>
-                </label>
-              </div>
-
-              <div class="question-stem">
-                {currentQ.stem}
-              </div>
-
-              <div class="options-list">
-                {#each currentQ.options as opt (opt.key)}
-                  {@const isSelected = answers[currentQuestionIndex] === opt.key}
-                  <button
-                    class="opt-card"
-                    class:opt-card--selected={isSelected}
-                    type="button"
-                    onclick={() => {
-                      answers[currentQuestionIndex] = opt.key;
-                    }}
-                  >
-                    <div class="opt-key">{opt.key}</div>
-                    <div class="opt-text">{opt.text}</div>
-                  </button>
-                {/each}
-              </div>
-
-              <!-- Question Action Buttons -->
-              <div class="question-nav-buttons">
-                <button
-                  class="btn-nav-prev"
-                  type="button"
-                  disabled={currentQuestionIndex === 0}
-                  onclick={() => {
-                    if (currentQuestionIndex > 0) currentQuestionIndex -= 1;
-                  }}
-                >
-                  ← Soal Sebelumnya
-                </button>
-
-                {#if currentQuestionIndex < catExamQuestions.length - 1}
-                  <button
-                    class="btn-nav-next"
-                    type="button"
-                    onclick={() => {
-                      currentQuestionIndex += 1;
-                    }}
-                  >
-                    Soal Berikutnya →
-                  </button>
-                {:else}
-                  <button class="btn-finish-exam" type="button" onclick={finishExam}>
-                    Selesai &amp; Kumpulkan Ujian
-                  </button>
-                {/if}
-              </div>
-            </div>
-
-            <!-- Right: Palette Navigator -->
-            <aside class="palette-panel">
-              <div class="palette-heading">NAVIGASI SOAL</div>
-              <div class="palette-grid">
-                {#each catExamQuestions as _, idx (idx)}
-                  {@const isAnswered = answers[idx] !== undefined}
-                  {@const isDoubt = doubts[idx] === true}
-                  {@const isCurrent = idx === currentQuestionIndex}
-                  <button
-                    class="palette-btn"
-                    class:palette-btn--current={isCurrent}
-                    class:palette-btn--answered={isAnswered && !isDoubt}
-                    class:palette-btn--doubt={isDoubt}
-                    type="button"
-                    onclick={() => {
-                      currentQuestionIndex = idx;
-                    }}
-                  >
-                    {idx + 1}
-                  </button>
-                {/each}
-              </div>
-
-              <div class="palette-legend">
-                <div class="legend-item">
-                  <span class="legend-dot dot--answered"></span>
-                  <span>Sudah dijawab ({answeredCount})</span>
-                </div>
-                <div class="legend-item">
-                  <span class="legend-dot dot--doubt"></span>
-                  <span>Ragu-ragu ({Object.values(doubts).filter(Boolean).length})</span>
-                </div>
-                <div class="legend-item">
-                  <span class="legend-dot dot--empty"></span>
-                  <span>Belum dijawab ({catExamQuestions.length - answeredCount})</span>
-                </div>
-              </div>
-
-              <button class="btn-finish-sidebar" type="button" onclick={finishExam}>
-                Selesai Ujian
-              </button>
-            </aside>
-          </div>
-        </div>
-      {:else}
-        <!-- SCORECARD / HASIL EVALUASI -->
-        <div class="modal-body">
-          <div class="result-scorecard">
-            <div class="result-score-circle" class:result-score-circle--pass={isPassing}>
-              <span class="score-number">{examScore()}</span>
-              <span class="score-label">NILAI AKHIR</span>
-            </div>
-
-            <h3 class="result-status-title">
-              {isPassing ? 'MEMENUHI SYARAT (MS)' : 'TIDAK MEMENUHI SYARAT (TMS)'}
-            </h3>
-            <p class="result-status-desc">
-              {isPassing
-                ? 'Selamat! Nilai Anda berada di atas ambang batas minimal kelulusan Polri (61.00).'
-                : 'Nilai Anda belum mencapai batas minimal 61.00. Perbanyak latihan subtes yang belum dikuasai.'}
-            </p>
-
-            <div class="review-box">
-              <div class="review-title">PEMBAHASAN BUTIR SOAL:</div>
-              {#each catExamQuestions as q, idx (q.id)}
-                {@const userAns = answers[idx]}
-                {@const isRight = userAns === q.correctKey}
-                <div class="review-item" class:review-item--correct={isRight} class:review-item--wrong={!isRight}>
-                  <div class="review-item__header">
-                    <span class="review-num">Soal #{idx + 1} • {q.module}</span>
-                    <span class="review-badge">{isRight ? 'Benar (+1)' : 'Salah (0)'}</span>
-                  </div>
-                  <div class="review-stem">{q.stem}</div>
-                  <div class="review-ans">
-                    Jawaban Anda: <strong>{userAns ?? 'Tidak dijawab'}</strong> • Kunci Resmi: <strong>{q.correctKey}</strong>
-                  </div>
-                  <div class="review-exp">Penjelasan: {q.explanation}</div>
-                </div>
-              {/each}
-            </div>
-
-            <div class="result-actions">
-              <button class="btn-finish-exam" type="button" onclick={startExam}>Ulangi Simulasi</button>
-              <button class="btn-nav-prev" type="button" onclick={closeExamModal}>Kembali ke Dashboard</button>
-            </div>
-          </div>
-        </div>
-      {/if}
-    </div>
-  </div>
-{/if}
-
 <!-- ================================================================== SESSION DETAIL MODAL -->
 {#if detailModalOpen && selectedSession}
   <div class="modal-backdrop" onclick={() => (detailModalOpen = false)} role="dialog" aria-modal="true">
@@ -830,7 +512,7 @@
         </div>
 
         <div class="detail-actions">
-          <button class="btn-finish-exam" type="button" onclick={() => { detailModalOpen = false; startExam(); }}>
+          <button class="btn-finish-exam" type="button" onclick={() => { detailModalOpen = false; goto('/simulation'); }}>
             Latihan Simulasi Serupa
           </button>
           <button class="btn-nav-prev" type="button" onclick={() => (detailModalOpen = false)}>

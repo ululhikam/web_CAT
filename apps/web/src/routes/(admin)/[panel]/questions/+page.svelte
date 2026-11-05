@@ -333,7 +333,7 @@
               <td>
                 <a class="stem" href={`${adminBase()}/questions/${row.id}`}>{row.stemPreview}</a>
                 <div class="chips">
-                  {#if row.mediaCount > 0}<span class="chip">🖼 {row.mediaCount}</span>{/if}
+                  {#if row.mediaCount > 0}<span class="chip">Media {row.mediaCount}</span>{/if}
                   {#if row.categoryName}<span class="chip">{row.categoryName}</span>{/if}
                   <span class="chip chip--muted">{row.difficulty}</span>
                 </div>
