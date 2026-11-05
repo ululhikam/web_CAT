@@ -21,7 +21,10 @@ export type AdminIconName =
   | 'media'
   | 'plans'
   | 'audit'
-  | 'settings';
+  | 'settings'
+  | 'shield'
+  | 'list'
+  | 'clock';
 
 export interface AdminNavItem {
   /** Href absolut, sudah memperhitungkan basis panel. */
@@ -49,6 +52,7 @@ interface NavSeed {
   icon: AdminIconName;
   permission?: Permission;
   platformOnly?: boolean;
+  adminOnly?: boolean;
 }
 
 const NAV_SEEDS: readonly NavSeed[] = [
@@ -100,6 +104,24 @@ const NAV_SEEDS: readonly NavSeed[] = [
     permission: 'questions.read',
   },
   {
+    group: 'Ujian',
+    path: '/exams',
+    label: 'Konfigurasi ujian',
+    description: 'Atur tahap, subtes, dan ambang skor ujian CAT.',
+    icon: 'shield',
+    permission: 'exams.config',
+    adminOnly: true,
+  },
+  {
+    group: 'Ujian',
+    path: '/monitoring',
+    label: 'Monitoring ujian',
+    description: 'Pantau sesi berjalan, progres peserta, dan pelanggaran.',
+    icon: 'clock',
+    permission: 'exams.monitor',
+    adminOnly: true,
+  },
+  {
     group: 'Langganan',
     path: '/plans',
     label: 'Paket & harga',
@@ -127,7 +149,7 @@ const NAV_SEEDS: readonly NavSeed[] = [
   },
 ];
 
-const GROUP_ORDER = ['Ikhtisar', 'Peserta', 'Bank soal', 'Langganan', 'Platform'] as const;
+const GROUP_ORDER = ['Ikhtisar', 'Peserta', 'Bank soal', 'Ujian', 'Langganan', 'Platform'] as const;
 
 /** Path yang hanya tersedia di panel SUPER_ADMIN. */
 export const PLATFORM_ONLY_PATHS = ['/audit', '/settings'] as const;
@@ -142,9 +164,9 @@ export function isPlatformOnlyPath(path: string): boolean {
 function buildNav(panel: AdminPanel): AdminNavGroup[] {
   const base = panelBase(panel);
 
-  const items = NAV_SEEDS.filter((seed) => panel === 'super-admin' || !seed.platformOnly).map<
-    AdminNavItem
-  >((seed) => ({
+  const items = NAV_SEEDS.filter(
+    (seed) => (panel === 'super-admin' || !seed.platformOnly) && (panel === 'admin' || !seed.adminOnly),
+  ).map<AdminNavItem>((seed) => ({
     href: seed.path ? `${base}${seed.path}` : base,
     path: seed.path,
     label: seed.label,
@@ -219,6 +241,8 @@ const SECTIONS: Record<string, { label: string; path: string }> = {
   questions: { label: 'Bank soal', path: '/questions' },
   categories: { label: 'Kategori', path: '/categories' },
   media: { label: 'Media', path: '/media' },
+  exams: { label: 'Konfigurasi ujian', path: '/exams' },
+  monitoring: { label: 'Monitoring ujian', path: '/monitoring' },
   plans: { label: 'Paket & harga', path: '/plans' },
   audit: { label: 'Audit log', path: '/audit' },
   settings: { label: 'Pengaturan', path: '/settings' },

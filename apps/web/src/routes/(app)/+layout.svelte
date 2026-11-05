@@ -18,6 +18,8 @@
 
   const navPrimary = [
     { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as const },
+    { href: '/exam', label: 'Ujian CAT', icon: 'shield' as const, badge: 'B3' },
+    { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
     { href: '/dashboard#tryout', label: 'Simulasi CAT Ujian', icon: 'shield' as const, badge: 'Aktif' },
     { href: '/dashboard#latihan', label: 'Bank Soal Subtes', icon: 'questions' as const },
     { href: '/dashboard#riwayat', label: 'Riwayat & Nilai (MS/TMS)', icon: 'list' as const },

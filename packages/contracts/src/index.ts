@@ -14,4 +14,6 @@ export * from './media/index';
 export * from './imports/index';
 export * from './audit/index';
 export * from './settings/index';
+export * from './results/index';
+export * from './proctoring/index';
 export * from './ports/index';

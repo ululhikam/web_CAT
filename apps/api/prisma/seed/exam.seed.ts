@@ -20,6 +20,7 @@ interface StageSeed {
   orderIndex: number;
   weight: number;
   passingScore: number;
+  eliminationEnabled: boolean;
   subtests: SubtestSeed[];
 }
 
@@ -40,11 +41,11 @@ const STAGES: StageSeed[] = [
   {
     code: 'PSIKOLOGI',
     name: 'Tes Psikologi',
-    description:
-      'Empat subtes psikologi: Kecerdasan, Kepribadian, Kecermatan, dan Pass Hand.',
+    description: 'Empat subtes psikologi: Kecerdasan, Kepribadian, Kecermatan, dan Pass Hand.',
     orderIndex: 1,
     weight: 50,
     passingScore: 60,
+    eliminationEnabled: true,
     subtests: [
       {
         code: 'KECERDASAN',
@@ -65,8 +66,11 @@ const STAGES: StageSeed[] = [
         durationMinutes: 45,
         weight: 20,
         passingScore: 60,
-        scoringStrategy: 'LIKERT_PROFILE',
-        scoringConfig: { scale: 5, dimensions: ['KEPEMIMPINAN', 'KERJASAMA', 'STABILITAS'] },
+        scoringStrategy: 'DIMENSION_PROFILE',
+        scoringConfig: {
+          scale: 5,
+          dimensions: ['KEPEMIMPINAN', 'KERJASAMA', 'STABILITAS'],
+        },
         eliminationEnabled: true,
       },
       {
@@ -76,8 +80,9 @@ const STAGES: StageSeed[] = [
         questionCount: 500,
         durationMinutes: 10,
         weight: 20,
-        passingScore: 60,
-        scoringStrategy: 'KEYED_CORRECT',
+        passingScore: 55,
+        scoringStrategy: 'CORRECT_MINUS_PENALTY',
+        scoringConfig: { penalty: 1 },
         eliminationEnabled: true,
       },
       {
@@ -87,9 +92,14 @@ const STAGES: StageSeed[] = [
         questionCount: 150,
         durationMinutes: 18,
         weight: 20,
-        passingScore: 60,
-        scoringStrategy: 'COLUMN_MATCH',
-        scoringConfig: { columns: 150, perColumnSeconds: 7 },
+        passingScore: 50,
+        scoringStrategy: 'PASS_HAND_METRIC',
+        scoringConfig: {
+          w1: 0.5,
+          w2: 0.25,
+          w3: 0.25,
+          maxPairsPerMinute: 60,
+        },
         eliminationEnabled: true,
       },
     ],
@@ -101,6 +111,7 @@ const STAGES: StageSeed[] = [
     orderIndex: 2,
     weight: 30,
     passingScore: 60,
+    eliminationEnabled: true,
     subtests: [
       {
         code: 'TPA',
@@ -122,6 +133,7 @@ const STAGES: StageSeed[] = [
     orderIndex: 3,
     weight: 20,
     passingScore: 60,
+    eliminationEnabled: false,
     subtests: [
       {
         code: 'TPK',
@@ -132,11 +144,65 @@ const STAGES: StageSeed[] = [
         weight: 100,
         passingScore: 60,
         scoringStrategy: 'KEYED_CORRECT',
-        eliminationEnabled: true,
+        eliminationEnabled: false,
       },
     ],
   },
 ];
+
+/**
+ * Kebijakan pelanggaran default (bentuk baru: `events` + `warningTemplate`).
+ * Server mengeksekusi aksi hanya saat counter tepat mencapai `at`, sehingga
+ * retry batch proctoring tidak menggugurkan sesi berkali-kali.
+ */
+const VIOLATION_POLICY = {
+  events: {
+    TAB_BLUR: {
+      severity: 'low',
+      actions: [
+        { at: 3, action: 'WARN' },
+        { at: 6, action: 'LOCK_SUBTEST' },
+      ],
+    },
+    COPY: {
+      severity: 'medium',
+      actions: [
+        { at: 1, action: 'WARN' },
+        { at: 3, action: 'ELIMINATE' },
+      ],
+    },
+    PASTE: {
+      severity: 'medium',
+      actions: [
+        { at: 1, action: 'WARN' },
+        { at: 3, action: 'ELIMINATE' },
+      ],
+    },
+    CUT: {
+      severity: 'medium',
+      actions: [
+        { at: 1, action: 'WARN' },
+        { at: 3, action: 'ELIMINATE' },
+      ],
+    },
+    FULLSCREEN_EXIT: {
+      severity: 'low',
+      actions: [{ at: 4, action: 'WARN' }],
+    },
+    DEVTOOLS_OPEN: {
+      severity: 'high',
+      actions: [
+        { at: 1, action: 'WARN' },
+        { at: 3, action: 'ELIMINATE' },
+      ],
+    },
+    HEARTBEAT_LOST: {
+      severity: 'low',
+      actions: [{ at: 5, action: 'WARN' }],
+    },
+  },
+  warningTemplate: 'Pelanggaran {type} terdeteksi ({count}/{limit}).',
+} as const;
 
 export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
   for (const stage of STAGES) {
@@ -148,7 +214,7 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
         orderIndex: stage.orderIndex,
         weight: stage.weight,
         passingScore: stage.passingScore,
-        eliminationEnabled: true,
+        eliminationEnabled: stage.eliminationEnabled,
         isActive: true,
       },
       create: {
@@ -158,7 +224,7 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
         orderIndex: stage.orderIndex,
         weight: stage.weight,
         passingScore: stage.passingScore,
-        eliminationEnabled: true,
+        eliminationEnabled: stage.eliminationEnabled,
         isActive: true,
       },
     });
@@ -207,7 +273,15 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
 
   await prisma.examSetting.upsert({
     where: { id: 'singleton' },
-    update: {},
+    update: {
+      timezone: 'Asia/Jakarta',
+      totalPassingScore: 60,
+      maxSessionsPerDay: 1,
+      gracePeriodShortMs: 3000,
+      gracePeriodLongMs: 8000,
+      subtestTransition: 'on_open',
+      violationPolicy: VIOLATION_POLICY as never,
+    },
     create: {
       id: 'singleton',
       timezone: 'Asia/Jakarta',
@@ -215,11 +289,8 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
       maxSessionsPerDay: 1,
       gracePeriodShortMs: 3000,
       gracePeriodLongMs: 8000,
-      violationPolicy: {
-        tab_blur: { warn: 1, lockSubtest: 3, eliminate: 5 },
-        copy_paste: { warn: 1, lockSubtest: 2, eliminate: 4 },
-        devtools: { warn: 0, lockSubtest: 1, eliminate: 3 },
-      },
+      subtestTransition: 'on_open',
+      violationPolicy: VIOLATION_POLICY as never,
     },
   });
 }

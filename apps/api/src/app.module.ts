@@ -27,6 +27,10 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { MediaModule } from './modules/media/media.module';
 import { ImportsModule } from './modules/imports/imports.module';
+import { ScoringModule } from './modules/scoring/scoring.module';
+import { ExamsModule } from './modules/exams/exams.module';
+import { ProctoringModule } from './modules/proctoring/proctoring.module';
+import { ResultsModule } from './modules/results/results.module';
 
 /**
  * Root module — modular monolith.
@@ -59,6 +63,10 @@ import { ImportsModule } from './modules/imports/imports.module';
     PaymentsModule,
     AnalyticsModule,
     HealthModule,
+    ScoringModule,
+    ExamsModule,
+    ProctoringModule,
+    ResultsModule,
     CronModule,
   ],
   providers: [
