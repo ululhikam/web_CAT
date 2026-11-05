@@ -16,6 +16,8 @@ import type { PoolShortage } from '../ports/index';
  * ============================================================================
  */
 
+export * from './answer-anomaly';
+
 /** Kode tes (stage) — dibekukan sejak Phase 0. */
 export const STAGE_CODES = ['PSIKOLOGI', 'TPA', 'TPK'] as const;
 export type StageCode = (typeof STAGE_CODES)[number];

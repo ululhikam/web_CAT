@@ -23,6 +23,15 @@ export const PROCTORING_EVENT_TYPES = [
   'SESSION_REPLACED',
   'ENVIRONMENT_CHANGED',
   'IDLE',
+  /**
+   * F5-13 — satu-satunya sinyal anomali yang dihitung klien: antrean offline
+   * menggabungkan beberapa perubahan pada satu soal menjadi satu baris, jadi
+   * jumlah perubahan per 2 detik hanya terlihat di browser.
+   *
+   * Dua sinyal lain (`ANSWER_TOO_FAST_IMAGE`, `ANSWER_TOO_FAST_STREAK`) ditulis
+   * server dari `exam_answer_events` dan tidak diterima dari klien.
+   */
+  'ANSWER_CHANGE_BURST',
 ] as const;
 export type ProctoringEventType = (typeof PROCTORING_EVENT_TYPES)[number];
 

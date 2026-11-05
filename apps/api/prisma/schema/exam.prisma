@@ -235,6 +235,10 @@ model ExamAnswerEvent {
   answerPayload    Json     @map("answer_payload")
   isCorrect        Boolean? @map("is_correct")
   scoreAwarded     Decimal? @map("score_awarded") @db.Decimal(10, 4)
+  /// Waktu sejak soal tampil saat jawaban ini dikirim (0 = tidak dilaporkan).
+  /// Disimpan per event karena aturan F5-13 memakai jawaban pertama, bukan
+  /// akumulasi `exam_session_questions.time_spent_ms`.
+  timeSpentMs      Int      @default(0) @map("time_spent_ms")
   answeredAt       DateTime @default(now()) @map("answered_at")
 
   sessionQuestion ExamSessionQuestion @relation(fields: [sessionQuestionId], references: [id], onDelete: Cascade)
