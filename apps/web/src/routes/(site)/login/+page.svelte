@@ -14,53 +14,9 @@
   let password = $state('');
   let submitting = $state(false);
   let error = $state<string | null>(null);
-  let selectedPreset = $state<string | null>(null);
 
   const redirectParam = $derived(page.url.searchParams.get('redirect'));
   const oauthError = $derived(page.url.searchParams.get('error'));
-
-  const presets = [
-    {
-      id: 'super-admin',
-      role: 'SUPER_ADMIN',
-      label: 'Super Admin',
-      badge: 'Akses Penuh',
-      badgeTone: 'purple',
-      email: 'admin@example.com',
-      password: 'Narcissistic',
-      dest: '/super-admin',
-      desc: 'Platform, Audit Log & RBAC',
-    },
-    {
-      id: 'admin',
-      role: 'ADMIN',
-      label: 'Admin Operasional',
-      badge: 'Operasional',
-      badgeTone: 'blue',
-      email: 'operator@example.com',
-      password: 'AdminOperator123',
-      dest: '/admin',
-      desc: 'Bank Soal & Manajemen Peserta',
-    },
-    {
-      id: 'peserta',
-      role: 'USER',
-      label: 'Peserta Ujian',
-      badge: 'Siswa Aktif',
-      badgeTone: 'green',
-      email: 'user@example.com',
-      password: 'PesertaDemo123',
-      dest: '/dashboard',
-      desc: 'Dashboard Simulasi & Ujian CAT',
-    },
-  ] as const;
-
-  function selectPreset(preset: (typeof presets)[number]) {
-    email = preset.email;
-    password = preset.password;
-    selectedPreset = preset.id;
-    error = null;
-  }
 
   const oauthMessage = $derived(
     oauthError === 'oauth_state'
@@ -160,40 +116,8 @@
       </div>
     </div>
 
-    <!-- Kolom Kanan: Card Login & Presets Demo -->
+    <!-- Kolom Kanan: Card Login -->
     <div class="auth-panel">
-      <!-- Helper Cepat untuk Demo / Role Testing -->
-      <div class="preset-card">
-        <div class="preset-header">
-          <div class="preset-title-wrap">
-            <AdminIcon name="sparkles" size={15} />
-            <span class="preset-title">Pilih Akun Demo (1-Klik Isi)</span>
-          </div>
-          <span class="preset-tag">Role Router</span>
-        </div>
-        <p class="preset-sub">
-          Klik tombol di bawah untuk langsung mencoba hak akses tiap peran:
-        </p>
-
-        <div class="preset-grid">
-          {#each presets as p (p.id)}
-            <button
-              type="button"
-              class="preset-btn"
-              class:preset-btn--selected={selectedPreset === p.id}
-              onclick={() => selectPreset(p)}
-            >
-              <div class="preset-btn-top">
-                <span class="preset-btn-name">{p.label}</span>
-                <span class="role-pill role-pill--{p.badgeTone}">{p.badge}</span>
-              </div>
-              <div class="preset-btn-dest">Tujuan: <code>{p.dest}</code></div>
-              <div class="preset-btn-desc">{p.desc}</div>
-            </button>
-          {/each}
-        </div>
-      </div>
-
       <!-- Form Login -->
       <div class="login-card">
         <div class="login-header">
@@ -237,15 +161,6 @@
           </Field>
 
           <div class="login-row">
-            <span class="role-hint">
-              {#if email === 'admin@example.com'}
-                Target: <span class="badge-role">Super Admin</span>
-              {:else if email === 'operator@example.com'}
-                Target: <span class="badge-role">Admin</span>
-              {:else if email.includes('peserta') || email === 'user@example.com'}
-                Target: <span class="badge-role">Peserta Ujian</span>
-              {/if}
-            </span>
             <a href="/forgot-password" class="forgot-link">Lupa password?</a>
           </div>
 
@@ -429,142 +344,6 @@
     gap: var(--space-5);
   }
 
-  /* Preset Helper Box */
-  .preset-card {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 1px solid #cbd5e1;
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  }
-
-  .preset-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .preset-title-wrap {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    color: var(--brand-700);
-  }
-
-  .preset-title {
-    font-size: var(--text-xs);
-    font-weight: 750;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .preset-tag {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: var(--radius-full);
-    background: #e2e8f0;
-    color: #475569;
-  }
-
-  .preset-sub {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-    margin: var(--space-2) 0 var(--space-3);
-  }
-
-  .preset-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-2);
-  }
-
-  @media (min-width: 600px) {
-    .preset-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .preset-btn {
-    text-align: left;
-    background: #ffffff;
-    border: 1px solid var(--neutral-300);
-    border-radius: var(--radius-md);
-    padding: var(--space-3);
-    cursor: pointer;
-    transition: all 0.15s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .preset-btn:hover {
-    border-color: var(--brand-500);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .preset-btn--selected {
-    border-color: var(--brand-600);
-    background: #f4f7ff;
-    box-shadow: 0 0 0 2px rgba(74, 99, 240, 0.2);
-  }
-
-  .preset-btn-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.25rem;
-  }
-
-  .preset-btn-name {
-    font-size: var(--text-xs);
-    font-weight: 700;
-    color: var(--neutral-900);
-  }
-
-  .preset-btn-dest {
-    font-size: 11px;
-    color: var(--neutral-500);
-  }
-
-  .preset-btn-dest code {
-    font-size: 10px;
-    background: #f1f5f9;
-    padding: 1px 3px;
-    border-radius: 3px;
-  }
-
-  .preset-btn-desc {
-    font-size: 10px;
-    color: var(--neutral-400);
-    line-height: 1.3;
-  }
-
-  .role-pill {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 1px 5px;
-    border-radius: 4px;
-    text-transform: uppercase;
-  }
-
-  .role-pill--purple {
-    background: #f3e8ff;
-    color: #6b21a8;
-  }
-
-  .role-pill--blue {
-    background: #dbeafe;
-    color: #1e40af;
-  }
-
-  .role-pill--green {
-    background: #dcfce7;
-    color: #15803d;
-  }
-
   /* Login Form Card */
   .login-card {
     background: var(--color-surface);
@@ -605,18 +384,8 @@
   .login-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     font-size: var(--text-sm);
-  }
-
-  .role-hint {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-
-  .badge-role {
-    font-weight: 700;
-    color: var(--brand-700);
   }
 
   .forgot-link {
