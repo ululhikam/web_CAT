@@ -208,69 +208,81 @@ Distribusi tipe soal: `SINGLE_CHOICE` 209, `MULTI_CHOICE` 1, `IMAGE_CHOICE` 1,
 
 ## Fase 3 — Soal bergambar
 
+**Status Fase 3: ✅ SELESAI (2026-11-05).** Rantai soal bergambar kini utuh:
+`question_media` → snapshot per opsi → proyeksi ber-URL bertanda tangan →
+runner tile → dinilai `KEYED_CORRECT`. Bukti end-to-end dihasilkan
+`pnpm smoke:media` (lihat F3-31), bukan hanya unit test.
+
 ### 3A — Snapshot & materialisasi
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F3-01 | `SnapshotMedia.optionId` + `assetId` | ⬜ | — | — |
-| F3-02 | `SnapshotOption.media` | ⬜ | — | — |
-| F3-03 | Parser toleran snapshot lama | ⬜ | — | — |
-| F3-04 | `QuestionRow` memuat `optionId`/`assetId` | ⬜ | — | — |
-| F3-05 | `mapDbQuestion` mengelompokkan media opsi | ⬜ | — | — |
-| F3-06 | Builder fixture menerima media | ⬜ | — | — |
-| F3-07 | Unit test materialisasi media | ⬜ | — | — |
+| F3-01 | `SnapshotMedia.optionId` + `assetId` | ✅ | `scoring/scoring.types.ts` — keduanya opsional; snapshot lama tetap valid | 2026-11-05 |
+| F3-02 | `SnapshotOption.media` | ✅ | idem; `SnapshotMedia[]` wajib di TS, parser mengisi `[]` | 2026-11-05 |
+| F3-03 | Parser toleran snapshot lama | ✅ | `parseQuestionSnapshot` + 4 test (`exam-question-source.spec.ts`): snapshot lama → `media: []`, media rusak dibuang | 2026-11-05 |
+| F3-04 | `QuestionRow` memuat `optionId`/`assetId` | ✅ | `exam-question-source.ts` `QuestionRow.media` + `orderBy sortOrder` | 2026-11-05 |
+| F3-05 | `mapDbQuestion` mengelompokkan media opsi | ✅ | media `OPTION` ber-`optionId` → opsi; tanpa `optionId` tetap masuk media soal (tidak hilang diam-diam) | 2026-11-05 |
+| F3-06 | Builder fixture menerima media | ✅ | `FixtureMediaSpec` + `applyFixtureMedia()`; media opsi memaksa tipe `IMAGE_CHOICE` | 2026-11-05 |
+| F3-07 | Unit test materialisasi media | ✅ | `apps/api/test/exam-question-source.spec.ts` — 14 test lulus | 2026-11-05 |
 
 ### 3B — Proyeksi
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F3-08 | `optionView` mengirim media opsi | ⬜ | — | — |
-| F3-09 | Saring `EXPLANATION` dari DTO ujian | ⬜ | — | — |
-| F3-10 | Cache URL media opsi | ⬜ | — | — |
-| F3-11 | Unit test proyeksi media | ⬜ | — | — |
+| F3-08 | `optionView` mengirim media opsi | ✅ | `exam-question-projection.ts` — `optionView()` memetakan `SnapshotOption.media` | 2026-11-05 |
+| F3-09 | Saring `EXPLANATION` dari DTO ujian | ✅ | `mediaViews()` hanya `role === 'STEM'`; test proyeksi memastikan pembahasan tidak bocor | 2026-11-05 |
+| F3-10 | Cache URL media opsi | ✅ | `collectPaths()` mencakup media opsi; `projectMany()` cache per path | 2026-11-05 |
+| F3-11 | Unit test proyeksi media | ✅ | `apps/api/test/exam-question-projection.spec.ts` — 8 test lulus | 2026-11-05 |
 
 ### 3C — Runner
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F3-12 | Render media opsi | ⬜ | — | — |
-| F3-13 | Cabang `IMAGE_CHOICE` (tile) | ⬜ | — | — |
-| F3-14 | CSS media & tile | ⬜ | — | — |
-| F3-15 | (Opsional) satukan renderer via adapter | ⬜ | — | — |
-| F3-16 | Test komponen `ImageChoice` | ⬜ | — | — |
+| F3-12 | Render media opsi | ✅ | `exam/[sessionId]/+page.svelte` — media opsi pada SINGLE/MULTI/MISSING | 2026-11-05 |
+| F3-13 | Cabang `IMAGE_CHOICE` (tile) | ✅ | grid tile, klik menyimpan `optionIds` lewat `chooseOption()` | 2026-11-05 |
+| F3-14 | CSS media & tile | ✅ | CSS responsif; ≤640 px tetap dua kolom (tidak satu kolom yang terlalu panjang) | 2026-11-05 |
+| F3-15 | Satukan renderer via adapter | ✅ | `lib/exams/render-adapter.ts` + `ImageChoiceTiles.svelte` dipakai runner **dan** pratinjau admin; 12 test (`render-adapter.spec.ts` 7 + `image-choice-tiles.spec.ts` 5) | 2026-11-05 |
+| F3-16 | Test komponen `ImageChoice` | ✅ | `image-choice.spec.ts` — 6 test (render via `svelte/server`) | 2026-11-05 |
 
 ### 3D — URL & penyajian berkas
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F3-17 | Proyeksi pakai `buildMediaUrl(assetId)` | ⬜ | — | — |
-| F3-18 | `DevStorage` URL benar-benar dilayani | ⬜ | — | — |
-| F3-19 | TTL URL ≥ durasi subtes | ⬜ | — | — |
-| F3-20 | Test akses media 200 | ⬜ | — | — |
+| F3-17 | Proyeksi pakai `buildMediaUrl(assetId)` | ✅ | `/api/v1/media/:id/content?sig=…`; runtime: 115 URL → 200 `image/webp` | 2026-11-05 |
+| F3-18 | `DevStorage` URL benar-benar dilayani | ✅ | `DevStorageController` + `MediaService.contentByPath()`; 404 untuk path di luar `media/` | 2026-11-05 |
+| F3-19 | TTL URL ≥ durasi subtes | ✅ | `EXAM_MEDIA_TTL_SECONDS = 7_200` (120 menit) | 2026-11-05 |
+| F3-20 | Test akses media 200 | ✅ | `media-access.spec.ts` — 13 test; runtime kontrol negatif `sig` rusak → 404 | 2026-11-05 |
 
 ### 3E — Konten bergambar
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F3-21 | Aset gambar figural WebP | ⬜ | — | — |
-| F3-22 | `seedMediaAssets` (dedupe) | ⬜ | — | — |
-| F3-23 | 30–40 `IMAGE_CHOICE` (Kecerdasan) | ⬜ | — | — |
-| F3-24 | 15 soal figural TPA | ⬜ | — | — |
-| F3-25 | Seed menulis `question_media` | ⬜ | — | — |
-| F3-26 | Test kelengkapan media soal | ⬜ | — | — |
+| F3-21 | Aset gambar figural WebP | ✅ | **Deviasi:** aset digenerate dari SVG (`seed/media/figural.ts`, 7 keluarga) lalu dikonversi WebP oleh `storeBuffer`; tidak ada biner di repo. 235 aset → 104 baris `media_assets` (dedupe checksum) | 2026-11-05 |
+| F3-22 | `seedMediaAssets` (dedupe) | ✅ | Seed 2× → run kedua `baru 0`; `media_assets = 104` | 2026-11-05 |
+| F3-23 | 30–40 `IMAGE_CHOICE` (Kecerdasan) | ✅ | 44 soal figural Kecerdasan (`PSI-KEC-FIG-*`), semua PUBLISHED | 2026-11-05 |
+| F3-24 | 15 soal figural TPA | ✅ | 15 soal `PSI-TPA-FIG-*`; `db:stats` TPA PUBLISHED = 15 | 2026-11-05 |
+| F3-25 | Seed menulis `question_media` | ✅ | `question_media = 235` baris; seed menghapus lalu menulis ulang (unik dengan `option_id NULL`) | 2026-11-05 |
+| F3-26 | Test kelengkapan media soal | ✅ | `question-seed.spec.ts` — 25 test; hanya `DEMO-TPA-IMG-001` (ARCHIVED) tanpa media | 2026-11-05 |
 
 ### 3F — Validasi & UI admin
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F3-27 | Validasi `IMAGE_CHOICE` wajib media | ⬜ | — | — |
-| F3-28 | Validasi dimensi min 200×200 | ⬜ | — | — |
-| F3-29 | Indikator opsi belum bergambar di form admin | ⬜ | — | — |
-| F3-30 | Test kontrak + upload | ⬜ | — | — |
-| F3-31 | Uji visual runner dengan soal figural | ⬜ | — | — |
+| F3-27 | Validasi `IMAGE_CHOICE` wajib media | ✅ | `questionShapeIssues()` menolak tanpa media STEM dan tanpa media untuk setiap label opsi | 2026-11-05 |
+| F3-28 | Validasi dimensi min 200×200 | ✅ | `MEDIA_MIN_DIMENSION` di `MediaService.upload()` → 422; `storeBuffer` sengaja dikecualikan (import + seed) | 2026-11-05 |
+| F3-29 | Indikator opsi belum bergambar di form admin | ✅ | `draftMediaIssues()` + badge "⚠ belum bergambar" di `QuestionForm.svelte` | 2026-11-05 |
+| F3-30 | Test kontrak + upload | ✅ | `packages/contracts/test/questions.spec.ts` (6) + `apps/api/test/media-upload.spec.ts` (5) | 2026-11-05 |
+| F3-31 | Uji visual runner dengan soal figural | ✅ | `pnpm smoke:media`: 30 soal figural terpilih, 23 `IMAGE_CHOICE`, 115 URL → 200, artefak `docs/perbaikan/fase-3-bukti/` | 2026-11-05 |
 
-**Gate keluar:** ≥ 30 `IMAGE_CHOICE` PUBLISHED; soal figural tampil di runner
-dan dinilai benar.
+**Gate keluar:** ✅ 59 `IMAGE_CHOICE` PUBLISHED (44 Kecerdasan + 15 TPA);
+soal figural tampil di runner dan dinilai benar.
+
+> **Perbaikan di luar daftar tugas (ditemukan saat F3-31).** `loadFromDatabase`
+> memakai `orderBy publicCode asc` + `take: count`, sehingga 44 soal figural
+> yang kodenya berakhiran `-FIG-` **tidak pernah** masuk sesi (pool 144, kuota
+> 100). Diganti dengan `spreadSelection()` — sampling merata dengan offset
+> deterministik dari `subtestSessionId` — plus 5 test regresi dan skrip
+> `pnpm pool:coverage` untuk memantau cakupan tiap subtes.
 
 ---
 

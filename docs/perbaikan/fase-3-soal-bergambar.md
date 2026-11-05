@@ -32,13 +32,17 @@ tanpa gambar, meski gambarnya sudah diunggah.
 
 ## Definition of Done fase
 
-- [ ] ≥ 30 soal `IMAGE_CHOICE` PUBLISHED dengan media stem **dan** media tiap opsi.
-- [ ] Runner menampilkan gambar stem + tile gambar opsi.
-- [ ] Klik tile menyimpan `optionIds`; scoring menilai benar/salah.
-- [ ] Pratinjau admin dan runner menampilkan soal secara identik.
-- [ ] Media hanya diakses lewat URL bertanda tangan.
-- [ ] Media `EXPLANATION` tidak muncul di DTO peserta.
-- [ ] Snapshot lama (tanpa media opsi) tetap bisa diparse.
+- [x] ≥ 30 soal `IMAGE_CHOICE` PUBLISHED dengan media stem **dan** media tiap opsi.
+      → 59 soal (44 Kecerdasan `PSI-KEC-FIG-*` + 15 TPA `PSI-TPA-FIG-*`), semua
+      opsi bergambar; diverifikasi `pnpm smoke:media`.
+- [x] Runner menampilkan gambar stem + tile gambar opsi.
+- [x] Klik tile menyimpan `optionIds`; scoring menilai benar/salah.
+- [x] Pratinjau admin dan runner menampilkan soal secara identik.
+      → satu adapter (`lib/exams/render-adapter.ts`) + satu komponen
+      `ImageChoiceTiles.svelte` dipakai kedua layar (F3-15).
+- [x] Media hanya diakses lewat URL bertanda tangan.
+- [x] Media `EXPLANATION` tidak muncul di DTO peserta.
+- [x] Snapshot lama (tanpa media opsi) tetap bisa diparse.
 
 ---
 
@@ -73,6 +77,12 @@ tanpa gambar, meski gambarnya sudah diunggah.
 | F3-13 | Cabang `IMAGE_CHOICE` → grid tile | idem | Tidak lagi tampil sebagai teks | 1 j | F3-12 |
 | F3-14 | CSS media & tile responsif | idem `<style>` | Tidak rusak di 360 px | 45 m | F3-13 |
 | F3-15 | (Opsional) Satukan renderer via adapter | `apps/web/src/lib/exams/render-adapter.ts` (baru) | Pratinjau = runner | 3 j | F3-13 |
+
+> **F3-15 dikerjakan.** Adapter data (`render-adapter.ts`) menyatukan cara baca
+> DTO peserta vs form admin, dan `ImageChoiceTiles.svelte` menyatukan markup
+> tile. Bukti kesetaraan: `render-adapter.spec.ts` (7 test, termasuk
+> `examQuestionTileView === renderQuestionTileView` untuk data setara) dan
+> `image-choice-tiles.spec.ts` (5 test, termasuk HTML runner ≡ HTML pratinjau).
 | F3-16 | Test komponen `ImageChoice` | `apps/web/src/lib/components/questions/*.spec.ts` | Lulus | 1 j | F3-13 |
 
 ### 3D — URL & penyajian berkas
@@ -478,6 +488,35 @@ Ketentuan:
 > Aset bisa dibuat manual dengan editor gambar, atau digenerate (SVG → WebP).
 > Jangan memakai aset berhak cipta dari bank soal komersial.
 
+**Implementasi aktual — generator, bukan berkas biner (deviasi yang disengaja).**
+
+Aset figural **tidak** disimpan sebagai berkas `.webp` di repo. Berkas
+`.svg`/`.webp` biner sulit di-review di diff, mudah rusak oleh alat teks, dan
+membuat kunci jawaban tidak bisa diturunkan dari geometri. Yang disimpan adalah
+*spesifikasi* gambar:
+
+| Berkas | Isi |
+| --- | --- |
+| `apps/api/prisma/seed/media/figural.ts` | 7 keluarga soal (series, rotation, mirror, analogy, net, count, direction) + `renderFigure(spec, variant)` yang menghasilkan SVG deterministik |
+| `apps/api/prisma/seed/questions/figural.ts` | 59 baris soal (44 Kecerdasan `IMAGE_CHOICE` + 15 TPA) beserta `figureAssets()`, `figureAssetCode()`, `layoutFor()` |
+
+Alur seed: `renderFigure()` → SVG → `sharp().webp({quality: 82})` di dalam
+`MediaService.storeBuffer()` → byte tersimpan di `media_assets.data` +
+`storage_path`. Jadi yang tersimpan di database tetap WebP ≥256×256 px,
+≤5 MB, dengan alt text — persis ketentuan di atas.
+
+Konsekuensi yang perlu diketahui:
+
+- Kunci jawaban **diturunkan dari geometri** (`correctOptionVariant()`), bukan
+  ditulis tangan, sehingga tidak mungkin ada soal yang kuncinya tidak cocok
+  dengan gambar.
+- Posisi kunci diacak per soal oleh `layoutFor()`; kunci tidak selalu "A".
+- 235 kode aset → 104 baris `media_assets` karena gambar identik berbagi
+  checksum (dedupe `storeBuffer`). Ini perilaku yang diharapkan.
+- Menambah soal figural = menambah entri di `figural.ts`, bukan mengunggah
+  berkas. Bila nanti ingin aset dari desainer, jalur `POST admin/media/upload`
+  tetap tersedia dan tidak bentrok dengan generator.
+
 ---
 
 ### F3-22 — `seedMediaAssets`
@@ -643,7 +682,31 @@ if ((metadata.width ?? 0) < MIN_DIMENSION || (metadata.height ?? 0) < MIN_DIMENS
 ```powershell
 pnpm --filter @webcat/api test
 pnpm --filter @webcat/web test
-pnpm db:seed
+pnpm prisma:seed
+pnpm --filter @webcat/api pool:coverage   # cakupan pool + soal figural ikut terpilih
+pnpm smoke:cat                            # alur CAT 6 subtes tetap lulus
+pnpm smoke:media                          # end-to-end: soal bergambar lewat API peserta
+```
+
+`smoke:media` menempuh jalur peserta sungguhan (login → mulai sesi → buka
+KECERDASAN → ambil soal), lalu mengunduh **setiap** URL media dan memastikan
+byte-nya gambar. Skrip ini juga menulis artefak bukti ke
+`docs/perbaikan/fase-3-bukti/`:
+
+- `f3-31-contoh-soal.png` — montase stem + empat tile opsi satu soal figural;
+- `f3-31-semua-soal.html` — semua soal `IMAGE_CHOICE` pada sesi itu, gambar
+  disematkan sebagai `data:` URI sehingga dokumen tetap utuh setelah TTL URL
+  (2 jam) habis.
+
+Keluaran yang diharapkan (5 Nov 2026, DB dev):
+
+```
+sumber soal                100/100 dari bank soal
+soal figural               30 soal PSI-KEC-FIG-* terpilih
+tipe IMAGE_CHOICE          23 soal
+kelengkapan media          stem + media untuk setiap opsi terisi
+unduh media                115 URL → 200, 146682 byte gambar
+kontrol negatif            sig dirusak → HTTP 404
 ```
 
 Cek DB:
@@ -687,7 +750,7 @@ Uji UI:
 | Signed URL kedaluwarsa saat subtes 120 menit | gambar hilang | TTL 120 menit atau refresh per batch |
 | Byte media di DB membengkak | DB besar | batas 5 MB, WebP, rencanakan pindah bucket |
 | Gambar besar memperlambat halaman | UX buruk | `loading="lazy"`, `object-fit: contain`, batas `max-height` |
-| Renderer admin ≠ runner | peserta melihat hal berbeda | F3-15 atau samakan markup + CSS |
+| Renderer admin ≠ runner | peserta melihat hal berbeda | satu adapter (`lib/exams/render-adapter.ts`) + satu komponen `ImageChoiceTiles.svelte` untuk dua layar (F3-15) |
 
 ---
 
