@@ -34,7 +34,7 @@ rilis publik.
 
 | ID | Pekerjaan | Kondisi saat ini | Kriteria selesai | Est |
 | --- | --- | --- | --- | --- |
-| F5-10 | Autosave IndexedDB + replay + `sendBeacon` | in-memory saja | Jawaban aman saat offline/refresh | 3 j |
+| F5-10 | Autosave IndexedDB + replay + `fetch keepalive` (bukan `sendBeacon`) | in-memory saja | Jawaban aman saat offline/refresh | 3 j |
 | F5-11 | Preload 2 soal berikutnya (teks + gambar) | belum ada | Navigasi tanpa jeda | 1 j |
 | F5-12 | Zoom/pan gambar figural | belum ada | Gambar kecil bisa diperbesar | 1,5 j |
 | F5-13 | Flag anomali waktu jawab | belum ada | `< 300 ms` (gambar), `< 150 ms` (Kecermatan) tercatat | 1 j |
