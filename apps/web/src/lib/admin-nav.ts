@@ -104,6 +104,14 @@ const NAV_SEEDS: readonly NavSeed[] = [
     permission: 'questions.read',
   },
   {
+    group: 'Bank soal',
+    path: '/media/import',
+    label: 'Impor ZIP gambar',
+    description: 'Petakan gambar dari arsip ZIP ke soal, opsi, atau pembahasan.',
+    icon: 'import',
+    permission: 'questions.import',
+  },
+  {
     group: 'Ujian',
     path: '/exams',
     label: 'Konfigurasi ujian',
@@ -252,6 +260,7 @@ const CHILD_LABELS: Record<string, string> = {
   'users/new': 'Tambah pengguna',
   'questions/new': 'Soal baru',
   'questions/import': 'Impor soal',
+  'media/import': 'Impor ZIP gambar',
 };
 
 /** Breadcrumb untuk topbar. */

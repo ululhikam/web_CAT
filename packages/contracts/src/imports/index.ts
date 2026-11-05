@@ -6,6 +6,8 @@ import {
 } from '../questions/index';
 import { STAGE_CODES, SUBTEST_CODES } from '../exams/index';
 
+export * from './media-zip';
+
 export const IMPORT_SOURCE_KINDS = ['SPREADSHEET', 'PDF', 'DOCX'] as const;
 export type ImportSourceKind = (typeof IMPORT_SOURCE_KINDS)[number];
 
