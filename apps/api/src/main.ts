@@ -18,6 +18,8 @@ loadLocalEnv();
 export async function createApp(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['error', 'warn', 'log'],
+    // Body mentah dibutuhkan verifikasi signature webhook.
+    rawBody: true,
   });
 
   const express = app.getHttpAdapter().getInstance() as unknown as {

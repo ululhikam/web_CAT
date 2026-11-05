@@ -178,11 +178,24 @@ export interface PaymentEvent {
   raw: unknown;
 }
 
+export interface RefundRequest {
+  orderId: string;
+  amountIdr: number;
+  reason: string;
+}
+
+export interface RefundResult {
+  providerRef: string | null;
+  raw: unknown;
+}
+
 export interface PaymentProvider {
   readonly name: string;
   createCharge(request: ChargeRequest): Promise<ChargeResult>;
   verifyWebhook(headers: Record<string, string | undefined>, body: string): boolean;
   parseEvent(body: string): PaymentEvent;
+  /** Opsional: provider tanpa API refund (mis. fake) cukup melempar/melewati. */
+  refund?(request: RefundRequest): Promise<RefundResult>;
 }
 
 /** Dipakai modul plan/pricing; memisahkan domain dari Prisma. */

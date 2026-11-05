@@ -6,6 +6,7 @@ export * from './common/index';
 export * from './auth/index';
 export * from './users/index';
 export * from './plans/index';
+export * from './billing/index';
 export * from './exams/index';
 export * from './categories/index';
 export * from './questions/index';

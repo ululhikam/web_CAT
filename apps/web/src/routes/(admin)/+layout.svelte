@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import '$lib/styles/admin.css';
 
   import { onMount, type Snippet } from 'svelte';

@@ -27,6 +27,10 @@
       "types": "./dist/plans/index.d.ts",
       "default": "./dist/plans/index.js"
     },
+    "./billing": {
+      "types": "./dist/billing/index.d.ts",
+      "default": "./dist/billing/index.js"
+    },
     "./exams": {
       "types": "./dist/exams/index.d.ts",
       "default": "./dist/exams/index.js"

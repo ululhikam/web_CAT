@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppConfigModule } from './core/config/config.module';
 import { LoggerModule } from './core/logger/logger.module';
@@ -19,6 +19,8 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BillingModule } from './modules/billing/billing.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { HealthModule } from './modules/health/health.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { CategoriesModule } from './modules/categories/categories.module';
@@ -54,6 +56,8 @@ import { ImportsModule } from './modules/imports/imports.module';
     MediaModule,
     QuestionsModule,
     ImportsModule,
+    PaymentsModule,
+    AnalyticsModule,
     HealthModule,
     CronModule,
   ],

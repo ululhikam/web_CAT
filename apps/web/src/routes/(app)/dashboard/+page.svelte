@@ -34,7 +34,7 @@
       if (!subscription) loading = true;
       error = null;
       try {
-        const result = await apiRequest<SubscriptionSummary | null>('/me/subscription', {
+        const result = await apiRequest<SubscriptionSummary | null>('/subscriptions/me', {
           token: session.accessToken,
           cacheTtlMs: 20000,
         });

@@ -1,4 +1,4 @@
-<script lang="ts">
+﻿<script lang="ts">
   import { onMount, type Snippet } from 'svelte';
   import { goto, afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
@@ -25,6 +25,7 @@
 
   const navBilling = [
     { href: '/subscription', label: 'Paket Langganan', icon: 'card' as const },
+    { href: '/transactions', label: 'Riwayat Transaksi', icon: 'list' as const },
   ];
 
   const navAccount = [

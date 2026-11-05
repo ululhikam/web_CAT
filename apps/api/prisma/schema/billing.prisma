@@ -76,6 +76,7 @@ model Subscription {
   grantNote          String?            @map("grant_note")
   revokedAt          DateTime?          @map("revoked_at")
   revokeReason       String?            @map("revoke_reason")
+  lastReminderAt     DateTime?          @map("last_reminder_at")
   createdAt          DateTime           @default(now()) @map("created_at")
   updatedAt          DateTime           @updatedAt @map("updated_at")
 
@@ -120,9 +121,13 @@ model Transaction {
   provider       String            @default("midtrans")
   providerRef    String?           @map("provider_ref")
   snapToken      String?           @map("snap_token")
+  redirectUrl    String?           @map("redirect_url")
   invoiceNumber  String?           @unique @map("invoice_number")
   expiresAt      DateTime?         @map("expires_at")
   paidAt         DateTime?         @map("paid_at")
+  refundedAt     DateTime?         @map("refunded_at")
+  refundReason   String?           @map("refund_reason")
+  refundedById   String?           @map("refunded_by") @db.Uuid
   rawPayload     Json?             @map("raw_payload")
   createdAt      DateTime          @default(now()) @map("created_at")
   updatedAt      DateTime          @updatedAt @map("updated_at")
@@ -134,6 +139,7 @@ model Transaction {
   @@unique([provider, providerRef])
   @@index([userId, createdAt(sort: Desc)])
   @@index([status, expiresAt])
+  @@index([status, paidAt])
   @@map("transactions")
 }
 

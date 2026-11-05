@@ -12,7 +12,7 @@ import type { Plan } from './index';
  *
  * Semua nominal dalam Rupiah penuh (bukan sen).
  */
-export const DEFAULT_PLANS: readonly Plan[] = [
+const DEFAULT_PLAN_SEEDS: ReadonlyArray<Omit<Plan, 'status'>> = [
   {
     id: 'fallback-trial-3d',
     code: 'TRIAL_3D',
@@ -134,3 +134,9 @@ export const DEFAULT_PLANS: readonly Plan[] = [
     isPopular: false,
   },
 ];
+
+/** Semua paket fallback dianggap aktif agar bisa tampil di halaman pricing. */
+export const DEFAULT_PLANS: readonly Plan[] = DEFAULT_PLAN_SEEDS.map((plan) => ({
+  ...plan,
+  status: 'ACTIVE' as const,
+}));
