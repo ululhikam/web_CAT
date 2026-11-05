@@ -1,0 +1,732 @@
+import {
+  compassOf,
+  countOfShapes,
+  correctOptionVariant,
+  figureAltText,
+  renderFigure,
+  rotationStepDegrees,
+  STEM_VARIANT,
+  type CompassDirection,
+  type FigureFamily,
+  type FigureSpec,
+} from '../media/figural';
+import { createRng, shuffle } from './rng';
+import type { SeedDifficulty, SeedQuestionMedia } from './types';
+
+/**
+ * Soal figural (F3-23/F3-24).
+ *
+ * Setiap baris hanya menyebut **spesifikasi gambar** (keluarga + seed), bukan
+ * berkas. Dari spesifikasi yang sama diturunkan:
+ *   - gambar stem & 4 gambar pilihan (`figureAssets`),
+ *   - label opsi yang benar (`correctOptionVariant`),
+ *   - teks alternatif (`figureAltText`).
+ *
+ * Akibatnya kunci jawaban tidak bisa bertentangan dengan gambar: keduanya
+ * dihitung dari geometri yang sama.
+ */
+
+export interface FiguralSeed {
+  /** Kode publik unik. */
+  code: string;
+  family: FigureFamily;
+  /** Angka pembeda variasi di dalam keluarga; menentukan gambar & kunci. */
+  seed: number;
+  type: 'IMAGE_CHOICE' | 'SINGLE_CHOICE';
+  difficulty: SeedDifficulty;
+  stem: string;
+  explanation: string;
+  tags: readonly string[];
+}
+
+export interface FigureAssetRef {
+  code: string;
+  spec: FigureSpec;
+  /** `STEM_VARIANT` atau 0..3 (label A..D). */
+  variant: number;
+  alt: string;
+}
+
+const OPTION_LABELS = ['A', 'B', 'C', 'D'] as const;
+
+/* ------------------------------------------------------------- Kecerdasan */
+
+const KEC_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
+  {
+    code: 'PSI-KEC-FIG-001',
+    family: 'series',
+    seed: 0,
+    difficulty: 'EASY',
+    stem: 'Perhatikan deret bentuk berikut. Bentuk manakah yang melanjutkan pola?',
+    explanation: 'Jumlah bentuk bertambah satu setiap baris (1, 2, 3), jadi baris berikutnya berisi 4 bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-002',
+    family: 'series',
+    seed: 1,
+    difficulty: 'EASY',
+    stem: 'Deret berikut bertambah teratur. Lanjutan pola yang tepat adalah ...',
+    explanation: 'Banyaknya bentuk naik satu per baris; lanjutan yang benar memuat 4 bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-003',
+    family: 'series',
+    seed: 2,
+    difficulty: 'EASY',
+    stem: 'Tentukan bentuk yang tepat untuk melanjutkan pola baris berikut.',
+    explanation: 'Pola jumlah 1–2–3 berlanjut menjadi 4 bentuk pada baris keempat.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-004',
+    family: 'series',
+    seed: 3,
+    difficulty: 'EASY',
+    stem: 'Baris bentuk di bawah ini mengikuti satu aturan. Pilih lanjutan yang sesuai.',
+    explanation: 'Aturannya adalah penambahan satu bentuk per baris, sehingga lanjutan berisi 4 bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-005',
+    family: 'series',
+    seed: 4,
+    difficulty: 'MEDIUM',
+    stem: 'Amati perubahan jumlah bentuk pada setiap baris, lalu pilih gambar lanjutan.',
+    explanation: 'Jumlah bentuk membentuk deret aritmetika 1, 2, 3 sehingga baris berikutnya 4 bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-006',
+    family: 'series',
+    seed: 5,
+    difficulty: 'MEDIUM',
+    stem: 'Pola deret bentuk manakah yang benar untuk gambar selanjutnya?',
+    explanation: 'Setiap baris menambah satu bentuk; pilihan dengan 4 bentuk adalah jawabannya.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-007',
+    family: 'series',
+    seed: 6,
+    difficulty: 'MEDIUM',
+    stem: 'Deret bentuk ini memiliki aturan tetap. Gambar manakah yang melengkapi deret?',
+    explanation: 'Deret jumlah 1, 2, 3 dilanjutkan 4 bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-008',
+    family: 'series',
+    seed: 7,
+    difficulty: 'MEDIUM',
+    stem: 'Lanjutkan pola bentuk berikut dengan memilih satu gambar yang tepat.',
+    explanation: 'Baris keempat harus memuat empat bentuk agar pola penambahan satu tetap berjalan.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-009',
+    family: 'series',
+    seed: 8,
+    difficulty: 'HARD',
+    stem: 'Perhatikan irama jumlah bentuk pada tiap baris. Pilih gambar lanjutan yang benar.',
+    explanation: 'Irama jumlah bentuk naik satu tiap baris, sehingga lanjutan berisi 4 bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'PSI-KEC-FIG-010',
+    family: 'series',
+    seed: 9,
+    difficulty: 'HARD',
+    stem: 'Deret gambar berikut mengikuti pola jumlah. Tentukan gambar selanjutnya.',
+    explanation: 'Jumlah bentuk per baris 1, 2, 3, lalu 4. Pilihan dengan empat bentuk benar.',
+    tags: ['figural', 'pola'],
+  },
+
+  {
+    code: 'PSI-KEC-FIG-011',
+    family: 'rotation',
+    seed: 0,
+    difficulty: 'EASY',
+    stem: 'Bentuk L diputar dengan sudut tetap. Pilih gambar hasil putaran berikutnya.',
+    explanation: 'Putaran bertambah 90° searah jarum jam setiap langkah, jadi hasil berikutnya adalah 180° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-012',
+    family: 'rotation',
+    seed: 1,
+    difficulty: 'MEDIUM',
+    stem: 'Perhatikan arah putaran bentuk berikut, lalu tentukan lanjutannya.',
+    explanation: 'Langkah putar 45° searah jarum jam berlanjut menjadi 90° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-013',
+    family: 'rotation',
+    seed: 2,
+    difficulty: 'MEDIUM',
+    stem: 'Bentuk pada gambar diputar secara beraturan. Gambar manakah lanjutannya?',
+    explanation: 'Langkah putar 135° berlanjut menjadi 270° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-014',
+    family: 'rotation',
+    seed: 3,
+    difficulty: 'MEDIUM',
+    stem: 'Tentukan hasil putaran berikutnya pada deret bentuk L di bawah ini.',
+    explanation: 'Sudut putar tetap 90°, sehingga gambar berikutnya berada pada 180° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-015',
+    family: 'rotation',
+    seed: 4,
+    difficulty: 'HARD',
+    stem: 'Amati arah putaran bentuk. Pilih gambar yang melanjutkan deret dengan benar.',
+    explanation: 'Putaran berlangsung 90° berlawanan arah jarum jam; langkah kedua menjadi 180° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-016',
+    family: 'rotation',
+    seed: 5,
+    difficulty: 'HARD',
+    stem: 'Deret bentuk L berikut berputar teratur. Lanjutan yang tepat adalah ...',
+    explanation: 'Langkah putar 45° berlawanan arah jarum jam berlanjut menjadi 90° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-017',
+    family: 'rotation',
+    seed: 6,
+    difficulty: 'HARD',
+    stem: 'Pilih gambar yang tepat untuk melanjutkan rotasi bentuk di bawah.',
+    explanation: 'Putaran 135° berlawanan arah jarum jam berlanjut menjadi 270° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-018',
+    family: 'rotation',
+    seed: 7,
+    difficulty: 'HARD',
+    stem: 'Bentuk L diputar dengan besar sudut yang sama setiap langkah. Tentukan gambar keempat.',
+    explanation: 'Rotasi 90° berlawanan arah jarum jam; langkah kedua sama dengan 180° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+
+  {
+    code: 'PSI-KEC-FIG-019',
+    family: 'mirror',
+    seed: 0,
+    difficulty: 'MEDIUM',
+    stem: 'Gambar manakah yang merupakan pencerminan bentuk terhadap garis putus-putus?',
+    explanation: 'Pencerminan terhadap garis mendatar membalik posisi atas–bawah tanpa mengubah kiri–kanan.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'PSI-KEC-FIG-020',
+    family: 'mirror',
+    seed: 1,
+    difficulty: 'MEDIUM',
+    stem: 'Pilih hasil pencerminan yang benar terhadap sumbu mendatar pada gambar.',
+    explanation: 'Hasil cermin terhadap sumbu mendatar adalah bayangan terbalik atas–bawah.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'PSI-KEC-FIG-021',
+    family: 'mirror',
+    seed: 2,
+    difficulty: 'MEDIUM',
+    stem: 'Bentuk di bawah dicerminkan pada garis putus-putus. Hasilnya adalah ...',
+    explanation: 'Bayangan cermin mendatar mempertahankan susunan kiri–kanan dan membalik arah tegak.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'PSI-KEC-FIG-022',
+    family: 'mirror',
+    seed: 3,
+    difficulty: 'HARD',
+    stem: 'Tentukan bayangan cermin bentuk berikut terhadap garis mendatar.',
+    explanation: 'Pencerminan terhadap garis mendatar menghasilkan bayangan yang terbalik secara vertikal.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'PSI-KEC-FIG-023',
+    family: 'mirror',
+    seed: 4,
+    difficulty: 'HARD',
+    stem: 'Manakah bayangan yang tepat bila bentuk dicerminkan terhadap garis putus-putus?',
+    explanation: 'Sumbu cermin mendatar membalik koordinat tegak; susunan mendatar tetap.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'PSI-KEC-FIG-024',
+    family: 'mirror',
+    seed: 5,
+    difficulty: 'HARD',
+    stem: 'Pilih gambar hasil pencerminan yang sesuai dengan sumbu pada gambar.',
+    explanation: 'Bayangan cermin terhadap sumbu mendatar adalah hasil pembalikan arah vertikal.',
+    tags: ['figural', 'pencerminan'],
+  },
+
+  {
+    code: 'PSI-KEC-FIG-025',
+    family: 'analogy',
+    seed: 0,
+    difficulty: 'MEDIUM',
+    stem: 'Perhatikan hubungan pada baris pertama, lalu lengkapi baris kedua.',
+    explanation: 'Aturannya: bentuk tetap, ukuran membesar. Jadi jawabannya bentuk yang sama dalam ukuran besar.',
+    tags: ['figural', 'analogi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-026',
+    family: 'analogy',
+    seed: 1,
+    difficulty: 'MEDIUM',
+    stem: 'Jika pasangan pertama berhubungan seperti pada gambar, pasangan kedua adalah ...',
+    explanation: 'Hubungannya adalah pembesaran ukuran tanpa perubahan bentuk.',
+    tags: ['figural', 'analogi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-027',
+    family: 'analogy',
+    seed: 2,
+    difficulty: 'MEDIUM',
+    stem: 'Tentukan gambar yang melengkapi analogi figural berikut.',
+    explanation: 'Bentuk dipertahankan, ukuran diperbesar. Pilihan dengan bentuk sama dan ukuran besar benar.',
+    tags: ['figural', 'analogi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-028',
+    family: 'analogy',
+    seed: 3,
+    difficulty: 'HARD',
+    stem: 'Lengkapi analogi bentuk di bawah dengan aturan yang sama seperti contoh.',
+    explanation: 'Aturan contoh: bentuk tetap dan ukuran membesar.',
+    tags: ['figural', 'analogi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-029',
+    family: 'analogy',
+    seed: 4,
+    difficulty: 'HARD',
+    stem: 'Pilih gambar yang meneruskan hubungan bentuk pada contoh.',
+    explanation: 'Ukuran membesar sedangkan bentuk tidak berubah.',
+    tags: ['figural', 'analogi'],
+  },
+  {
+    code: 'PSI-KEC-FIG-030',
+    family: 'analogy',
+    seed: 5,
+    difficulty: 'HARD',
+    stem: 'Analogi figural: tentukan pasangan yang tepat untuk tanda tanya.',
+    explanation: 'Pasangan benar adalah bentuk yang sama dengan ukuran lebih besar.',
+    tags: ['figural', 'analogi'],
+  },
+
+  {
+    code: 'PSI-KEC-FIG-031',
+    family: 'net',
+    seed: 0,
+    difficulty: 'HARD',
+    stem: 'Sisi bertanda merah dilipat menjadi kubus. Sisi manakah yang berhadapan dengannya?',
+    explanation: 'Pada jaring salib, sisi yang dipisahkan satu kotak pada baris yang sama saling berhadapan.',
+    tags: ['figural', 'kubus'],
+  },
+  {
+    code: 'PSI-KEC-FIG-032',
+    family: 'net',
+    seed: 1,
+    difficulty: 'HARD',
+    stem: 'Tentukan sisi yang berhadapan dengan sisi bertanda pada jaring-jaring kubus berikut.',
+    explanation: 'Lipatan jaring membuat sisi berjarak satu kotak pada baris utama menjadi berhadapan.',
+    tags: ['figural', 'kubus'],
+  },
+  {
+    code: 'PSI-KEC-FIG-033',
+    family: 'net',
+    seed: 2,
+    difficulty: 'HARD',
+    stem: 'Jaring-jaring kubus di bawah dilipat. Pilih sisi yang berhadapan dengan tanda merah.',
+    explanation: 'Sisi berhadapan ditentukan oleh posisi berlawanan pada jaring salib.',
+    tags: ['figural', 'kubus'],
+  },
+  {
+    code: 'PSI-KEC-FIG-034',
+    family: 'net',
+    seed: 3,
+    difficulty: 'HARD',
+    stem: 'Setelah dilipat, sisi bertanda merah berhadapan dengan sisi ...',
+    explanation: 'Dua sisi yang berselang satu kotak pada deret jaring akan berhadapan.',
+    tags: ['figural', 'kubus'],
+  },
+];
+
+const KEC_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
+  {
+    code: 'PSI-KEC-FIG-035',
+    family: 'count',
+    seed: 0,
+    difficulty: 'EASY',
+    stem: 'Berapa banyak bentuk pada gambar berikut?',
+    explanation: 'Hitung satu per satu bentuk pada gambar; jumlahnya sesuai pilihan yang tersedia.',
+    tags: ['figural', 'hitung'],
+  },
+  {
+    code: 'PSI-KEC-FIG-036',
+    family: 'count',
+    seed: 1,
+    difficulty: 'EASY',
+    stem: 'Tentukan jumlah bentuk yang tampak pada gambar.',
+    explanation: 'Hitung seluruh bentuk, termasuk yang berwarna berbeda.',
+    tags: ['figural', 'hitung'],
+  },
+  {
+    code: 'PSI-KEC-FIG-037',
+    family: 'count',
+    seed: 2,
+    difficulty: 'MEDIUM',
+    stem: 'Berapakah jumlah bentuk geometri pada gambar di bawah ini?',
+    explanation: 'Jumlahkan bentuk pada setiap baris untuk memperoleh total.',
+    tags: ['figural', 'hitung'],
+  },
+  {
+    code: 'PSI-KEC-FIG-038',
+    family: 'count',
+    seed: 3,
+    difficulty: 'MEDIUM',
+    stem: 'Hitung banyaknya bentuk yang ditampilkan, lalu pilih jawaban yang tepat.',
+    explanation: 'Hitung bentuk baris demi baris agar tidak ada yang terlewat.',
+    tags: ['figural', 'hitung'],
+  },
+  {
+    code: 'PSI-KEC-FIG-039',
+    family: 'direction',
+    seed: 0,
+    difficulty: 'EASY',
+    stem: 'Jarum kompas pada gambar menunjuk ke arah ...',
+    explanation: 'Perhatikan ujung panah kompas untuk menentukan arah mata angin.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'PSI-KEC-FIG-040',
+    family: 'direction',
+    seed: 1,
+    difficulty: 'EASY',
+    stem: 'Arah yang ditunjukkan jarum kompas berikut adalah ...',
+    explanation: 'Ujung panah menunjuk arah mata angin sesuai skala kompas.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'PSI-KEC-FIG-041',
+    family: 'direction',
+    seed: 2,
+    difficulty: 'EASY',
+    stem: 'Tentukan arah mata angin yang ditunjuk jarum pada gambar.',
+    explanation: 'Baca arah ujung jarum terhadap empat arah utama kompas.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'PSI-KEC-FIG-042',
+    family: 'direction',
+    seed: 3,
+    difficulty: 'MEDIUM',
+    stem: 'Jarum kompas berputar seperti pada gambar. Arah yang ditunjuk adalah ...',
+    explanation: 'Arah ditentukan oleh posisi ujung panah pada bidang kompas.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'PSI-KEC-FIG-043',
+    family: 'direction',
+    seed: 4,
+    difficulty: 'MEDIUM',
+    stem: 'Berdasarkan gambar kompas, arah yang benar adalah ...',
+    explanation: 'Ujung panah menunjuk salah satu dari empat arah mata angin utama.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'PSI-KEC-FIG-044',
+    family: 'direction',
+    seed: 5,
+    difficulty: 'MEDIUM',
+    stem: 'Pilih arah mata angin yang sesuai dengan jarum kompas di bawah.',
+    explanation: 'Cocokkan posisi ujung panah dengan arah mata angin.',
+    tags: ['figural', 'arah'],
+  },
+];
+
+/* -------------------------------------------------------------------- TPA */
+
+const TPA_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
+  {
+    code: 'TPA-FIG-001',
+    family: 'series',
+    seed: 100,
+    difficulty: 'EASY',
+    stem: 'Lanjutkan pola jumlah bentuk pada gambar berikut.',
+    explanation: 'Jumlah bentuk bertambah satu pada setiap baris, sehingga lanjutan berisi empat bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'TPA-FIG-002',
+    family: 'series',
+    seed: 101,
+    difficulty: 'MEDIUM',
+    stem: 'Deret bentuk berikut memiliki pola tetap. Pilih gambar lanjutannya.',
+    explanation: 'Pola penambahan satu bentuk per baris berlanjut menjadi empat bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'TPA-FIG-003',
+    family: 'series',
+    seed: 102,
+    difficulty: 'MEDIUM',
+    stem: 'Tentukan gambar yang melanjutkan deret bentuk di bawah ini.',
+    explanation: 'Baris keempat memuat empat bentuk sesuai pola 1, 2, 3.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'TPA-FIG-004',
+    family: 'series',
+    seed: 103,
+    difficulty: 'HARD',
+    stem: 'Amati pola jumlah bentuk dan pilih kelanjutan yang tepat.',
+    explanation: 'Jumlah bentuk naik satu setiap baris; kelanjutannya empat bentuk.',
+    tags: ['figural', 'pola'],
+  },
+  {
+    code: 'TPA-FIG-005',
+    family: 'rotation',
+    seed: 100,
+    difficulty: 'MEDIUM',
+    stem: 'Bentuk diputar dengan sudut tetap. Tentukan hasil putaran berikutnya.',
+    explanation: 'Sudut putar bertambah 90°, sehingga gambar berikutnya berputar 180° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'TPA-FIG-006',
+    family: 'rotation',
+    seed: 101,
+    difficulty: 'HARD',
+    stem: 'Perhatikan langkah rotasi pada gambar, lalu pilih lanjutannya.',
+    explanation: 'Langkah 45° berlanjut menjadi 90° dari posisi awal.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'TPA-FIG-007',
+    family: 'rotation',
+    seed: 102,
+    difficulty: 'HARD',
+    stem: 'Tentukan gambar keempat pada deret rotasi bentuk berikut.',
+    explanation: 'Rotasi 135° per langkah menghasilkan posisi 270° pada langkah kedua.',
+    tags: ['figural', 'rotasi'],
+  },
+  {
+    code: 'TPA-FIG-008',
+    family: 'mirror',
+    seed: 100,
+    difficulty: 'MEDIUM',
+    stem: 'Pilih bayangan cermin bentuk terhadap garis putus-putus.',
+    explanation: 'Pencerminan terhadap garis mendatar membalik arah vertikal.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'TPA-FIG-009',
+    family: 'mirror',
+    seed: 101,
+    difficulty: 'HARD',
+    stem: 'Gambar manakah hasil pencerminan bentuk berikut?',
+    explanation: 'Bayangan cermin mempertahankan susunan mendatar dan membalik susunan tegak.',
+    tags: ['figural', 'pencerminan'],
+  },
+  {
+    code: 'TPA-FIG-010',
+    family: 'mirror',
+    seed: 102,
+    difficulty: 'HARD',
+    stem: 'Tentukan hasil pencerminan bentuk pada sumbu mendatar.',
+    explanation: 'Hasil cermin terhadap sumbu mendatar adalah pembalikan arah tegak.',
+    tags: ['figural', 'pencerminan'],
+  },
+];
+
+const TPA_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
+  {
+    code: 'TPA-FIG-011',
+    family: 'count',
+    seed: 100,
+    difficulty: 'EASY',
+    stem: 'Berapa jumlah bentuk pada gambar berikut?',
+    explanation: 'Hitung seluruh bentuk pada gambar satu per satu.',
+    tags: ['figural', 'hitung'],
+  },
+  {
+    code: 'TPA-FIG-012',
+    family: 'count',
+    seed: 101,
+    difficulty: 'MEDIUM',
+    stem: 'Hitung banyaknya bentuk geometri yang tampak.',
+    explanation: 'Jumlahkan bentuk pada tiap baris untuk memperoleh total.',
+    tags: ['figural', 'hitung'],
+  },
+  {
+    code: 'TPA-FIG-013',
+    family: 'direction',
+    seed: 100,
+    difficulty: 'EASY',
+    stem: 'Jarum kompas menunjuk ke arah ...',
+    explanation: 'Arah ditentukan oleh ujung panah pada kompas.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'TPA-FIG-014',
+    family: 'direction',
+    seed: 101,
+    difficulty: 'MEDIUM',
+    stem: 'Tentukan arah mata angin yang ditunjuk jarum kompas.',
+    explanation: 'Cocokkan posisi ujung panah dengan arah mata angin.',
+    tags: ['figural', 'arah'],
+  },
+  {
+    code: 'TPA-FIG-015',
+    family: 'direction',
+    seed: 102,
+    difficulty: 'MEDIUM',
+    stem: 'Berdasarkan gambar, arah yang ditunjuk kompas adalah ...',
+    explanation: 'Ujung panah menunjuk salah satu arah mata angin utama.',
+    tags: ['figural', 'arah'],
+  },
+];
+
+/* ---------------------------------------------------------------- ekspor */
+
+function withType(
+  rows: ReadonlyArray<Omit<FiguralSeed, 'type'>>,
+  type: FiguralSeed['type'],
+): FiguralSeed[] {
+  return rows.map((row) => ({ ...row, type }));
+}
+
+export const FIGURAL_KECERDASAN: readonly FiguralSeed[] = [
+  ...withType(KEC_IMAGE, 'IMAGE_CHOICE'),
+  ...withType(KEC_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
+];
+
+export const FIGURAL_TPA: readonly FiguralSeed[] = [
+  ...withType(TPA_IMAGE, 'IMAGE_CHOICE'),
+  ...withType(TPA_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
+];
+
+/* ------------------------------------------------------- aset & kunci opsi */
+
+/** Kode aset untuk satu gambar; stabil antar seed. */
+export function figureAssetCode(spec: FigureSpec, variant: number): string {
+  return `FIG-${spec.family.toUpperCase()}-${spec.seed}-${
+    variant === STEM_VARIANT ? 'STEM' : OPTION_LABELS[variant] ?? variant
+  }`;
+}
+
+/**
+ * Seluruh aset gambar yang dibutuhkan soal figural.
+ *
+ * Satu baris per gambar (stem + pilihan). Duplikat dibuang agar gambar yang
+ * dipakai dua soal tidak di-render dua kali.
+ */
+export function figureAssets(): FigureAssetRef[] {
+  const byCode = new Map<string, FigureAssetRef>();
+
+  for (const row of [...FIGURAL_KECERDASAN, ...FIGURAL_TPA]) {
+    const spec: FigureSpec = { family: row.family, seed: row.seed };
+    const variants = row.type === 'IMAGE_CHOICE' ? [STEM_VARIANT, 0, 1, 2, 3] : [STEM_VARIANT];
+
+    for (const variant of variants) {
+      const code = figureAssetCode(spec, variant);
+      if (byCode.has(code)) continue;
+      byCode.set(code, {
+        code,
+        spec,
+        variant,
+        alt: figureAltText(spec, variant),
+      });
+    }
+  }
+
+  return [...byCode.values()];
+}
+
+export interface FiguralLayout {
+  /** Varian gambar per label (indeks 0..3 = label A..D). */
+  variantByLabel: number[];
+  /** Label (0..3) yang benar. */
+  correctIndex: number;
+}
+
+/**
+ * Susunan gambar pada pilihan jawaban.
+ *
+ * Varian diacak deterministik per soal agar kunci tidak selalu di label A.
+ * Semua varian tetap muncul tepat satu kali, jadi soal selalu punya satu
+ * jawaban benar.
+ */
+export function layoutFor(row: FiguralSeed): FiguralLayout {
+  const spec: FigureSpec = { family: row.family, seed: row.seed };
+  const correct = correctOptionVariant(spec);
+  const variantByLabel = shuffle(
+    createRng(`figural-layout:${row.code}`),
+    [0, 1, 2, 3].filter((variant) => variant !== correct),
+  );
+  // Sisipkan varian benar pada posisi acak tersendiri.
+  const insertAt = Math.floor(createRng(`figural-key:${row.code}`).next() * 4);
+  variantByLabel.splice(insertAt, 0, correct);
+
+  return { variantByLabel, correctIndex: variantByLabel.indexOf(correct) };
+}
+
+/** Label opsi bergambar yang benar untuk satu spesifikasi. */
+export function correctLabel(row: FiguralSeed): string {
+  return OPTION_LABELS[layoutFor(row).correctIndex]!;
+}
+
+/** Varian gambar (0..3) yang benar — dipakai test konsistensi kunci. */
+export function correctVariant(row: FiguralSeed): number {
+  return correctOptionVariant({ family: row.family, seed: row.seed });
+}
+
+/** Empat pengecoh untuk soal hitung (angka di sekitar jawaban). */
+export function countDistractors(answer: number): [string, string, string, string] {
+  const unique: string[] = [];
+  for (const candidate of [answer - 1, answer + 1, answer + 2, answer - 2]) {
+    const text = String(candidate);
+    if (candidate > 0 && candidate !== answer && !unique.includes(text)) unique.push(text);
+  }
+  let extra = answer + 3;
+  while (unique.length < 4) {
+    const text = String(extra);
+    if (extra !== answer && !unique.includes(text)) unique.push(text);
+    extra += 1;
+  }
+  return unique.slice(0, 4) as [string, string, string, string];
+}
+
+/** Pengecoh arah: tiga arah mata angin lain + satu arah diagonal. */
+export function directionDistractors(answer: CompassDirection): [string, string, string, string] {
+  const others = (['Utara', 'Timur', 'Selatan', 'Barat'] as const).filter(
+    (direction) => direction !== answer,
+  );
+  return [others[0]!, others[1]!, others[2]!, 'Timur Laut'];
+}
+
+/** Jawaban teks & stem bergambar untuk keluarga hitung/arah. */
+export function figuralTextAnswer(row: FiguralSeed): string {
+  const spec: FigureSpec = { family: row.family, seed: row.seed };
+  if (row.family === 'count') return String(countOfShapes(spec));
+  if (row.family === 'direction') return compassOf(spec);
+  throw new Error(`${row.code}: keluarga ${row.family} tidak memakai jawaban teks`);
+}
+
+/** Render SVG satu aset; dipakai seed dan test. */
+export function renderAsset(asset: FigureAssetRef): string {
+  return renderFigure(asset.spec, asset.variant);
+}

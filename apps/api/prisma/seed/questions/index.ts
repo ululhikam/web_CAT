@@ -2,19 +2,31 @@ import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient } from '@prisma/client';
 import { computeDedupeHash } from '../../../src/modules/questions/dedupe';
 import { buildChoices } from './builder';
-import { buildOptions, createRng } from './rng';
+import {
+  countDistractors,
+  directionDistractors,
+  FIGURAL_KECERDASAN,
+  FIGURAL_TPA,
+  figuralTextAnswer,
+  figureAssetCode,
+  layoutFor,
+  type FiguralSeed,
+} from './figural';
+import { figureAltText, STEM_VARIANT, type FigureSpec } from '../media/figural';
+import { buildOptions, createRng, OPTION_LABELS } from './rng';
 import { KECERDASAN_QUESTIONS } from './kecerdasan';
 import { KECERMATAN_QUESTIONS } from './kecermatan';
 import { KEPRIBADIAN_QUESTIONS } from './kepribadian';
 import { PASS_HAND_QUESTIONS } from './pass-hand';
 import { TPK_QUESTIONS } from './tpk';
-import type { SeedDifficulty } from './types';
+import type { SeedDifficulty, SeedQuestionMedia } from './types';
 
 /**
  * Seed bank soal realistis (bukan fixture).
  *
  * Cakupan:
  *   PSIKOLOGI — Kecerdasan 100, Kepribadian 140, Kecermatan 500, Pass Hand 150
+ *   TPA       — 15 soal figural
  *   TPK       — 100 soal (10 kelompok materi × 10)
  *
  * Semua soal berstatus PUBLISHED. `exam-question-source.ts` baru memakai bank
@@ -55,6 +67,12 @@ export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
     parentPath: 'psikologi/kecerdasan',
     sortOrder: 3,
   },
+  {
+    path: 'psikologi/kecerdasan/figural',
+    name: 'Figural',
+    parentPath: 'psikologi/kecerdasan',
+    sortOrder: 4,
+  },
   { path: 'psikologi/kepribadian', name: 'Kepribadian', parentPath: 'psikologi', sortOrder: 2 },
   { path: 'psikologi/kecermatan', name: 'Kecermatan', parentPath: 'psikologi', sortOrder: 3 },
   {
@@ -87,18 +105,26 @@ export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
   { path: 'tpk/manajemen', name: 'Manajemen & Kepemimpinan', parentPath: 'tpk', sortOrder: 8 },
   { path: 'tpk/situasi-tugas', name: 'Situasi Tugas', parentPath: 'tpk', sortOrder: 9 },
   { path: 'tpk/profesionalisme', name: 'Profesionalisme', parentPath: 'tpk', sortOrder: 10 },
+  { path: 'tpa', name: 'TPA', sortOrder: 2 },
+  { path: 'tpa/figural', name: 'Figural', parentPath: 'tpa', sortOrder: 1 },
 ];
 
 /* ------------------------------------------------------------------ payload */
 
-type SeedStageCode = 'PSIKOLOGI' | 'TPK';
-type SeedSubtestCode = 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'PASS_HAND' | 'TPK';
+type SeedStageCode = 'PSIKOLOGI' | 'TPA' | 'TPK';
+type SeedSubtestCode = 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'PASS_HAND' | 'TPA' | 'TPK';
 type SeedQuestionType =
-  'SINGLE_CHOICE' | 'LIKERT_STATEMENT' | 'MISSING_ELEMENT' | 'PASS_HAND_COLUMN';
+  | 'SINGLE_CHOICE'
+  | 'MULTI_CHOICE'
+  | 'IMAGE_CHOICE'
+  | 'LIKERT_STATEMENT'
+  | 'MISSING_ELEMENT'
+  | 'PASS_HAND_COLUMN';
 
 interface SeedOption {
   label: string;
-  contentText: string;
+  /** `null` untuk opsi yang isinya hanya gambar (`IMAGE_CHOICE`). */
+  contentText: string | null;
   isCorrect: boolean;
   scoreValue: number;
   dimensionMap: Record<string, number> | null;
@@ -121,6 +147,8 @@ export interface SeedQuestion {
   /** `true` untuk soal bangkitan yang stem-nya identik dalam satu subtes. */
   dedupeOverride: boolean;
   options: SeedOption[];
+  /** Media soal; `assetCode` diresolusi ke `media_assets.id` saat seed. */
+  media: SeedQuestionMedia[];
   tags: string[];
 }
 
@@ -151,8 +179,11 @@ function choiceOptions(options: readonly string[], answerLabel: string): SeedOpt
   });
 }
 
-function hashOf(stem: string, options: readonly { contentText: string }[]): string {
-  return computeDedupeHash(stem, options);
+function hashOf(stem: string, options: readonly { contentText: string | null }[]): string {
+  return computeDedupeHash(
+    stem,
+    options.map((option) => ({ contentText: option.contentText ?? '' })),
+  );
 }
 
 /* --------------------------------------------------------------- psikologi */
@@ -177,6 +208,7 @@ function buildKecerdasan(): SeedQuestion[] {
     ),
     dedupeOverride: false,
     options: choiceOptions(row.options, row.answer),
+    media: [],
     tags: [...row.tags],
   }));
 }
@@ -217,6 +249,7 @@ function buildKepribadian(): SeedQuestion[] {
         scoreValue: Number(option.label),
         dimensionMap,
       })),
+      media: [],
       tags: [...row.tags],
     };
   });
@@ -258,6 +291,7 @@ function buildKecermatan(): SeedQuestion[] {
         scoreValue: option.isCorrect ? 1 : 0,
         dimensionMap: null,
       })),
+      media: [],
       tags: [...row.tags],
     };
   });
@@ -281,6 +315,7 @@ function buildPassHand(): SeedQuestion[] {
     // Tanpa opsi, seluruh kolom berbagi stem yang sama.
     dedupeOverride: true,
     options: [],
+    media: [],
     tags: [...row.tags],
   }));
 }
@@ -307,18 +342,161 @@ function buildTpk(): SeedQuestion[] {
     ),
     dedupeOverride: false,
     options: choiceOptions(row.options, row.answer),
+    media: [],
     tags: [...row.tags],
   }));
+}
+
+/* ---------------------------------------------------------------- figural */
+
+/** Media STEM untuk soal bergambar (satu gambar soal). */
+function stemMedia(spec: FigureSpec): SeedQuestionMedia {
+  return {
+    role: 'STEM',
+    assetCode: figureAssetCode(spec, STEM_VARIANT),
+    altText: figureAltText(spec, STEM_VARIANT),
+    sortOrder: 0,
+  };
+}
+
+/**
+ * Soal pilihan gambar (`IMAGE_CHOICE`).
+ *
+ * Opsi tidak punya teks (`contentText: null`) — isinya gambar. Susunan varian
+ * gambar per label diacak deterministik oleh `layoutFor()` agar kunci tidak
+ * selalu di label A, dan media OPTION memakai kode aset varian yang sesuai
+ * dengan labelnya.
+ */
+function buildFiguralImage(
+  row: FiguralSeed,
+  stageCode: SeedStageCode,
+  subtestCode: SeedSubtestCode,
+): SeedQuestion {
+  const spec: FigureSpec = { family: row.family, seed: row.seed };
+  const { variantByLabel, correctIndex } = layoutFor(row);
+
+  const options: SeedOption[] = OPTION_LABELS.slice(0, 4).map((label, index) => ({
+    label,
+    contentText: null,
+    isCorrect: index === correctIndex,
+    scoreValue: index === correctIndex ? 1 : 0,
+    dimensionMap: null,
+  }));
+
+  const media: SeedQuestionMedia[] = [
+    stemMedia(spec),
+    ...variantByLabel.map((variant, index) => ({
+      role: 'OPTION' as const,
+      assetCode: figureAssetCode(spec, variant),
+      optionLabel: OPTION_LABELS[index]!,
+      altText: figureAltText(spec, variant),
+      sortOrder: index,
+    })),
+  ];
+
+  return {
+    publicCode: row.code,
+    stageCode,
+    subtestCode,
+    categoryPath:
+      subtestCode === 'TPA' ? 'tpa/figural' : 'psikologi/kecerdasan/figural',
+    type: 'IMAGE_CHOICE',
+    difficulty: row.difficulty,
+    stemText: row.stem,
+    explanation: row.explanation,
+    scoringStrategy: 'KEYED_CORRECT',
+    scoringConfig: {},
+    pairGroup: null,
+    columnIndex: null,
+    // Dedupe memakai kunci opsi, bukan teks (teks opsi kosong).
+    dedupeHash: computeDedupeHash(
+      row.stem,
+      options.map((option) => ({ contentText: option.isCorrect ? 'BENAR' : 'SALAH' })),
+    ),
+    dedupeOverride: false,
+    options,
+    media,
+    tags: [...row.tags],
+  };
+}
+
+/** Soal pilihan teks yang stem-nya bergambar (hitung & arah kompas). */
+function buildFiguralText(
+  row: FiguralSeed,
+  stageCode: SeedStageCode,
+  subtestCode: SeedSubtestCode,
+): SeedQuestion {
+  const spec: FigureSpec = { family: row.family, seed: row.seed };
+  const answer = figuralTextAnswer(row);
+
+  const distractors =
+    row.family === 'count'
+      ? countDistractors(Number(answer))
+      : directionDistractors(answer as Parameters<typeof directionDistractors>[0]);
+
+  const built = buildOptions(createRng(`figural-text:${row.code}`), answer, distractors);
+
+  return {
+    publicCode: row.code,
+    stageCode,
+    subtestCode,
+    categoryPath:
+      subtestCode === 'TPA' ? 'tpa/figural' : 'psikologi/kecerdasan/figural',
+    type: 'SINGLE_CHOICE',
+    difficulty: row.difficulty,
+    stemText: row.stem,
+    explanation: row.explanation,
+    scoringStrategy: 'KEYED_CORRECT',
+    scoringConfig: {},
+    pairGroup: null,
+    columnIndex: null,
+    dedupeHash: computeDedupeHash(
+      row.stem,
+      built.options.map((option) => ({ contentText: option.contentText })),
+    ),
+    dedupeOverride: false,
+    options: built.options.map((option) => ({
+      label: option.label,
+      contentText: option.contentText,
+      isCorrect: option.isCorrect,
+      scoreValue: option.isCorrect ? 1 : 0,
+      dimensionMap: null,
+    })),
+    media: [stemMedia(spec)],
+    tags: [...row.tags],
+  };
+}
+
+function buildFigural(
+  rows: readonly FiguralSeed[],
+  stageCode: SeedStageCode,
+  subtestCode: SeedSubtestCode,
+): SeedQuestion[] {
+  return rows.map((row) =>
+    row.type === 'IMAGE_CHOICE'
+      ? buildFiguralImage(row, stageCode, subtestCode)
+      : buildFiguralText(row, stageCode, subtestCode),
+  );
+}
+
+function buildFiguralKecerdasan(): SeedQuestion[] {
+  return buildFigural(FIGURAL_KECERDASAN, PSIKOLOGI, 'KECERDASAN');
+}
+
+function buildFiguralTpa(): SeedQuestion[] {
+  return buildFigural(FIGURAL_TPA, 'TPA', 'TPA');
 }
 
 /** Seluruh soal realistis yang akan di-seed (fungsi murni, mudah diuji). */
 export function buildSeedQuestions(): SeedQuestion[] {
   return [
     ...buildKecerdasan(),
+    ...buildFiguralKecerdasan(),
     ...buildKepribadian(),
     ...buildKecermatan(),
     ...buildPassHand(),
     ...buildTpk(),
+    ...buildFiguralTpa(),
   ];
 }
 
@@ -416,9 +594,29 @@ function questionFields(question: SeedQuestion, categoryId: string | null) {
   };
 }
 
-export async function seedQuestionBank(prisma: PrismaClient): Promise<void> {
+export async function seedQuestionBank(
+  prisma: PrismaClient,
+  mediaIds: ReadonlyMap<string, string> = new Map(),
+): Promise<void> {
   const categoryIds = await seedCategories(prisma);
   const questions = buildSeedQuestions();
+
+  // Media soal hanya bisa ditulis bila asetnya sudah terdaftar. Gagal cepat di
+  // sini lebih baik daripada seed "sukses" tetapi soal bergambar tanpa gambar.
+  const missingAssets = [
+    ...new Set(
+      questions.flatMap((question) =>
+        question.media.map((entry) => entry.assetCode).filter((code) => !mediaIds.has(code)),
+      ),
+    ),
+  ];
+  if (missingAssets.length > 0) {
+    throw new Error(
+      `Aset media belum terdaftar (jalankan seedMediaAssets lebih dulu): ${missingAssets
+        .slice(0, 5)
+        .join(', ')}`,
+    );
+  }
 
   // Hanya soal yang ikut aturan dedupe (dedupeOverride=false) yang wajib unik;
   // soal bangkitan memang berbagi stem sehingga hash-nya boleh sama.
@@ -491,6 +689,7 @@ export async function seedQuestionBank(prisma: PrismaClient): Promise<void> {
   const touchedIds = touched.map((question) => idFor(question));
 
   for (const batch of chunks(touchedIds, CHUNK_SIZE)) {
+    await prisma.questionMedia.deleteMany({ where: { questionId: { in: batch } } });
     await prisma.questionOption.deleteMany({ where: { questionId: { in: batch } } });
     await prisma.questionTag.deleteMany({ where: { questionId: { in: batch } } });
   }
@@ -510,6 +709,59 @@ export async function seedQuestionBank(prisma: PrismaClient): Promise<void> {
 
     if (options.length > 0) {
       await prisma.questionOption.createMany({ data: options });
+    }
+  }
+
+  // Media soal (F3-25). Label opsi perlu id baris `question_options`, jadi
+  // media ditulis setelah opsi tersimpan dan id-nya dibaca kembali.
+  for (const batch of chunks(touched, CHUNK_SIZE)) {
+    const withMedia = batch.filter((question) => question.media.length > 0);
+    if (withMedia.length === 0) continue;
+
+    const questionIds = withMedia.map((question) => idFor(question));
+    const savedOptions = await prisma.questionOption.findMany({
+      where: { questionId: { in: questionIds } },
+      select: { id: true, questionId: true, label: true },
+    });
+    const optionId = new Map(
+      savedOptions.map((option) => [`${option.questionId}|${option.label}`, option.id]),
+    );
+
+    const mediaRows = withMedia.flatMap((question) =>
+      question.media.map((entry) => {
+        const mediaAssetId = mediaIds.get(entry.assetCode);
+        if (!mediaAssetId) {
+          throw new Error(
+            `${question.publicCode}: aset ${entry.assetCode} belum terdaftar di media_assets`,
+          );
+        }
+
+        let optionRowId: string | null = null;
+        if (entry.role === 'OPTION') {
+          if (!entry.optionLabel) {
+            throw new Error(`${question.publicCode}: media OPTION tanpa optionLabel`);
+          }
+          optionRowId = optionId.get(`${idFor(question)}|${entry.optionLabel}`) ?? null;
+          if (!optionRowId) {
+            throw new Error(
+              `${question.publicCode}: opsi ${entry.optionLabel} tidak ditemukan untuk media`,
+            );
+          }
+        }
+
+        return {
+          questionId: idFor(question),
+          optionId: optionRowId,
+          mediaAssetId,
+          role: entry.role,
+          altText: entry.altText ?? null,
+          sortOrder: entry.sortOrder ?? 0,
+        };
+      }),
+    );
+
+    if (mediaRows.length > 0) {
+      await prisma.questionMedia.createMany({ data: mediaRows });
     }
   }
 

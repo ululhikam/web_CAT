@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createHash } from 'node:crypto';
 import { questionShapeIssues, type QuestionShapeInput } from '@webcat/contracts';
 import {
   buildSeedQuestions,
@@ -20,6 +21,20 @@ function only(code: SeedQuestion['subtestCode']): SeedQuestion[] {
   return questions.filter((question) => question.subtestCode === code);
 }
 
+/**
+ * UUID v4 deterministik dari kode aset.
+ *
+ * Test bentuk soal tidak butuh database; id palsu yang stabil sudah cukup
+ * untuk memenuhi `mediaAssetId: uuid` di kontrak.
+ */
+function mediaAssetId(assetCode: string): string {
+  const hex = createHash('sha1').update(`asset:${assetCode}`).digest('hex').slice(0, 32);
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(
+    17,
+    20,
+  )}-${hex.slice(20, 32)}`;
+}
+
 function shapeInput(question: SeedQuestion): QuestionShapeInput {
   return {
     publicCode: question.publicCode,
@@ -34,12 +49,19 @@ function shapeInput(question: SeedQuestion): QuestionShapeInput {
     dedupeOverride: question.dedupeOverride,
     options: question.options.map((option, index) => ({
       label: option.label,
-      contentText: option.contentText,
+      ...(option.contentText === null ? {} : { contentText: option.contentText }),
       isCorrect: option.isCorrect,
       scoreValue: option.scoreValue,
       sortOrder: index,
     })),
-    media: [],
+    // Media divalidasi dengan id aset deterministik dari kode aset: yang diuji
+    // di sini adalah aturan bentuk (STEM/OPTION), bukan baris `media_assets`.
+    media: question.media.map((entry, index) => ({
+      mediaAssetId: mediaAssetId(entry.assetCode),
+      role: entry.role,
+      ...(entry.optionLabel ? { optionLabel: entry.optionLabel } : {}),
+      sortOrder: entry.sortOrder ?? index,
+    })),
     tags: [...question.tags],
     columnIndex: question.columnIndex,
   };
@@ -47,11 +69,14 @@ function shapeInput(question: SeedQuestion): QuestionShapeInput {
 
 describe('komposisi bank soal', () => {
   it('memenuhi kuota setiap subtes agar bank DB dipakai mesin ujian', () => {
-    expect(only('KECERDASAN')).toHaveLength(100);
+    // Kuota subtes (exam.seed.ts) harus terpenuhi; kelebihan diperbolehkan
+    // karena pool dipilih acak per sesi.
+    expect(only('KECERDASAN').length).toBeGreaterThanOrEqual(100);
     expect(only('KEPRIBADIAN').length).toBeGreaterThanOrEqual(140);
     expect(only('KECERMATAN')).toHaveLength(500);
     expect(only('PASS_HAND')).toHaveLength(150);
     expect(only('TPK')).toHaveLength(100);
+    expect(only('TPA').length).toBeGreaterThanOrEqual(15);
   });
 
   it('memakai kode publik unik', () => {
@@ -78,13 +103,14 @@ describe('komposisi bank soal', () => {
     expect([...perTopic.values()]).toEqual(new Array(10).fill(10));
   });
 
-  it('kecerdasan memuat verbal, numerik, dan logika', () => {
+  it('kecerdasan memuat verbal, numerik, logika, dan figural', () => {
     const topics = new Set(only('KECERDASAN').map((question) => question.categoryPath));
     expect(topics).toEqual(
       new Set([
         'psikologi/kecerdasan/verbal',
         'psikologi/kecerdasan/numerik',
         'psikologi/kecerdasan/logis',
+        'psikologi/kecerdasan/figural',
       ]),
     );
   });
@@ -99,7 +125,11 @@ describe('bentuk soal', () => {
   });
 
   it('soal pilihan tunggal punya tepat satu kunci dan lima opsi unik', () => {
-    for (const question of only('KECERDASAN').concat(only('TPK'), only('KECERMATAN'))) {
+    const textChoice = only('KECERDASAN')
+      .concat(only('TPK'), only('KECERMATAN'), only('TPA'))
+      .filter((question) => question.type !== 'IMAGE_CHOICE');
+
+    for (const question of textChoice) {
       expect(question.options, question.publicCode).toHaveLength(5);
       expect(
         question.options.filter((option) => option.isCorrect),
@@ -131,6 +161,73 @@ describe('bentuk soal', () => {
       expect(question.options.some((option) => option.isCorrect)).toBe(false);
       expect(question.options.map((option) => option.scoreValue)).toEqual([1, 2, 3, 4, 5]);
       expect(question.columnIndex).toBeNull();
+    }
+  });
+});
+
+describe('kelengkapan media soal bergambar (F3-26)', () => {
+  const imageChoice = questions.filter((question) => question.type === 'IMAGE_CHOICE');
+
+  it('seed memuat soal bergambar untuk Kecerdasan dan TPA', () => {
+    expect(imageChoice.length).toBeGreaterThanOrEqual(20);
+    expect(new Set(imageChoice.map((question) => question.subtestCode))).toEqual(
+      new Set(['KECERDASAN', 'TPA']),
+    );
+  });
+
+  it('setiap soal bergambar punya tepat satu media STEM', () => {
+    for (const question of imageChoice) {
+      const stem = question.media.filter((entry) => entry.role === 'STEM');
+      expect(stem, question.publicCode).toHaveLength(1);
+      expect(stem[0]!.assetCode, question.publicCode).toMatch(/^FIG-/);
+      expect(stem[0]!.altText?.length ?? 0, question.publicCode).toBeGreaterThan(3);
+    }
+  });
+
+  it('setiap opsi soal bergambar punya media OPTION sendiri', () => {
+    for (const question of imageChoice) {
+      const labels = question.options.map((option) => option.label);
+      const withMedia = question.media
+        .filter((entry) => entry.role === 'OPTION')
+        .map((entry) => entry.optionLabel);
+
+      expect(new Set(withMedia).size, question.publicCode).toBe(labels.length);
+      expect([...withMedia].sort(), question.publicCode).toEqual([...labels].sort());
+    }
+  });
+
+  it('media OPTION hanya dipakai soal bergambar dan selalu menyebut label', () => {
+    for (const question of questions) {
+      const optionMedia = question.media.filter((entry) => entry.role === 'OPTION');
+      if (question.type !== 'IMAGE_CHOICE') {
+        expect(optionMedia, question.publicCode).toEqual([]);
+        continue;
+      }
+      for (const entry of optionMedia) {
+        expect(entry.optionLabel, question.publicCode).toBeTruthy();
+      }
+    }
+  });
+
+  it('stem bergambar tanpa opsi gambar tetap punya satu media STEM', () => {
+    const textWithStem = questions.filter(
+      (question) => question.type === 'SINGLE_CHOICE' && question.media.length > 0,
+    );
+
+    expect(textWithStem.length).toBeGreaterThan(0);
+    for (const question of textWithStem) {
+      expect(question.media, question.publicCode).toHaveLength(1);
+      expect(question.media[0]!.role, question.publicCode).toBe('STEM');
+    }
+  });
+
+  it('opsi bergambar tidak menyimpan teks dan kuncinya tepat satu', () => {
+    for (const question of imageChoice) {
+      const correct = question.options.filter((option) => option.isCorrect);
+      expect(correct, question.publicCode).toHaveLength(1);
+      for (const option of question.options) {
+        expect(option.contentText, `${question.publicCode}/${option.label}`).toBeNull();
+      }
     }
   });
 });

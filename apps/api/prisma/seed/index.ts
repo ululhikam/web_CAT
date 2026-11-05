@@ -15,9 +15,12 @@
 import { PrismaClient } from '@prisma/client';
 import { PERMISSIONS, ROLE_PERMISSIONS, ROLES } from '@webcat/contracts';
 import { loadLocalEnv } from '../../src/core/config/load-env';
+import { DevStorage } from '../../src/core/ports/impl/dev-storage';
+import { MediaService } from '../../src/modules/media/media.service';
 import { seedAdmin } from './admin.seed';
 import { seedDemoUsers } from './demo-users.seed';
 import { seedExamStructure } from './exam.seed';
+import { seedMediaAssets } from './media.seed';
 import { seedPlans } from './plans.seed';
 import { seedQuestionBank } from './question.seed';
 import { seedRoles } from './roles.seed';
@@ -38,7 +41,28 @@ async function main(): Promise<void> {
 
   await seedRoles(prisma);
   await seedExamStructure(prisma);
-  await seedQuestionBank(prisma);
+
+  // Aset gambar harus ada lebih dulu: `seedQuestionBank` menolak soal yang
+  // menunjuk aset belum terdaftar (lebih baik gagal cepat daripada soal
+  // bergambar tanpa gambar).
+  const media = new MediaService(
+    prisma as never,
+    { record: async () => undefined } as never,
+    {
+      value: {
+        NODE_ENV: process.env.NODE_ENV ?? 'development',
+        STORAGE: 'dev',
+        JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET ?? 'seed-media-placeholder',
+      },
+    } as never,
+    new DevStorage(),
+  );
+  const seedMedia = await seedMediaAssets(prisma, media);
+  console.log(
+    `  aset media figural: ${seedMedia.total} gambar → ${seedMedia.idByCode.size} kode (baru ${seedMedia.created})`,
+  );
+
+  await seedQuestionBank(prisma, seedMedia.idByCode);
   await seedPlans(prisma);
   await seedPlatformSettings(prisma);
   await seedSuperAdmin(prisma);
@@ -53,6 +77,8 @@ async function main(): Promise<void> {
   const users = await prisma.user.count();
   const categories = await prisma.category.count();
   const questions = await prisma.question.count();
+  const mediaAssets = await prisma.mediaAsset.count();
+  const questionMedia = await prisma.questionMedia.count();
 
   console.log('Ringkasan Data:');
   console.table({
@@ -64,6 +90,8 @@ async function main(): Promise<void> {
     users,
     categories,
     questions,
+    mediaAssets,
+    questionMedia,
   });
 
   console.log('\n================ AKUN CONTOH LOGIN ================');

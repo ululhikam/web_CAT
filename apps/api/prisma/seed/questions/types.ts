@@ -10,6 +10,26 @@ export type SeedDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
 
 export type ChoiceLabel = 'A' | 'B' | 'C' | 'D' | 'E';
 
+/* -------------------------------------------------------------------- media */
+
+export type SeedMediaRole = 'STEM' | 'OPTION';
+
+/**
+ * Referensi media pada data seed.
+ *
+ * Yang disimpan adalah **kode aset** (`FIG-SERIES-0-A`), bukan id database:
+ * id baru diketahui setelah `seedMediaAssets()` berjalan di database target.
+ */
+export interface SeedQuestionMedia {
+  role: SeedMediaRole;
+  /** Kode aset dari `seed/questions/figural.ts` → `figureAssetCode()`. */
+  assetCode: string;
+  /** Wajib untuk `OPTION`; harus sama dengan label opsi yang bersangkutan. */
+  optionLabel?: ChoiceLabel;
+  altText?: string;
+  sortOrder?: number;
+}
+
 /* --------------------------------------------------------------- pilihan ganda */
 
 /** Soal pilihan ganda tertulis sebelum diberi kode & path kategori. */
@@ -39,7 +59,6 @@ export interface ChoiceQuestionData {
   explanation: string;
   tags: readonly string[];
 }
-
 /* ---------------------------------------------------------------- kepribadian */
 
 export type LikertPolarity = 'POSITIVE' | 'REVERSE';
