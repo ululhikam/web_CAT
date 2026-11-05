@@ -1,0 +1,112 @@
+/**
+ * Tipe data mentah bank soal realistis untuk seed.
+ *
+ * File data sengaja tidak mengimpor `@prisma/client` agar dapat diuji murni
+ * (lihat `apps/api/test/question-seed.spec.ts`). Pemetaan ke model Prisma
+ * dilakukan di `questions/index.ts`.
+ */
+
+export type SeedDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
+
+export type ChoiceLabel = 'A' | 'B' | 'C' | 'D' | 'E';
+
+/* --------------------------------------------------------------- pilihan ganda */
+
+/** Soal pilihan ganda tertulis sebelum diberi kode & path kategori. */
+export interface WrittenQuestion {
+  /** Subkategori daun, mis. `verbal` → `<prefix>/verbal`. */
+  topic: string;
+  difficulty: SeedDifficulty;
+  stem: string;
+  /** Lima opsi berurutan; label dibentuk otomatis A–E. */
+  options: readonly [string, string, string, string, string];
+  /** Label opsi yang benar pada urutan `options` di atas. */
+  answer: ChoiceLabel;
+  explanation: string;
+  tags: readonly string[];
+}
+
+/** Soal pilihan ganda yang sudah final (opsi sudah diacak). */
+export interface ChoiceQuestionData {
+  /** Kode publik unik, mis. `PSI-KEC-001`. */
+  code: string;
+  /** Path kategori, mis. `psikologi/kecerdasan/verbal`. */
+  categoryPath: string;
+  difficulty: SeedDifficulty;
+  stem: string;
+  options: readonly [string, string, string, string, string];
+  answer: ChoiceLabel;
+  explanation: string;
+  tags: readonly string[];
+}
+
+/* ---------------------------------------------------------------- kepribadian */
+
+export type LikertPolarity = 'POSITIVE' | 'REVERSE';
+
+/** Pernyataan Kepribadian sebelum diberi kode. */
+export interface LikertSeedRow {
+  statement: string;
+  /** Dimensi yang diukur; sesuai `scoringConfig.dimensions` subtes. */
+  dimension: string;
+  /**
+   * `POSITIVE` = makin setuju makin tinggi skor dimensi.
+   * `REVERSE`  = item terbalik (makin setuju makin rendah skor dimensi).
+   */
+  polarity: LikertPolarity;
+  /** Dua item dalam grup yang sama mengukur hal serupa (uji konsistensi). */
+  pairGroup?: string;
+  difficulty?: SeedDifficulty;
+  tags: readonly string[];
+}
+
+/** Pernyataan Kepribadian yang sudah final. */
+export interface LikertQuestionData {
+  code: string;
+  statement: string;
+  dimension: string;
+  polarity: LikertPolarity;
+  pairGroup?: string;
+  difficulty: SeedDifficulty;
+  tags: readonly string[];
+}
+
+/* ----------------------------------------------------------------- kecermatan */
+
+/**
+ * Soal Kecermatan (elemen hilang).
+ *
+ * `left` adalah larik lengkap, `right` adalah larik yang satu elemennya
+ * dihapus. Peserta memilih karakter yang hilang dari lima opsi.
+ */
+export interface MissingElementSeed {
+  code: string;
+  categoryPath: string;
+  difficulty: SeedDifficulty;
+  stem: string;
+  left: string;
+  right: string;
+  answer: string;
+  /** Empat pengecoh; tidak boleh memuat `answer`. */
+  distractors: readonly string[];
+  tags: readonly string[];
+}
+
+/* ----------------------------------------------------------------- pass hand */
+
+/**
+ * Kolom Pass Hand: dua baris angka yang saling berhadapan.
+ *
+ * `numbers` disimpan selang-seling (atas, bawah, atas, bawah, ...) karena
+ * `exam-question-projection.ts` memecahnya menjadi dua baris berdasarkan
+ * indeks genap/ganjil.
+ */
+export interface PassHandSeed {
+  code: string;
+  categoryPath: string;
+  difficulty: SeedDifficulty;
+  stem: string;
+  columnIndex: number;
+  numbers: readonly number[];
+  tags: readonly string[];
+}
