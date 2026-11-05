@@ -52,6 +52,26 @@ let onTokenRefreshed: ((token: string) => void) | null = null;
 let tokenGetter: (() => string | null) | null = null;
 let restoreWaiter: (() => Promise<void>) | null = null;
 
+/** Nama cookie CSRF; harus sama dengan `CSRF_COOKIE` di API. */
+const CSRF_COOKIE = 'webcat_csrf';
+
+/**
+ * Membaca token CSRF dari cookie non-httpOnly (double-submit).
+ * SSR tidak punya `document`; request SSR tidak memakai sesi cookie untuk
+ * mutasi, jadi tidak perlu header.
+ */
+function csrfHeaders(): Record<string, string> {
+  if (typeof document === 'undefined') return {};
+  for (const part of document.cookie.split(';')) {
+    const [name, ...rest] = part.trim().split('=');
+    if (name === CSRF_COOKIE && rest.length > 0) {
+      const token = rest.join('=');
+      if (token) return { 'x-csrf-token': token };
+    }
+  }
+  return {};
+}
+
 // Cache in-memory dan deduplikasi in-flight untuk mempercepat load data
 const inFlightRequests = new Map<string, Promise<unknown>>();
 const memoryCache = new Map<string, { data: unknown; expiresAt: number }>();
@@ -86,7 +106,7 @@ async function refreshAccessToken(doFetch: typeof fetch): Promise<string | null>
       const response = await doFetch(`${BASE}/auth/refresh`, {
         method: 'POST',
         credentials: 'include',
-        headers: { accept: 'application/json' },
+        headers: { accept: 'application/json', ...csrfHeaders() },
       });
 
       if (!response.ok) return null;
@@ -195,6 +215,7 @@ async function executeRequest<T>(
         accept: 'application/json',
         ...(options.body === undefined ? {} : { 'content-type': 'application/json' }),
         ...(t ? { authorization: `Bearer ${t}` } : {}),
+        ...(method === 'GET' ? {} : csrfHeaders()),
       },
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
       signal: options.signal,
@@ -271,6 +292,7 @@ export async function apiUpload<T>(
       headers: {
         accept: 'application/json',
         ...(token ? { authorization: `Bearer ${token}` } : {}),
+        ...csrfHeaders(),
       },
       body: form,
       signal: options.signal,

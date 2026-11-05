@@ -64,31 +64,6 @@
       a: 'QRIS, Virtual Account (BCA, BNI, BRI, Mandiri, Permata), GoPay, OVO, DANA, ShopeePay, dan kartu kredit/debit melalui Midtrans.',
     },
   ] as const;
-
-  const structuredData = $derived(
-    JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'ItemList',
-      name: 'Paket latihan Web CAT',
-      itemListElement: data.cards.map((plan, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        item: {
-          '@type': 'Product',
-          name: `Web CAT ${plan.name}`,
-          description:
-            plan.tagline ?? `Akses latihan simulasi ujian Polri selama ${plan.durationDays} hari`,
-          offers: {
-            '@type': 'Offer',
-            price: plan.priceIdr,
-            priceCurrency: 'IDR',
-            availability: 'https://schema.org/InStock',
-            url: `/pricing?plan=${plan.code}`,
-          },
-        },
-      })),
-    }),
-  );
 </script>
 
 <svelte:head>
@@ -105,7 +80,6 @@
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={page.url.origin + '/pricing'} />
-  {@html `<script type="application/ld+json">${structuredData}</script>`}
 </svelte:head>
 
 <section class="hero">

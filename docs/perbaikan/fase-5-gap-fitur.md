@@ -263,17 +263,79 @@ batas sama sekali.
 
 ---
 
-### F5-07 — CSRF + CSP
+### F5-07 — CSRF + CSP ✅
 
-| Item | Implementasi yang disarankan |
+| Item | Implementasi |
 | --- | --- |
-| CSRF | token double-submit untuk endpoint non-Bearer (refresh cookie) |
-| CSP | header via middleware: `default-src 'self'`, `img-src 'self' data: <storage-host>` |
+| CSRF | double-submit token: cookie `webcat_csrf` (dibaca JS) + header `x-csrf-token` |
+| Guard | `CsrfGuard` global, urutan ke-2 setelah `JwtAuthGuard` |
+| CSP web | `kit.csp` mode `hash` di `svelte.config.js` |
+| Header API | middleware di `main.ts` (nosniff, DENY, no-referrer, CSP `default-src 'none'`) |
+
+**Implementasi CSRF**
+
+| Bagian | Detail |
+| --- | --- |
+| Token | 32 byte acak → base64url 43 karakter, dibandingkan `timingSafeEqual` |
+| Penerbitan | `setRefreshCookie` menulis `webcat_rt` (httpOnly) **dan** `webcat_csrf` (bisa dibaca JS) |
+| Rotasi | setiap login/refresh/Google callback menerbitkan ulang keduanya |
+| Logout | `clearRefreshCookie` menghapus keduanya |
+| Klien web | `csrfHeaders()` di `client.ts` membaca cookie dan mengirim header pada non-GET |
+| Pengecualian | GET/HEAD/OPTIONS; request `Authorization: Bearer`; request tanpa cookie refresh |
+| Migrasi | sesi lama (cookie refresh tanpa cookie CSRF) hanya boleh `POST /auth/refresh`; respons menerbitkan token baru |
+| Gagal | 403 `COMMON_CSRF_FAILED` |
+
+**Implementasi CSP**
+
+| Directive | Nilai |
+| --- | --- |
+| `default-src` | `'self'` |
+| `script-src` | `'self'` + hash inline yang digenerate SvelteKit |
+| `style-src` | `'self' 'unsafe-inline' https://fonts.googleapis.com` |
+| `img-src` | `'self' data: blob: https://*.supabase.co` |
+| `font-src` | `'self' data: https://fonts.gstatic.com` |
+| `connect-src` | `'self'` (`+ ws:` hanya saat dev) |
+| `frame-ancestors` / `base-uri` / `form-action` / `object-src` | `'none'` / `'self'` / `'self'` / `'none'` |
+
+**Keputusan desain**
+
+1. **Double-submit cookie, bukan token per-sesi di database.** Refresh token sudah
+   httpOnly + `SameSite=Lax`; token kedua yang bisa dibaca JS cukup untuk
+   membuktikan request berasal dari origin yang sama, tanpa tabel/Redis baru.
+2. **Mode `hash`, bukan `nonce`.** Halaman `/pricing` memakai
+   `cache-control: public, max-age=60`. Nonce yang ikut ter-cache akan kedaluwarsa
+   atau dipakai ulang; hash selalu cocok dengan HTML yang dilayani.
+3. **`style-src 'unsafe-inline'` dipertahankan.** Banyak komponen memakai atribut
+   `style=` dan transisi Svelte membuat elemen `<style>` saat runtime. Risiko
+   inline style jauh lebih kecil daripada inline script.
+4. **Bearer dikecualikan.** Token akses tidak dikirim otomatis oleh browser,
+   sehingga tidak ada ambient credential yang bisa dieksploitasi CSRF.
+5. **Pengecualian refresh untuk sesi lama.** Tanpa ini semua pengguna yang login
+   sebelum deploy akan ter-logout paksa. Setelah satu refresh, cookie CSRF ada
+   dan aturan penuh berlaku.
+
+**Deviasi: JSON-LD `/pricing` dihapus**
+
+`{@html}` yang menyisipkan `<script type="application/ld+json">` tidak ikut
+di-hash SvelteKit, sehingga akan melanggar `script-src 'self'` (hash/nonce
+diperlukan untuk script inline). Blok JSON-LD dinamis di
+`apps/web/src/routes/(site)/pricing/+page.svelte` dihapus; meta/OG tetap ada.
+Bila structured data dibutuhkan lagi, rutenya harus diprerender atau memakai
+nonce yang disuntikkan lewat `app.html`.
 
 **Kriteria selesai**
 
-- Request state-changing tanpa token CSRF → 403.
-- Tidak ada inline script yang diblokir CSP (uji halaman utama + runner).
+- Request state-changing tanpa token CSRF → 403. ✅ runtime: `POST /auth/logout`
+  tanpa header → 403 `COMMON_CSRF_FAILED`; header salah → 403.
+- `POST /auth/refresh` dengan cookie + header → 200 dan token CSRF berotasi. ✅
+- Logout dengan Bearer + header → 200 dan kedua cookie dihapus. ✅
+- Header API hadir: `content-security-policy`, `x-content-type-options: nosniff`,
+  `x-frame-options: DENY`, `referrer-policy: no-referrer`, tanpa `x-powered-by`. ✅
+- Tidak ada inline script yang diblokir CSP. ✅ diuji `/`, `/login`, `/pricing`,
+  `/dashboard`, `/exam/<id>`: setiap halaman punya tepat 1 script inline dan
+  hash-nya ada di `script-src`.
+- Test otomatis: `apps/api/test/csrf.spec.ts` 11 test (guard, perbandingan token,
+  pasangan cookie). ✅
 
 ---
 

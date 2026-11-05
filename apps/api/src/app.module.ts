@@ -10,6 +10,7 @@ import { PermissionsGuard } from './core/auth/permissions.guard';
 import { EmailVerifiedGuard } from './core/auth/email-verified.guard';
 import { RateLimitModule } from './core/ratelimit/rate-limit.module';
 import { RateLimitGuard } from './core/ratelimit/rate-limit.guard';
+import { CsrfGuard } from './core/security/csrf.guard';
 import { JobsModule } from './core/jobs/jobs.module';
 import { PortsModule } from './core/ports/ports.module';
 import { CronModule } from './core/cron/cron.module';
@@ -38,8 +39,10 @@ import { ResultsModule } from './modules/results/results.module';
  * Guard didaftarkan global agar tidak ada endpoint yang lupa diproteksi.
  * Urutan eksekusi guard mengikuti urutan provider APP_GUARD:
  *   1. JwtAuthGuard       — verifikasi token, isi req.user (kecuali @Public)
- *   2. PermissionsGuard   — cek @RequirePermissions / @RequireRoles
- *   3. EmailVerifiedGuard — email wajib terverifikasi
+ *   2. CsrfGuard          — wajib token double-submit untuk request cookie
+ *   3. RateLimitGuard     — batas global/per-rute
+ *   4. PermissionsGuard   — cek @RequirePermissions / @RequireRoles
+ *   5. EmailVerifiedGuard — email wajib terverifikasi
  */
 @Module({
   imports: [
@@ -71,6 +74,7 @@ import { ResultsModule } from './modules/results/results.module';
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: CsrfGuard },
     { provide: APP_GUARD, useClass: RateLimitGuard },
     { provide: APP_GUARD, useClass: PermissionsGuard },
     { provide: APP_GUARD, useClass: EmailVerifiedGuard },

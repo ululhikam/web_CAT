@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **6/16**
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **7/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 6 | 16 | `████░░░░░░` 38% |
-| **Total** | | | **85** | **95** | **89%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 7 | 16 | `████░░░░░░` 44% |
+| **Total** | | | **86** | **95** | **91%** |
 
 ---
 
@@ -337,7 +337,7 @@ tidak ada lagi fallback senyap ke fixture.
 | F5-04 | Detail transaksi admin | ➖ | Ditunda: payment gateway juga ditunda. Saat ini langganan diberikan manual oleh admin (buat akun + langganan, atau grant untuk akun Google), jadi detail transaksi/refund belum relevan. Aksi `mark-paid`/`refund` sudah ada dan tercatat di audit bila nanti gateway aktif | 2026-11-05 |
 | F5-05 | Worker job queue terjadwal | ✅ | `vercel.json` sudah memanggil `process-jobs` tiap menit + guard `CRON_SECRET`; ditambahkan `JobQueueService.stats()`, `GET /internal/cron/backlog` (pending/running/failed/umur tertua + threshold + alert), dan `logger.warn` saat backlog melewati `JOB_BACKLOG_ALERT_THRESHOLD` (default 100). `process-jobs` kini mengembalikan `details.backlog`/`backlogAlert`. 8 test baru; bukti runtime 12/12 | 2026-11-05 |
 | F5-06 | Rate limit API | ✅ | Guard per-rute yang ada ditambah default global `RATE_LIMIT_GLOBAL_PER_MINUTE` (600/menit): per pengguna login, anonim per IP. 429 menyertakan `Retry-After`. Uji limit 5: request ke-6 → 429; login ke-11 → 429; 6 request `/auth/me` dengan IP berbeda tetap 429 (scope user); limit default 600 tidak memblokir trafik normal. 7 test baru | 2026-11-05 |
-| F5-07 | CSRF + CSP | ⬜ | — | — |
+| F5-07 | CSRF + CSP | ✅ | CSRF double-submit: cookie `webcat_csrf` (non-httpOnly) + header `x-csrf-token`, ditulis/dirotasi bersama `webcat_rt`, dihapus saat logout; `CsrfGuard` global setelah `JwtAuthGuard`, mengecualikan GET/HEAD/OPTIONS, Bearer, dan request tanpa cookie refresh; sesi lama hanya boleh `POST /auth/refresh`. CSP SvelteKit `mode: 'hash'` (aman untuk halaman ter-cache) + header keamanan API. Uji HTTP nyata 9/9; hash script inline cocok di `/`, `/login`, `/pricing`, `/dashboard`, `/exam/<id>`; 11 test `csrf.spec.ts` | 2026-11-05 |
 | F5-08 | Dashboard peserta dari API | ⬜ | — | — |
 | F5-09 | Dokumentasi API produksi | ⬜ | — | — |
 
@@ -438,6 +438,30 @@ tidak ada lagi fallback senyap ke fixture.
 | Kecocokan DB | ✅ `global:ip` 6 hit, IP lain 1, login 11, `global:user` 6; seluruh baris uji dihapus |
 | Limit default 600 | ✅ 6/6 request `health/live` dari IP baru → 200 (tidak ada false positive) |
 
+#### Verifikasi penutup F5-07 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run test/csrf.spec.ts` | ✅ **11/11** (method aman, Bearer, tanpa cookie, token cocok/salah/hilang, pengecualian refresh, perbandingan token, pasangan cookie) |
+| `vitest run` (API penuh) | ✅ 38 berkas / **370** test |
+| `vitest run` (web penuh) | ✅ 8 berkas / **70** test |
+| `tsc --noEmit` · `tsc -p tsconfig.build.json` (API) | ✅ exit 0 keduanya |
+| `svelte-check --tsconfig ./tsconfig.json` | ✅ **0 error, 0 warning** |
+| `eslint src --max-warnings 0` (API & web) | ✅ exit 0 keduanya |
+| `vite build` (adapter-node) | ✅ sukses; server produksi diuji di `:4173` |
+| Login (HTTP nyata) | ✅ 200; `webcat_rt` httpOnly + `webcat_csrf` non-httpOnly, keduanya `SameSite=Lax`, `Path=/` |
+| `POST /auth/logout` tanpa header / header salah | ✅ **403** `COMMON_CSRF_FAILED` (keduanya) |
+| `POST /auth/refresh` dengan cookie + header | ✅ 200, token CSRF **berotasi** (43 karakter baru) |
+| `POST /auth/logout` dengan Bearer + header | ✅ 200, kedua cookie dihapus |
+| Sesi lama tanpa cookie CSRF | ✅ `POST /auth/refresh` → 200 dan menerbitkan `webcat_csrf` baru |
+| Header keamanan API | ✅ `content-security-policy: default-src 'none'; frame-ancestors 'none'`, `x-content-type-options: nosniff`, `x-frame-options: DENY`, `referrer-policy: no-referrer`, tanpa `x-powered-by` |
+| CSP hash script inline (dev `:5173` + produksi `:4173`) | ✅ `/`, `/login`, `/pricing`, `/dashboard`, `/exam/<uuid>`: tepat **1** script inline per halaman, SHA-256-nya ada di `script-src` |
+| `style-src` | ✅ `'self' 'unsafe-inline' https://fonts.googleapis.com` (transisi Svelte & atribut `style=`) |
+
+> **Deviasi:** blok JSON-LD `{@html}` di `/pricing` dihapus. Script inline yang
+> disuntik lewat `{@html}` tidak ikut di-hash SvelteKit sehingga pasti melanggar
+> `script-src 'self'`. Meta/OG tetap ada; lihat runbook F5-07.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
@@ -464,6 +488,33 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5: F5-07 selesai
+
+**Dikerjakan:** F5-07
+**Hasil:** Fase 5 ✅ 7/16. Request state-changing yang memakai cookie sesi kini
+wajib menyertakan token CSRF; halaman web dilindungi CSP berbasis hash.
+Tracker: **86/95 = 91%**.
+
+**Bukti:**
+
+- `CsrfGuard` global (urutan ke-2): cookie `webcat_csrf` + header
+  `x-csrf-token`, dibandingkan `timingSafeEqual`; 403 `COMMON_CSRF_FAILED`.
+- Cookie CSRF ditulis/dirotasi bersama `webcat_rt`; dihapus saat logout.
+- Pengecualian: method aman, request Bearer, request tanpa cookie refresh.
+  Sesi lama (tanpa cookie CSRF) masih bisa `POST /auth/refresh` sekali.
+- CSP `mode: 'hash'` di `svelte.config.js`; header API `default-src 'none'`
+  + nosniff/DENY/no-referrer, `x-powered-by` dimatikan.
+- Uji HTTP nyata **9/9**: login menerbitkan dua cookie dengan flag benar;
+  logout tanpa/salah header → 403; refresh dengan header → 200 + token
+  berotasi; logout Bearer → 200 + cookie terhapus; sesi lama → token baru.
+- Hash inline script cocok di `/`, `/login`, `/pricing`, `/dashboard`, dan
+  `/exam/<uuid>` (dev `:5173` **dan** build produksi `:4173`).
+- 11 test baru; API 38 berkas / 370 test, web 8 berkas / 70 test.
+- JSON-LD `{@html}` di `/pricing` dihapus (tidak bisa di-hash SvelteKit).
+
+**Hambatan:** —
+**Berikutnya:** F5-08 — dashboard peserta dari API.
 
 ### 2026-11-05 — Fase 5: F5-03 selesai
 

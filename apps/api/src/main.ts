@@ -33,6 +33,22 @@ export async function createApp(): Promise<NestExpressApplication> {
   express.use(requestIdMiddleware);
   express.disable('x-powered-by');
 
+  // Header keamanan untuk semua respons API. API hanya mengirim JSON/berkas,
+  // jadi CSP ketat tanpa sumber eksternal.
+  express.use(
+    (
+      _req: unknown,
+      res: { setHeader: (name: string, value: string) => void },
+      next: () => void,
+    ) => {
+      res.setHeader('x-content-type-options', 'nosniff');
+      res.setHeader('x-frame-options', 'DENY');
+      res.setHeader('referrer-policy', 'no-referrer');
+      res.setHeader('content-security-policy', "default-src 'none'; frame-ancestors 'none'");
+      next();
+    },
+  );
+
   app.use(cookieParser());
   app.enableCors({
     origin: (process.env.APP_URL ?? 'http://localhost:5173')

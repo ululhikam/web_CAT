@@ -44,10 +44,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const response = await resolve(event);
 
-  // Header keamanan dasar. CSP penuh menyusul saat aset produksi dibekukan.
+  // Header keamanan dasar; CSP utama dipasang SvelteKit dari `svelte.config.js`.
   response.headers.set('x-content-type-options', 'nosniff');
   response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
-  response.headers.set('x-frame-options', 'SAMEORIGIN');
+  response.headers.set('x-frame-options', 'DENY');
   response.headers.set('permissions-policy', 'camera=(), microphone=(), geolocation=()');
 
   return response;
