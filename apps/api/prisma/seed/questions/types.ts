@@ -59,6 +59,41 @@ export interface ChoiceQuestionData {
   explanation: string;
   tags: readonly string[];
 }
+
+/* ------------------------------------------------------------ pilihan ganda banyak */
+
+/**
+ * Soal pilihan ganda banyak jawaban (`MULTI_CHOICE`) sebelum diberi kode.
+ *
+ * Ditulis dengan **teks** opsi benar, bukan label, karena urutan opsi diacak
+ * deterministik saat dibangun. Dengan begitu penulis soal tidak perlu tahu
+ * label akhir kunci (sumber kesalahan yang sama seperti `WrittenQuestion`).
+ */
+export interface WrittenMultiChoice {
+  /** Subkategori daun, mis. `penalaran` → `<prefix>/penalaran`. */
+  topic: string;
+  difficulty: SeedDifficulty;
+  stem: string;
+  /** Teks opsi yang benar; minimal 2 agar tidak sama dengan pilihan tunggal. */
+  correct: readonly string[];
+  /** Pengecoh; dilengkapi sampai lima opsi bila kurang. */
+  distractors: readonly string[];
+  explanation: string;
+  tags: readonly string[];
+}
+
+/** Soal pilihan ganda banyak jawaban yang sudah final (opsi sudah diacak). */
+export interface MultiChoiceQuestionData {
+  code: string;
+  categoryPath: string;
+  difficulty: SeedDifficulty;
+  stem: string;
+  options: readonly [string, string, string, string, string];
+  /** Label semua opsi benar pada urutan `options` di atas (≥ 2). */
+  answers: readonly ChoiceLabel[];
+  explanation: string;
+  tags: readonly string[];
+}
 /* ---------------------------------------------------------------- kepribadian */
 
 export type LikertPolarity = 'POSITIVE' | 'REVERSE';

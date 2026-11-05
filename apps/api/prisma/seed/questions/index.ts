@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient } from '@prisma/client';
 import { computeDedupeHash } from '../../../src/modules/questions/dedupe';
-import { buildChoices } from './builder';
+import { buildChoices, buildMultiChoices } from './builder';
 import {
   countDistractors,
   directionDistractors,
@@ -14,10 +14,11 @@ import {
 } from './figural';
 import { figureAltText, STEM_VARIANT, type FigureSpec } from '../media/figural';
 import { buildOptions, createRng, OPTION_LABELS } from './rng';
-import { KECERDASAN_QUESTIONS } from './kecerdasan';
+import { KECERDASAN_QUESTIONS, MULTI_KECERDASAN } from './kecerdasan';
 import { KECERMATAN_QUESTIONS } from './kecermatan';
 import { KEPRIBADIAN_QUESTIONS } from './kepribadian';
 import { PASS_HAND_QUESTIONS } from './pass-hand';
+import { TPA_MULTI_CHOICE, TPA_QUESTIONS } from './tpa';
 import { TPK_QUESTIONS } from './tpk';
 import type { SeedDifficulty, SeedQuestionMedia } from './types';
 
@@ -25,8 +26,9 @@ import type { SeedDifficulty, SeedQuestionMedia } from './types';
  * Seed bank soal realistis (bukan fixture).
  *
  * Cakupan:
- *   PSIKOLOGI — Kecerdasan 100, Kepribadian 140, Kecermatan 500, Pass Hand 150
- *   TPA       — 15 soal figural
+ *   PSIKOLOGI — Kecerdasan 100 + 3 multi-jawaban + 44 figural,
+ *               Kepribadian 140, Kecermatan 500, Pass Hand 150
+ *   TPA       — 87 pilihan tunggal + 3 multi-jawaban + 15 figural
  *   TPK       — 100 soal (10 kelompok materi × 10)
  *
  * Semua soal berstatus PUBLISHED. `exam-question-source.ts` baru memakai bank
@@ -106,7 +108,10 @@ export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
   { path: 'tpk/situasi-tugas', name: 'Situasi Tugas', parentPath: 'tpk', sortOrder: 9 },
   { path: 'tpk/profesionalisme', name: 'Profesionalisme', parentPath: 'tpk', sortOrder: 10 },
   { path: 'tpa', name: 'TPA', sortOrder: 2 },
-  { path: 'tpa/figural', name: 'Figural', parentPath: 'tpa', sortOrder: 1 },
+  { path: 'tpa/verbal', name: 'Verbal', parentPath: 'tpa', sortOrder: 1 },
+  { path: 'tpa/numerik', name: 'Numerik', parentPath: 'tpa', sortOrder: 2 },
+  { path: 'tpa/penalaran', name: 'Penalaran', parentPath: 'tpa', sortOrder: 3 },
+  { path: 'tpa/figural', name: 'Figural', parentPath: 'tpa', sortOrder: 4 },
 ];
 
 /* ------------------------------------------------------------------ payload */
@@ -347,6 +352,125 @@ function buildTpk(): SeedQuestion[] {
   }));
 }
 
+/* --------------------------------------------------- multi choice (F4-05) */
+
+/**
+ * Soal `MULTI_CHOICE` Kecerdasan.
+ *
+ * Sengaja ditambahkan sebagai **soal ekstra** (bukan pengganti pilihan
+ * tunggal): bank Kecerdasan sudah 144 soal untuk kuota 100, sehingga soal
+ * banyak-jawaban tidak mengurangi pilihan pilihan tunggal pada sesi.
+ */
+function buildKecerdasanMulti(): SeedQuestion[] {
+  return buildMultiChoices('PSI-KEC-M', 'psikologi/kecerdasan', MULTI_KECERDASAN).map((row) => ({
+    publicCode: row.code,
+    stageCode: PSIKOLOGI,
+    subtestCode: 'KECERDASAN',
+    categoryPath: row.categoryPath,
+    type: 'MULTI_CHOICE',
+    difficulty: row.difficulty,
+    stemText: row.stem,
+    explanation: row.explanation,
+    scoringStrategy: 'MULTI_CORRECT_PARTIAL',
+    scoringConfig: { wrongPenalty: 0.5 },
+    pairGroup: null,
+    columnIndex: null,
+    dedupeHash: hashOf(
+      row.stem,
+      row.options.map((contentText) => ({ contentText })),
+    ),
+    dedupeOverride: false,
+    options: row.options.map((contentText, index) => {
+      const label = CHOICE_LABELS[index]!;
+      const isCorrect = row.answers.includes(label);
+      return {
+        label,
+        contentText,
+        isCorrect,
+        scoreValue: isCorrect ? 1 : 0,
+        dimensionMap: null,
+      };
+    }),
+    media: [],
+    tags: [...row.tags],
+  }));
+}
+
+/* ---------------------------------------------------------------------- tpa */
+
+/**
+ * Soal TPA tertulis (`SINGLE_CHOICE`).
+ *
+ * Subtes TPA dinilai `KEYED_CORRECT` di level subtes (lihat `exam.seed.ts`),
+ * jadi skor dihitung per himpunan jawaban — tidak ada kredit parsial.
+ */
+function buildTpaChoices(): SeedQuestion[] {
+  return buildChoices('TPA', 'tpa', TPA_QUESTIONS).map((row) => ({
+    publicCode: row.code,
+    stageCode: 'TPA',
+    subtestCode: 'TPA',
+    categoryPath: row.categoryPath,
+    type: 'SINGLE_CHOICE',
+    difficulty: row.difficulty,
+    stemText: row.stem,
+    explanation: row.explanation,
+    scoringStrategy: 'KEYED_CORRECT',
+    scoringConfig: {},
+    pairGroup: null,
+    columnIndex: null,
+    dedupeHash: hashOf(
+      row.stem,
+      row.options.map((contentText) => ({ contentText })),
+    ),
+    dedupeOverride: false,
+    options: choiceOptions(row.options, row.answer),
+    media: [],
+    tags: [...row.tags],
+  }));
+}
+
+/**
+ * Soal TPA banyak-jawaban (`MULTI_CHOICE`, F4-05).
+ *
+ * `scoringStrategy` per soal = `MULTI_CORRECT_PARTIAL` (metadata untuk admin);
+ * penilaian sesungguhnya tetap memakai strategi subtes `KEYED_CORRECT`, yang
+ * mensyaratkan himpunan terpilih sama persis dengan kunci.
+ */
+function buildTpaMultiChoices(): SeedQuestion[] {
+  return buildMultiChoices('TPA-MC', 'tpa', TPA_MULTI_CHOICE).map((row) => ({
+    publicCode: row.code,
+    stageCode: 'TPA',
+    subtestCode: 'TPA',
+    categoryPath: row.categoryPath,
+    type: 'MULTI_CHOICE',
+    difficulty: row.difficulty,
+    stemText: row.stem,
+    explanation: row.explanation,
+    scoringStrategy: 'MULTI_CORRECT_PARTIAL',
+    scoringConfig: { wrongPenalty: 0.5 },
+    pairGroup: null,
+    columnIndex: null,
+    dedupeHash: hashOf(
+      row.stem,
+      row.options.map((contentText) => ({ contentText })),
+    ),
+    dedupeOverride: false,
+    options: row.options.map((contentText, index) => {
+      const label = CHOICE_LABELS[index]!;
+      const isCorrect = row.answers.includes(label);
+      return {
+        label,
+        contentText,
+        isCorrect,
+        scoreValue: isCorrect ? 1 : 0,
+        dimensionMap: null,
+      };
+    }),
+    media: [],
+    tags: [...row.tags],
+  }));
+}
+
 /* ---------------------------------------------------------------- figural */
 
 /** Media STEM untuk soal bergambar (satu gambar soal). */
@@ -491,11 +615,14 @@ function buildFiguralTpa(): SeedQuestion[] {
 export function buildSeedQuestions(): SeedQuestion[] {
   return [
     ...buildKecerdasan(),
+    ...buildKecerdasanMulti(),
     ...buildFiguralKecerdasan(),
     ...buildKepribadian(),
     ...buildKecermatan(),
     ...buildPassHand(),
     ...buildTpk(),
+    ...buildTpaChoices(),
+    ...buildTpaMultiChoices(),
     ...buildFiguralTpa(),
   ];
 }

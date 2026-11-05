@@ -1,5 +1,10 @@
 import { buildChoices } from './builder';
-import type { ChoiceQuestionData, SeedDifficulty, WrittenQuestion } from './types';
+import type {
+  ChoiceQuestionData,
+  SeedDifficulty,
+  WrittenMultiChoice,
+  WrittenQuestion,
+} from './types';
 
 /**
  * Tes Kecerdasan — 100 soal.
@@ -1055,3 +1060,45 @@ export const KECERDASAN_QUESTIONS: ChoiceQuestionData[] = buildChoices(
   'psikologi/kecerdasan',
   [...VERBAL, ...NUMERIK, ...LOGIS],
 );
+
+/**
+ * Soal `MULTI_CHOICE` Kecerdasan (F4-05).
+ *
+ * Ditaruh di kategori `logis` karena isinya klasifikasi/penalaran, bukan
+ * verbal atau numerik murni. Kode publik `PSI-KEC-M-*` tidak bertabrakan
+ * dengan `PSI-KEC-***` (pilihan tunggal) maupun `PSI-KEC-FIG-*` (figural).
+ */
+export const MULTI_KECERDASAN: WrittenMultiChoice[] = [
+  {
+    topic: 'logis',
+    difficulty: 'EASY',
+    stem: 'Manakah di antara bilangan berikut yang termasuk bilangan genap?',
+    correct: ['4', '10', '16'],
+    distractors: ['7', '13'],
+    explanation: 'Bilangan genap habis dibagi 2: 4, 10, dan 16. Angka 7 dan 13 ganjil.',
+    tags: ['logis', 'klasifikasi', 'multi-jawaban'],
+  },
+  {
+    topic: 'logis',
+    difficulty: 'MEDIUM',
+    stem: 'Manakah kata berikut yang diawali huruf vokal?',
+    correct: ['angin', 'indah'],
+    distractors: ['buku', 'cahaya', 'dinding'],
+    explanation: 'Huruf vokal adalah a, i, u, e, o. "angin" diawali a dan "indah" diawali i.',
+    tags: ['logis', 'klasifikasi', 'multi-jawaban'],
+  },
+  {
+    topic: 'logis',
+    difficulty: 'MEDIUM',
+    stem: 'Manakah pernyataan matematika berikut yang bernilai benar?',
+    correct: ['2 adalah bilangan prima', '9 adalah bilangan kuadrat'],
+    distractors: [
+      '1 adalah bilangan prima',
+      'Semua bilangan ganjil adalah bilangan prima',
+      '0 adalah bilangan positif',
+    ],
+    explanation:
+      '2 hanya habis dibagi 1 dan 2; 9 = 3². Angka 1 bukan prima, 9 ganjil tetapi bukan prima, dan 0 bukan positif.',
+    tags: ['logis', 'bilangan', 'multi-jawaban'],
+  },
+];
