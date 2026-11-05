@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 3 | 16 | `██░░░░░░░░` 19% |
-| **Total** | | | **82** | **95** | **86%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 4 | 16 | `███░░░░░░░` 25% |
+| **Total** | | | **83** | **95** | **87%** |
 
 ---
 
@@ -334,7 +334,7 @@ tidak ada lagi fallback senyap ke fixture.
 | F5-01 | Pulihkan `/pricing` | ✅ | Dipulihkan dari `e0b23fd^` (`(site)/pricing/*`, `PlanCard.svelte`), migrasi `$app/stores`→`$app/state`, tautan nav dikembalikan. Bukti runtime dua arah: DB `MONTHLY=151000` → halaman `Rp 151.000` (149.000 hilang), lalu revert `149000` → `Rp 149.000` (151.000 hilang). 6 test `page.server.spec.ts` + 3 test `PlanCard.spec.ts` | 2026-11-05 |
 | F5-02 | CRUD plan admin | ✅ | `subscription_plans.deleted_at` (migrasi `20261105140000_f5_02_plan_soft_delete`), `DELETE /admin/plans/:id` + `POST /:id/restore` (wajib alasan), `GET ?includeDeleted=true`. UI `[panel]/plans` kini CRUD penuh (form + tab Arsip), sebelumnya baca-saja & memakai endpoint publik. Audit `plan.create/update/delete/restore` | 2026-11-05 |
 | F5-03 | Detail user admin | ✅ | `GET /admin/users/:id/overview` — satu request berisi profil, verifikasi, langganan aktif + riwayat, agregat & riwayat ujian, agregat & riwayat pembayaran; agregat dihitung di DB. `GET /admin/transactions?userId=` untuk riwayat pembayaran peserta. Halaman `[panel]/users/[id]` + tautan dari daftar. 13 test `users-overview.spec.ts` + 2 test filter `payments.service.spec.ts`. Bukti runtime 18/18 cek, semua angka cocok dengan query DB | 2026-11-05 |
-| F5-04 | Detail transaksi admin | ⬜ | — | — |
+| F5-04 | Detail transaksi admin | ➖ | Ditunda: payment gateway juga ditunda. Saat ini langganan diberikan manual oleh admin (buat akun + langganan, atau grant untuk akun Google), jadi detail transaksi/refund belum relevan. Aksi `mark-paid`/`refund` sudah ada dan tercatat di audit bila nanti gateway aktif | 2026-11-05 |
 | F5-05 | Worker job queue terjadwal | ⬜ | — | — |
 | F5-06 | Rate limit API | ⬜ | — | — |
 | F5-07 | CSRF + CSP | ⬜ | — | — |
@@ -461,8 +461,21 @@ dan berapa total yang sudah dibayar — semuanya dari satu endpoint. Tracker:
 - DB uji dibersihkan: 0 sesi, 0 transaksi, 3 langganan baseline.
 
 **Hambatan:** —
-**Berikutnya:** F5-04 — detail transaksi admin (perlu keputusan soal bukti
-bayar & sumber riwayat status).
+**Berikutnya:** F5-04 ditunda (gateway ditunda) → F5-05.
+
+### 2026-11-05 — Fase 5: F5-04 ditunda
+
+**Dikerjakan:** keputusan cakupan F5-04
+**Hasil:** F5-04 (detail transaksi + bukti bayar) ditunda karena payment
+gateway ditunda. Fase 5 tracker: **83/95 = 87%** (F5-04 dihitung `➖`).
+
+**Alasan:** langganan saat ini diberikan manual oleh admin — akun dibuat
+dengan langganan, atau akun Google yang sudah ada di-grant langganan lalu
+email dikirim ulang. Belum ada transaksi yang perlu diverifikasi/direfund.
+
+**Bukti:** `docs/perbaikan/fase-5-gap-fitur.md` §F5-04; `pnpm progress` → 83/95.
+**Hambatan:** —
+**Berikutnya:** F5-05 — worker job queue terjadwal.
 
 ### 2026-11-05 — Fase 5: F5-02 selesai
 

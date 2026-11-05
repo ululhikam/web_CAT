@@ -168,32 +168,29 @@ ujian, dan riwayat pembayaran.
 
 ---
 
-### F5-04 — Detail transaksi admin
+### F5-04 — Detail transaksi admin ➖ (ditunda)
 
-Halaman `[panel]/transactions/[id]` belum ada. Yang perlu ditampilkan: status,
-metode, bukti bayar (media), riwayat status, dan aksi refund/verifikasi.
+**Keputusan (5 Nov 2026):** payment gateway ditunda, jadi detail transaksi juga
+ditunda. Saat ini peserta memperoleh akses lewat dua jalur non-gateway:
 
-**Catatan penting**
+1. Admin membuat akun (email + password undangan) sekaligus menentukan
+   langganan; sistem mengirim email aktivasi ke pengguna.
+2. Pengguna masuk lewat Google (belum bisa dipakai penuh); ia menghubungi admin
+   untuk ditambahkan langganan, lalu email dikirim ulang ke akun Google yang
+   sudah terdaftar.
 
-- Model `Transaction` **tidak punya** kolom metode pembayaran atau bukti bayar.
-  Kolom yang tersedia: `provider`, `providerRef`, `snapToken`, `redirectUrl`,
-  `rawPayload`, `refundedAt`, `refundReason`, `refundedById`.
-- Riwayat status harus diambil dari `audit_logs`
-  (`transaction.mark_paid`, `transaction.refund`, `transaction.<status>`) dan/atau
-  `payment_webhook_events`.
-- Endpoint `mark-paid` dan `refund` sudah ada dan sudah menulis audit.
+Konsekuensinya tidak ada transaksi yang perlu diverifikasi/direfund sekarang.
+Halaman `[panel]/transactions/[id]` dan unggah bukti bayar baru dikerjakan bila
+gateway diaktifkan kembali.
 
-**Keputusan yang perlu diambil sebelum mulai**
+**Yang sudah tersedia bila nanti dibutuhkan**
 
-1. Tambah unggah bukti bayar (kolom + alur media) **atau** nyatakan sebagai
-   deviasi eksplisit dengan alasan (mis. pembayaran hanya lewat gateway).
-2. Sumber riwayat status: `audit_logs` saja, atau digabung dengan
-   `payment_webhook_events` agar replay webhook terlihat.
-
-**Kriteria selesai**
-
-- Admin bisa melihat detail transaksi dan riwayat statusnya tanpa query manual.
-- Aksi verifikasi/refund dari halaman transaksi tercatat di audit.
+- `POST /admin/transactions/:id/mark-paid` dan `/:id/refund` — wajib alasan,
+  sudah menulis `audit_logs`.
+- `payment_webhook_events` menyimpan payload gateway untuk rekonsiliasi.
+- Model `Transaction` **tidak punya** kolom metode/bukti bayar; kolom yang ada:
+  `provider`, `providerRef`, `snapToken`, `redirectUrl`, `rawPayload`,
+  `refundedAt`, `refundReason`, `refundedById`.
 
 ---
 
