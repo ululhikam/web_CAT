@@ -230,17 +230,48 @@ alert.
 
 ---
 
-### F5-06 / F5-07 — Rate limit, CSRF, CSP
+### F5-06 — Rate limit API ✅
+
+Rate limit per-rute sudah ada (`RateLimitGuard` + tabel `rate_limit_hits`),
+tetapi hanya auth/checkout/webhook yang dibatasi. Endpoint lain tidak punya
+batas sama sekali.
+
+**Implementasi**
+
+| Bagian | Detail |
+| --- | --- |
+| Global | `RATE_LIMIT_GLOBAL_PER_MINUTE` (default 600) untuk endpoint tanpa `@RateLimit` |
+| Scope | per pengguna login (`global:user:<id>`), anonim per IP (`global:ip:<ip>`) |
+| Per-rute | `@RateLimit` tetap menang: login 10/900 dtk, checkout 3/60 dtk, webhook 120/60 dtk |
+| Header | respons 429 menyertakan `Retry-After` |
+| Penyimpanan | `rate_limit_hits` (Postgres, UPSERT atomik, tanpa Redis) |
+
+**Keputusan desain**
+
+1. **Tidak menambah `@nestjs/throttler`.** Guard yang ada sudah atomik dan
+   tidak membutuhkan Redis; menambah dependensi hanya menggandakan mekanisme.
+2. **Default per pengguna untuk request terautentikasi**, per IP untuk anonim.
+   Ini mencegah siswa di balik satu NAT sekolah saling memblokir.
+3. **Login tetap 10/900 detik** — lebih ketat daripada kriteria 10/menit, jadi
+   tidak dilonggarkan.
+
+**Kriteria selesai**
+
+- `POST /auth/login` ke-11 dalam jendela → 429. ✅ (diuji; `Retry-After: 523`)
+- Request global ke-6 saat limit uji 5 → 429 + `Retry-After`. ✅
+- Trafik normal pada limit default 600/menit tidak terblokir. ✅ (6/6 health 200)
+
+---
+
+### F5-07 — CSRF + CSP
 
 | Item | Implementasi yang disarankan |
 | --- | --- |
-| Rate limit | `@nestjs/throttler` global + limit lebih ketat untuk `/auth/login` |
 | CSRF | token double-submit untuk endpoint non-Bearer (refresh cookie) |
 | CSP | header via middleware: `default-src 'self'`, `img-src 'self' data: <storage-host>` |
 
 **Kriteria selesai**
 
-- `POST /auth/login` ke-11 dalam 1 menit → 429.
 - Request state-changing tanpa token CSRF → 403.
 - Tidak ada inline script yang diblokir CSP (uji halaman utama + runner).
 

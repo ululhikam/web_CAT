@@ -34,6 +34,8 @@ export const envSchema = z.object({
   STORAGE: z.enum(['dev', 'supabase']).default('dev'),
 
   ACCESS_POLICY: z.enum(['dev', 'billing']).default('dev'),
+  /** Batas default request per menit (per pengguna login, atau per IP anonim). */
+  RATE_LIMIT_GLOBAL_PER_MINUTE: z.coerce.number().int().min(1).default(600),
   QUESTION_POOL: z.enum(['dev', 'db']).default('dev'),
   PAYMENT: z.enum(['fake', 'midtrans']).default('fake'),
   DOC_EXTRACTOR: z.enum(['heuristic', 'ai']).default('heuristic'),
