@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { ExamQuestionType, SubtestCode } from '@webcat/contracts';
 import type { Prisma } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
-import type { QuestionSnapshot, SnapshotOption } from '../scoring/scoring.types';
+import type { QuestionSnapshot, SnapshotMedia, SnapshotOption } from '../scoring/scoring.types';
 
 /**
  * Sumber soal untuk materialisasi subtes.
@@ -26,6 +26,20 @@ export interface MaterializedQuestionSeed {
   position: number;
   columnIndex: number | null;
   snapshot: QuestionSnapshot;
+}
+
+/**
+ * Media opsional untuk soal fixture (F3-06).
+ *
+ * Fixture dipakai saat bank soal DB belum cukup (mis. TPA kosong di dev).
+ * Dengan spec ini, test dan seed tetap bisa menghasilkan soal bergambar tanpa
+ * bergantung pada `question_media`.
+ */
+export interface FixtureMediaSpec {
+  /** Media stem; membuat soal tampil dengan gambar di atas pertanyaan. */
+  stem?: SnapshotMedia[];
+  /** Media per indeks opsi. Bila ada, tipe soal menjadi `IMAGE_CHOICE`. */
+  options?: Record<number, SnapshotMedia[]>;
 }
 
 /* ------------------------------------------------------------------ random */
@@ -64,6 +78,33 @@ function shuffle<T>(rng: () => number, values: readonly T[]): T[] {
   }
   return copy;
 }
+
+/**
+ * Ambil `count` soal yang tersebar merata dari `rows` (stride sampling).
+ *
+ * Pola lama (`orderBy publicCode asc` + `take: count`) hanya mengambil blok
+ * awal pool. Begitu pool lebih besar dari kuota subtes, soal yang kode
+ * publiknya berurutan di belakang — mis. `PSI-KEC-FIG-*` — tidak pernah
+ * terpilih sehingga soal bergambar tak pernah tampil di sesi.
+ *
+ * `offset` (diturunkan dari seed sesi) menggeser titik awal sehingga tiap sesi
+ * mendapat irisan berbeda, sementara sesi yang sama tetap deterministik.
+ */
+export function spreadSelection<T>(rows: readonly T[], count: number, offset = 0): T[] {
+  if (count <= 0 || rows.length === 0) return [];
+  if (rows.length <= count) return [...rows];
+
+  const stride = rows.length / count;
+  const start = ((offset % rows.length) + rows.length) % rows.length;
+  const picked: T[] = [];
+  for (let index = 0; index < count; index += 1) {
+    picked.push(rows[Math.floor(start + index * stride) % rows.length]!);
+  }
+  return picked;
+}
+
+/** Batas atas baris pool yang dimuat sekaligus (pengaman memori). */
+const QUESTION_POOL_LIMIT = 2_000;
 
 /** UUID deterministik dari string — dipakai sebagai id opsi snapshot. */
 export function deterministicUuid(value: string): string {
@@ -136,6 +177,7 @@ function buildChoice(
     isCorrect: value === answer,
     scoreValue: value === answer ? 1 : 0,
     dimensionMap: null,
+    media: [],
   }));
 
   return {
@@ -170,6 +212,7 @@ function buildLikert(rng: () => number, sourceId: string, position: number): Que
     isCorrect: false,
     scoreValue: Number(label),
     dimensionMap: { [dimension]: 1 },
+    media: [],
   }));
 
   return {
@@ -213,6 +256,7 @@ function buildMissingElement(rng: () => number, sourceId: string): QuestionSnaps
     isCorrect: value === answer,
     scoreValue: value === answer ? 1 : 0,
     dimensionMap: null,
+    media: [],
   }));
 
   return {
@@ -258,7 +302,12 @@ function buildPassHand(rng: () => number, sourceId: string, columnIndex: number)
   };
 }
 
-function buildFixture(code: SubtestCode, count: number, seed: string): MaterializedQuestionSeed[] {
+function buildFixture(
+  code: SubtestCode,
+  count: number,
+  seed: string,
+  media?: FixtureMediaResolver,
+): MaterializedQuestionSeed[] {
   const rng = createRng(hashSeed(`${seed}:${code}`));
   const result: MaterializedQuestionSeed[] = [];
 
@@ -283,6 +332,11 @@ function buildFixture(code: SubtestCode, count: number, seed: string): Materiali
       );
     }
 
+    // Media fixture hanya dipasang bila pemanggil meminta (F3-06), sehingga
+    // jalur produksi tanpa media tetap persis seperti sebelumnya.
+    const fixtureMedia = media?.(position, snapshot);
+    if (fixtureMedia) snapshot = applyFixtureMedia(snapshot, fixtureMedia);
+
     result.push({
       externalId,
       questionId: null,
@@ -293,6 +347,35 @@ function buildFixture(code: SubtestCode, count: number, seed: string): Materiali
   }
 
   return result;
+}
+
+/** Resolver media fixture: dipanggil per posisi, boleh mengembalikan null. */
+export type FixtureMediaResolver = (
+  position: number,
+  snapshot: QuestionSnapshot,
+) => FixtureMediaSpec | null;
+
+/**
+ * Tempelkan media fixture ke snapshot.
+ *
+ * Bila ada media opsi, tipe soal dipaksa menjadi `IMAGE_CHOICE` — itu inti
+ * soal bergambar: peserta memilih gambar, bukan teks.
+ */
+export function applyFixtureMedia(
+  snapshot: QuestionSnapshot,
+  spec: FixtureMediaSpec,
+): QuestionSnapshot {
+  const hasOptionMedia = Object.keys(spec.options ?? {}).length > 0;
+
+  return {
+    ...snapshot,
+    type: hasOptionMedia ? 'IMAGE_CHOICE' : snapshot.type,
+    media: [...snapshot.media, ...(spec.stem ?? [])],
+    options: snapshot.options.map((option, index) => ({
+      ...option,
+      media: spec.options?.[index] ?? option.media,
+    })),
+  };
 }
 
 /* ------------------------------------------------------------------ database */
@@ -318,8 +401,11 @@ interface QuestionRow {
   }>;
   media: Array<{
     role: 'STEM' | 'OPTION' | 'EXPLANATION';
+    /** Diisi bila media menempel pada opsi tertentu (soal bergambar). */
+    optionId: string | null;
     altText: string | null;
-    mediaAsset: { storagePath: string };
+    sortOrder: number;
+    mediaAsset: { id: string; storagePath: string };
   }>;
 }
 
@@ -341,6 +427,34 @@ function mapDbQuestion(row: QuestionRow, position: number): MaterializedQuestion
     config.missingElement && typeof config.missingElement === 'object'
       ? (config.missingElement as Record<string, unknown>)
       : null;
+
+  /**
+   * Pisahkan media per opsi (F3-05).
+   *
+   * Media `OPTION` yang tidak punya `optionId` TIDAK dibuang — dimasukkan ke
+   * media soal supaya tetap terlihat saat debugging (datanya rusak, bukan
+   * hilang tanpa jejak).
+   */
+  const optionMedia = new Map<string, SnapshotMedia[]>();
+  const questionMedia: SnapshotMedia[] = [];
+
+  for (const media of row.media) {
+    const entry: SnapshotMedia = {
+      role: media.role,
+      assetId: media.mediaAsset.id,
+      optionId: media.optionId,
+      path: media.mediaAsset.storagePath,
+      alt: media.altText,
+    };
+
+    if (media.role === 'OPTION' && media.optionId) {
+      const list = optionMedia.get(media.optionId) ?? [];
+      list.push(entry);
+      optionMedia.set(media.optionId, list);
+    } else {
+      questionMedia.push(entry);
+    }
+  }
 
   const snapshot: QuestionSnapshot = {
     sourceId: row.publicCode,
@@ -375,12 +489,9 @@ function mapDbQuestion(row: QuestionRow, position: number): MaterializedQuestion
         !Array.isArray(option.dimensionMap)
           ? (option.dimensionMap as Record<string, number>)
           : null,
+      media: optionMedia.get(option.id) ?? [],
     })),
-    media: row.media.map((media) => ({
-      role: media.role,
-      path: media.mediaAsset.storagePath,
-      alt: media.altText,
-    })),
+    media: questionMedia,
   };
 
   return {
@@ -415,34 +526,63 @@ export class ExamQuestionSource {
       subtestSessionId: string;
       subtestCode: SubtestCode;
       count: number;
+      /** Fixture bergambar (F3-06); diabaikan bila bank soal DB dipakai. */
+      fixtureMedia?: FixtureMediaResolver;
     },
     db: ExamDbClient = this.prisma,
   ): Promise<MaterializedQuestionSeed[]> {
-    const dbQuestions = await this.loadFromDatabase(input.subtestCode, input.count, db);
+    const dbQuestions = await this.loadFromDatabase(
+      input.subtestCode,
+      input.count,
+      db,
+      input.subtestSessionId,
+    );
     if (dbQuestions.length >= input.count) {
       const rng = createRng(hashSeed(input.subtestSessionId));
       return shuffle(rng, dbQuestions).map((row, index) => mapDbQuestion(row, index + 1));
     }
-    return buildFixture(input.subtestCode, input.count, input.subtestSessionId);
+    return buildFixture(
+      input.subtestCode,
+      input.count,
+      input.subtestSessionId,
+      input.fixtureMedia,
+    );
   }
 
   private async loadFromDatabase(
     code: SubtestCode,
     count: number,
     db: ExamDbClient = this.prisma,
+    sessionSeed = '',
   ): Promise<QuestionRow[]> {
+    const where = {
+      subtestCode: code,
+      status: 'PUBLISHED' as const,
+      deletedAt: null,
+    };
     try {
+      // Tahap 1: id saja (murah) — cukup untuk memilih irisan pool yang merata.
+      const candidates = await db.question.findMany({
+        where,
+        orderBy: [{ publicCode: 'asc' }, { id: 'asc' }],
+        select: { id: true },
+        take: QUESTION_POOL_LIMIT,
+      });
+      if (candidates.length === 0) return [];
+
+      const picked = spreadSelection(
+        candidates.map((row) => row.id),
+        count,
+        hashSeed(`${sessionSeed}:${code}`),
+      );
+
+      // Tahap 2: muat relasi hanya untuk soal terpilih.
       const rows = await db.question.findMany({
-        where: {
-          subtestCode: code,
-          status: 'PUBLISHED',
-          deletedAt: null,
-        },
-        orderBy: { publicCode: 'asc' },
-        take: Math.max(count, 1),
+        where: { id: { in: picked } },
+        orderBy: [{ publicCode: 'asc' }, { id: 'asc' }],
         include: {
           options: { orderBy: { sortOrder: 'asc' } },
-          media: { include: { mediaAsset: true } },
+          media: { include: { mediaAsset: true }, orderBy: { sortOrder: 'asc' } },
         },
       });
       return rows as unknown as QuestionRow[];

@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "smoke:cat": "tsx scripts/smoke-cat.ts",
+    "smoke:media": "tsx scripts/smoke-media.ts",
     "prisma:generate": "prisma generate --schema prisma/schema",
     "prisma:validate": "prisma validate --schema prisma/schema",
     "prisma:migrate": "prisma migrate dev --schema prisma/schema",
@@ -25,6 +26,7 @@
     "db:guard": "tsx scripts/db-guard.ts",
     "db:ping": "tsx scripts/db-ping.ts",
     "db:stats": "tsx scripts/db-stats.ts",
+    "pool:coverage": "tsx scripts/pool-coverage.ts",
     "cron:run": "tsx scripts/cron-run.ts"
   },
   "dependencies": {
