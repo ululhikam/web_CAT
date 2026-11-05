@@ -28,11 +28,14 @@ karangan tanpa ada yang menyadarinya.
 
 ## Definition of Done fase
 
-- [ ] Semua subtes memenuhi kuota soal `PUBLISHED`.
-- [ ] `TPA` ada di bank soal dan terdaftar di seed.
-- [ ] Tidak ada fallback senyap ke `buildFixture()` pada jalur produksi.
-- [ ] `QUESTION_POOL=db` dipakai di `.env` dan sesi berjalan dari DB.
-- [ ] Seed idempoten (dijalankan 2× tidak menggandakan soal).
+- [x] Semua subtes memenuhi kuota soal `PUBLISHED`.
+      → KECERDASAN 147/100, KEPRIBADIAN 143/140, KECERMATAN 500/500,
+      PASS_HAND 150/150, TPA 105/100, TPK 100/100 (`pnpm pool:coverage`).
+- [x] `TPA` ada di bank soal dan terdaftar di seed.
+- [x] Tidak ada fallback senyap ke `buildFixture()` pada jalur produksi.
+      → `QUESTION_POOL=db` → 503 `EXAM_POOL_INSUFFICIENT`; `dev` → `logger.warn`.
+- [x] `QUESTION_POOL=db` dipakai di `.env` dan sesi berjalan dari DB.
+- [x] Seed idempoten (dijalankan 2× tidak menggandakan soal).
 
 ---
 
@@ -47,8 +50,27 @@ karangan tanpa ada yang menyadarinya.
 | F4-05 | Tambah `MULTI_CHOICE` (saat ini 0) | `seed/questions/kecerdasan.ts`, `tpa.ts` | ≥ 5 soal multi-choice | 1 j | F4-04 |
 | F4-06 | Test `pair_group` Kepribadian berpasangan + ada item terbalik | `apps/api/test/question-seed.spec.ts` | Lulus | 45 m | F4-01 |
 | F4-07 | Aktifkan `QUESTION_POOL=db` | `.env`, `.env.example` | Sesi berjalan dari DB | 2 j | F4-02 |
-| F4-08 | Hilangkan/perjelas fallback senyap ke `buildFixture()` | `exam-question-source.ts:405-420` | Ada log/penolakan eksplisit | 1 j | F4-07 |
+| F4-08 | Hilangkan/perjelas fallback senyap ke `buildFixture()` | `exam-question-source.ts` | Ada log/penolakan eksplisit | 1 j | F4-07 |
 | F4-09 | Health check kuota dengan pesan spesifik | `PrismaQuestionPool.validate()` | Pesan menyebut subtes & kekurangan | 1 j | F4-07 |
+
+> **Deviasi komposisi TPA (F4-03).** Target awal "100 soal TPA" terpenuhi dengan
+> 87 `SINGLE_CHOICE` + 3 `MULTI_CHOICE` (TPA) + 15 figural (Fase 3) = **105
+> PUBLISHED**. Tidak ada soal fiktif yang dipangkas: 15 figural sudah ada lebih
+> dulu, dan 90 soal teks adalah komposisi yang disepakati (verbal 40, numerik 35,
+> penalaran 12 + 3 multi-choice).
+
+> **Deviasi `MULTI_CHOICE` (F4-05).** Baris `MULTI_CHOICE` menyimpan
+> `scoringStrategy: 'MULTI_CORRECT_PARTIAL'` + `scoringConfig.wrongPenalty = 0.5`
+> sebagai **metadata admin saja**. Scoring sesi nyata memakai strategi tingkat
+> subtes (`KEYED_CORRECT`), yang menuntut kecocokan himpunan jawaban secara
+> persis — tidak ada partial credit. Perilaku ini dikunci oleh test
+> `ScoringService`.
+
+> **Perbaikan kualitas soal numerik (ditemukan saat audit F4-03).** Pengecoh
+> dulu selalu `answer ± {1,2,3,5,10}`, sehingga soal harga `Rp68.000` berpengecoh
+> `68.001`, `67.998`, dst. — mustahil dipilih dan menandai kuncinya. Kini
+> `numericOptions()` memakai kelipatan 1.000 untuk jawaban ≥ 1.000 yang bulat:
+> kunci `68000` → `69000 / 67000 / 70000 / 66000`.
 
 ---
 
@@ -209,17 +231,43 @@ Verifikasi:
 
 1. Mulai sesi baru.
 2. Buka subtes KECERDASAN.
-3. Cek `exam_session_questions.snapshot` → `externalId` harus berupa
-   `publicCode` soal (mis. `PSI-KEC-...`), **bukan** `DEV-KECERDASAN-0001`.
+3. Cek `exam_session_questions.snapshot` → `sourceId` harus berupa `publicCode`
+   soal (mis. `PSI-KEC-...`), **bukan** `DEV-KECERDASAN-0001`.
 
 ```sql
-SELECT jsonb_extract_path_text(snapshot, 'externalId') AS external_id
+SELECT snapshot->>'sourceId' AS source_id
 FROM exam_session_questions
 WHERE subtest_session_id = '<id>'
 LIMIT 10;
 ```
 
 Bila masih `DEV-*`, artinya masih memakai fixture.
+
+**Bukti runtime (5 Nov 2026).** API dijalankan dari `dist` (bukan `--watch`, agar
+recompile tidak memutus sesi), lalu `pnpm --filter @webcat/api smoke:cat`:
+
+```
+smoke:cat → http://localhost:3000/api/v1
+  health                     status ok, database up
+  start sesi                 0c986a62-… — 6 subtes, status IN_PROGRESS
+  KECERDASAN open            100 soal
+  KECERDASAN finish          status COMPLETED, nilai 100%, lulus true
+  …
+```
+
+Sesi dibuat nyata lewat HTTP; query bukti (dijalankan saat sesi masih berjalan,
+setelah 3 subtes selesai — 740 baris snapshot):
+
+```sql
+SELECT count(*) FILTER (WHERE snapshot->>'sourceId' LIKE 'DEV-%') AS fixture_rows,
+       count(*) AS total
+FROM exam_session_questions;
+--  fixture_rows | total
+--              0 |   740
+
+SELECT split_part(snapshot->>'sourceId','-',1) AS prefix, count(*) ...
+--  PSI | 740   (tidak ada satu pun DEV-*)
+```
 
 ---
 
@@ -258,28 +306,66 @@ if (dbQuestions.length < input.count) {
 **Aturan:** fallback hanya boleh terjadi bila `QUESTION_POOL=dev` (lingkungan
 pengembangan), dan **selalu** tercatat di log.
 
+**Dampak ke test integrasi.** Setelah `.env` menjadi `db`, test integrasi
+(`test/integration/*`) sempat gagal dengan `EXAM_POOL_INSUFFICIENT` — bukan
+regresi produk, melainkan konsekuensi benar dari mode ketat: DB uji
+(`webcat_test`) di-`TRUNCATE` dan memang tidak memuat bank soal. Factory test
+kini menyatakan mode secara eksplisit:
+
+```ts
+const fixtureConfig = { value: { QUESTION_POOL: 'dev' } } as unknown as AppConfigService;
+const questionSource = new ExamQuestionSource(prisma, fixtureConfig);
+```
+
+Jadi jalur bank-soal nyata diverifikasi oleh `pnpm smoke:cat` + `pnpm
+pool:coverage` terhadap DB dev, sedangkan test integrasi fokus pada perilaku
+mesin sesi. Tidak ada lagi pewarisan `.env` yang membuat hasil test bergantung
+pada isi file env pengembang.
+
 ---
 
 ### F4-09 — Health check kuota
 
-`PrismaQuestionPool.validate()` sebaiknya mengembalikan daftar kekurangan yang
-bisa dibaca manusia, mis.:
+`PrismaQuestionPool.validate()` mengembalikan daftar kekurangan yang bisa dibaca
+manusia:
 
 ```ts
 {
-  ok: false,
+  ready: false,
+  available: 412,
+  required: 500,
+  missingSubtestCodes: ['KECERMATAN'],
   problems: [
-    { subtestCode: 'KECERMATAN', required: 500, available: 412, missing: 88 },
+    {
+      subtestCode: 'KECERMATAN',
+      required: 500,
+      available: 412,
+      missing: 88,
+      message: 'Subtes Kecermatan: tersedia 412 soal, dibutuhkan 500 (kurang 88 soal).',
+    },
   ],
 }
 ```
 
-Lalu `startSession` (atau endpoint `GET /exams/eligibility`) menampilkan alasan
-yang jelas alih-alih gagal generik di tengah ujian.
+Pemakaian:
+
+- `GET /exams/eligibility` → `poolProblems[]` (rincian) di samping `reasons`.
+  Halaman `/exam` menampilkannya sebagai sub-daftar di bawah alasan
+  `EXAM_POOL_INSUFFICIENT`.
+- `startSession()` → bila bank soal satu-satunya penghalang, error dikirim
+  sebagai `EXAM_POOL_INSUFFICIENT` (409) dengan `message` dari pool dan
+  `details.problems`; bukan lagi `EXAM_SESSION_LOCKED` generik.
+- `ExamQuestionSource.prepare()` (`QUESTION_POOL=db`) → 503
+  `EXAM_POOL_INSUFFICIENT` dengan `details { subtestCode, required, available, missing }`.
 
 > Catatan penting: **jangan** memvalidasi kuota seluruh subtes saat start sesi
 > bila itu memperlambat (6 count query). Cukup validasi subtes yang akan dibuka,
 > atau cache hasilnya selama 5 menit.
+
+**Status:** kuota divalidasi untuk subtes yang akan dibuka (loop `stages`), sesuai
+catatan di atas. Tidak ada cache — 6 `COUNT` terindeks
+(`questions(subtest_code, status, difficulty)`) selesai dalam hitungan milidetik
+pada bank 1.159 soal, jadi cache hanya akan menambah risiko data basi.
 
 ---
 
@@ -299,15 +385,19 @@ ORDER BY subtest_code;
 
 -- tidak ada ID fixture di sesi nyata
 SELECT count(*) FROM exam_session_questions
-WHERE snapshot->>'externalId' LIKE 'DEV-%';
+WHERE snapshot->>'sourceId' LIKE 'DEV-%';
 ```
 
-| Cek | Target |
-| --- | --- |
-| Semua 6 subtes `PUBLISHED` ≥ kuota | ya |
-| `OPEN` subtes dengan `QUESTION_POOL=db` | tidak ada `DEV-*` |
-| Seed dijalankan 2× | jumlah soal tidak bertambah |
-| `pnpm test` | hijau |
+| Cek | Target | Hasil |
+| --- | --- | --- |
+| Semua 6 subtes `PUBLISHED` ≥ kuota | ya | ✅ 147/100, 143/140, 500/500, 150/150, 105/100, 100/100 |
+| `OPEN` subtes dengan `QUESTION_POOL=db` | tidak ada `DEV-*` | ✅ 0 dari 740 snapshot |
+| Seed dijalankan 2× | jumlah soal tidak bertambah | ✅ "baru 0, diperbarui 1052" |
+| `pnpm test` | hijau | ✅ 34 berkas / 319 test |
+| `pnpm test:integration` | hijau | ✅ 14 test |
+| `pnpm pool:coverage` | semua subtes dari bank soal | ✅ 6/6 "bank soal" |
+| `pnpm smoke:cat` | 6/6 subtes selesai | ✅ lihat F4-07 |
+| `pnpm smoke:media` | semua URL media 200 | ✅ 115/115 |
 
 ---
 

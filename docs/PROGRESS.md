@@ -290,17 +290,38 @@ soal figural tampil di runner dan dinilai benar.
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F4-01 | Jalankan `pnpm db:seed` | ⬜ | — | — |
-| F4-02 | Verifikasi kuota per subtes | ⬜ | — | — |
-| F4-03 | Bank TPA 100 soal | ⬜ | — | — |
-| F4-04 | Daftarkan TPA di seed | ⬜ | — | — |
-| F4-05 | Tambah `MULTI_CHOICE` | ⬜ | — | — |
-| F4-06 | Test `pair_group` Kepribadian | ⬜ | — | — |
-| F4-07 | Aktifkan `QUESTION_POOL=db` | ⬜ | — | — |
-| F4-08 | Hapus/perjelas fallback fixture | ⬜ | — | — |
-| F4-09 | Health check kuota | ⬜ | — | — |
+| F4-01 | Jalankan `pnpm db:seed` | ✅ | Seed 2×: run-2 "baru 0, diperbarui 1052" → idempoten. Total **1.159** baris `questions`; 1.145 soal bank (KECERDASAN 147, KEPRIBADIAN 143, KECERMATAN 500, PASS_HAND 150, TPA 105, TPK 100) | 2026-11-05 |
+| F4-02 | Verifikasi kuota per subtes | ✅ | Query kuota → **0 baris** kurang: 147/100, 143/140, 500/500, 150/150, 105/100, 100/100 | 2026-11-05 |
+| F4-03 | Bank TPA 100 soal | ✅ | `seed/questions/tpa.ts`: 87 `SINGLE_CHOICE` (verbal 40 / numerik 35 / penalaran 12) + 3 `MULTI_CHOICE`; + 15 figural Fase 3 = **105 PUBLISHED** | 2026-11-05 |
+| F4-04 | Daftarkan TPA di seed | ✅ | 4 kategori `tpa/{verbal,numerik,penalaran,figural}`; `buildTpaChoices()` + `buildTpaMultiChoices()` masuk `buildSeedQuestions()` | 2026-11-05 |
+| F4-05 | Tambah `MULTI_CHOICE` | ✅ | 6 soal: 3 KECERDASAN (`PSI-KEC-M-*`) + 3 TPA; DB `MULTI_CHOICE` = 6, `IMAGE_CHOICE` = 44. Strategi simpan `MULTI_CORRECT_PARTIAL` (metadata), scoring sesi tetap `KEYED_CORRECT` | 2026-11-05 |
+| F4-06 | Test `pair_group` Kepribadian | ✅ | `question-seed.spec.ts` 32 test: pair genap + ≥1 reverse; 3 dimensi dengan rasio reverse 20–60% | 2026-11-05 |
+| F4-07 | Aktifkan `QUESTION_POOL=db` | ✅ | `.env` + `.env.example` → `db`; API dijalankan dari `dist` (tanpa watch) lalu `smoke:cat` **LULUS** (6/6 subtes COMPLETED, total 100 vs ambang 60). Query: `snapshot->>'sourceId' LIKE 'DEV-%'` = **0 dari 740** baris; prefix `PSI` = 740 | 2026-11-05 |
+| F4-08 | Hapus/perjelas fallback fixture | ✅ | `resolve()` + `PreparedQuestions`; `db` → 503 `EXAM_POOL_INSUFFICIENT` (`details.subtestCode/required/available/missing`), `dev` → `logger.warn`; 4 test. Env tetap `db` | 2026-11-05 |
+| F4-09 | Health check kuota | ✅ | `PoolStatus.problems[]` (`subtestCode/required/available/missing/message`); `ExamEligibility.poolProblems` + sub-daftar di `/exam`; `startSession` → `EXAM_POOL_INSUFFICIENT` dengan pesan spesifik; 7 test | 2026-11-05 |
 
-**Gate keluar:** semua subtes PUBLISHED & kuota penuh; tidak ada fallback.
+**Gate keluar:** ✅ semua subtes PUBLISHED & kuota penuh; `QUESTION_POOL=db` aktif;
+tidak ada lagi fallback senyap ke fixture.
+
+### Verifikasi penutup Fase 4 (5 Nov 2026)
+
+| Perintah | Hasil |
+| --- | --- |
+| `pnpm db:seed` (3×) | ✅ run-3 "baru 0, diperbarui 1145"; 1.159 `questions`, 235 `question_media`, 104 `media_assets` stabil |
+| `pnpm --filter @webcat/api test` | ✅ 34 berkas / **320** test |
+| `pnpm test:integration` | ✅ 4 berkas / **14** test |
+| `pnpm pool:coverage` | ✅ 6/6 subtes "bank soal" (DB=kuota), 0 fixture |
+| `pnpm smoke:cat` | ✅ 6/6 subtes COMPLETED, total 100, `DEV-*` = 0 |
+| `pnpm smoke:media` | ✅ 29 figural, 23 `IMAGE_CHOICE`, 115 URL → 200, `sig` rusak → 404 |
+
+> **Perbaikan di luar daftar tugas (ditemukan saat F4-07).** Dua hal yang bukan
+> bug produk tetapi menghalangi verifikasi:
+> 1. Test suite gagal acak di `figural-media.spec.ts` (`Test timed out in
+>    5000ms`) karena render WebP via `sharp` berebut CPU saat suite paralel →
+>    `vitest.config.ts` kini `testTimeout: 30_000`.
+> 2. Setelah `.env` menjadi `db`, test integrasi gagal `EXAM_POOL_INSUFFICIENT`
+>    karena DB uji di-`TRUNCATE`. Factory test kini memaksa `QUESTION_POOL=dev`
+>    secara eksplisit — tidak lagi mewarisi `.env`.
 
 ---
 
