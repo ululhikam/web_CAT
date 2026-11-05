@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Platform TES CAT Polri (Psikologi, TKK, TPK) — NestJS + SvelteKit + Supabase di Vercel",
-  "packageManager": "pnpm@11.12.0",
+  "packageManager": "pnpm@11.28.9",
   "engines": {
     "node": ">=22"
   },

@@ -2,5 +2,21 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "sveltekit",
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
-  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@webcat/web"
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@webcat/web",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://tes-cat-api.vercel.app/api/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/logo-(.*).png",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }]
+    },
+    {
+      "source": "/og.png",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    }
+  ]
 }
