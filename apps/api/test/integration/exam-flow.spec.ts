@@ -181,6 +181,15 @@ describe.skipIf(!integrationEnabled)('alur peserta (Postgres)', () => {
     expect(saved1.saved).toHaveLength(50);
     expect(saved2.saved).toHaveLength(50);
 
+    // F5-10: jawaban yang sudah tersimpan harus kembali ke peserta yang sama.
+    // Tanpa ini, refresh tab menampilkan soal kosong walau server punya
+    // jawabannya. Regresi: `select` memakai `answerPayload` sedangkan proyeksi
+    // membaca `answer` (dua nama berbeda).
+    const replay = await engine.sessions.getQuestions(user.id, sessionId, kecerdasan.id, {
+      limit: 1,
+    });
+    expect(replay.items[0]!.answer).toEqual(answers[0]!.payload);
+
     // 6. heartbeat
     const heartbeat = await engine.sessions.heartbeat(user.id, sessionId);
     expect(heartbeat.sessionStatus).toBe('IN_PROGRESS');

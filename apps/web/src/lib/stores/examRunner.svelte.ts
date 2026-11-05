@@ -25,6 +25,11 @@ import {
   removeAnswers,
   type QueuedAnswer,
 } from '$lib/offline/answer-queue';
+import {
+  buildKeepaliveBatch,
+  mergePendingAnswers,
+  type PendingAnswer,
+} from '$lib/offline/answer-sync';
 
 /**
  * ============================================================================
@@ -46,12 +51,6 @@ const EVENT_DELAY_MS = 4_000;
 const MAX_EVENT_BUFFER = 200;
 const MAX_RETRIES = 5;
 const TICK_MS = 250;
-
-interface RecentAnswer {
-  questionId: string;
-  payload: AnswerPayload;
-  timeSpentMs: number;
-}
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -103,6 +102,8 @@ export class ExamRunnerStore {
   connected = $state(true);
   pendingCount = $state(0);
   lastSavedAt = $state<number | null>(null);
+  /** Jumlah jawaban yang dipulihkan dari IndexedDB saat halaman dimuat. */
+  restoredCount = $state(0);
   actionTaken = $state<ViolationAction | null>(null);
 
   /* --------------------------------------------------------------- internal */
@@ -122,8 +123,14 @@ export class ExamRunnerStore {
   private retryCount = 0;
   private expiryHandled = false;
   private queueWrite: Promise<void> = Promise.resolve();
-  private recentAnswers = new Map<string, RecentAnswer>();
+  /**
+   * Cermin antrean IndexedDB di memori. Dipakai `keepaliveFlush()` saat tab
+   * ditutup, ketika operasi async IndexedDB tidak lagi bisa diandalkan.
+   */
+  private pendingMirror = new Map<string, PendingAnswer>();
   private clientSeqHighWater = 0;
+  private onlineHandler: (() => void) | null = null;
+  private offlineHandler: (() => void) | null = null;
 
   /* ------------------------------------------------------------------ getters */
 
@@ -281,14 +288,34 @@ export class ExamRunnerStore {
         if (question.answer) seeded[question.id] = question.answer;
       }
 
-      this.questions = items;
-      this.answers = { ...seeded, ...this.answers };
+      // F5-10: pulihkan jawaban yang belum ter-ACK. Server bisa saja sudah
+      // punya jawaban lebih lama, tetapi antrean lokal berisi perubahan yang
+      // belum sempat terkirim — jadi antrean menang.
       const queued = await listAnswers(subtest.id);
-      this.pendingCount = queued.length;
+      const restored = mergePendingAnswers(seeded, queued, this.answers);
+
+      this.questions = items;
+      this.answers = restored;
+      // Cermin dikunci per soal (bukan per baris) karena satu soal bisa punya
+      // beberapa baris antrean bila dijawab berulang kali saat offline.
+      this.pendingMirror = new Map(
+        queued.map((entry) => [
+          entry.questionId,
+          {
+            questionId: entry.questionId,
+            payload: entry.payload,
+            timeSpentMs: entry.timeSpentMs,
+            clientSeq: entry.clientSeq,
+          },
+        ]),
+      );
+      this.restoredCount = this.pendingMirror.size;
+      this.pendingCount = this.pendingMirror.size;
       this.clientSeqHighWater = queued.reduce(
         (max, entry) => Math.max(max, entry.clientSeq),
         this.clientSeqHighWater,
       );
+      if (queued.length > 0) this.scheduleFlush(0);
     } catch (cause) {
       this.handleError(cause);
       this.questions = [];
@@ -309,7 +336,12 @@ export class ExamRunnerStore {
 
     const elapsed = Math.max(0, Math.min(86_400_000, Math.round(timeSpentMs)));
     this.answers = { ...this.answers, [questionId]: payload };
-    this.recentAnswers.set(questionId, { questionId, payload, timeSpentMs: elapsed });
+    this.pendingMirror.set(questionId, {
+      questionId,
+      payload,
+      timeSpentMs: elapsed,
+      clientSeq: 0,
+    });
 
     this.queueWrite = this.queueWrite.then(async () => {
       try {
@@ -319,7 +351,7 @@ export class ExamRunnerStore {
           payload,
           timeSpentMs: elapsed,
         });
-        this.pendingCount += 1;
+        this.pendingCount = this.pendingMirror.size;
         this.scheduleFlush();
       } catch (cause) {
         this.handleError(cause);
@@ -374,6 +406,13 @@ export class ExamRunnerStore {
 
         if (batch.length === 0) break;
 
+        // Cermin memori ikut mendapat `clientSeq` agar keepalive saat tab
+        // ditutup memakai nomor batch yang sama (idempoten), bukan nomor baru.
+        for (const entry of batch) {
+          const mirror = this.pendingMirror.get(entry.questionId);
+          if (mirror) mirror.clientSeq = clientSeq;
+        }
+
         this.saving = true;
         try {
           const response = await apiRequest<AutosaveResponse>(
@@ -401,14 +440,22 @@ export class ExamRunnerStore {
           }
 
           await removeAnswers(batch.map((entry) => entry.id));
-          for (const entry of batch) this.recentAnswers.delete(entry.questionId);
-          this.pendingCount = Math.max(0, this.pendingCount - batch.length);
+          for (const entry of batch) {
+            // Hanya hapus cermin bila isinya masih jawaban yang barusan
+            // ter-ACK; perubahan baru saat request berjalan harus tetap
+            // tercatat untuk keepalive berikutnya.
+            const mirror = this.pendingMirror.get(entry.questionId);
+            if (mirror && mirror.clientSeq === clientSeq) {
+              this.pendingMirror.delete(entry.questionId);
+            }
+          }
+          this.pendingCount = this.pendingMirror.size;
         } catch (cause) {
           this.handleError(cause);
           if (this.lockedReason) {
             await clearSubtest(subtest.id);
             this.pendingCount = 0;
-            this.recentAnswers.clear();
+            this.pendingMirror.clear();
             break;
           }
 
@@ -436,25 +483,43 @@ export class ExamRunnerStore {
     }
   }
 
-  /** Best-effort saat tab ditutup: fetch keepalive dengan token di memori. */
+  /**
+   * Best-effort saat tab ditutup.
+   *
+   * `navigator.sendBeacon` tidak bisa mengirim header `Authorization`, jadi
+   * dipakai `fetch(..., { keepalive: true })` yang tetap membawa Bearer token
+   * dari memori. Batch diambil dari cermin antrean (`pendingMirror`) — operasi
+   * IndexedDB async sudah tidak bisa diandalkan pada titik ini.
+   */
   keepaliveFlush(): void {
     const subtest = this.currentSubtest;
     const sessionId = this.sessionId;
-    if (!subtest || !sessionId || this.recentAnswers.size === 0) return;
+    if (!subtest || !sessionId) return;
 
-    const answers = [...this.recentAnswers.values()]
-      .slice(-MAX_BATCH)
-      .map((entry) => ({
+    const nextSeq = this.clientSeqHighWater + 1;
+    const batch = buildKeepaliveBatch(this.pendingMirror.values(), MAX_BATCH, nextSeq);
+    if (!batch) return;
+    // Batch yang memakai `clientSeq` baru (belum pernah dicoba) menaikkan
+    // penanda tertinggi agar `flush()` berikutnya tidak memakai nomor sama.
+    if (batch.clientSeq === nextSeq) this.clientSeqHighWater = nextSeq;
+
+    const body = JSON.stringify({
+      clientSeq: batch.clientSeq,
+      answers: batch.answers.map((entry) => ({
         questionId: entry.questionId,
         payload: entry.payload,
         timeSpentMs: entry.timeSpentMs,
-      }));
-    if (answers.length === 0) return;
+      })),
+    });
 
-    this.clientSeqHighWater += 1;
-    const clientSeq = this.clientSeqHighWater;
+    const url = `/api/v1/exams/sessions/${sessionId}/subtests/${subtest.id}/answers`;
 
-    void fetch(`/api/v1/exams/sessions/${sessionId}/subtests/${subtest.id}/answers`, {
+    // `navigator.sendBeacon` sengaja TIDAK dipakai: ia tidak bisa membawa
+    // header `Authorization`, sedangkan endpoint ini menuntut Bearer token
+    // (tidak ada cookie akses). Beacon akan menerima 401 dan jawaban hilang
+    // tanpa jejak. `fetch(..., { keepalive: true })` setara secara semantik
+    // (dikirim saat unload) tetapi tetap mengirim header.
+    void fetch(url, {
       method: 'PATCH',
       keepalive: true,
       credentials: 'include',
@@ -463,7 +528,7 @@ export class ExamRunnerStore {
         'content-type': 'application/json',
         ...(session.accessToken ? { authorization: `Bearer ${session.accessToken}` } : {}),
       },
-      body: JSON.stringify({ clientSeq, answers }),
+      body,
     }).catch(() => undefined);
   }
 
@@ -493,7 +558,7 @@ export class ExamRunnerStore {
 
       await clearSubtest(subtest.id);
       this.pendingCount = 0;
-      this.recentAnswers.clear();
+      this.pendingMirror.clear();
       this.applyActive(result);
       this.questions = [];
       this.answers = {};
@@ -603,6 +668,24 @@ export class ExamRunnerStore {
     if (this.ticker !== null) return;
     this.nowMs = Date.now();
 
+    // F5-10: begitu jaringan pulih, langsung kirim antrean tanpa menunggu
+    // jadwal flush berikutnya. Tanpa ini, jawaban bisa tertahan sampai
+    // retry berikutnya meski koneksi sudah kembali.
+    if (typeof window !== 'undefined') {
+      this.onlineHandler = () => {
+        this.retryCount = 0;
+        this.connected = true;
+        this.error = null;
+        void this.flush();
+        void this.flushEvents();
+      };
+      window.addEventListener('online', this.onlineHandler);
+      this.offlineHandler = () => {
+        this.connected = false;
+      };
+      window.addEventListener('offline', this.offlineHandler);
+    }
+
     this.ticker = setInterval(() => {
       this.nowMs = Date.now();
       if (
@@ -613,7 +696,7 @@ export class ExamRunnerStore {
       ) {
         this.expiryHandled = true;
         this.lockedReason = 'TIME_EXPIRED';
-        this.recentAnswers.clear();
+        this.pendingMirror.clear();
         void this.heartbeat();
       }
     }, TICK_MS);
@@ -632,6 +715,14 @@ export class ExamRunnerStore {
     if (this.heartbeatTimer !== null) clearInterval(this.heartbeatTimer);
     if (this.eventTimer !== null) clearInterval(this.eventTimer);
     if (this.flushTimer !== null) clearTimeout(this.flushTimer);
+    if (this.onlineHandler && typeof window !== 'undefined') {
+      window.removeEventListener('online', this.onlineHandler);
+    }
+    if (this.offlineHandler && typeof window !== 'undefined') {
+      window.removeEventListener('offline', this.offlineHandler);
+    }
+    this.onlineHandler = null;
+    this.offlineHandler = null;
     this.ticker = null;
     this.heartbeatTimer = null;
     this.eventTimer = null;
@@ -678,7 +769,9 @@ export class ExamRunnerStore {
       this.currentSubtestId = nextId;
       this.questions = [];
       this.answers = {};
-      this.recentAnswers.clear();
+      this.pendingMirror.clear();
+      this.pendingCount = 0;
+      this.restoredCount = 0;
       this.expiryHandled = false;
       this.warning = null;
       this.actionTaken = null;

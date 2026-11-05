@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 9 | 16 | `██████░░░░` 56% |
-| **Total** | | | **88** | **95** | **93%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 10 | 16 | `██████░░░░` 63% |
+| **Total** | | | **89** | **95** | **94%** |
 
 ---
 
@@ -512,11 +512,37 @@ tidak ada lagi fallback senyap ke fixture.
 > placeholder env disediakan agar `docs:openapi:check` bisa jalan di CI tanpa
 > `.env`.
 
+#### Verifikasi penutup F5-10 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run` (web penuh) | ✅ 11 berkas / **106** test (21 di antaranya baru: `answer-sync.spec.ts` 12, `answer-queue.spec.ts` 9) |
+| `vitest run` (API penuh) | ✅ 39 berkas / **381** test |
+| `vitest run --config vitest.integration.config.ts exam-flow.spec.ts` | ✅ 3/3 — termasuk regresi baru: setelah autosave, `GET .../questions` mengembalikan `answer` milik peserta |
+| `tsc --noEmit` (API) · `svelte-check` (web) | ✅ exit 0 · **0 error, 0 warning** |
+| `eslint src --max-warnings 0` (API & web) | ✅ exit 0 keduanya |
+| Runtime skenario 1 (Chrome + DevTools Protocol, `:5173`) | ✅ `offline: 5 jawaban tersimpan di IndexedDB` (`kinds: option, tile, tile, option, option`) + statusline `"5 jawaban menunggu terkirim Offline"` → online → `rows: 0`, `"Tersimpan 5 Nov 2026, 23.37 Terhubung"` |
+| Runtime skenario 2 (autosave diblokir `*/answers`) | ✅ 3 jawaban tertahan di IndexedDB → **refresh** → soal terjawab **9 → 12** (jawaban server + antrean pulih), notice `"3 jawaban dipulihkan dari perangkat dan sedang dikirim ulang."` → blokir dibuka → antrean **0** tanpa interaksi |
+| Error runtime browser | ✅ `[]` (tidak ada `error`/`unhandledrejection`) |
+| Idempotensi replay (DB) | ✅ `exam_answer_events`: 20 baris / 12 soal unik, **0** pasangan `(session_question_id, client_seq)` duplikat |
+| DB dev setelah uji | ✅ `exam_session_subtests.answered_count = 12` = jumlah baris `answer_payload IS NOT NULL` |
+
+> **Deviasi:** `sendBeacon` tidak dipakai karena tidak bisa mengirim header
+> `Authorization` (endpoint autosave hanya menerima Bearer, tanpa cookie akses).
+> Penggantinya `fetch(..., { keepalive: true })` dari `beforeunload`, `pagehide`,
+> dan `visibilitychange → hidden`. Alasan lengkap ada di runbook F5-10.
+
+> **Bug turunan yang ikut diperbaiki:** `GET /exams/sessions/:id/subtests/:id/questions`
+> selalu mengembalikan `answer: null` — `select` memakai nama kolom
+> `answerPayload` sedangkan `ProjectionRow` membaca `answer`. Tanpa perbaikan ini
+> jawaban yang sudah tersimpan tidak pernah tampil setelah refresh, sehingga
+> kriteria F5-10 tidak mungkin terbukti.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F5-10 | Autosave IndexedDB + `sendBeacon` | ⬜ | — | — |
+| F5-10 | Autosave IndexedDB (+ `fetch keepalive`, bukan `sendBeacon`) | ✅ | Antrean IndexedDB dipulihkan ke UI setelah refresh, disinkronkan ulang saat `online`, dan digabung per soal (satu baris per soal) agar jawaban terbaru tidak kalah dari yang lama. Bug turunan ditemukan & diperbaiki: `GET .../questions` mengembalikan `answer: null` karena `select` memakai `answerPayload` sementara proyeksi membaca `answer`. Bukti runtime Chrome/CDP **9/9** (offline 5 jawaban → IndexedDB → online → antrean 0 & tersimpan; autosave diblokir → 3 tertahan → refresh → 9→12 soal terjawab + "3 dipulihkan" → blokir dibuka → antrean 0). 21 test baru | 2026-11-05 |
 | F5-11 | Preload 2 soal berikutnya | ⬜ | — | — |
 | F5-12 | Zoom/pan gambar figural | ⬜ | — | — |
 | F5-13 | Flag anomali waktu jawab | ⬜ | — | — |
@@ -538,6 +564,49 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5: F5-10 selesai
+
+**Dikerjakan:** F5-10
+**Hasil:** Fase 5 ✅ 10/16. Jawaban tidak lagi hanya hidup di memori: setiap
+perubahan masuk antrean IndexedDB, dipulihkan ke layar setelah refresh, dan
+dikirim ulang otomatis begitu koneksi kembali. Tracker: **89/95 = 94%**.
+
+**Bukti:**
+
+- `apps/web/src/lib/offline/answer-sync.ts` (baru) — fungsi murni
+  `mergePendingAnswers()` (server < antrean < memori) dan
+  `buildKeepaliveBatch()` (batch unload memakai `clientSeq` lama agar replay
+  idempoten). 12 test.
+- `answer-queue.ts`: `enqueueAnswer()` menggabungkan jawaban berulang pada soal
+  yang sama selama belum terkirim — tanpa ini beberapa baris bersaing dengan
+  `clientSeq` yang sama dan server memakai yang **pertama**, sehingga jawaban
+  terbaru peserta hilang. `nextClientSeq` fallback memori kini per subtes.
+  9 test.
+- `examRunner.svelte.ts`: `loadQuestions()` memulihkan antrean ke `answers` +
+  `pendingMirror`; listener `online`/`offline`; `keepaliveFlush()` disusun dari
+  cermin memori (IndexedDB async tidak andal saat unload); cermin hanya dihapus
+  bila `clientSeq`-nya masih cocok.
+- `exam/[sessionId]/+page.svelte`: `pagehide`, flush saat tab disembunyikan, dan
+  indikator "N jawaban dipulihkan dari perangkat".
+- **Bug turunan ditemukan lewat uji ini:** `GET .../questions` selalu
+  `answer: null` karena `select` memakai `answerPayload` sementara proyeksi
+  membaca `answer`. Diperbaiki di `exam-session.service.ts` + regresi di
+  `exam-flow.spec.ts` (setelah autosave, jawaban peserta kembali).
+- Runtime Chrome/CDP **9/9**: offline 5 jawaban → 5 baris IndexedDB → online →
+  antrean 0 & "Tersimpan"; autosave diblokir → 3 tertahan → refresh → soal
+  terjawab 9 → 12 + "3 dipulihkan" → blokir dibuka → antrean 0. DB:
+  `answered_count` 12 = 12 baris terisi, 0 pasangan `(question, client_seq)`
+  duplikat.
+- Regresi: web 11 berkas / 106 test, API 39 berkas / 381 test, integrasi 3/3,
+  `tsc` & `svelte-check` & `eslint` bersih.
+
+**Hambatan:** DB uji `webcat_test` tertinggal satu migrasi
+(`20261105140000_f5_02_plan_soft_delete`) sehingga `seedPlans` gagal; sudah
+diterapkan `prisma migrate deploy` dengan `DATABASE_URL`/`DIRECT_URL` diarahkan
+ke DB uji.
+
+**Berikutnya:** F5-11 — preload 2 soal berikutnya.
 
 ### 2026-11-05 — Fase 5: F5-09 selesai
 

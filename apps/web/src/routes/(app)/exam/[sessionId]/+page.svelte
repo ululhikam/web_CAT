@@ -234,6 +234,9 @@
 
     const onVisibility = () => {
       examRunner.pushEvent(document.hidden ? 'TAB_BLUR' : 'TAB_FOCUS');
+      // F5-10: saat tab disembunyikan, kirim antrean lebih dulu — tab bisa
+      // dibuang OS tanpa sempat memicu `beforeunload`.
+      if (document.hidden) void examRunner.flush();
     };
     const onCopy = () => examRunner.pushEvent('COPY');
     const onPaste = () => examRunner.pushEvent('PASTE');
@@ -299,6 +302,11 @@
         event.returnValue = '';
       }
     };
+    // F5-10: `beforeunload` tidak selalu jalan di mobile (Safari/Chrome Android).
+    // `pagehide` dipakai sebagai jalur kedua agar antrean tetap dikirim.
+    const onPageHide = () => {
+      examRunner.keepaliveFlush();
+    };
 
     document.addEventListener('visibilitychange', onVisibility);
     document.addEventListener('copy', onCopy);
@@ -309,6 +317,7 @@
     window.addEventListener('resize', onResize);
     window.addEventListener('keydown', onKeydown);
     window.addEventListener('beforeunload', onBeforeUnload);
+    window.addEventListener('pagehide', onPageHide);
 
     detach = () => {
       document.removeEventListener('visibilitychange', onVisibility);
@@ -320,6 +329,7 @@
       window.removeEventListener('resize', onResize);
       window.removeEventListener('keydown', onKeydown);
       window.removeEventListener('beforeunload', onBeforeUnload);
+      window.removeEventListener('pagehide', onPageHide);
     };
   }
 
@@ -501,6 +511,16 @@
         </span>
         <span>{examRunner.connected ? 'Terhubung' : 'Offline'}</span>
       </div>
+
+      {#if examRunner.restoredCount > 0 && examRunner.pendingCount > 0}
+        <!--
+          F5-10: jawaban dari IndexedDB sudah tampil lagi setelah halaman
+          dimuat ulang. Indikator hilang sendiri setelah semua ter-ACK.
+        -->
+        <p class="muted restored">
+          {examRunner.restoredCount} jawaban dipulihkan dari perangkat dan sedang dikirim ulang.
+        </p>
+      {/if}
 
       {#if examRunner.loadingQuestions}
         <div class="center"><Spinner size={26} label="Memuat soal" /></div>

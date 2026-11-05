@@ -671,7 +671,17 @@ export class ExamSessionService {
       this.prisma.examSessionQuestion.count({ where: { subtestSessionId: subtest.id } }),
     ]);
 
-    const items = await this.projection.projectMany(rows);
+    // F5-10: `ProjectionRow.answer` berasal dari kolom `answerPayload`. Tanpa
+    // pemetaan ini jawaban peserta selalu kembali `null`, sehingga refresh tab
+    // menampilkan soal kosong meski server sudah menyimpannya.
+    const items = await this.projection.projectMany(
+      rows.map((row) => ({
+        id: row.id,
+        position: row.position,
+        snapshot: row.snapshot,
+        answer: row.answerPayload,
+      })),
+    );
     const lastPosition = rows.at(-1)?.position ?? null;
     const hasMore = lastPosition !== null && lastPosition < total;
 

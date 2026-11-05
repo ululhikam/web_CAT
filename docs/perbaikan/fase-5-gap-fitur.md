@@ -489,7 +489,7 @@ Nest gagal dibuat. Skrip tidak menghubungi database.
 
 ---
 
-### F5-10 — Autosave IndexedDB
+### F5-10 — Autosave IndexedDB ✅
 
 Saat ini jawaban hanya disimpan di memori + dikirim ke server. Bila koneksi
 putus atau tab ditutup, jawaban bisa hilang.
@@ -510,6 +510,92 @@ setiap perubahan jawaban:
 - Matikan jaringan → jawab 5 soal → nyalakan jaringan → semua tersimpan.
 - Refresh tab di tengah subtes → jawaban tetap ada.
 - Replay `clientSeq` tetap idempoten di server (lihat F2-07).
+
+#### Kondisi awal (apa yang sebenarnya belum jalan)
+
+Antrean IndexedDB sudah ada (`apps/web/src/lib/offline/answer-queue.ts`) dan
+setiap perubahan jawaban sudah ditulis ke sana. Yang **belum** benar:
+
+1. **Refresh menghapus jawaban dari layar.** `loadQuestions()` hanya memakai
+   jawaban dari server; baris antrean dibaca sebatas untuk menghitung
+   `pendingCount`. Jawaban yang belum terkirim tetap ada di IndexedDB, tetapi
+   UI menampilkannya sebagai soal kosong — peserta mengira jawabannya hilang.
+2. **Tidak ada pengiriman ulang saat koneksi pulih.** Retry berhenti setelah
+   `MAX_RETRIES` (5 kali, ±23 detik). Bila jaringan mati lebih lama, antrean
+   berhenti dicoba sampai peserta menjawab soal lain. Tidak ada listener
+   `online`.
+3. **Dua baris untuk satu soal = jawaban terbaru hilang.** Setiap perubahan
+   jawaban menambah baris baru. Beberapa baris untuk soal yang sama masuk ke
+   batch dengan `clientSeq` yang sama; server menyimpan yang **pertama**
+   (`exam_answer_events` unik per soal + `clientSeq`), sehingga jawaban terakhir
+   peserta diabaikan.
+4. **`keepaliveFlush()` hanya memuat jawaban sejak halaman dibuka.** Setelah
+   refresh, `recentAnswers` kosong, sehingga menutup tab tidak mengirim apa pun.
+
+#### Solusi
+
+| Berkas | Perubahan |
+| --- | --- |
+| `lib/offline/answer-queue.ts` | `enqueueAnswer()` menggabungkan jawaban berulang pada soal yang sama **selama belum terkirim** (satu baris per soal, `timeSpentMs` dijumlahkan). `nextClientSeq` di fallback memori kini per subtes (sebelumnya satu counter global) |
+| `lib/offline/answer-sync.ts` (baru) | Fungsi murni `mergePendingAnswers()` (prioritas server < antrean < memori) dan `buildKeepaliveBatch()` (batch unload memakai `clientSeq` yang sudah ada) |
+| `lib/stores/examRunner.svelte.ts` | `loadQuestions()` memulihkan antrean ke `answers` + `pendingMirror`; `online`/`offline` listener; `keepaliveFlush()` memakai cermin antrean, bukan `recentAnswers` |
+| `routes/(app)/exam/[sessionId]/+page.svelte` | `pagehide` + flush saat tab disembunyikan; indikator "N jawaban dipulihkan dari perangkat" |
+| `modules/exams/exam-session.service.ts` (API) | Bug turunan: `GET .../questions` selalu mengembalikan `answer: null` karena `select` memakai `answerPayload` sedangkan `ProjectionRow` membaca `answer`. Sekarang dipetakan eksplisit |
+
+`pendingMirror` adalah salinan antrean di memori. Saat tab ditutup, operasi
+IndexedDB yang asinkron tidak bisa diandalkan lagi, jadi batch terakhir disusun
+dari cermin ini. Cermin hanya dihapus bila jawaban yang ter-ACK masih sama
+(`clientSeq` cocok) sehingga perubahan yang terjadi saat request berjalan tidak
+ikut terhapus.
+
+#### Deviasi: `sendBeacon` tidak dipakai
+
+Rancangan menyebut `navigator.sendBeacon(...)`. Itu **tidak bisa** dipakai di
+sini: `sendBeacon` tidak dapat mengirim header `Authorization`, sedangkan
+`PATCH /exams/sessions/:id/subtests/:id/answers` menuntut Bearer token (tidak ada
+cookie akses — lihat F5-07). Beacon akan menerima 401 dan jawaban hilang tanpa
+jejak, sementara browser melaporkan "terkirim".
+
+Penggantinya `fetch(..., { keepalive: true })`: semantiknya sama (request tetap
+dijalankan saat halaman ditinggalkan), tetapi header tetap terkirim. Dipicu dari
+tiga jalur — `beforeunload`, `pagehide` (mobile Safari/Chrome Android sering
+melewatkan `beforeunload`), dan `visibilitychange` → `hidden` (tab bisa dibuang
+OS tanpa event unload).
+
+#### Idempotensi replay
+
+Tidak ada endpoint baru: replay tetap memakai `clientSeq` yang sama.
+`buildKeepaliveBatch()` sengaja mengutamakan record yang **sudah** punya
+`clientSeq` agar unload tidak menerbitkan nomor baru untuk jawaban yang sudah
+pernah dicoba. Server menyimpan `exam_answer_events` unik per
+`(sessionQuestionId, clientSeq)` dan menganggap replay sebagai `saved` tanpa
+menambah baris — dibuktikan `exam-flow.spec.ts` (F2-07).
+
+#### Bukti runtime (Chrome + DevTools Protocol)
+
+Skenario 1 — jaringan mati lalu hidup:
+
+| Langkah | Hasil |
+| --- | --- |
+| `Network.emulateNetworkConditions { offline: true }` | `navigator.onLine === false` |
+| Jawab 5 soal (2 `IMAGE_CHOICE` tile + 3 opsi) | IndexedDB `answers` berisi **5** baris |
+| Statusline | `"5 jawaban menunggu terkirim · Offline"` |
+| Kembali online + event `online` | antrean **0**, statusline `"Tersimpan 5 Nov 2026, 23.37 · Terhubung"` |
+
+Skenario 2 — autosave diblokir, lalu refresh:
+
+| Langkah | Hasil |
+| --- | --- |
+| `Network.setBlockedURLs { urls: ['*/answers'] }`, jawab 3 soal belum terjawab | IndexedDB berisi **3** baris |
+| `Page.reload` (halaman tetap bisa dimuat) | soal terjawab **9 → 12**; notice `"3 jawaban dipulihkan dari perangkat dan sedang dikirim ulang."`; statusline `"3 jawaban menunggu terkirim"` |
+| Blokir dibuka + event `online` | antrean **0** tanpa interaksi tambahan |
+| Error runtime | `[]` |
+
+Idempotensi di DB setelah uji: `exam_answer_events` 20 baris / 12 soal unik,
+**0** pasangan `(session_question_id, client_seq)` duplikat; 
+`exam_session_subtests.answered_count = 12` sama dengan jumlah baris
+`answer_payload IS NOT NULL`.
+
 
 ---
 
