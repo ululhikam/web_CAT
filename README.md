@@ -28,7 +28,7 @@ dan tabel `job_queue` di Postgres (`FOR UPDATE SKIP LOCKED`).
 ```
 apps/
   api/                 NestJS API (satu serverless function)
-    api/index.ts       entrypoint Vercel
+    api/index.js       entrypoint Vercel (memuat dist/src/main.js)
     prisma/            schema multi-file, migrasi, seed
     scripts/           env-check, db-guard, cron-run
     src/core/          config, prisma, auth, security, jobs, ports
@@ -99,14 +99,25 @@ Pendaftaran mandiri **tidak** dibuka. Akun dibuat admin lewat undangan
 
 ## Deployment
 
-Dua proyek Vercel terpisah (lihat `apps/api/vercel.json` dan `apps/web/vercel.json`):
+Dua proyek Vercel terpisah dari satu repo (lihat `apps/api/vercel.json` dan
+`apps/web/vercel.json`), mengikuti
+[`docs/DEPLOY-VERCEL.md`](docs/DEPLOY-VERCEL.md):
 
-1. **web-cat-api** — root `apps/api`, build `pnpm --filter @webcat/api build`.
-2. **web-cat-web** — root `apps/web`, build `pnpm --filter @webcat/web build`.
+1. **tes-cat-api** — root `apps/api`, https://tes-cat-api.vercel.app
+2. **tes-cat** — root `apps/web`, https://tes-cat-mu.vercel.app
+
+Web mem-proxy `/api/*` ke project API, jadi browser hanya melihat satu origin
+dan cookie sesi (`SameSite=Lax`) tetap terkirim.
 
 Adapter web dipilih otomatis: `adapter-vercel` bila env `VERCEL` terisi,
 selain itu `adapter-node` (agar build lokal di Windows tidak gagal karena
 keterbatasan symlink).
+
+Aset merek (favicon, ikon aplikasi, `og.png`) dihasilkan dari `logo.png`:
+
+```powershell
+python scripts/make-brand-assets.py
+```
 
 ## Lisensi
 

@@ -11,7 +11,10 @@ serverless tidak menyimpan proses latar belakang jangka panjang.
 
 ## Keputusan
 
-- Satu fungsi Vercel menangani seluruh `/api/*` (`apps/api/api/index.ts`).
+- Satu fungsi Vercel menangani seluruh `/api/*` (`apps/api/api/index.js`).
+  Entry ini JavaScript CommonJS dan memuat `dist/src/main.js` hasil `tsc`,
+  karena builder Vercel tidak meng-emit decorator metadata (`design:paramtypes`)
+  yang dibutuhkan DI NestJS.
 - Aplikasi Nest di-cache pada variabel modul sehingga container yang dihangatkan
   tidak melakukan bootstrap ulang setiap request.
 - Modul dipisah rapi di `src/modules/*` dengan batas yang jelas, meski berjalan
