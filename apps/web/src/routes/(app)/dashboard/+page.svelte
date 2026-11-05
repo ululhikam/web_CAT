@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, untrack } from 'svelte';
   import Badge from '@webcat/ui/components/Badge.svelte';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
@@ -26,16 +26,21 @@
   let error = $state<string | null>(null);
 
   $effect(() => {
-    if (!session.user || !session.accessToken) return;
+    const user = session.user;
+    const token = session.accessToken;
+    if (!user || !token) return;
 
     let cancelled = false;
 
     void (async () => {
-      if (!subscription) loading = true;
+      // Baca `subscription` tanpa melacaknya sebagai dependency. Tanpa ini,
+      // assignment `subscription = result` memicu effect yang sama berulang
+      // terus (fetch loop) dan membuat browser hang.
+      if (untrack(() => !subscription)) loading = true;
       error = null;
       try {
         const result = await apiRequest<SubscriptionSummary | null>('/subscriptions/me', {
-          token: session.accessToken,
+          token,
           cacheTtlMs: 20000,
         });
         if (!cancelled) {
@@ -45,7 +50,7 @@
           }
         }
       } catch (cause) {
-        if (!cancelled && !subscription) error = apiErrorMessage(cause);
+        if (!cancelled && untrack(() => !subscription)) error = apiErrorMessage(cause);
       } finally {
         if (!cancelled) loading = false;
       }
@@ -1829,5 +1834,71 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
+  }
+  /* RESPONSIVE MOBILE */
+  @media (max-width: 640px) {
+    .page-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .header-actions,
+    .btn-start-cat {
+      width: 100%;
+    }
+
+    .btn-start-cat,
+    .btn-primary-launch,
+    .btn-secondary-launch,
+    .btn-finish-exam,
+    .btn-nav-prev,
+    .btn-nav-next,
+    .btn-finish-sidebar {
+      justify-content: center;
+      min-height: 44px;
+    }
+
+    .banner-tryout {
+      padding: 1.1rem;
+    }
+
+    .banner-title {
+      font-size: 1.15rem;
+    }
+
+    .banner-buttons {
+      flex-direction: column;
+    }
+
+    .banner-buttons > * {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .card-box__header {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chart-container {
+      height: 220px;
+      padding: 0.75rem;
+    }
+
+    .question-meta,
+    .question-nav-buttons,
+    .result-actions,
+    .detail-actions {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .modal-body {
+      padding: 1rem;
+    }
+
+    .modal-dialog {
+      max-height: 94vh;
+    }
   }
 </style>

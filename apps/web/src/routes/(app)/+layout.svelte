@@ -1030,4 +1030,24 @@
     width: 100%;
     margin: 0 auto;
   }
+
+  @media (max-width: 640px) {
+    .page-content {
+      padding: 1rem;
+    }
+
+    .topbar {
+      padding: 0 0.75rem;
+    }
+
+    .topbar__right {
+      gap: 0.35rem;
+    }
+
+    .dropdown-panel--notif,
+    .dropdown-panel--message,
+    .dropdown-panel--user {
+      width: min(92vw, 330px);
+    }
+  }
 </style>
