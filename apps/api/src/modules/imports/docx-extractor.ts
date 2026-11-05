@@ -1,10 +1,6 @@
 import type { ExtractedImage } from '@webcat/contracts';
+import { nativeImport } from './native-import';
 import type { SourceLine } from './document-parser';
-
-/** Sama seperti PDF: mammoth adalah paket CommonJS tetapi dimuat malas. */
-const nativeImport = new Function('specifier', 'return import(specifier)') as <T>(
-  specifier: string,
-) => Promise<T>;
 
 interface MammothImage {
   contentType: string;
@@ -93,21 +89,68 @@ function normalizeMime(mime: string): string {
 }
 
 /**
+ * Beri penanda pada setiap item daftar.
+ *
+ * Word menyimpan penomoran otomatis sebagai metadata, bukan teks: mammoth
+ * menghasilkan `<ol><li>` tanpa angka. Tanpa penanda, soal bernomor otomatis
+ * tidak akan pernah terdeteksi sebagai blok soal.
+ */
+function annotateLists(html: string): string {
+  const stack: Array<{ kind: 'ol' | 'ul'; id: number; count: number }> = [];
+  let nextId = 1;
+
+  return html.replace(/<ol\b[^>]*>|<\/ol>|<ul\b[^>]*>|<\/ul>|<li\b[^>]*>/gi, (tag) => {
+    const lower = tag.toLowerCase();
+    if (lower.startsWith('<ol')) {
+      stack.push({ kind: 'ol', id: nextId, count: 0 });
+      nextId += 1;
+      return tag;
+    }
+    if (lower.startsWith('<ul')) {
+      stack.push({ kind: 'ul', id: 0, count: 0 });
+      return tag;
+    }
+    if (lower.startsWith('</ol') || lower.startsWith('</ul')) {
+      stack.pop();
+      return tag;
+    }
+    if (lower.startsWith('<li')) {
+      const top = stack[stack.length - 1];
+      if (!top || top.kind === 'ul') return '<li>[[BUL]]';
+      top.count += 1;
+      // id daftar dipakai parser untuk membedakan daftar soal dan daftar opsi.
+      return `<li>[[OL:${top.id}:${top.count}]]`;
+    }
+    return tag;
+  });
+}
+
+/**
  * Ubah HTML mammoth menjadi baris teks. Satu elemen blok = satu baris agar
  * heuristik nomor/opsi bekerja sama seperti pada PDF.
+ *
+ * Penebalan dipertahankan sebagai `**...**` supaya opsi yang dikunci dengan
+ * bold masih terbaca sebagai kunci jawaban.
  */
 export function htmlToLines(html: string): SourceLine[] {
-  const withBreaks = html
+  const withBreaks = annotateLists(html)
     .replace(/\r/g, '')
     .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/(p|h[1-6]|li|tr|div|table|blockquote|ul|ol)>/gi, '\n')
-    .replace(/<img[^>]*src="\[\[IMG:(\d+)\]\]"[^>]*>/gi, '\n[[IMG:$1]]\n');
+    .replace(/<\/(p|h[1-6]|li|tr|td|th|div|table|blockquote|ul|ol)>/gi, '\n')
+    .replace(/<img[^>]*src="\[\[IMG:(\d+)\]\]"[^>]*>/gi, '\n[[IMG:$1]]\n')
+    .replace(/<(strong|b)\b[^>]*>/gi, '**')
+    .replace(/<\/(strong|b)>/gi, '**');
 
   const text = stripTags(withBreaks);
 
   return text
     .split('\n')
-    .map((line) => decodeEntities(line).replace(/\u00a0/g, ' ').replace(/[ \t]+/g, ' ').trim())
+    .map((line) =>
+      decodeEntities(line)
+        .replace(/\u00a0/g, ' ')
+        .replace(/[ \t]+/g, ' ')
+        .trim(),
+    )
     .filter((line) => line.length > 0)
     .map((text) => ({ text }));
 }
@@ -116,8 +159,9 @@ function stripTags(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<\/?(?:span|strong|b|em|i|u|a|sup|sub|font|td|th|thead|tbody|p|h[1-6]|li|ul|ol|div|table|tr|blockquote)[^>]*>/gi, (tag) =>
-      /^<\/(?:td|th)/i.test(tag) ? ' ' : '',
+    .replace(
+      /<\/?(?:span|em|i|u|a|sup|sub|font|td|th|thead|tbody|p|h[1-6]|li|ul|ol|div|table|tr|blockquote)[^>]*>/gi,
+      (tag) => (/^<\/(?:td|th)/i.test(tag) ? ' ' : ''),
     )
     .replace(/<[^>]+>/g, '');
 }

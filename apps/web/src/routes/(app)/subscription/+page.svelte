@@ -9,8 +9,21 @@
   import { formatDate } from '$lib/format';
   import type { SubscriptionSummary } from '@webcat/contracts';
 
-  let subscription = $state<SubscriptionSummary | null>(null);
-  let loading = $state(true);
+  const SUB_CACHE_KEY = 'webcat_sub_cache';
+
+  function readCachedSub(): SubscriptionSummary | null {
+    if (typeof window === 'undefined') return null;
+    try {
+      const raw = sessionStorage.getItem(SUB_CACHE_KEY);
+      return raw ? (JSON.parse(raw) as SubscriptionSummary) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  const initialSub = readCachedSub();
+  let subscription = $state<SubscriptionSummary | null>(initialSub);
+  let loading = $state(!initialSub);
   let error = $state<string | null>(null);
 
   $effect(() => {
@@ -18,13 +31,17 @@
     let cancelled = false;
 
     void (async () => {
-      loading = true;
+      if (!subscription) loading = true;
       error = null;
       try {
         const result = await apiRequest<SubscriptionSummary | null>('/me/subscription', {
           token: session.accessToken,
+          cacheTtlMs: 20000,
         });
-        if (!cancelled) subscription = result;
+        if (!cancelled) {
+          subscription = result;
+          if (typeof window !== 'undefined' && result) sessionStorage.setItem(SUB_CACHE_KEY, JSON.stringify(result));
+        }
       } catch (cause) {
         if (!cancelled) error = apiErrorMessage(cause);
       } finally {
@@ -56,7 +73,7 @@
       <h1 class="page__title">Langganan</h1>
       <p class="muted">Status akses, masa aktif, dan riwayat pemberian.</p>
     </div>
-    <Button href="/pricing" size="sm">Perpanjang</Button>
+    <Button href="mailto:support@webcat.id" size="sm">Perpanjang</Button>
   </header>
 
   {#if error}
@@ -105,7 +122,7 @@
     <Card>
       <p class="muted">Tidak ada langganan yang tercatat untuk akun ini.</p>
       <div class="actions">
-        <Button href="/pricing">Lihat paket</Button>
+        <Button href="mailto:support@webcat.id">Hubungi admin</Button>
       </div>
     </Card>
   {/if}

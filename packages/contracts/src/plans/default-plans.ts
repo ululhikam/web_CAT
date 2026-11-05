@@ -7,8 +7,8 @@ import type { Plan } from './index';
  * Sumber kebenaran tetap database (admin bisa mengubah harga tanpa deploy).
  * Konstanta ini dipakai oleh:
  *   - API (`PlansService`) sebagai fallback, dan
- *   - web (`/pricing` +page.server.ts) agar halaman tetap menampilkan paket
- *     saat API gagal sesaat.
+ *   - web (halaman admin paket) agar daftar tetap tampil saat API gagal
+ *     sesaat.
  *
  * Semua nominal dalam Rupiah penuh (bukan sen).
  */

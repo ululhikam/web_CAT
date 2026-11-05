@@ -40,6 +40,8 @@ export interface RequestOptions {
   /** Cegah loop refresh untuk endpoint /auth/*. */
   skipRefresh?: boolean;
   signal?: AbortSignal;
+  /** Durasi cache dalam milidetik (khusus GET). */
+  cacheTtlMs?: number;
 }
 
 /** Basis relatif: browser memakai proxy/rewrite, SSR memakai origin sendiri. */
@@ -47,9 +49,35 @@ const BASE = '/api/v1';
 
 let refreshPromise: Promise<string | null> | null = null;
 let onTokenRefreshed: ((token: string) => void) | null = null;
+let tokenGetter: (() => string | null) | null = null;
+let restoreWaiter: (() => Promise<void>) | null = null;
+
+// Cache in-memory dan deduplikasi in-flight untuk mempercepat load data
+const inFlightRequests = new Map<string, Promise<unknown>>();
+const memoryCache = new Map<string, { data: unknown; expiresAt: number }>();
+
+export function apiClearCache(pathPrefix?: string): void {
+  if (!pathPrefix) {
+    memoryCache.clear();
+    return;
+  }
+  for (const key of memoryCache.keys()) {
+    if (key.startsWith(pathPrefix)) {
+      memoryCache.delete(key);
+    }
+  }
+}
 
 export function setTokenRefreshListener(listener: ((token: string) => void) | null): void {
   onTokenRefreshed = listener;
+}
+
+export function setTokenGetter(getter: (() => string | null) | null): void {
+  tokenGetter = getter;
+}
+
+export function setRestoreWaiter(waiter: (() => Promise<void>) | null): void {
+  restoreWaiter = waiter;
 }
 
 async function refreshAccessToken(doFetch: typeof fetch): Promise<string | null> {
@@ -78,27 +106,103 @@ async function refreshAccessToken(doFetch: typeof fetch): Promise<string | null>
 }
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const method = options.method ?? 'GET';
+  const isGet = method === 'GET';
+
+  // Otomatis bersihkan cache bila melakukan mutasi
+  if (!isGet) {
+    apiClearCache();
+  }
+
+  // Selesaikan token otorisasi secara otomatis bila belum dipasok
+  let token = options.token;
+  if (token === undefined && tokenGetter) {
+    token = tokenGetter();
+    if (!token && restoreWaiter && !options.skipRefresh && typeof window !== 'undefined') {
+      await restoreWaiter().catch(() => {});
+      token = tokenGetter();
+    }
+  }
+
+  const cacheKey = `${path}::${token ?? ''}`;
+  const effectiveTtl = options.cacheTtlMs !== undefined ? options.cacheTtlMs : isGet ? 15000 : 0;
+
+  // 1. Cek memory cache (Stale-While-Revalidate pattern)
+  if (isGet && effectiveTtl > 0) {
+    const cached = memoryCache.get(cacheKey);
+    if (cached) {
+      const now = Date.now();
+      // Jika data masih segar, langsung kembalikan (0ms latency)
+      if (cached.expiresAt > now) {
+        return cached.data as T;
+      }
+      // Jika data sedikit basi (< 60 detik kedaluwarsa), kembalikan data instan
+      // dan jalankan revalidasi di latar belakang
+      if (now - cached.expiresAt < 60000 && !inFlightRequests.has(cacheKey)) {
+        void (async () => {
+          try {
+            const fresh = await executeRequest<T>(path, method, token, options);
+            memoryCache.set(cacheKey, { data: fresh, expiresAt: Date.now() + effectiveTtl });
+          } catch {
+            // Abaikan kegagalan revalidasi di latar belakang
+          }
+        })();
+        return cached.data as T;
+      }
+    }
+  }
+
+  // 2. Cek in-flight deduplication (cegah multiple request identik bersamaan)
+  if (isGet && inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey) as Promise<T>;
+  }
+
+  const promise = executeRequest<T>(path, method, token, options).then((data) => {
+    if (isGet && effectiveTtl > 0) {
+      memoryCache.set(cacheKey, { data, expiresAt: Date.now() + effectiveTtl });
+    }
+    return data;
+  });
+
+  if (isGet) {
+    inFlightRequests.set(cacheKey, promise);
+    promise.finally(() => {
+      inFlightRequests.delete(cacheKey);
+    });
+  }
+
+  return promise;
+}
+
+async function executeRequest<T>(
+  path: string,
+  method: string,
+  token: string | null | undefined,
+  options: RequestOptions,
+): Promise<T> {
   const doFetch = options.fetchImpl ?? fetch;
   const url = path.startsWith('http') ? path : `${BASE}${path}`;
 
-  const send = (token: string | null) =>
+  const send = (t: string | null | undefined) =>
     doFetch(url, {
-      method: options.method ?? 'GET',
+      method,
       credentials: 'include',
       headers: {
         accept: 'application/json',
         ...(options.body === undefined ? {} : { 'content-type': 'application/json' }),
-        ...(token ? { authorization: `Bearer ${token}` } : {}),
+        ...(t ? { authorization: `Bearer ${t}` } : {}),
       },
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
       signal: options.signal,
     });
 
-  let response = await send(options.token ?? null);
+  let response = await send(token);
 
-  if (response.status === 401 && !options.skipRefresh && options.token) {
+  if (response.status === 401 && !options.skipRefresh) {
     const fresh = await refreshAccessToken(doFetch);
-    if (fresh) response = await send(fresh);
+    if (fresh) {
+      response = await send(fresh);
+    }
   }
 
   const text = await response.text();
@@ -136,6 +240,7 @@ export async function apiUpload<T>(
   form: FormData,
   options: Omit<RequestOptions, 'body'> = {},
 ): Promise<T> {
+  apiClearCache();
   const doFetch = options.fetchImpl ?? fetch;
   const url = path.startsWith('http') ? path : `${BASE}${path}`;
 

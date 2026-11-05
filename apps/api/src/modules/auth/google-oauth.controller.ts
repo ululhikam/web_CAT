@@ -87,7 +87,17 @@ export class GoogleOAuthController {
 
       setRefreshCookie(res, this.config, tokens.refreshToken);
 
-      const target = new URL('/dashboard', this.config.value.APP_URL);
+      /**
+       * Tujuan pasca-login mengikuti role, sama seperti login password:
+       * peserta → /dashboard, ADMIN → /admin, SUPER_ADMIN → /super-admin.
+       */
+      const home =
+        tokens.user.role === 'SUPER_ADMIN'
+          ? '/super-admin'
+          : tokens.user.role === 'ADMIN'
+            ? '/admin'
+            : '/dashboard';
+      const target = new URL(home, this.config.value.APP_URL);
       target.searchParams.set('oauth', 'success');
       res.redirect(302, target.toString());
     } catch (error) {

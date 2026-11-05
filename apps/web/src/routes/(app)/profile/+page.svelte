@@ -13,11 +13,11 @@
   import type { AdminUserSummary, AvatarUploadResponse, MessageResult } from '@webcat/contracts';
 
   let profile = $state<AdminUserSummary | null>(null);
-  let loading = $state(true);
+  let loading = $state(!session.user);
   let loadError = $state<string | null>(null);
 
-  let fullName = $state('');
-  let phone = $state('');
+  let fullName = $state(session.user?.fullName ?? '');
+  let phone = $state(session.user?.phone ?? '');
   let saving = $state(false);
   let saveError = $state<string | null>(null);
   let saveNotice = $state<string | null>(null);
@@ -34,7 +34,7 @@
   let avatarNotice = $state<string | null>(null);
 
   async function load() {
-    loading = true;
+    if (!profile && !session.user) loading = true;
     loadError = null;
     try {
       profile = await apiRequest<AdminUserSummary>('/users/me', { token: session.accessToken });

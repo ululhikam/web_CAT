@@ -28,12 +28,18 @@ function slugify(value: string): string {
 
 @Injectable()
 export class CategoriesService {
+  private listCache: { key: string; data: CategoryNode[]; expiresAt: number } | null = null;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
   async list(query: CategoryListQuery): Promise<CategoryNode[]> {
+    const cacheKey = query.includeEmpty ? 'all' : 'non-empty';
+    if (this.listCache && this.listCache.key === cacheKey && this.listCache.expiresAt > Date.now()) {
+      return this.listCache.data;
+    }
     const [categories, counts] = await Promise.all([
       this.prisma.category.findMany({
         orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
@@ -97,10 +103,12 @@ export class CategoriesService {
       for (const node of list) sortNodes(node.children);
     };
     sortNodes(roots);
+    this.listCache = { key: cacheKey, data: roots, expiresAt: Date.now() + 30000 };
     return roots;
   }
 
   async create(input: CategoryCreateInput, actor: Actor): Promise<CategoryNode> {
+    this.listCache = null;
     const slug = input.slug ?? slugify(input.name);
     if (!slug) {
       throw new ConflictException({
@@ -155,6 +163,7 @@ export class CategoriesService {
   }
 
   async update(id: string, input: CategoryUpdateInput, actor: Actor): Promise<CategoryNode> {
+    this.listCache = null;
     const current = await this.requireById(id);
     const parent =
       input.parentId === undefined
@@ -233,6 +242,7 @@ export class CategoriesService {
   }
 
   async remove(id: string, actor: Actor): Promise<CategoryDeleteResult> {
+    this.listCache = null;
     const current = await this.requireById(id);
     const children = await this.prisma.category.count({ where: { parentId: id } });
     if (children > 0) {

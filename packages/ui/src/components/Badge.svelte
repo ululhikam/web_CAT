@@ -45,35 +45,39 @@
   }
 
   .badge--neutral {
-    background: var(--color-surface-muted);
-    color: var(--color-text-muted);
-    border-color: var(--color-border);
+    background: var(--neutral-100);
+    color: var(--neutral-700);
+    border-color: var(--neutral-200);
   }
 
   .badge--brand {
-    background: var(--color-primary-soft);
-    color: var(--color-primary);
+    background: var(--brand-50);
+    color: var(--brand-700);
     border-color: var(--brand-200);
   }
 
   .badge--success {
-    background: var(--color-success-soft);
-    color: var(--color-success);
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
   }
 
   .badge--warning {
-    background: var(--color-warning-soft);
-    color: var(--color-warning);
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
   }
 
   .badge--danger {
-    background: var(--color-danger-soft);
-    color: var(--color-danger);
+    background: #fff1f2;
+    color: #9f1239;
+    border-color: #fecdd3;
   }
 
   .badge--info {
-    background: var(--color-info-soft);
-    color: var(--color-info);
+    background: #f0f9ff;
+    color: #0369a1;
+    border-color: #bae6fd;
   }
 
   .badge--solid {

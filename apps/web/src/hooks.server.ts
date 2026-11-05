@@ -25,6 +25,7 @@ const PROTECTED_PREFIXES = [
   '/profile',
   '/devices',
   '/admin',
+  '/super-admin',
 ] as const;
 
 function isProtected(pathname: string): boolean {

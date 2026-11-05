@@ -150,6 +150,9 @@ export interface ImportJobStats {
 
 export interface ImportJobView {
   id: string;
+  /** Admin yang membuat job; ADMIN hanya melihat job miliknya sendiri. */
+  adminId: string;
+  adminEmail: string | null;
   sourceKind: ImportSourceKind;
   status: ImportJobStatus;
   originalName: string;

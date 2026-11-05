@@ -10,15 +10,19 @@ import type { ImportSettings, ParsedFile, ParsedRow } from './imports.types';
 
 /* ------------------------------------------------------------------ regexes */
 
-const NUMBERED_START = /^\s*(\d{1,3})\s*[.)]\s+(.*)$/;
-const OPTION_START = /^\s*\**([A-Ea-e])\**\s*[.)]\s+(.*)$/;
+const NUMBERED_START = /^\s*(?:\*\*)?\(?(\d{1,3})\s*[.)\]]\s*(.+)$/;
+const OPTION_START = /^\s*\**([A-Ea-e])\**\s*[.)]\s*(.+)$/;
 const ANSWER_LINE =
-  /^\s*(?:jawaban|kunci(?:\s+jawaban)?)\s*[:=]\s*\**\s*([A-Ea-e](?:\s*[,/]\s*[A-Ea-e])*)\s*\**\s*$/i;
-const EXPLANATION_START = /^\s*(?:pembahasan|penjelasan)\s*[:=]\s*(.*)$/i;
+  /^\s*\**\s*(?:jawaban|kunci(?:\s+jawaban)?|answer|ans)\s*\**\s*[:=]\s*\**\s*([A-Ea-e](?:\s*[,/]\s*[A-Ea-e])*)\s*\**\s*$/i;
+const EXPLANATION_START =
+  /^\s*\**\s*(?:pembahasan|penjelasan|explanation|solution)\s*\**\s*[:=]\s*(.*)$/i;
 const SUBTEST_HEADING =
-  /^\s*(?:sub\s*tes|bagian|tes)?\s*[:-]?\s*(KECERDASAN|KEPRIBADIAN|KECERMATAN|PAS+HAND|TPA|TPK)\s*$/i;
-const ANSWER_KEY_BLOCK = /^\s*(?:kunci\s+jawaban|kunci)\s*:?\s*$/i;
+  /^\s*\**\s*(?:sub\s*tes|bagian|tes)?\s*[:-]?\s*(KECERDASAN|KEPRIBADIAN|KECERMATAN|PAS+HAND|TPA|TPK)\s*\**\s*$/i;
+const ANSWER_KEY_BLOCK =
+  /^\s*\**\s*(?:kunci\s+jawaban|kunci(?:\s+jawaban)?|answer\s+key)\s*\**\s*[:=]?\s*(.*)$/i;
 const IMAGE_TOKEN = /\[\[IMG:(\d+)\]\]/g;
+const OL_START = /^\s*\[\[OL:(\d+):(\d+)\]\]\s*(.*)$/;
+const BULLET_START = /^\s*\[\[BUL\]\]\s*(.*)$/;
 
 const SUBTEST_FROM_HEADING: Record<string, SubtestCode> = {
   KECERDASAN: 'KECERDASAN',
@@ -103,6 +107,10 @@ export interface DocParseInput {
  * Heuristik berlapis (§10.4B): nomor soal, heading subtes, kunci jawaban
  * inline, dan blok kunci di akhir dokumen. Token `[[IMG:n]]` (DOCX) dipakai
  * untuk menempatkan gambar relatif terhadap stem/opsi.
+ *
+ * Dua bentuk yang umum di dokumen asli juga ditangani:
+ * - daftar bernomor otomatis Word (`[[OL:n]]`, tanpa angka literal), dan
+ * - beberapa opsi pada satu baris (`A. 3   B. 4   C. 5   D. 6`).
  */
 export function segmentLines(lines: SourceLine[]): {
   blocks: RawBlock[];
@@ -127,17 +135,43 @@ export function segmentLines(lines: SourceLine[]): {
     }
   };
 
+  const startBlock = (
+    text: string,
+    number: number | undefined,
+    line: SourceLine,
+    tokens: number[],
+  ) => {
+    flush();
+    rowNumber += 1;
+    current = {
+      rowNumber,
+      page: line.page,
+      number,
+      heading,
+      lines: [text],
+      images: [],
+      optionPositions: [],
+      yMin: line.y,
+      yMax: line.y,
+    };
+    tokens.forEach((index) => attachImage(current!, index));
+  };
+
   for (const line of lines) {
+    // `current` hanya diubah di dalam closure, sehingga TypeScript
+    // mempersempit tipenya menjadi `null` di alur utama; cast ini menjaga tipe
+    // union yang sebenarnya.
+    const block = current as RawBlock | null;
     const tokens = [...line.text.matchAll(IMAGE_TOKEN)].map((match) => Number(match[1]));
-    const raw = line.text
+    let raw = line.text
       .replace(IMAGE_TOKEN, ' ')
       .replace(/\u00a0/g, ' ')
       .replace(/[ \t]+/g, ' ')
-      .trimEnd();
+      .trim();
 
-    if (!raw.trim()) {
+    if (!raw) {
       // Baris berisi gambar saja menempel ke blok aktif.
-      if (current) tokens.forEach((index) => attachImage(current!, index));
+      if (block) tokens.forEach((index) => attachImage(block, index));
       continue;
     }
 
@@ -145,14 +179,74 @@ export function segmentLines(lines: SourceLine[]): {
     if (headingMatch) {
       flush();
       inKeySection = false;
-      heading = SUBTEST_FROM_HEADING[headingMatch[1]!.toUpperCase().replace(/\s+/g, '')];
+      heading = SUBTEST_FROM_HEADING[headingMatch[1]!.toUpperCase().replace(/[^A-Z]/g, '')];
       continue;
     }
 
-    if (ANSWER_KEY_BLOCK.test(raw)) {
-      flush();
-      inKeySection = true;
+    // Daftar bernomor otomatis dari Word: angkanya tidak ada di teks.
+    //
+    // Mammoth mengubah daftar berurutan menjadi `<ol>` tanpa angka dan kadang
+    // menggabungkan daftar soal dengan daftar pilihan jawaban menjadi satu
+    // `<ol>`. Karena itu setiap butir diklasifikasikan dari bentuk isinya.
+    const ol = OL_START.exec(raw);
+    if (ol) {
+      const content = (ol[3] ?? '').trim();
+      if (!content) continue;
+
+      const looksLikeOption = OPTION_START.exec(content);
+      const treatAsOption =
+        block !== null &&
+        block.optionPositions.length < 5 &&
+        content.length <= 40 &&
+        !/[?]$/.test(content);
+
+      if (treatAsOption && block) {
+        if (looksLikeOption) {
+          block.lines.push(content);
+          block.optionPositions.push({
+            label: looksLikeOption[1]!.toUpperCase(),
+            y: line.y,
+          });
+        } else {
+          const label = String.fromCharCode(65 + block.optionPositions.length);
+          block.lines.push(`${label}. ${content}`);
+          block.optionPositions.push({ label, y: line.y });
+        }
+        if (line.y !== undefined) {
+          block.yMin = block.yMin === undefined ? line.y : Math.min(block.yMin, line.y);
+          block.yMax = block.yMax === undefined ? line.y : Math.max(block.yMax, line.y);
+        }
+        tokens.forEach((token) => attachImage(block, token));
+        continue;
+      }
+
+      startBlock(content, Number(ol[2]), line, tokens);
       continue;
+    }
+
+    // Butir daftar tanpa nomor: hampir selalu opsi atau lanjutan stem.
+    const bullet = BULLET_START.exec(raw);
+    if (bullet) {
+      const content = (bullet[1] ?? '').trim();
+      if (content && block) {
+        raw = content;
+      } else {
+        continue;
+      }
+    }
+
+    const keyMatch = ANSWER_KEY_BLOCK.exec(raw);
+    if (keyMatch) {
+      const inline = (keyMatch[1] ?? '').trim();
+      const entries = inline ? parseKeyLine(inline) : [];
+      // "Kunci: C" adalah jawaban soal aktif, bukan awal blok kunci.
+      const isKeyHeader = !inline || /^\s*\d{1,3}\s*[.)\-:=]/.test(inline) || entries.length > 0;
+      if (isKeyHeader) {
+        flush();
+        inKeySection = true;
+        if (entries.length > 0) keyEntries.push(...entries);
+        continue;
+      }
     }
 
     if (inKeySection) {
@@ -165,39 +259,37 @@ export function segmentLines(lines: SourceLine[]): {
       if (raw.length < 60) inKeySection = false;
     }
 
-    const numbered = NUMBERED_START.exec(raw);
-    if (numbered && isPlausibleQuestionStart(raw)) {
-      flush();
-      rowNumber += 1;
-      current = {
-        rowNumber,
-        page: line.page,
-        number: Number(numbered[1]),
-        heading,
-        lines: [numbered[2] ?? ''],
-        images: [],
-        optionPositions: [],
-        yMin: line.y,
-        yMax: line.y,
-      };
-      tokens.forEach((index) => attachImage(current!, index));
-      continue;
+    const pieces = splitInlineOptions(raw);
+
+    // Opsi hasil pemecahan baris harus menempel ke blok yang baru dimulai pada
+    // baris yang sama, bukan ke blok sebelumnya.
+    let target: RawBlock | null = block;
+
+    for (const [pieceIndex, piece] of pieces.entries()) {
+      const numbered = pieceIndex === 0 ? NUMBERED_START.exec(piece) : null;
+      if (numbered && isPlausibleQuestionStart(piece)) {
+        startBlock(numbered[2] ?? '', Number(numbered[1]), line, tokens);
+        target = current as RawBlock | null;
+        continue;
+      }
+
+      if (!target) continue;
+
+      target.lines.push(piece);
+      if (line.y !== undefined) {
+        target.yMin = target.yMin === undefined ? line.y : Math.min(target.yMin, line.y);
+        target.yMax = target.yMax === undefined ? line.y : Math.max(target.yMax, line.y);
+      }
+
+      const option = OPTION_START.exec(piece);
+      if (option) {
+        target.optionPositions.push({ label: option[1]!.toUpperCase(), y: line.y });
+      }
+
+      if (pieceIndex === pieces.length - 1) {
+        tokens.forEach((index) => attachImage(target!, index));
+      }
     }
-
-    if (!current) continue;
-
-    current.lines.push(raw);
-    if (line.y !== undefined) {
-      current.yMin = current.yMin === undefined ? line.y : Math.min(current.yMin, line.y);
-      current.yMax = current.yMax === undefined ? line.y : Math.max(current.yMax, line.y);
-    }
-
-    const option = OPTION_START.exec(raw);
-    if (option) {
-      current.optionPositions.push({ label: option[1]!.toUpperCase(), y: line.y });
-    }
-
-    tokens.forEach((index) => attachImage(current!, index));
   }
 
   flush();
@@ -205,6 +297,42 @@ export function segmentLines(lines: SourceLine[]): {
   if (blocks.length === 0) warnings.push('Tidak ada blok soal bernomor yang terdeteksi');
 
   return { blocks, keyEntries, warnings };
+}
+
+/**
+ * Pisahkan baris yang memuat beberapa opsi sekaligus, mis.
+ * `A. 3   B. 4   C. 5   D. 6` menjadi empat baris.
+ *
+ * Hanya dilakukan bila label membentuk urutan menaik mulai dari A, supaya
+ * singkatan seperti "e.g." tidak dianggap opsi.
+ */
+export function splitInlineOptions(line: string): string[] {
+  const pattern = /(?:^|[\s;,])([A-Ha-h])\s*[.)]\s+/g;
+  const matches = [...line.matchAll(pattern)];
+  if (matches.length < 2) return [line];
+
+  const labels = matches.map((match) => match[1]!.toUpperCase());
+  const ascending = labels.every(
+    (label, index) => index === 0 || label.charCodeAt(0) > labels[index - 1]!.charCodeAt(0),
+  );
+  if (!ascending) return [line];
+
+  const starts = matches.map((match) => {
+    const offset = match[0].length - match[0].trimStart().length;
+    return (match.index ?? 0) + offset;
+  });
+
+  const pieces: string[] = [];
+  const head = line.slice(0, starts[0]).trim();
+  if (head) pieces.push(head);
+
+  starts.forEach((start, index) => {
+    const end = index + 1 < starts.length ? starts[index + 1]! : line.length;
+    const piece = line.slice(start, end).trim();
+    if (piece) pieces.push(piece);
+  });
+
+  return pieces;
 }
 
 /** Token inline: gambar sebelum opsi pertama = STEM, sesudahnya = opsi terakhir. */
@@ -281,7 +409,8 @@ function assignPdfImages(blocks: RawBlock[], images: SourceImage[]): void {
     const nearest = [...target.optionPositions]
       .filter((entry) => entry.y !== undefined && entry.y <= y + tolerance)
       .sort((a, b) => (b.y ?? 0) - (a.y ?? 0))[0];
-    const label = nearest?.label ?? target.optionPositions[target.optionPositions.length - 1]?.label;
+    const label =
+      nearest?.label ?? target.optionPositions[target.optionPositions.length - 1]?.label;
     target.images.push({ index: image.index, role: 'OPTION', optionLabel: label });
   }
 }
@@ -313,8 +442,16 @@ export function parseDocBlocks(input: DocParseInput): DocParseOutput {
   const settings: ImportSettings = { ...input.settings, detectedSubtestCode };
 
   const rows: ParsedRow[] = [];
+  // Heading berlaku untuk seluruh blok soal berikutnya sampai heading baru,
+  // sehingga dokumen multi-subtes tidak memakai heading pertama untuk semua.
+  let currentHeading: SubtestCode | null = null;
   for (const block of questionBlocks) {
-    const parsed = parseQuestionBlock(block, settings, keyByNumber);
+    if (block.heading) currentHeading = block.heading;
+    const parsed = parseQuestionBlock(
+      block,
+      { ...settings, detectedSubtestCode: currentHeading },
+      keyByNumber,
+    );
     if (parsed) rows.push(parsed);
   }
 
@@ -338,9 +475,7 @@ export function parseDocBlocks(input: DocParseInput): DocParseOutput {
 function isKeyOnlyBlock(block: RawBlock): boolean {
   const meaningful = block.lines.filter((line) => line.trim().length > 0);
   if (meaningful.length === 0) return true;
-  return meaningful.every(
-    (line) => parseKeyLine(line).length > 0 && !/[a-z]{3,}/i.test(line),
-  );
+  return meaningful.every((line) => parseKeyLine(line).length > 0 && !/[a-z]{3,}/i.test(line));
 }
 
 function parseQuestionBlock(
@@ -372,11 +507,13 @@ function parseQuestionBlock(
 
     const option = OPTION_START.exec(line);
     if (option) {
+      // Word menandai kunci dengan menebalkan seluruh opsi ("**C. 5**") atau
+      // hanya labelnya ("**C**. 5").
+      const bold = /^\s*\*\*[\s\S]*\*\*\s*$/.test(line);
       options.push({
         label: option[1]!.toUpperCase(),
-        // Label opsi tebal menandakan kunci (mis. dari DOCX).
         contentText: (option[2] ?? '').replace(/\*\*/g, '').trim(),
-        isCorrect: /^\s*\*\*[A-Ea-e]\*\*/.test(line) || undefined,
+        isCorrect: bold || undefined,
       });
       explanationCollecting = false;
       continue;
@@ -410,7 +547,8 @@ function parseQuestionBlock(
   }
 
   const subtestCode = block.heading ?? settings.detectedSubtestCode ?? settings.targetSubtestCode;
-  const stageCode = settings.targetStageCode ?? (subtestCode ? STAGE_OF[subtestCode] : undefined);
+  // Stage diturunkan dari subtes agar kombinasi stage/subtes selalu valid.
+  const stageCode = subtestCode ? STAGE_OF[subtestCode] : settings.targetStageCode;
   const type = detectType({ stemText, options, settings, subtestCode });
 
   if (options.length === 0 && type !== 'LIKERT_STATEMENT' && type !== 'PASS_HAND_COLUMN') {
@@ -429,7 +567,11 @@ function parseQuestionBlock(
     warnings,
   });
 
-  const { payload, issues, warnings: builtWarnings } = buildPayload(
+  const {
+    payload,
+    issues,
+    warnings: builtWarnings,
+  } = buildPayload(
     {
       rowNumber: block.rowNumber,
       rawText: block.lines.join('\n'),
@@ -478,10 +620,16 @@ export function detectType(input: {
     likertLabels.some((text) => /tidak setuju|sangat tidak/.test(text));
   if (looksLikert) return 'LIKERT_STATEMENT';
 
-  if (/\.{3,}|…|\bmissing\b|\bberapa\b.*\?/i.test(stemText) && /\b(hilang|missing|titik-titik)\b/i.test(stemText)) {
+  if (
+    /\.{3,}|…|\bmissing\b|\bberapa\b.*\?/i.test(stemText) &&
+    /\b(hilang|missing|titik-titik)\b/i.test(stemText)
+  ) {
     return 'MISSING_ELEMENT';
   }
-  if (options.filter((option) => option.contentText).length < 2 && settings.defaultType === 'IMAGE_CHOICE') {
+  if (
+    options.filter((option) => option.contentText).length < 2 &&
+    settings.defaultType === 'IMAGE_CHOICE'
+  ) {
     return 'IMAGE_CHOICE';
   }
 

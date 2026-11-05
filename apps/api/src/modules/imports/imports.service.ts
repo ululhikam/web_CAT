@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   PayloadTooLargeException,
@@ -27,6 +28,7 @@ import {
   type ImportPreviewResponse,
   type ImportQuestionPayload,
   type ImportSourceKind,
+  type Role,
   type StageCode,
   type SubtestCode,
 } from '@webcat/contracts';
@@ -44,6 +46,7 @@ import { buildTemplateWorkbook, parseSpreadsheet } from './spreadsheet-parser';
 
 interface Actor {
   id: string;
+  role: Role;
   ip?: string | null;
   userAgent?: string | null;
 }
@@ -110,13 +113,22 @@ export class ImportsService {
     const mime = detectMime(file);
     const sourceKind = sourceKindFor(mime, file.originalname);
     if (!sourceKind) {
+      const legacyWord = file.originalname.toLowerCase().endsWith('.doc');
       throw new UnsupportedMediaTypeException({
         code: 'IMPORT_UNSUPPORTED_FORMAT',
-        message: 'Format tidak didukung. Gunakan CSV, XLSX, PDF, atau DOCX.',
+        message: legacyWord
+          ? 'Format .doc lama tidak didukung. Simpan ulang sebagai .docx lalu unggah kembali.'
+          : 'Format tidak didukung. Gunakan CSV, XLSX, PDF, atau DOCX.',
       });
     }
 
     const settings = await this.normalizeSettings(input.settings);
+    if (settings.dedupeMode === 'OVERRIDE' && actor.role !== 'SUPER_ADMIN') {
+      throw new ForbiddenException({
+        code: 'IMPORT_OVERRIDE_FORBIDDEN',
+        message: 'Hanya SUPER_ADMIN yang dapat mengizinkan impor duplikat',
+      });
+    }
     const storagePath = `imports/${actor.id}/${Date.now()}-${sanitize(file.originalname)}`;
 
     const job = await this.prisma.importJob.create({
@@ -154,10 +166,7 @@ export class ImportsService {
       for (const row of limited) {
         const payload = row.payload;
         if (payload?.stageCode && payload.subtestCode) {
-          hashByRow.set(
-            row.rowNumber,
-            computeDedupeHash(payload.stemText, payload.options),
-          );
+          hashByRow.set(row.rowNumber, computeDedupeHash(payload.stemText, payload.options));
         }
       }
       const existingByKey = await this.existingDuplicates(hashByRow, limited);
@@ -172,7 +181,7 @@ export class ImportsService {
           if (payload.categoryPath && !resolvedCategory) {
             issues.push(`Kategori "${payload.categoryPath}" tidak ditemukan`);
           }
-          payload.categoryId = resolvedCategory?.id ?? (settings.categoryId ?? null);
+          payload.categoryId = resolvedCategory?.id ?? settings.categoryId ?? null;
 
           if (issues.length > 0) status = 'INVALID';
 
@@ -186,12 +195,18 @@ export class ImportsService {
               issues.push(`Duplikat dengan baris ${firstRow} dalam berkas ini`);
             } else if (existing) {
               seen.set(key, row.rowNumber);
-              if (settings.dedupeMode === 'OVERRIDE') {
-                // Override tetap diizinkan; dicatat sebagai peringatan.
-                row.warnings.push(`Duplikat database ${existing.publicCode} — akan diimpor sebagai soal baru`);
-              } else {
+              if (settings.dedupeMode === 'SKIP') {
                 status = 'DUPLICATE';
                 issues.push(`Sudah ada di bank soal (${existing.publicCode})`);
+              } else if (settings.dedupeMode === 'WARN') {
+                // Mode WARN mengimpor duplikat tetapi memberi catatan.
+                row.warnings.push(
+                  `Duplikat database ${existing.publicCode} — tetap diimpor (mode peringatan)`,
+                );
+              } else {
+                row.warnings.push(
+                  `Duplikat database ${existing.publicCode} — diimpor sebagai soal baru (override)`,
+                );
               }
             } else {
               seen.set(key, row.rowNumber);
@@ -244,7 +259,7 @@ export class ImportsService {
         userAgent: actor.userAgent ?? null,
       });
 
-      return this.getById(job.id);
+      return this.getById(job.id, actor);
     } catch (error) {
       await this.prisma.importJob.update({
         where: { id: job.id },
@@ -269,10 +284,14 @@ export class ImportsService {
 
   // ------------------------------------------------------------------ reads
 
-  async list(query: ImportListQuery): Promise<ImportJobListResponse> {
+  async list(
+    query: ImportListQuery,
+    actor: { id: string; role: Role },
+  ): Promise<ImportJobListResponse> {
     const cursor = query.cursor ? decodeCursor<{ t: string; i: string }>(query.cursor) : null;
     const rows = await this.prisma.importJob.findMany({
       where: {
+        ...(actor.role === 'SUPER_ADMIN' ? {} : { adminId: actor.id }),
         ...(query.status ? { status: query.status } : {}),
         ...(query.sourceKind ? { sourceKind: query.sourceKind } : {}),
         ...(cursor
@@ -288,6 +307,7 @@ export class ImportsService {
             }
           : {}),
       },
+      include: { admin: { select: { email: true } } },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: query.limit + 1,
     });
@@ -304,14 +324,25 @@ export class ImportsService {
     };
   }
 
-  async getById(id: string): Promise<ImportJobView> {
-    const job = await this.prisma.importJob.findUnique({ where: { id } });
+  async getById(id: string, actor?: { id: string; role?: Role }): Promise<ImportJobView> {
+    const job = await this.prisma.importJob.findUnique({
+      where: { id },
+      include: { admin: { select: { email: true } } },
+    });
     if (!job) throw this.notFound();
+    if (actor?.role && actor.role !== 'SUPER_ADMIN' && job.adminId !== actor.id) {
+      // Jangan bocorkan keberadaan job milik admin lain.
+      throw this.notFound();
+    }
     return this.mapJob(job);
   }
 
-  async preview(id: string, query: ImportPreviewQuery): Promise<ImportPreviewResponse> {
-    const job = await this.requireJob(id);
+  async preview(
+    id: string,
+    query: ImportPreviewQuery,
+    actor: { id: string; role: Role },
+  ): Promise<ImportPreviewResponse> {
+    const job = await this.requireJob(id, actor);
     if (job.status === 'CANCELLED') {
       throw new ConflictException({
         code: 'IMPORT_JOB_STATE_INVALID',
@@ -320,9 +351,14 @@ export class ImportsService {
     }
 
     const rows = await this.prisma.importJobItem.findMany({
-      where: { jobId: id, ...(query.status ? { status: query.status } : {}) },
+      where: {
+        jobId: id,
+        ...(query.status ? { status: query.status } : {}),
+        // Cursor adalah rowNumber baris berikutnya; memakai rowNumber (bukan
+        // offset) menjaga paginasi tetap benar saat filter status aktif.
+        ...(query.cursor ? { rowNumber: { gte: query.cursor } } : {}),
+      },
       orderBy: { rowNumber: 'asc' },
-      skip: query.cursor ? query.cursor - 1 : 0,
       take: query.limit + 1,
     });
 
@@ -339,8 +375,11 @@ export class ImportsService {
     };
   }
 
-  async listErrors(id: string): Promise<Array<{ rowNumber: number | null; code: string; message: string }>> {
-    await this.requireJob(id);
+  async listErrors(
+    id: string,
+    actor: { id: string; role: Role },
+  ): Promise<Array<{ rowNumber: number | null; code: string; message: string }>> {
+    await this.requireJob(id, actor);
     const rows = await this.prisma.importJobError.findMany({
       where: { jobId: id },
       orderBy: [{ rowNumber: 'asc' }, { id: 'asc' }],
@@ -354,8 +393,8 @@ export class ImportsService {
   }
 
   /** CSV error per baris; siap diunduh admin. */
-  async errorsCsv(id: string): Promise<string> {
-    const job = await this.requireJob(id);
+  async errorsCsv(id: string, actor: { id: string; role: Role }): Promise<string> {
+    const job = await this.requireJob(id, actor);
     const items = await this.prisma.importJobItem.findMany({
       where: { jobId: id, status: { in: ['INVALID', 'DUPLICATE'] } },
       orderBy: { rowNumber: 'asc' },
@@ -401,7 +440,7 @@ export class ImportsService {
     input: { payload?: ImportQuestionPayload; skip?: boolean },
     actor: Actor,
   ): Promise<ImportItemView> {
-    const job = await this.requireJob(jobId);
+    const job = await this.requireJob(jobId, actor);
     if (!['PARSED', 'REVIEWING'].includes(job.status)) {
       throw new ConflictException({
         code: 'IMPORT_JOB_STATE_INVALID',
@@ -435,7 +474,9 @@ export class ImportsService {
       const parsed = importQuestionPayloadSchema.safeParse(payload);
       if (!parsed.success) {
         status = 'INVALID';
-        issues.push(...parsed.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`));
+        issues.push(
+          ...parsed.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`),
+        );
       } else {
         payload = parsed.data;
         const settings = (job.settings ?? {}) as unknown as ImportSettings;
@@ -472,13 +513,26 @@ export class ImportsService {
 
         if (rebuilt.issues.length === 0 && payload.stageCode && payload.subtestCode) {
           const hash = computeDedupeHash(payload.stemText, payload.options);
-          const duplicate = await this.findDuplicate(payload.stageCode, payload.subtestCode, hash, item.questionId ?? undefined);
+          const duplicate = await this.findDuplicate(
+            payload.stageCode,
+            payload.subtestCode,
+            hash,
+            item.questionId ?? undefined,
+          );
           if (duplicate) {
-            if (settings.dedupeMode === 'OVERRIDE') {
-              payload.warnings = [...payload.warnings, `Duplikat ${duplicate.publicCode} (override)`];
-            } else {
+            if (settings.dedupeMode === 'SKIP') {
               status = 'DUPLICATE';
               issues.push(`Sudah ada di bank soal (${duplicate.publicCode})`);
+            } else if (settings.dedupeMode === 'WARN') {
+              payload.warnings = [
+                ...payload.warnings,
+                `Duplikat ${duplicate.publicCode} — tetap diimpor (mode peringatan)`,
+              ];
+            } else {
+              payload.warnings = [
+                ...payload.warnings,
+                `Duplikat ${duplicate.publicCode} (override)`,
+              ];
             }
           }
         }
@@ -513,7 +567,7 @@ export class ImportsService {
   // ------------------------------------------------------------------ commit
 
   async commit(jobId: string, input: ImportCommitInput, actor: Actor): Promise<ImportCommitResult> {
-    const job = await this.requireJob(jobId);
+    const job = await this.requireJob(jobId, actor);
     if (!['PARSED', 'REVIEWING', 'COMMITTING'].includes(job.status)) {
       throw new ConflictException({
         code: 'IMPORT_JOB_STATE_INVALID',
@@ -525,6 +579,13 @@ export class ImportsService {
       ...((job.settings ?? {}) as unknown as ImportSettings),
       ...(input.dedupeMode ? { dedupeMode: input.dedupeMode } : {}),
     } as ImportSettings;
+
+    if (settings.dedupeMode === 'OVERRIDE' && actor.role !== 'SUPER_ADMIN') {
+      throw new ForbiddenException({
+        code: 'IMPORT_OVERRIDE_FORBIDDEN',
+        message: 'Hanya SUPER_ADMIN yang dapat mengizinkan impor duplikat',
+      });
+    }
 
     await this.prisma.importJob.update({
       where: { id: jobId },
@@ -573,7 +634,7 @@ export class ImportsService {
           });
           continue;
         }
-        if (item.status === 'DUPLICATE' && settings.dedupeMode !== 'OVERRIDE') {
+        if (item.status === 'DUPLICATE' && settings.dedupeMode === 'SKIP') {
           skipped += 1;
           await this.prisma.importJobItem.update({
             where: { id: item.id },
@@ -601,8 +662,7 @@ export class ImportsService {
             weight: payload.weight,
             pairGroup: payload.pairGroup ?? null,
             columnIndex: payload.columnIndex ?? null,
-            dedupeOverride:
-              settings.dedupeMode === 'OVERRIDE' && item.status === 'DUPLICATE',
+            dedupeOverride: item.status === 'DUPLICATE' && settings.dedupeMode !== 'SKIP',
             options: payload.options.map((option) => ({
               label: option.label,
               contentText: option.contentText,
@@ -720,7 +780,7 @@ export class ImportsService {
     });
 
     return {
-      job: this.mapJob(updated),
+      job: this.mapJob({ ...updated, admin: job.admin }),
       created,
       skipped,
       failed: errors.length,
@@ -729,7 +789,7 @@ export class ImportsService {
   }
 
   async cancel(jobId: string, actor: Actor): Promise<ImportJobView> {
-    const job = await this.requireJob(jobId);
+    const job = await this.requireJob(jobId, actor);
     if (['COMPLETED', 'CANCELLED'].includes(job.status)) {
       throw new ConflictException({
         code: 'IMPORT_JOB_STATE_INVALID',
@@ -752,7 +812,7 @@ export class ImportsService {
       userAgent: actor.userAgent ?? null,
     });
 
-    return this.mapJob(updated);
+    return this.mapJob({ ...updated, admin: job.admin });
   }
 
   // ------------------------------------------------------------------ parsing
@@ -834,9 +894,7 @@ export class ImportsService {
         extractorWarnings: extraction.warnings,
       });
 
-      const imageMap = new Map(
-        extraction.images.map((image) => [image.index, image]),
-      );
+      const imageMap = new Map(extraction.images.map((image) => [image.index, image]));
       await this.storeDocumentImages(imageMap, parsed.rows, imageAssets, actorId);
 
       return {
@@ -857,9 +915,7 @@ export class ImportsService {
       extractorWarnings: extraction.warnings,
     });
 
-    const imageMap = new Map(
-      extraction.images.map((image) => [image.index, image]),
-    );
+    const imageMap = new Map(extraction.images.map((image) => [image.index, image]));
     await this.storeDocumentImages(imageMap, parsed.rows, imageAssets, actorId);
 
     return {
@@ -944,7 +1000,12 @@ export class ImportsService {
     const stageCode = input.targetStageCode;
     let subtestCode = input.targetSubtestCode;
 
-    if (stageCode && subtestCode && SUBTEST_OF_STAGE_HINT[stageCode] && !SUBTEST_OF_STAGE_HINT[stageCode]!.includes(subtestCode)) {
+    if (
+      stageCode &&
+      subtestCode &&
+      SUBTEST_OF_STAGE_HINT[stageCode] &&
+      !SUBTEST_OF_STAGE_HINT[stageCode]!.includes(subtestCode)
+    ) {
       throw new UnprocessableEntityException({
         code: 'COMMON_VALIDATION_FAILED',
         message: `Subtes ${subtestCode} tidak berada di stage ${stageCode}`,
@@ -969,7 +1030,9 @@ export class ImportsService {
   }
 
   private async categoryMap(): Promise<Map<string, { id: string }>> {
-    const rows = await this.prisma.category.findMany({ select: { id: true, path: true, name: true } });
+    const rows = await this.prisma.category.findMany({
+      select: { id: true, path: true, name: true },
+    });
     const map = new Map<string, { id: string }>();
     for (const row of rows) {
       map.set(row.path.toLowerCase(), { id: row.id });
@@ -1007,7 +1070,13 @@ export class ImportsService {
             };
           }),
         },
-        select: { id: true, publicCode: true, stageCode: true, subtestCode: true, dedupeHash: true },
+        select: {
+          id: true,
+          publicCode: true,
+          stageCode: true,
+          subtestCode: true,
+          dedupeHash: true,
+        },
       });
       for (const row of found) {
         result.set(`${row.stageCode}:${row.subtestCode}:${row.dedupeHash}`, {
@@ -1074,14 +1143,23 @@ export class ImportsService {
     return stats;
   }
 
-  private async requireJob(id: string) {
-    const job = await this.prisma.importJob.findUnique({ where: { id } });
+  private async requireJob(id: string, actor?: { id: string; role?: Role }) {
+    const job = await this.prisma.importJob.findFirst({
+      where: {
+        id,
+        // ADMIN hanya boleh menyentuh job miliknya; SUPER_ADMIN melihat semua.
+        ...(actor?.role && actor.role !== 'SUPER_ADMIN' ? { adminId: actor.id } : {}),
+      },
+      include: { admin: { select: { email: true } } },
+    });
     if (!job) throw this.notFound();
     return job;
   }
 
   private mapJob(row: {
     id: string;
+    adminId: string;
+    admin?: { email: string } | null;
     sourceKind: string;
     status: string;
     originalName: string;
@@ -1096,6 +1174,8 @@ export class ImportsService {
   }): ImportJobView {
     return {
       id: row.id,
+      adminId: row.adminId,
+      adminEmail: row.admin?.email ?? null,
       sourceKind: row.sourceKind as ImportSourceKind,
       status: row.status as ImportJobView['status'],
       originalName: row.originalName,
@@ -1183,7 +1263,10 @@ function resolveCategory(
   map: Map<string, { id: string }>,
 ): { id: string } | null {
   if (!path) return null;
-  const normalized = path.trim().toLowerCase().replace(/^\/+|\/+$/g, '');
+  const normalized = path
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+|\/+$/g, '');
   return map.get(normalized) ?? map.get(normalized.split('/').pop() ?? '') ?? null;
 }
 
@@ -1203,11 +1286,17 @@ function detectMime(file: Express.Multer.File): string {
 
 function sourceKindFor(mime: string, filename: string): ImportSourceKind | null {
   if (SPREADSHEET_MIMES.includes(mime)) return 'SPREADSHEET';
-  if (mime === 'application/pdf') return 'PDF';
-  if (mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+  const lower = filename.toLowerCase();
+  // Deteksi lewat ekstensi juga: sebagian browser mengirim DOCX/PDF sebagai
+  // `application/octet-stream`.
+  if (mime === 'application/pdf' || lower.endsWith('.pdf')) return 'PDF';
+  if (
+    mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    lower.endsWith('.docx')
+  ) {
     return 'DOCX';
   }
-  if (filename.toLowerCase().endsWith('.csv')) return 'SPREADSHEET';
+  if (lower.endsWith('.csv')) return 'SPREADSHEET';
   return null;
 }
 

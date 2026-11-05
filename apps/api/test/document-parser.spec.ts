@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { detectType, parseDocBlocks, segmentLines } from '../src/modules/imports/document-parser';
+import {
+  detectType,
+  parseDocBlocks,
+  segmentLines,
+  splitInlineOptions,
+} from '../src/modules/imports/document-parser';
+import { htmlToLines } from '../src/modules/imports/docx-extractor';
 import type { ImportSettings } from '../src/modules/imports/imports.types';
 
 const settings: ImportSettings = {
@@ -146,15 +152,15 @@ describe('parseDocBlocks', () => {
 
 describe('detectType', () => {
   it('memaksa Pass Hand untuk subtes PASS_HAND', () => {
-    expect(
-      detectType({ stemText: 'x', options: [], settings, subtestCode: 'PASS_HAND' }),
-    ).toBe('PASS_HAND_COLUMN');
+    expect(detectType({ stemText: 'x', options: [], settings, subtestCode: 'PASS_HAND' })).toBe(
+      'PASS_HAND_COLUMN',
+    );
   });
 
   it('memaksa Likert untuk subtes KEPRIBADIAN', () => {
-    expect(
-      detectType({ stemText: 'x', options: [], settings, subtestCode: 'KEPRIBADIAN' }),
-    ).toBe('LIKERT_STATEMENT');
+    expect(detectType({ stemText: 'x', options: [], settings, subtestCode: 'KEPRIBADIAN' })).toBe(
+      'LIKERT_STATEMENT',
+    );
   });
 
   it('mengenali skala setuju/tidak setuju', () => {
@@ -171,5 +177,172 @@ describe('detectType', () => {
         ],
       }),
     ).toBe('LIKERT_STATEMENT');
+  });
+});
+
+describe('splitInlineOptions', () => {
+  it('memecah beberapa opsi pada satu baris', () => {
+    expect(splitInlineOptions('A. 3   B. 4   C. 5   D. 6')).toEqual([
+      'A. 3',
+      'B. 4',
+      'C. 5',
+      'D. 6',
+    ]);
+  });
+
+  it('mempertahankan stem di depan opsi', () => {
+    expect(splitInlineOptions('1. Ibu kota? A. Bandung B. Jakarta')).toEqual([
+      '1. Ibu kota?',
+      'A. Bandung',
+      'B. Jakarta',
+    ]);
+  });
+
+  it('tidak memecah kalimat biasa', () => {
+    const line = 'Jawaban yang benar adalah e. g. contoh berikut';
+    expect(splitInlineOptions(line)).toEqual([line]);
+  });
+});
+
+describe('segmentLines — daftar otomatis Word', () => {
+  it('membedakan daftar soal dan daftar opsi', () => {
+    const { blocks } = segmentLines([
+      { text: 'KECERDASAN' },
+      { text: '[[OL:1:1]]Manakah bilangan genap?' },
+      { text: '[[OL:1:2]]7' },
+      { text: '[[OL:1:3]]9' },
+      { text: '[[OL:1:4]]8' },
+      { text: '[[OL:1:5]]11' },
+      { text: 'Jawaban: C' },
+      { text: '[[OL:1:6]]Hasil dari 2 + 2?' },
+      { text: 'A. 3' },
+      { text: 'B. 4' },
+      { text: 'Jawaban: B' },
+    ]);
+
+    expect(blocks).toHaveLength(2);
+    expect(blocks[0]?.lines).toEqual([
+      'Manakah bilangan genap?',
+      'A. 7',
+      'B. 9',
+      'C. 8',
+      'D. 11',
+      'Jawaban: C',
+    ]);
+    expect(blocks[1]?.lines[0]).toBe('Hasil dari 2 + 2?');
+  });
+});
+
+describe('parseDocBlocks — dokumen asli', () => {
+  it('menggabungkan kunci dari blok kunci di akhir dokumen', () => {
+    const output = parseDocBlocks({
+      sourceKind: 'PDF',
+      pageCount: 1,
+      settings,
+      extractorWarnings: [],
+      lines: [
+        { text: 'KECERDASAN' },
+        { text: '1. Berapakah 1 + 1?' },
+        { text: 'A. 1' },
+        { text: 'B. 2' },
+        { text: '2. Berapakah 2 + 2?' },
+        { text: 'A. 3' },
+        { text: 'B. 4' },
+        { text: 'KUNCI JAWABAN' },
+        { text: '1. B   2. B' },
+      ],
+    });
+
+    expect(output.rows.map((row) => row.payload?.correctLabels)).toEqual([['B'], ['B']]);
+    expect(output.rows.every((row) => row.issues.length === 0)).toBe(true);
+  });
+
+  it('mengambil kunci dari opsi yang ditebalkan', () => {
+    const output = parseDocBlocks({
+      sourceKind: 'DOCX',
+      pageCount: 1,
+      settings,
+      extractorWarnings: [],
+      lines: [
+        { text: 'KECERDASAN' },
+        { text: '1. Hasil 9 - 4?' },
+        { text: 'A. 3' },
+        { text: 'B. 4' },
+        { text: '**C. 5**' },
+        { text: 'D. 6' },
+      ],
+    });
+
+    expect(output.rows[0]?.payload?.correctLabels).toEqual(['C']);
+    expect(output.rows[0]?.warnings).toContain(
+      'Kunci diambil dari opsi tebal (bold); periksa kembali',
+    );
+  });
+
+  it('menangani opsi yang dipisah koma dan titik pada satu baris', () => {
+    const output = parseDocBlocks({
+      sourceKind: 'PDF',
+      pageCount: 1,
+      settings,
+      extractorWarnings: [],
+      lines: [
+        { text: 'KECERDASAN' },
+        { text: '1. Ibu kota Indonesia?' },
+        { text: 'A. Bandung   B. Jakarta   C. Surabaya' },
+        { text: 'Jawaban: B' },
+      ],
+    });
+
+    expect(output.rows[0]?.payload?.options.map((option) => option.label)).toEqual(['A', 'B', 'C']);
+  });
+
+  it('menempelkan opsi satu baris ke soal yang baru dimulai', () => {
+    const output = parseDocBlocks({
+      sourceKind: 'PDF',
+      pageCount: 1,
+      settings,
+      extractorWarnings: [],
+      lines: [
+        { text: 'KECERDASAN' },
+        { text: '1. 1 + 1? A. 1 B. 2' },
+        { text: '2. 2 + 2? A. 3 B. 4' },
+      ],
+    });
+
+    expect(output.rows).toHaveLength(2);
+    expect(output.rows[0]?.payload?.stemText).toBe('1 + 1?');
+    expect(output.rows[0]?.payload?.options.map((option) => option.contentText)).toEqual([
+      '1',
+      '2',
+    ]);
+    expect(output.rows[1]?.payload?.stemText).toBe('2 + 2?');
+    expect(output.rows[1]?.payload?.options.map((option) => option.contentText)).toEqual([
+      '3',
+      '4',
+    ]);
+  });
+});
+
+describe('htmlToLines', () => {
+  it('memberi penanda pada daftar berurutan', () => {
+    const lines = htmlToLines('<ol><li>Satu</li><li>Dua</li></ol>').map((line) => line.text);
+    expect(lines).toEqual(['[[OL:1:1]]Satu', '[[OL:1:2]]Dua']);
+  });
+
+  it('memberi penanda pada daftar berbutir', () => {
+    const lines = htmlToLines('<ul><li>Satu</li></ul>').map((line) => line.text);
+    expect(lines).toEqual(['[[BUL]]Satu']);
+  });
+
+  it('mempertahankan penebalan sebagai penanda kunci', () => {
+    const lines = htmlToLines('<p>A. 3</p><p><strong>C. 5</strong></p>').map((line) => line.text);
+    expect(lines).toEqual(['A. 3', '**C. 5**']);
+  });
+
+  it('memisahkan sel tabel berparagraf menjadi baris sendiri', () => {
+    const lines = htmlToLines(
+      '<table><tr><td><p>A. 3</p></td><td><p>B. 4</p></td></tr></table>',
+    ).map((line) => line.text);
+    expect(lines).toEqual(['A. 3', 'B. 4']);
   });
 });

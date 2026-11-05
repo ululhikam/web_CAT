@@ -1,0 +1,228 @@
+/* ============================================================================
+   Panel Admin — Modern Design System
+   Sleek enterprise aesthetic with crisp tables, subtle cards, and sharp typography.
+   ========================================================================== */
+
+.adm-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 1240px;
+}
+
+.adm-page--narrow {
+  max-width: 860px;
+}
+
+/* --- Toolbar filter ------------------------------------------------------ */
+
+.adm-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: #ffffff;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.adm-input,
+.adm-select {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: var(--neutral-900);
+  font-size: var(--text-sm);
+  min-height: 2.45rem;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.adm-input::placeholder {
+  color: var(--neutral-400);
+}
+
+.adm-input:hover,
+.adm-select:hover {
+  border-color: var(--neutral-400);
+}
+
+.adm-input:focus,
+.adm-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.adm-input--grow {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.adm-select--full {
+  width: 100%;
+  min-height: 2.5rem;
+}
+
+/* --- Panel & tabel ------------------------------------------------------- */
+
+.adm-panel {
+  background: #ffffff;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.adm-scroll {
+  overflow-x: auto;
+}
+
+.adm-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+}
+
+.adm-table th,
+.adm-table td {
+  padding: 0.85rem var(--space-4);
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.adm-table thead th {
+  background: #f8fafc;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--neutral-500);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.adm-table tbody tr {
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.adm-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.adm-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.adm-table td.adm-nowrap,
+.adm-nowrap {
+  white-space: nowrap;
+}
+
+/* --- Potongan isi yang sering dipakai ----------------------------------- */
+
+.adm-center {
+  display: grid;
+  place-items: center;
+  padding-block: var(--space-12);
+}
+
+.adm-more {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--space-4);
+}
+
+.adm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.adm-muted {
+  color: var(--neutral-500);
+}
+
+.adm-sub {
+  font-size: var(--text-xs);
+  color: var(--neutral-500);
+}
+
+.adm-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+
+.adm-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.adm-grid-2 {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 720px) {
+  .adm-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- Chip kecil untuk metadata ------------------------------------------ */
+
+.adm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.adm-chip {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-600);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* --- Tombol teks di dalam tabel ----------------------------------------- */
+
+.adm-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--color-primary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.adm-link:hover {
+  text-decoration: underline;
+  color: var(--brand-700);
+}
+
+.adm-link--danger {
+  color: var(--color-danger);
+}
+
+.adm-link--danger:hover {
+  color: #9f1239;
+}
+
+.adm-link:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: none;
+}

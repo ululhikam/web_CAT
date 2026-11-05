@@ -44,7 +44,12 @@ import { zodPipe } from '../../core/http/validation.pipe';
 import { ImportsService } from './imports.service';
 
 function actor(user: AuthPrincipal, req: Request) {
-  return { id: user.id, ip: req.ip ?? null, userAgent: req.headers['user-agent'] ?? null };
+  return {
+    id: user.id,
+    role: user.role,
+    ip: req.ip ?? null,
+    userAgent: req.headers['user-agent'] ?? null,
+  };
 }
 
 /**
@@ -52,6 +57,9 @@ function actor(user: AuthPrincipal, req: Request) {
  *
  * Semua endpoint admin-only dan wajib permission `questions.import`.
  * Hasil impor maksimum berstatus REVIEW — tidak ada auto-publish.
+ *
+ * ADMIN hanya melihat job impor miliknya sendiri; SUPER_ADMIN melihat semua
+ * job beserta admin pembuatnya.
  */
 @ApiTags('Admin — Imports')
 @ApiBearerAuth()
@@ -62,8 +70,11 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get()
-  list(@Query(zodPipe(importListQuerySchema)) query: ImportListQuery): Promise<ImportJobListResponse> {
-    return this.imports.list(query);
+  list(
+    @Query(zodPipe(importListQuerySchema)) query: ImportListQuery,
+    @AuthUser() user: AuthPrincipal,
+  ): Promise<ImportJobListResponse> {
+    return this.imports.list(query, user);
   }
 
   @RequirePermissions('questions.import')
@@ -119,8 +130,8 @@ export class ImportsController {
 
   @RequirePermissions('questions.import')
   @Get(':id')
-  detail(@Param('id') id: string): Promise<ImportJobView> {
-    return this.imports.getById(id);
+  detail(@Param('id') id: string, @AuthUser() user: AuthPrincipal): Promise<ImportJobView> {
+    return this.imports.getById(id, user);
   }
 
   @RequirePermissions('questions.import')
@@ -128,8 +139,9 @@ export class ImportsController {
   preview(
     @Param('id') id: string,
     @Query(zodPipe(importPreviewQuerySchema)) query: ImportPreviewQuery,
+    @AuthUser() user: AuthPrincipal,
   ): Promise<ImportPreviewResponse> {
-    return this.imports.preview(id, query);
+    return this.imports.preview(id, query, user);
   }
 
   @RequirePermissions('questions.import')
@@ -138,8 +150,9 @@ export class ImportsController {
   previewPost(
     @Param('id') id: string,
     @Body(zodPipe(importPreviewQuerySchema)) body: ImportPreviewQuery,
+    @AuthUser() user: AuthPrincipal,
   ): Promise<ImportPreviewResponse> {
-    return this.imports.preview(id, body);
+    return this.imports.preview(id, body, user);
   }
 
   @RequirePermissions('questions.import')
@@ -181,14 +194,19 @@ export class ImportsController {
   @Get(':id/errors')
   errors(
     @Param('id') id: string,
+    @AuthUser() user: AuthPrincipal,
   ): Promise<Array<{ rowNumber: number | null; code: string; message: string }>> {
-    return this.imports.listErrors(id);
+    return this.imports.listErrors(id, user);
   }
 
   @RequirePermissions('questions.import')
   @Get(':id/errors.csv')
-  async errorsCsv(@Param('id') id: string, @Res() res: Response): Promise<void> {
-    const csv = await this.imports.errorsCsv(id);
+  async errorsCsv(
+    @Param('id') id: string,
+    @AuthUser() user: AuthPrincipal,
+    @Res() res: Response,
+  ): Promise<void> {
+    const csv = await this.imports.errorsCsv(id, user);
     res.setHeader('content-type', 'text/csv; charset=utf-8');
     res.setHeader('content-disposition', `attachment; filename="import-${id}-errors.csv"`);
     res.end(`\ufeff${csv}`);

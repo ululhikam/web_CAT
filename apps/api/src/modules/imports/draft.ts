@@ -51,9 +51,18 @@ export function buildPayload(draft: QuestionDraft, settings: ImportSettings): Bu
   const warnings = [...draft.warnings];
   const issues: string[] = [];
 
-  const subtestCode = draft.subtestCode ?? settings.targetSubtestCode ?? settings.detectedSubtestCode;
-  const stageCode = draft.stageCode ?? settings.targetStageCode ??
-    (subtestCode ? SUBTEST_STAGE[subtestCode] : undefined);
+  const subtestCode =
+    settings.autoDetect === false
+      ? (settings.targetSubtestCode ?? draft.subtestCode ?? settings.detectedSubtestCode)
+      : (draft.subtestCode ?? settings.targetSubtestCode ?? settings.detectedSubtestCode);
+  const stageCode =
+    settings.autoDetect === false
+      ? (settings.targetStageCode ??
+        draft.stageCode ??
+        (subtestCode ? SUBTEST_STAGE[subtestCode] : undefined))
+      : (draft.stageCode ??
+        settings.targetStageCode ??
+        (subtestCode ? SUBTEST_STAGE[subtestCode] : undefined));
 
   if (!subtestCode) issues.push('Subtes belum ditentukan');
   if (!stageCode) issues.push('Stage belum ditentukan');

@@ -1,65 +1,75 @@
 /* ============================================================================
-   Web CAT — Design token
-   Satu sumber kebenaran untuk warna, tipografi, jarak, radius, dan bayangan.
-   Komponen TIDAK boleh memakai nilai warna hardcode; selalu var(--...).
+   Web CAT — Modern Design Tokens
+   Ultra-premium, authoritative, clean aesthetic for CAT Police & Civil Exam.
    ========================================================================== */
 
 :root {
-  /* --- Merek ------------------------------------------------------------ */
-  --brand-50: #eef4ff;
-  --brand-100: #dbe6ff;
-  --brand-200: #bccfff;
-  --brand-300: #94afff;
-  --brand-400: #6b87fb;
-  --brand-500: #4a63f0;
-  --brand-600: #3846d6;
-  --brand-700: #2d38ac;
-  --brand-800: #262f88;
-  --brand-900: #232c6c;
+  /* --- Merek / Brand (Cobalt Navy & Electric Blue) ------------------------- */
+  --brand-50: #eff6ff;
+  --brand-100: #dbeafe;
+  --brand-200: #bfdbfe;
+  --brand-300: #93c5fd;
+  --brand-400: #60a5fa;
+  --brand-500: #3b82f6;
+  --brand-600: #2563eb;
+  --brand-700: #1d4ed8;
+  --brand-800: #1e40af;
+  --brand-900: #0f172a;
+  --brand-950: #020617;
 
-  /* Aksen untuk status kelulusan / penekanan */
-  --accent-500: #06b981;
-  --accent-600: #059669;
+  /* --- Aksen Khusus -------------------------------------------------------- */
+  --accent-emerald: #10b981;
+  --accent-emerald-dark: #059669;
+  --accent-purple: #8b5cf6;
+  --accent-purple-dark: #6d28d9;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
 
-  /* --- Netral ----------------------------------------------------------- */
+  /* --- Netral (Modern Slate Precision) ----------------------------------- */
   --neutral-0: #ffffff;
-  --neutral-25: #fbfcfe;
-  --neutral-50: #f6f8fb;
-  --neutral-100: #eef1f6;
-  --neutral-200: #dfe4ec;
-  --neutral-300: #c6cedb;
-  --neutral-400: #97a2b5;
-  --neutral-500: #6b7688;
-  --neutral-600: #4d5768;
-  --neutral-700: #38414f;
-  --neutral-800: #252c37;
-  --neutral-900: #151a22;
+  --neutral-25: #fafbfc;
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
+  --neutral-950: #020617;
 
   /* --- Semantik --------------------------------------------------------- */
   --color-bg: var(--neutral-50);
   --color-surface: var(--neutral-0);
-  --color-surface-muted: var(--neutral-25);
+  --color-surface-muted: var(--neutral-100);
   --color-border: var(--neutral-200);
   --color-border-strong: var(--neutral-300);
   --color-text: var(--neutral-900);
   --color-text-muted: var(--neutral-500);
   --color-text-subtle: var(--neutral-400);
-  --color-primary: var(--brand-600);
-  --color-primary-hover: var(--brand-700);
-  --color-primary-soft: var(--brand-50);
-  --color-success: var(--accent-600);
-  --color-success-soft: #e7faf2;
-  --color-warning: #b45309;
-  --color-warning-soft: #fff7ed;
-  --color-danger: #c0332b;
-  --color-danger-soft: #fef2f2;
-  --color-info: #0e7490;
-  --color-info-soft: #ecfeff;
+
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-soft: #eff6ff;
+
+  --color-success: #059669;
+  --color-success-soft: #ecfdf5;
+
+  --color-warning: #d97706;
+  --color-warning-soft: #fffbeb;
+
+  --color-danger: #e11d48;
+  --color-danger-soft: #fff1f2;
+
+  --color-info: #0284c7;
+  --color-info-soft: #f0f9ff;
 
   /* --- Tipografi -------------------------------------------------------- */
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+    'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Code', Consolas, monospace;
 
   --text-xs: 0.75rem;
@@ -90,61 +100,35 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-  /* --- Radius ----------------------------------------------------------- */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-full: 999px;
+  /* --- Radius (Smooth Modern Curves) ------------------------------------ */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
 
-  /* --- Bayangan --------------------------------------------------------- */
-  --shadow-xs: 0 1px 2px rgba(21, 26, 34, 0.05);
-  --shadow-sm: 0 1px 3px rgba(21, 26, 34, 0.08), 0 1px 2px rgba(21, 26, 34, 0.04);
-  --shadow-md: 0 4px 12px rgba(21, 26, 34, 0.08), 0 1px 3px rgba(21, 26, 34, 0.05);
-  --shadow-lg: 0 12px 32px rgba(21, 26, 34, 0.12), 0 2px 8px rgba(21, 26, 34, 0.06);
-  --shadow-ring: 0 0 0 3px rgba(74, 99, 240, 0.28);
+  /* --- Bayangan (Layered Ambient Diffuse) -------------------------------- */
+  --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.04);
+  --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.07), 0 2px 4px -2px rgb(15 23 42 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.08), 0 4px 6px -4px rgb(15 23 42 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.06);
+  --shadow-ring: 0 0 0 3px rgba(37, 99, 235, 0.22);
 
   /* --- Transisi --------------------------------------------------------- */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-fast: 120ms;
-  --duration-normal: 200ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
 
   /* --- Layout ----------------------------------------------------------- */
   --container-sm: 640px;
   --container-md: 860px;
-  --container-lg: 1120px;
-  --container-xl: 1280px;
-  --header-height: 64px;
+  --container-lg: 1140px;
+  --container-xl: 1320px;
+  --header-height: 68px;
 
   --z-header: 40;
   --z-overlay: 60;
+  --z-modal: 70;
   --z-toast: 80;
-}
-
-/* Mode gelap mengikuti preferensi sistem; tetap kontras AA. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0d1117;
-    --color-surface: #161b23;
-    --color-surface-muted: #1b212b;
-    --color-border: #2a323d;
-    --color-border-strong: #3a4451;
-    --color-text: #eef1f6;
-    --color-text-muted: #a2adbd;
-    --color-text-subtle: #7d8798;
-    --color-primary: var(--brand-400);
-    --color-primary-hover: var(--brand-300);
-    --color-primary-soft: #1d2440;
-    --color-success: #34d399;
-    --color-success-soft: #10301f;
-    --color-warning: #fbbf24;
-    --color-warning-soft: #33260c;
-    --color-danger: #f87171;
-    --color-danger-soft: #3a1616;
-    --color-info: #22d3ee;
-    --color-info-soft: #0c2b33;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
-  }
 }

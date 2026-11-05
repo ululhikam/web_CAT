@@ -1,4 +1,4 @@
-import {
+﻿import {
   ConflictException,
   Injectable,
   NotFoundException,
@@ -188,7 +188,12 @@ export class QuestionsService {
     };
   }
 
+  private statsCache: { data: QuestionStatsResponse; expiresAt: number } | null = null;
+
   async stats(): Promise<QuestionStatsResponse> {
+    if (this.statsCache && this.statsCache.expiresAt > Date.now()) {
+      return this.statsCache.data;
+    }
     const [subtests, groups] = await Promise.all([
       this.prisma.subtest.findMany({ include: { stage: true } }),
       this.prisma.question.groupBy({
@@ -1185,6 +1190,7 @@ export class QuestionsService {
       columnIndex: row.columnIndex,
       dedupeHash: row.dedupeHash,
       dedupeOverride: row.dedupeOverride,
+      sourceImportId: (row as { sourceImportId?: string | null }).sourceImportId ?? null,
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
       options,

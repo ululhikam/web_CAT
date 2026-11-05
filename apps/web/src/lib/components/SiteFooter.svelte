@@ -15,8 +15,8 @@
     <nav aria-label="Produk">
       <p class="footer__title">Produk</p>
       <ul>
-        <li><a href="/pricing">Harga &amp; Paket</a></li>
-        <li><a href="/#cara-kerja">Cara Kerja</a></li>
+        <li><a href="/#tes">Struktur tes</a></li>
+        <li><a href="/#alur">Cara kerja</a></li>
         <li><a href="/#faq">FAQ</a></li>
       </ul>
     </nav>
@@ -104,6 +104,8 @@
   }
 
   @media (min-width: 768px) {
-    .footer__grid { grid-template-columns: 2fr 1fr 1fr; }
+    .footer__grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
   }
 </style>

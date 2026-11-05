@@ -1,37 +1,38 @@
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
+  import { homePathFor } from '$lib/panel';
   import { session } from '$lib/stores/session.svelte';
 
   const nav = [
-    { href: '/pricing', label: 'Harga' },
-    { href: '/#cara-kerja', label: 'Cara kerja' },
+    { href: '/#simulasi', label: 'Simulasi Interaktif' },
+    { href: '/#struktur', label: 'Struktur Seleksi' },
+    { href: '/#kalkulator', label: 'Kalkulator Ambang Batas' },
     { href: '/#faq', label: 'FAQ' },
   ] as const;
 
-  let current = $derived($page.url.pathname);
+  const home = $derived(homePathFor(session.user?.role));
 
   async function logout() {
     await session.logout();
     await goto('/');
   }
-
-  import { goto } from '$app/navigation';
 </script>
 
 <header class="header">
-  <div class="container header__inner">
-    <a class="brand" href="/" aria-label="Web CAT — beranda">
-      <span class="brand__mark" aria-hidden="true">W</span>
-      <span class="brand__name">Web CAT</span>
+  <div class="header__inner">
+    <a class="brand" href="/" aria-label="Web CAT POLRI — Beranda">
+      <div class="brand__icon">
+        <span>CAT</span>
+      </div>
+      <div class="brand__text">
+        <span class="brand__title">Web CAT POLRI</span>
+        <span class="brand__sub">Portal Simulasi Seleksi</span>
+      </div>
     </a>
 
     <nav class="nav" aria-label="Navigasi utama">
       {#each nav as item (item.href)}
-        <a
-          class="nav__link"
-          class:nav__link--active={current === item.href}
-          href={item.href}>{item.label}</a
-        >
+        <a class="nav__link" href={item.href}>{item.label}</a>
       {/each}
     </nav>
 
@@ -39,14 +40,11 @@
       {#if session.loading && !session.user}
         <span class="actions__skeleton" aria-hidden="true"></span>
       {:else if session.user}
-        {#if session.isAdmin}
-          <a class="btn btn--ghost" href="/admin/users">Admin</a>
-        {/if}
-        <a class="btn btn--secondary" href="/dashboard">Dashboard</a>
+        <a class="btn btn--outline" href={home}>Buka Dashboard</a>
         <button class="btn btn--ghost" type="button" onclick={logout}>Keluar</button>
       {:else}
-        <a class="btn btn--ghost" href="/login">Masuk</a>
-        <a class="btn btn--primary" href="/pricing">Pilih Paket</a>
+        <a class="btn btn--secondary" href="/login">Masuk Akun</a>
+        <a class="btn btn--primary" href="/login">Mulai Ujian</a>
       {/if}
     </div>
   </div>
@@ -56,107 +54,156 @@
   .header {
     position: sticky;
     top: 0;
-    z-index: var(--z-header);
-    background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
+    z-index: 100;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   .header__inner {
     display: flex;
     align-items: center;
-    gap: var(--space-6);
-    min-height: var(--header-height);
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    gap: 1.5rem;
   }
 
   .brand {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: var(--space-2);
-    font-weight: 750;
-    letter-spacing: -0.02em;
-    color: var(--color-text);
+    gap: 0.75rem;
     text-decoration: none;
+    color: #0f172a;
   }
 
-  .brand__mark {
+  .brand__icon {
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    background: var(--color-primary);
-    color: #fff;
-    font-size: var(--text-sm);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #1e3a8a;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand__title {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  .brand__sub {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
   }
 
   .nav {
     display: none;
-    gap: var(--space-5);
-    margin-inline-start: var(--space-4);
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 860px) {
+    .nav {
+      display: flex;
+    }
   }
 
   .nav__link {
-    padding-block: var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: 550;
-    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
     text-decoration: none;
-    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease;
   }
 
   .nav__link:hover {
-    color: var(--color-text);
+    color: #1e3a8a;
     text-decoration: none;
-  }
-
-  .nav__link--active {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
   }
 
   .actions {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    margin-inline-start: auto;
+    gap: 0.65rem;
   }
 
   .actions__skeleton {
     display: block;
-    width: 72px;
-    height: 28px;
-    border-radius: var(--radius-md);
-    background: var(--color-surface-muted);
+    width: 80px;
+    height: 36px;
+    border-radius: 6px;
+    background: #f1f5f9;
   }
 
-  /* Tombol lokal ringan untuk header (tidak menarik komponen penuh). */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    line-height: 1;
+    padding: 0.55rem 1.15rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 650;
     text-decoration: none;
+    transition: all 0.15s ease;
     cursor: pointer;
+    border: 1px solid transparent;
   }
 
-  .btn--primary { background: var(--color-primary); color: #fff; }
-  .btn--primary:hover { background: var(--color-primary-hover); text-decoration: none; }
+  .btn--primary {
+    background: #1e3a8a;
+    color: #ffffff;
+  }
+
+  .btn--primary:hover {
+    background: #172554;
+    text-decoration: none;
+  }
+
   .btn--secondary {
-    background: var(--color-surface);
-    color: var(--color-text);
-    border-color: var(--color-border-strong);
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1;
   }
-  .btn--secondary:hover { background: var(--color-surface-muted); text-decoration: none; }
-  .btn--ghost { background: transparent; color: var(--color-text-muted); }
-  .btn--ghost:hover { background: var(--color-surface-muted); text-decoration: none; }
 
-  @media (min-width: 768px) {
-    .nav { display: flex; }
+  .btn--secondary:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    text-decoration: none;
+  }
+
+  .btn--outline {
+    background: #ffffff;
+    color: #1e3a8a;
+    border-color: #cbd5e1;
+  }
+
+  .btn--outline:hover {
+    background: #f1f5f9;
+    border-color: #1e3a8a;
+    text-decoration: none;
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: #64748b;
+    padding-inline: 0.75rem;
+  }
+
+  .btn--ghost:hover {
+    color: #dc2626;
+    text-decoration: none;
   }
 </style>

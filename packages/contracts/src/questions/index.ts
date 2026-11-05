@@ -182,6 +182,8 @@ export const questionListQuerySchema = z.object({
   difficulty: z.enum(QUESTION_DIFFICULTIES).optional(),
   categoryId: z.string().uuid().optional(),
   tag: z.string().trim().max(40).optional(),
+  /** Hanya soal yang lahir dari job impor tertentu. */
+  sourceImportId: z.string().uuid().optional(),
   hasMedia: z
     .enum(['true', 'false'])
     .transform((value) => value === 'true')
@@ -242,6 +244,8 @@ export interface QuestionView {
   columnIndex: number | null;
   dedupeHash: string;
   dedupeOverride: boolean;
+  /** Job impor asal soal, bila soal dibuat lewat impor. */
+  sourceImportId: string | null;
   createdAt: string;
   updatedAt: string;
   options: QuestionOptionView[];

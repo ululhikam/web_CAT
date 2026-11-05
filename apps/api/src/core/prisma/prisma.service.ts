@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
  * pada `globalThis` supaya tidak dibuat ulang di setiap invocation.
  *
  * Catatan dev: bila database belum tersedia, aplikasi tetap boleh boot
- * (hanya peringatan) agar halaman statis/pricing bisa dikembangkan tanpa
+ * (hanya peringatan) agar pengembangan web bisa berjalan tanpa
  * Supabase. Di produksi kegagalan koneksi tetap fatal.
  */
 const globalForPrisma = globalThis as unknown as { __webcatPrisma?: PrismaClient };

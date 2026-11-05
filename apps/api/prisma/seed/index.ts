@@ -7,12 +7,16 @@
  *   4. exam_settings (singleton)
  *   5. subscription_plans (harga awal, bisa diubah admin lewat DB)
  *   6. akun SUPER_ADMIN pertama (dari env, sekali pakai)
+ *   7. akun ADMIN operasional (dari env, sekali pakai)
+ *   8. peserta contoh (opsional, hanya bila SEED_DEMO_USERS=true)
  *
  * Idempoten: aman dijalankan berulang (`pnpm db:seed`).
  */
 import { PrismaClient } from '@prisma/client';
 import { PERMISSIONS, ROLE_PERMISSIONS, ROLES } from '@webcat/contracts';
 import { loadLocalEnv } from '../../src/core/config/load-env';
+import { seedAdmin } from './admin.seed';
+import { seedDemoUsers } from './demo-users.seed';
 import { seedExamStructure } from './exam.seed';
 import { seedPlans } from './plans.seed';
 import { seedQuestionBank } from './question.seed';
@@ -38,6 +42,8 @@ async function main(): Promise<void> {
   await seedPlans(prisma);
   await seedPlatformSettings(prisma);
   await seedSuperAdmin(prisma);
+  await seedAdmin(prisma);
+  await seedDemoUsers(prisma);
 
   const permissions = await prisma.permission.count();
   const roles = await prisma.role.count();
@@ -48,7 +54,7 @@ async function main(): Promise<void> {
   const categories = await prisma.category.count();
   const questions = await prisma.question.count();
 
-  console.log('Ringkasan:');
+  console.log('Ringkasan Data:');
   console.table({
     permissions,
     roles,
@@ -59,6 +65,39 @@ async function main(): Promise<void> {
     categories,
     questions,
   });
+
+  console.log('\n================ AKUN CONTOH LOGIN ================');
+  console.table([
+    {
+      Peran: 'SUPER_ADMIN',
+      Email: process.env.BOOTSTRAP_SUPER_ADMIN_EMAIL || 'admin@example.com',
+      Password: process.env.BOOTSTRAP_SUPER_ADMIN_PASSWORD || 'Narcissistic',
+      'Target URL': '/super-admin',
+      Keterangan: 'Akses penuh platform & audit log',
+    },
+    {
+      Peran: 'ADMIN',
+      Email: process.env.BOOTSTRAP_ADMIN_EMAIL || 'operator@example.com',
+      Password: process.env.BOOTSTRAP_ADMIN_PASSWORD || 'AdminOperator123',
+      'Target URL': '/admin',
+      Keterangan: 'Kelola soal & peserta operasional',
+    },
+    {
+      Peran: 'USER (Peserta)',
+      Email: 'user@example.com',
+      Password: 'PesertaDemo123',
+      'Target URL': '/dashboard',
+      Keterangan: 'Peserta aktif (langganan 30 hari)',
+    },
+    {
+      Peran: 'USER (Peserta)',
+      Email: 'peserta.aktif@example.com',
+      Password: 'PesertaDemo123',
+      'Target URL': '/dashboard',
+      Keterangan: 'Peserta aktif (langganan 21 hari)',
+    },
+  ]);
+  console.log('====================================================\n');
   console.log(`Selesai dalam ${Date.now() - started} ms.`);
 }
 

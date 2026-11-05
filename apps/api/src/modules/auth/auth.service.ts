@@ -481,7 +481,8 @@ export class AuthService {
     // percobaan yang ditolak tidak meninggalkan efek samping.
     const policy = await this.assertSessionPolicy(user.id);
 
-    if (!user.googleSub) {      await this.prisma.user.update({
+    if (!user.googleSub) {
+      await this.prisma.user.update({
         where: { id: user.id },
         data: {
           googleSub: identity.sub,

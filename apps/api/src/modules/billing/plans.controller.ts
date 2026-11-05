@@ -5,7 +5,7 @@ import { Public } from '../../core/auth/decorators/public.decorator';
 import { PlansService } from './plans.service';
 
 /**
- * Endpoint publik yang menyuplai halaman /pricing (SSR).
+ * Endpoint publik untuk daftar paket (dipakai halaman admin & aktivasi manual).
  * Tanpa autentikasi: harga harus bisa dilihat sebelum mendaftar.
  */
 @ApiTags('Plans (public)')
