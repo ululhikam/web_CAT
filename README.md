@@ -1,8 +1,9 @@
-# Web CAT — Simulasi Ujian Polri
+# TES CAT — Ujian Polri
 
-Platform simulasi ujian seleksi Polri: **Tes Psikologi** (Kecerdasan, Kepribadian,
-Kecermatan, Pass Hand), **TPA**, dan **TPK**. Dibangun sebagai monorepo
-NestJS + SvelteKit dengan Postgres (Supabase) dan deploy di Vercel.
+Platform TES CAT ujian seleksi Polri: **Tes Psikologi** (Kecerdasan, Kepribadian,
+Kecermatan, Pass Hand), **TKK** (Tes Kemampuan Komputer), dan **TPK** (Tes
+Pengetahuan Kepolisian). Dibangun sebagai monorepo NestJS + SvelteKit dengan
+Postgres (Supabase) dan deploy di Vercel.
 
 > Status: **Fase 0 (fondasi) selesai.** Lihat [`docs/LAPORAN-PEKERJAAN.md`](docs/LAPORAN-PEKERJAAN.md)
 > untuk rincian pekerjaan, tanggal, dan hasil verifikasi.

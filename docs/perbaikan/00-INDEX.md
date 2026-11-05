@@ -15,10 +15,16 @@
 | [`fase-1-cat-fungsional.md`](./fase-1-cat-fungsional.md) | **P0** — 2 blocker CAT + verifikasi end-to-end |
 | [`fase-2-integration-test.md`](./fase-2-integration-test.md) | Test Postgres nyata + smoke script + CI |
 | [`fase-3-soal-bergambar.md`](./fase-3-soal-bergambar.md) | Soal figural + opsi bergambar end-to-end |
-| [`fase-4-bank-soal.md`](./fase-4-bank-soal.md) | TPA, PUBLISHED, kuota pool |
+| [`fase-4-bank-soal.md`](./fase-4-bank-soal.md) | Bank soal TKK (dulu TPA), PUBLISHED, kuota pool |
 | [`fase-5-gap-fitur.md`](./fase-5-gap-fitur.md) | Gap P1/P2 di luar mesin ujian |
 
 Ringkasan strategi & bukti temuan ada di [`../RENCANA-PERBAIKAN.md`](../RENCANA-PERBAIKAN.md).
+
+> Tambahan terakhir di Fase 5: **F5-17** — TPA diganti **TKK** (Tes Kemampuan
+> Komputer), admin boleh mengerjakan semua tes tanpa langganan, kuota sesi
+> harian pindah ke level aplikasi, dan runner `/exam/[sessionId]` memakai tata
+> letak anti-kecurangan. Rinciannya di
+> [`fase-5-gap-fitur.md`](./fase-5-gap-fitur.md).
 
 ---
 
@@ -110,7 +116,7 @@ Dipakai sebagai gerbang sebelum menyatakan perbaikan selesai.
 - [ ] Tidak ada `_tmp_*.ts` atau skrip scratch di repo.
 
 ### Konten
-- [ ] Semua subtes memenuhi kuota soal PUBLISHED (termasuk TPA).
+- [ ] Semua subtes memenuhi kuota soal PUBLISHED (termasuk TKK).
 - [ ] ≥ 30 soal bergambar dengan media stem + media opsi.
 - [ ] `QUESTION_POOL=db` berjalan tanpa fallback fixture.
 

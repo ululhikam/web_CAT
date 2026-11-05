@@ -41,6 +41,7 @@ rilis publik.
 | F5-14 | Import ZIP gambar end-to-end | parser ada, UI belum | Pemetaan manual + laporan error | 2 j |
 | F5-15 | Varian WebP/thumbnail | satu ukuran | 2 varian per gambar | 1 j |
 | F5-16 | E2E Playwright alur ujian | belum ada | Skrip lulus di CI dengan DB nyata | 3 j |
+| F5-17 | TKK menggantikan TPA, akses tes admin, runner anti-kecurangan ✅ | `TPA` usang, admin tanpa langganan, kuota 1 sesi/hari, runner satu kolom | Rename enum + 105 soal TKK, bypass admin, kuota app-level, `/exam` + runner tiga kolom | 4 j |
 
 ---
 
@@ -891,6 +892,111 @@ Tambahkan `apps/web/e2e/exam.spec.ts`:
 
 Jalankan terhadap API + DB nyata (bukan mock). Bisa digabung dengan job CI
 integrasi (F2-09) atau job terpisah.
+
+---
+
+### F5-17 — TKK menggantikan TPA, akses tes untuk admin, dan runner anti-kecurangan ✅
+
+**Kriteria selesai:** tidak ada lagi subtes/stage `TPA`; **TKK** (Tes Kemampuan
+Komputer) punya 105 soal PUBLISHED; admin bisa mengerjakan ketiga tes tanpa
+langganan; peserta bisa memilih tes mana yang dikerjakan (kuota harian mengikuti
+`max_sessions_per_day`, bukan lagi tepat satu baris per hari); dan layar ujian
+memakai tata letak tiga kolom dengan salin/tempel diblokir.
+
+#### Kondisi awal
+
+`TPA` (Tes Potensi Akademik) adalah nama warisan dari `plan.md` awal. Isi bank
+soalnya sudah lama bukan tes potensi akademik: 105 soal tentang perangkat
+keras, perangkat lunak, jaringan, keamanan, penalaran, dan figural — yaitu
+literasi komputer. Nama ini muncul di tiga tempat sekaligus (`StageCode`,
+`SubtestCode`, dan kategori soal `tpa/*`), sehingga mengganti label saja tidak
+cukup: enum Postgres dipakai sebagai nilai kolom di `exam_stages`, `subtests`,
+`exam_session_stages`, `exam_session_subtests`, `questions`, dan
+`exam_sessions.eliminated_subtest_code`.
+
+Tiga masalah lain ikut menumpuk:
+
+1. **Admin tidak bisa mengerjakan ujian.** `ExamEligibility` menolak aktor tanpa
+   langganan aktif (`SUBSCRIPTION_REQUIRED`), sehingga admin yang perlu memeriksa
+   bank soal harus membuat langganan palsu untuk dirinya sendiri.
+2. **Satu sesi per hari, apa pun tesnya.** Unique index parsial
+   `exam_sessions_user_exam_date_active_key` membatasi satu sesi per peserta per
+   `exam_date`; memilih TKK setelah Psikologi selalu gagal meski
+   `max_sessions_per_day` mengizinkan.
+3. **Tidak ada layar pemilihan tes.** `/exam` langsung memulai snapshot seluruh
+   stage, dan runner hanya berupa satu kolom soal tanpa daftar soal, penanda
+   ragu-ragu, atau konfirmasi saat mengakhiri sesi.
+
+#### Yang dibangun
+
+| Bagian | Detail |
+| --- | --- |
+| Rename | `TPA` → `TKK` (Tes Kemampuan Komputer) pada `StageCode` + `SubtestCode`; kategori `tpa/*` → `tkk/{perangkat-keras,perangkat-lunak,jaringan,keamanan,penalaran,figural}` |
+| Migrasi enum | `20261106140000_f5_16_tpa_to_tkk` — `ALTER TYPE "StageCode" RENAME VALUE 'TPA' TO 'TKK'` dan `ALTER TYPE "SubtestCode" RENAME VALUE 'TPA' TO 'TKK'`. Prefiks folder tetap `f5_16` karena migrasi ini dibuat sebelum penomoran F5-17 dipakai; mengubah nama folder yang sudah tercatat di `_prisma_migrations` akan membuat `migrate deploy` mencoba menerapkannya ulang |
+| Bank soal | 105 soal: 87 pilihan tunggal + 3 multi-jawaban + 15 figural; kode `TKK-*` |
+| Konfigurasi stage | weight 30, `passingScore` 60, `eliminationEnabled` true, 1 subtest (`TKK`), `questionCount` 100, `durationMinutes` 60, `scoringStrategy` `KEYED_CORRECT` |
+| Seed | soal lama `TPA-*` (dan `DEMO-*`) dihapus-lunak: `status = ARCHIVED` + `deletedAt` |
+| Admin | `SessionActor.privileged` - `ADMIN`/`SUPER_ADMIN` melewati cek langganan dan kuota harian (dipakai `eligibility`, `startSession`, `loadSession`) |
+| Kelola akun | `PATCH /admin/users/:id` (nama & telepon) dan `DELETE /admin/users/:id` (hapus-lunak: `status = DELETED` + `deletedAt`, sesi dicabut, anti-lockout SUPER_ADMIN terakhir) - dipakai form di halaman detail peserta |
+| Kuota | `20261106150000_f5_17_session_quota_app_level` menghapus index unik; kuota dihitung di aplikasi di dalam transaksi dengan `pg_advisory_xact_lock(hashtext('exam-session:<userId>:<examDate>'))` |
+| Pemilihan tes | `/exam` merender kartu per stage dari `ExamEligibility.stages`; `POST /exams/sessions { stageCode }` mem-scope snapshot ke satu stage |
+| Runner | `/exam/[sessionId]` tiga kolom: kiri daftar soal + legenda + "Akhiri sesi", tengah soal/jawaban + bar "Sebelumnya / Ragu-ragu / Selanjutnya", kanan kartu urutan tes |
+| Anti-kecurangan | `copy`/`paste`/`cut`/`dragstart`/`contextmenu` di-`preventDefault`, `Ctrl/Cmd+C/V/X` dicegat, `PrintScreen` dicatat sebagai pelanggaran (browser kerap mengabaikan `preventDefault`), fullscreen diminta otomatis, flag ragu-ragu disimpan di `localStorage` |
+| Rebranding | "simulasi" → **TES CAT**, nama situs **TES CAT**, rute lama `/simulation` menjadi redirect ke `/exam` |
+
+**Kenapa enum di-rename, bukan drop + create.** `DROP TYPE`/`CREATE TYPE`
+memaksa setiap kolom yang memakai tipe itu dikonversi ulang (atau tabelnya
+ditulis ulang). `ALTER TYPE … RENAME VALUE` hanya mengganti label pada nilai
+yang sama, sehingga seluruh baris historis — termasuk
+`exam_session_subtests` milik sesi yang sudah selesai — otomatis ikut berubah
+tanpa kehilangan relasi. Nilai lama `TPA` tidak tersisa di data mana pun, jadi
+tidak ada dua nama untuk satu tes.
+
+**Kenapa soal `TPA-*` harus dihapus-lunak.** Setelah enum di-rename, baris TPA
+lama **membaca dirinya sebagai TKK/TKK** — stage dan subtes yang sama dengan
+soal baru. Unique index `questions_active_dedupe_key` (`stage_code`,
+`subtest_code`, `dedupe_hash` `WHERE deleted_at IS NULL AND dedupe_override =
+false`) hanya mengabaikan baris yang `deleted_at` terisi, jadi soal figural TKK
+baru dengan `dedupe_hash` yang sama dianggap duplikat. Saat seed memakai
+`createMany({ skipDuplicates: true })`, baris baru **dilewati diam-diam**, lalu
+penulisan opsi dan media untuk soal itu gagal dengan pelanggaran foreign key
+(`question_options.question_id` tidak ada). Karena itu seed menghapus-lunak
+`TPA-*` lebih dulu (`status = ARCHIVED` + `deletedAt`), sehingga soal baru
+benar-benar masuk dan soal lama tidak lagi ikut pool sampling.
+
+**Kuota harian di level aplikasi.** Index parsial diganti pengecekan di dalam
+transaksi: kunci advisory per `(userId, examDate)` membuat dua request paralel
+tidak bisa sama-sama lolos, lalu jumlah sesi dihitung ulang setelah kunci
+didapat. Hasilnya `max_sessions_per_day` tetap berlaku, tetapi satu hari boleh
+berisi tes yang berbeda (mis. Psikologi lalu TKK). Index biasa
+`exam_sessions_user_id_exam_date_idx` dipertahankan untuk pencarian riwayat.
+
+#### Keputusan yang diambil
+
+| Topik | Keputusan | Alasan |
+| --- | --- | --- |
+| Nama tes | **TKK** = Tes Kemampuan Komputer | Isi bank soal adalah literasi komputer; "potensi akademik" menyesatkan peserta |
+| Perubahan enum | `RENAME VALUE` (PostgreSQL ≥ 10) | Baris historis ikut berubah nilai tanpa migrasi data manual |
+| Soal lama | hapus-lunak (`deletedAt` + `ARCHIVED`) | Index dedupe hanya mengabaikan baris terhapus; arsip saja tetap menabrak index |
+| Akses admin | `privileged` pada `SessionActor`, bukan langganan khusus admin | Admin perlu menguji bank soal, bukan membeli paket; satu flag dipakai ketiga jalur (eligibility, start, load) |
+| Kuota | advisory lock + re-count di transaksi | Aman dari balapan tanpa index unik; aturan "satu sesi per hari" menjadi "N sesi per hari sesuai `max_sessions_per_day`", dan tes yang dipilih bebas |
+| Scope sesi | `stageCode` opsional pada `POST /exams/sessions` | Satu sesi = satu tes agar timer dan sistem gugur per stage tetap jelas |
+| Runner | tiga kolom, bukan satu kolom | Daftar soal + status ragu-ragu harus terlihat tanpa membuka panel; kartu urutan tes menjaga peserta tahu posisinya |
+| Anti-kecurangan | blokir benar-benar, bukan hanya mencatat | Event tetap dikirim ke server agar tetap terlihat di monitoring |
+
+#### Bukti
+
+| Cek | Hasil |
+| --- | --- |
+| `pnpm typecheck` | ✅ 6/6 task, **0 error** |
+| `pnpm lint` | ✅ 6 paket, `--max-warnings 0` |
+| `pnpm test` | ✅ api **43 berkas / 427 test**, web **179 test**, contracts **70 test** |
+| `pnpm db:seed` | ✅ 3 stage, 6 subtest, **1264** soal, **105** media asset, **290** `questionMedia` |
+| DB — bank soal TKK | ✅ `TKK/TKK PUBLISHED: 105`, `TPA- published: 0`, `tkk categories = 7` |
+| DB — baris lama | ✅ 105 soal `TPA-*` ada, seluruhnya `deleted_at` terisi (tidak ikut pool) |
+| API — `GET /api/v1/exams/eligibility` | ✅ 3 stage untuk peserta (PSIKOLOGI 193 m, TKK 60 m, TPK 60 m); untuk admin `canStart: true` tanpa langganan |
+| API — `POST /api/v1/exams/sessions` `{ "stageCode": "TKK" }` | ✅ sesi berscope 1 stage, subtest TKK **100 soal / 60 menit** |
+| API — `GET …/sessions/:id/questions` | ✅ 50 soal pertama, pagination `cursor`/`limit` |
 
 ---
 
