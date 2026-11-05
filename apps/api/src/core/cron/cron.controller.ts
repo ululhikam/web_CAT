@@ -1,7 +1,8 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Public } from '../auth/decorators/public.decorator';
-import { JobQueueService } from '../jobs/job-queue.service';
+import { AppConfigService } from '../config/config.service';
+import { JobQueueService, type JobBacklogStats } from '../jobs/job-queue.service';
 import { OutboxService } from '../jobs/outbox.service';
 import { LoggerService } from '../logger/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -13,6 +14,11 @@ interface CronRunResult {
   job: string;
   processed: number;
   details?: Record<string, unknown>;
+}
+
+interface CronBacklogResult extends JobBacklogStats {
+  threshold: number;
+  alert: boolean;
 }
 
 /**
@@ -34,7 +40,35 @@ export class CronController {
     private readonly logger: LoggerService,
     private readonly billing: BillingExpiryService,
     private readonly payments: PaymentsService,
+    private readonly config: AppConfigService,
   ) {}
+
+  private backlogThreshold(): number {
+    return this.config.value.JOB_BACKLOG_ALERT_THRESHOLD;
+  }
+
+  private logBacklogIfNeeded(stats: JobBacklogStats, threshold: number): void {
+    if (stats.pending <= threshold) return;
+    this.logger.warn('Backlog job melewati ambang', {
+      pending: stats.pending,
+      running: stats.running,
+      failed: stats.failed,
+      oldestPendingAgeSeconds: stats.oldestPendingAgeSeconds,
+      threshold,
+    });
+  }
+
+  /**
+   * Metrik backlog untuk pemantauan (butuh `CRON_SECRET`).
+   * `alert` bernilai true bila job PENDING melewati ambang.
+   */
+  @Get('backlog')
+  async backlog(): Promise<CronBacklogResult> {
+    const stats = await this.jobs.stats();
+    const threshold = this.backlogThreshold();
+    this.logBacklogIfNeeded(stats, threshold);
+    return { ...stats, threshold, alert: stats.pending > threshold };
+  }
 
   @Post('finalize-subtests')
   async finalizeSubtests(): Promise<CronRunResult> {
@@ -59,10 +93,20 @@ export class CronController {
       await this.outbox.markProcessed(row.id);
     }
 
+    const backlog = await this.jobs.stats();
+    const threshold = this.backlogThreshold();
+    this.logBacklogIfNeeded(backlog, threshold);
+
     return {
       job: 'process-jobs',
       processed: claimed.length + outboxRows.length,
-      details: { staleReleased: stale, jobs: claimed.length, outbox: outboxRows.length },
+      details: {
+        staleReleased: stale,
+        jobs: claimed.length,
+        outbox: outboxRows.length,
+        backlog,
+        backlogAlert: backlog.pending > threshold,
+      },
     };
   }
 

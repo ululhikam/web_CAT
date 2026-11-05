@@ -194,21 +194,39 @@ gateway diaktifkan kembali.
 
 ---
 
-### F5-05 — Worker job queue
+### F5-05 — Worker job queue ✅
 
-`POST /internal/cron/process-jobs` sudah ada, tetapi **tidak ada penjadwal**.
+Penjadwal dan guard ternyata **sudah ada**: `apps/api/vercel.json` memanggil
+`process-jobs` tiap menit, dan `CronAuthGuard` memeriksa
+`Authorization: Bearer $CRON_SECRET`. Gap yang tersisa hanya metrik backlog dan
+alert.
 
-| Langkah | Detail |
+**Implementasi**
+
+| Bagian | Detail |
 | --- | --- |
-| 1 | Pastikan `vercel.json` (atau cron eksternal) memanggil endpoint cron secara berkala |
-| 2 | Amankan endpoint dengan secret header (`CRON_SECRET`) |
-| 3 | Tambahkan metrik backlog: jumlah job `PENDING` & umur tertua |
-| 4 | Alert bila backlog > ambang |
+| Metrik | `JobQueueService.stats()` → `pending`, `running`, `failed`, `oldestPendingAgeSeconds` |
+| Endpoint | `GET /internal/cron/backlog` (butuh `CRON_SECRET`) → metrik + `threshold` + `alert` |
+| Alert | `logger.warn('Backlog job melewati ambang', …)` saat `pending > JOB_BACKLOG_ALERT_THRESHOLD` (default 100) |
+| Cron | `process-jobs` menyertakan `details.backlog` dan `details.backlogAlert` pada respons |
+| Lokal | `pnpm --filter @webcat/api cron:run --status` |
+
+**Keputusan desain**
+
+1. **Penjadwal tetap di `vercel.json`.** Tidak menambah proses worker terpisah;
+   Vercel Cron sudah memanggil tiap menit dan endpoint idempoten (klaim
+   `FOR UPDATE SKIP LOCKED`).
+2. **Alert lewat log terstruktur.** Belum ada kanal on-call; `logger.warn` +
+   `SENTRY_DSN` yang sudah ada adalah jalur termurah yang bisa langsung dipakai.
+3. **Ambang dapat dikonfigurasi** lewat `JOB_BACKLOG_ALERT_THRESHOLD` agar uji
+   dan produksi bisa memakai nilai berbeda.
 
 **Kriteria selesai**
 
-- Job `PENDING` berkurang tanpa intervensi manual.
-- Ada endpoint/health check yang menampilkan backlog.
+- Job `PENDING` berkurang tanpa intervensi manual. ✅ (6 job uji → 0 lewat
+  `POST /process-jobs`, semuanya `COMPLETED`)
+- Ada endpoint/health check yang menampilkan backlog. ✅
+  `GET /internal/cron/backlog`
 
 ---
 

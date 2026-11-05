@@ -19,6 +19,15 @@ export interface ClaimedJob {
   maxAttempts: number;
 }
 
+/** Metrik backlog untuk endpoint cron & health check (F5-05). */
+export interface JobBacklogStats {
+  pending: number;
+  running: number;
+  failed: number;
+  /** Umur job PENDING tertua; `null` bila antrean kosong. */
+  oldestPendingAgeSeconds: number | null;
+}
+
 /**
  * Queue sederhana di Postgres, pengganti Redis/BullMQ.
  *
@@ -118,6 +127,34 @@ export class JobQueueService {
     });
 
     return exhausted ? 'DEAD' : 'RETRY';
+  }
+
+  /**
+   * Metrik antrean: jumlah per status + umur job PENDING tertua.
+   *
+   * Dipakai endpoint `GET /internal/cron/backlog` dan dicatat setiap
+   * `process-jobs` supaya penumpukan terlihat tanpa membuka DB.
+   */
+  async stats(): Promise<JobBacklogStats> {
+    const [pending, running, failed, oldest] = await Promise.all([
+      this.prisma.jobQueue.count({ where: { status: 'PENDING' } }),
+      this.prisma.jobQueue.count({ where: { status: 'RUNNING' } }),
+      this.prisma.jobQueue.count({ where: { status: { in: ['FAILED', 'DEAD'] } } }),
+      this.prisma.jobQueue.findFirst({
+        where: { status: 'PENDING' },
+        orderBy: { createdAt: 'asc' },
+        select: { createdAt: true },
+      }),
+    ]);
+
+    return {
+      pending,
+      running,
+      failed,
+      oldestPendingAgeSeconds: oldest
+        ? Math.max(0, Math.floor((Date.now() - oldest.createdAt.getTime()) / 1000))
+        : null,
+    };
   }
 
   /** Melepas job yang macet (locked terlalu lama), dipanggil cron. */

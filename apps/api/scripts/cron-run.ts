@@ -8,6 +8,7 @@
  *   pnpm cron:run                       # semua job
  *   pnpm cron:run process-jobs          # satu job
  *   pnpm cron:run finalize-subtests expire-subscriptions
+ *   pnpm cron:run --status              # metrik backlog (GET /internal/cron/backlog)
  *
  * Env:
  *   API_URL      (default http://localhost:3000)
@@ -68,6 +69,22 @@ async function run(): Promise<void> {
   if (!secret) {
     console.error('CRON_SECRET belum diisi — tidak bisa memanggil endpoint cron.');
     process.exit(1);
+  }
+
+  if (process.argv.includes('--status')) {
+    const response = await fetch(`${apiUrl}/api/v1/internal/cron/backlog`, {
+      headers: { authorization: `Bearer ${secret}`, accept: 'application/json' },
+    });
+    const text = await response.text();
+
+    if (!response.ok) {
+      console.error(`x backlog — HTTP ${response.status}`);
+      console.error(`  ${text.slice(0, 500)}`);
+      process.exit(1);
+    }
+
+    console.log(text);
+    return;
   }
 
   let failures = 0;

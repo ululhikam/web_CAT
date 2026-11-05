@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **3/16**
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **5/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -39,8 +39,8 @@
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
 | 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
 | 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 4 | 16 | `███░░░░░░░` 25% |
-| **Total** | | | **83** | **95** | **87%** |
+| 5 | Gap fitur P1/P2 | P1/P2 | 5 | 16 | `███░░░░░░░` 31% |
+| **Total** | | | **84** | **95** | **88%** |
 
 ---
 
@@ -335,7 +335,7 @@ tidak ada lagi fallback senyap ke fixture.
 | F5-02 | CRUD plan admin | ✅ | `subscription_plans.deleted_at` (migrasi `20261105140000_f5_02_plan_soft_delete`), `DELETE /admin/plans/:id` + `POST /:id/restore` (wajib alasan), `GET ?includeDeleted=true`. UI `[panel]/plans` kini CRUD penuh (form + tab Arsip), sebelumnya baca-saja & memakai endpoint publik. Audit `plan.create/update/delete/restore` | 2026-11-05 |
 | F5-03 | Detail user admin | ✅ | `GET /admin/users/:id/overview` — satu request berisi profil, verifikasi, langganan aktif + riwayat, agregat & riwayat ujian, agregat & riwayat pembayaran; agregat dihitung di DB. `GET /admin/transactions?userId=` untuk riwayat pembayaran peserta. Halaman `[panel]/users/[id]` + tautan dari daftar. 13 test `users-overview.spec.ts` + 2 test filter `payments.service.spec.ts`. Bukti runtime 18/18 cek, semua angka cocok dengan query DB | 2026-11-05 |
 | F5-04 | Detail transaksi admin | ➖ | Ditunda: payment gateway juga ditunda. Saat ini langganan diberikan manual oleh admin (buat akun + langganan, atau grant untuk akun Google), jadi detail transaksi/refund belum relevan. Aksi `mark-paid`/`refund` sudah ada dan tercatat di audit bila nanti gateway aktif | 2026-11-05 |
-| F5-05 | Worker job queue terjadwal | ⬜ | — | — |
+| F5-05 | Worker job queue terjadwal | ✅ | `vercel.json` sudah memanggil `process-jobs` tiap menit + guard `CRON_SECRET`; ditambahkan `JobQueueService.stats()`, `GET /internal/cron/backlog` (pending/running/failed/umur tertua + threshold + alert), dan `logger.warn` saat backlog melewati `JOB_BACKLOG_ALERT_THRESHOLD` (default 100). `process-jobs` kini mengembalikan `details.backlog`/`backlogAlert`. 8 test baru; bukti runtime 12/12 | 2026-11-05 |
 | F5-06 | Rate limit API | ⬜ | — | — |
 | F5-07 | CSRF + CSP | ⬜ | — | — |
 | F5-08 | Dashboard peserta dari API | ⬜ | — | — |
@@ -409,6 +409,21 @@ tidak ada lagi fallback senyap ke fixture.
 > (≈1/64) string tidak berubah dan `verifyState` mengembalikan `true`. Kini
 > karakter terakhir dijamin berbeda.
 
+#### Verifikasi penutup F5-05 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run test/cron-backlog.spec.ts` | ✅ **8/8** (stats, ambang, alert, guard) |
+| `vitest run` (API penuh) | ✅ 36 berkas / **352** test |
+| `vitest run` (web penuh) | ✅ 8 berkas / **70** test |
+| `tsc --noEmit` · `tsc -p tsconfig.build.json` | ✅ exit 0 keduanya |
+| `svelte-check --tsconfig ./tsconfig.json` | ✅ **0 error, 0 warning** (474 berkas) |
+| `eslint src --max-warnings 0` (API & web) | ✅ exit 0 keduanya |
+| `apps/api/vercel.json` | ✅ `process-jobs` + `finalize-subtests` tiap menit, `expire-subscriptions`/`cleanup` harian; guard memakai `Authorization: Bearer $CRON_SECRET` |
+| Uji HTTP nyata (API `dist` + DB dev) | ✅ **12/12** cek. Tanpa/salah secret → 401; backlog 6 = DB 6; umur tertua **899 detik**; ambang 5 → `alert: true`; `POST /process-jobs` → **201**, klaim 6 job, backlog turun ke 0; 6 baris `COMPLETED` |
+| Log alert | ✅ 2 baris `WARN: Backlog job melewati ambang` di log API saat backlog melewati ambang |
+| DB akhir | ✅ 0 baris `f5-05-proof`; API kembali memakai ambang default (100) |
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
@@ -462,6 +477,28 @@ dan berapa total yang sudah dibayar — semuanya dari satu endpoint. Tracker:
 
 **Hambatan:** —
 **Berikutnya:** F5-04 ditunda (gateway ditunda) → F5-05.
+
+### 2026-11-05 — Fase 5: F5-05 selesai
+
+**Dikerjakan:** F5-05
+**Hasil:** Fase 5 ✅ 5/16. Penjadwal & guard cron sudah ada; ditambahkan metrik
+backlog + alert. Tracker: **84/95 = 88%**.
+
+**Bukti:**
+
+- `GET /internal/cron/backlog` mengembalikan `pending`, `running`, `failed`,
+  `oldestPendingAgeSeconds`, `threshold`, dan `alert`.
+- `process-jobs` menyertakan `details.backlog` dan `details.backlogAlert`.
+- Ambang `JOB_BACKLOG_ALERT_THRESHOLD` (default 100) memicu
+  `logger.warn('Backlog job melewati ambang', …)`.
+- Uji HTTP **12/12**: 401 tanpa/salah secret, backlog 6 = DB 6, umur tertua
+  899 detik, alert true saat ambang 5, `process-jobs` 201 memproses 6 job →
+  pending 0.
+- 8 test baru (`cron-backlog.spec.ts`); API 36 berkas / 352 test.
+- DB uji dibersihkan; API kembali memakai ambang default.
+
+**Hambatan:** —
+**Berikutnya:** F5-06 — rate limit API.
 
 ### 2026-11-05 — Fase 5: F5-04 ditunda
 

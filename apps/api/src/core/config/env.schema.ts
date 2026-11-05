@@ -44,6 +44,8 @@ export const envSchema = z.object({
   MIDTRANS_IS_PRODUCTION: bool.default('false'),
 
   CRON_SECRET: z.string().min(8, 'CRON_SECRET minimal 8 karakter'),
+  /** Ambang job PENDING yang memicu peringatan backlog di endpoint cron. */
+  JOB_BACKLOG_ALERT_THRESHOLD: z.coerce.number().int().min(1).default(100),
   SENTRY_DSN: z.string().optional(),
 
   /** Sekali pakai saat seed: membuat akun SUPER_ADMIN pertama. */
