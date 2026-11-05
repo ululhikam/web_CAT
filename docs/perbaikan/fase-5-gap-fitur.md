@@ -53,12 +53,25 @@ Halaman `/pricing` hilang di commit `e0b23fd`. Pulihkan **bukan** dengan
 file spesifik:
 
 ```powershell
-git show e0b23fd^:apps/web/src/routes/pricing/+page.svelte > <path-tujuan>
-git show e0b23fd^:apps/web/src/routes/pricing/+page.ts   > <path-tujuan>
+git checkout e0b23fd^ -- "apps/web/src/routes/(site)/pricing" `
+                          "apps/web/src/lib/components/PlanCard.svelte"
 ```
 
-Bila route-nya sudah berpindah lokasi (mis. ke `(public)/pricing`), sesuaikan
-path tujuan dan `import` di dalamnya.
+Route lama sudah di grup `(site)`, jadi path tujuan tidak perlu diubah. Setelah
+dipulihkan, sesuaikan dengan konvensi kode sekarang:
+
+| Bagian | Penyesuaian |
+| --- | --- |
+| `$app/stores` | ganti ke `$app/state` (`page`, bukan `$page`) |
+| `SiteHeader.svelte` | tambahkan kembali tautan `Harga & Paket` → `/pricing` |
+| `+page.server.ts` | `apiRequest(..., { cacheTtlMs: 0 })` |
+
+**Kenapa `cacheTtlMs: 0`.** Klien API web punya memory cache 15 dtk **plus**
+stale-while-revalidate hingga 60 dtk (`apps/web/src/lib/api/client.ts`), jadi
+perubahan harga di DB bisa tertahan ~75 dtk di proses SSR. Halaman ini sudah
+memakai `cache-control` HTTP sendiri, sehingga cache lapis kedua itu hanya
+menambah keterlambatan yang bertabrakan dengan kriteria F5-02 ("perubahan
+langsung terlihat di `/pricing`").
 
 **Kriteria selesai**
 

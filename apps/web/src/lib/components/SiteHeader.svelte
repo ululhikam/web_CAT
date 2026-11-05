@@ -7,6 +7,7 @@
     { href: '/#simulasi', label: 'Simulasi Interaktif' },
     { href: '/#struktur', label: 'Struktur Seleksi' },
     { href: '/#kalkulator', label: 'Kalkulator Ambang Batas' },
+    { href: '/pricing', label: 'Harga & Paket' },
     { href: '/#faq', label: 'FAQ' },
   ] as const;
 

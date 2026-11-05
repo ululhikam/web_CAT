@@ -331,7 +331,7 @@ tidak ada lagi fallback senyap ke fixture.
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
 | --- | --- | --- | --- | --- |
-| F5-01 | Pulihkan `/pricing` | ⬜ | — | — |
+| F5-01 | Pulihkan `/pricing` | ✅ | Dipulihkan dari `e0b23fd^` (`(site)/pricing/*`, `PlanCard.svelte`), migrasi `$app/stores`→`$app/state`, tautan nav dikembalikan. Bukti runtime dua arah: DB `MONTHLY=151000` → halaman `Rp 151.000` (149.000 hilang), lalu revert `149000` → `Rp 149.000` (151.000 hilang). 6 test `page.server.spec.ts` + 3 test `PlanCard.spec.ts` | 2026-11-05 |
 | F5-02 | CRUD plan admin | ⬜ | — | — |
 | F5-03 | Detail user admin | ⬜ | — | — |
 | F5-04 | Detail transaksi admin | ⬜ | — | — |
@@ -340,6 +340,30 @@ tidak ada lagi fallback senyap ke fixture.
 | F5-07 | CSRF + CSP | ⬜ | — | — |
 | F5-08 | Dashboard peserta dari API | ⬜ | — | — |
 | F5-09 | Dokumentasi API produksi | ⬜ | — | — |
+
+#### Verifikasi penutup F5-01 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `pnpm --filter @webcat/web test` | ✅ 6 berkas / **45** test (termasuk 6 test `page.server.spec.ts`, 3 `PlanCard.spec.ts`) |
+| `svelte-check --tsconfig ./tsconfig.json` | ✅ **0 error**, 64 warning (hanya `dashboard/+page.svelte`) |
+| `eslint src --max-warnings 0` | ✅ exit 0 |
+| `GET /pricing` (API `dist` + vite dev) | ✅ **200**, 53.729 byte, `cache-control: public, max-age=60, stale-while-revalidate=300` |
+| Harga di HTML | ✅ `Rp 49.000`, `Rp 89.000`, `Rp 149.000`, `Rp 399.000` — semuanya cocok dengan query `subscription_plans` |
+| Kartu terender | ✅ `plan-WEEKLY`, `plan-BIWEEKLY`, `plan-MONTHLY`, `plan-QUARTERLY` (TRIAL_3D → banner, CUSTOM tidak jadi kartu) |
+| Uji propagasi DB→halaman | ✅ `MONTHLY=151000` → `Rp 151.000` muncul, `Rp 149.000` hilang; revert `149000` → kebalikan. DB akhir: 0/49000/89000/**149000**/399000/0 |
+| `?plan=MONTHLY` | ✅ kelas `plan--selected` ada |
+| Tautan nav | ✅ "Harga & Paket" → `/pricing` |
+
+> **Dua bug nyata yang ikut diperbaiki** (keduanya ditemukan justru karena uji
+> propagasi DB di atas):
+> 1. `apps/web/src/lib/api/client.ts` — `promise.finally()` pada dedup GET
+>    membuat promise turunan yang ditolak tanpa penangan, sehingga setiap GET
+>    gagal memunculkan `unhandled rejection` (terbukti di test 502). Diganti
+>    `void promise.then(release, release)`.
+> 2. `+page.server.ts` memakai memory cache klien API (15 dtk + SWR 60 dtk),
+>    jadi harga baru bisa tertahan ~75 dtk. Kini `cacheTtlMs: 0`; dijaga test
+>    regresi "harga baru langsung terlihat".
 
 ### P2
 
@@ -367,6 +391,38 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5 dimulai (F5-01)
+
+**Dikerjakan:** F5-01
+**Hasil:** Fase 5 ✅ 1/16. Halaman `/pricing` pulih dan kembali memakai harga dari
+DB. Tracker: **80/95 = 84%**.
+
+**Bukti:**
+
+- Dipulihkan dengan `git checkout e0b23fd^ -- "apps/web/src/routes/(site)/pricing" apps/web/src/lib/components/PlanCard.svelte`
+  (bukan `git revert`), lalu migrasi `$app/stores`→`$app/state` dan penambahan
+  tautan nav "Harga & Paket".
+- Test: `vitest` **6 berkas / 45 test**; `svelte-check` **0 error**;
+  `eslint src --max-warnings 0` exit 0.
+- Runtime (API dari `dist` + vite dev `--strictPort`): `GET /pricing` **200**,
+  53.729 byte, 4 kartu (`WEEKLY`/`BIWEEKLY`/`MONTHLY`/`QUARTERLY`), banner
+  `Coba 3 Hari`, `CUSTOM` tidak muncul.
+- Propagasi DB dua arah: `MONTHLY=151000` → `Rp 151.000` (149.000 hilang);
+  revert `149000` → `Rp 149.000` (151.000 hilang). DB akhir
+  0/49000/89000/**149000**/399000/0.
+
+**Bug tambahan ditemukan & diperbaiki:**
+
+1. `apps/web/src/lib/api/client.ts` — `promise.finally()` pada dedup GET
+   menghasilkan unhandled rejection setiap kali GET gagal.
+2. `+page.server.ts` — memory cache klien API (15 dtk + SWR 60 dtk) menahan
+   perubahan harga ~75 dtk; kini `cacheTtlMs: 0`.
+
+**Hambatan:** —
+**Berikutnya:** F5-02 — CRUD plan admin.
+
+---
 
 ### 2026-11-05 — Fase 2 selesai
 

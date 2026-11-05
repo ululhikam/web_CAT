@@ -166,9 +166,13 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 
   if (isGet) {
     inFlightRequests.set(cacheKey, promise);
-    promise.finally(() => {
+    // Bersihkan dedup setelah selesai — baik sukses MAUPUN gagal. Memakai
+    // `promise.finally()` di sini membuat promise turunan yang ditolak tanpa
+    // penangan, sehingga kegagalan GET memunculkan unhandled rejection.
+    const release = () => {
       inFlightRequests.delete(cacheKey);
-    });
+    };
+    void promise.then(release, release);
   }
 
   return promise;
