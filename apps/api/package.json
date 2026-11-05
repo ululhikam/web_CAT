@@ -4,7 +4,7 @@
   "private": true,
   "description": "NestJS API — satu Vercel Serverless Function",
   "scripts": {
-    "dev": "nest start --watch",
+    "dev": "node scripts/dev-server.mjs",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/src/main.js",
     "lint": "eslint src --max-warnings 0",
