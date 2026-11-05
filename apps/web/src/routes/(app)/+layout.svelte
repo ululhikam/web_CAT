@@ -87,6 +87,17 @@
     messageMenuOpen = false;
   }
 
+  /**
+   * Tutup menu saat klik di luar panel. Panel dropdown dibiarkan terbuka kalau
+   * yang diklik adalah isinya, jadi tidak perlu `onclick` + `stopPropagation`
+   * pada `<div>` non-interaktif (yang memicu peringatan a11y).
+   */
+  function handleWindowClick(event: MouseEvent) {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('.dropdown-panel')) return;
+    closeAllMenus();
+  }
+
   async function signOut() {
     if (signingOut) return;
     signingOut = true;
@@ -103,7 +114,7 @@
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<svelte:window onclick={closeAllMenus} />
+<svelte:window onclick={handleWindowClick} />
 
 {#if !session.user || session.isAdmin}
   <div class="loading"><Spinner size={32} label="Memeriksa status sesi" /></div>
@@ -279,7 +290,6 @@
             {#if notifMenuOpen}
               <div
                 class="dropdown-panel dropdown-panel--notif"
-                onclick={(e) => e.stopPropagation()}
                 role="region"
                 aria-label="Daftar Notifikasi"
               >
@@ -334,7 +344,6 @@
             {#if messageMenuOpen}
               <div
                 class="dropdown-panel dropdown-panel--message"
-                onclick={(e) => e.stopPropagation()}
                 role="region"
                 aria-label="Pesan Masuk"
               >
@@ -390,7 +399,6 @@
             {#if userMenuOpen}
               <div
                 class="dropdown-panel dropdown-panel--user"
-                onclick={(e) => e.stopPropagation()}
                 role="region"
                 aria-label="Menu Pengguna"
               >

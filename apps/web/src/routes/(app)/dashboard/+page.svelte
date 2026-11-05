@@ -466,8 +466,19 @@
 
 <!-- ================================================================== SESSION DETAIL MODAL -->
 {#if detailModalOpen && selectedSession}
-  <div class="modal-backdrop" onclick={() => (detailModalOpen = false)} role="dialog" aria-modal="true">
-    <div class="modal-dialog modal-dialog--sm" onclick={(e) => e.stopPropagation()} role="document">
+  <div
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    onclick={(e) => {
+      if (e.target === e.currentTarget) detailModalOpen = false;
+    }}
+    onkeydown={(e) => {
+      if (e.key === 'Escape') detailModalOpen = false;
+    }}
+  >
+    <div class="modal-dialog modal-dialog--sm" role="document">
       <div class="modal-header">
         <div class="exam-title-wrap">
           <div class="exam-badge-cat">SCORECARD RIWAYAT #{selectedSession.id}</div>
@@ -1063,24 +1074,6 @@
     font-weight: 850;
   }
 
-  .exam-timer-wrap {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .timer-box {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: rgba(0, 0, 0, 0.25);
-    padding: 0.4rem 0.85rem;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 1.15rem;
-    font-weight: 850;
-  }
-
   .btn-close-modal {
     background: none;
     border: none;
@@ -1094,119 +1087,6 @@
     padding: 1.5rem;
     overflow-y: auto;
     flex: 1;
-  }
-
-  .exam-layout {
-    display: grid;
-    grid-template-columns: 7fr 3fr;
-    gap: 1.5rem;
-  }
-
-  @media (max-width: 768px) {
-    .exam-layout {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .question-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .question-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #eaecf4;
-  }
-
-  .q-number {
-    font-size: 0.875rem;
-    font-weight: 800;
-    color: #4e73df;
-  }
-
-  .q-doubt-check {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #f6c23e;
-    cursor: pointer;
-  }
-
-  .question-stem {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #2c3e50;
-    line-height: 1.6;
-    background: #f8f9fc;
-    padding: 1.25rem;
-    border-radius: 8px;
-    border: 1px solid #eaecf4;
-  }
-
-  .options-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .opt-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.85rem 1.15rem;
-    border: 1px solid #eaecf4;
-    border-radius: 8px;
-    background: #ffffff;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.15s ease;
-  }
-
-  .opt-card:hover {
-    border-color: #4e73df;
-    background: #f8f9fc;
-  }
-
-  .opt-card--selected {
-    border-color: #4e73df;
-    background: #f0f4ff;
-    box-shadow: 0 0 0 2px rgba(78, 115, 223, 0.2);
-  }
-
-  .opt-key {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #eaecf4;
-    color: #4e73df;
-    font-weight: 850;
-    display: grid;
-    place-items: center;
-    font-size: 12px;
-    flex-shrink: 0;
-  }
-
-  .opt-card--selected .opt-key {
-    background: #4e73df;
-    color: #ffffff;
-  }
-
-  .opt-text {
-    font-size: 0.95rem;
-    color: #2e384d;
-    line-height: 1.4;
-  }
-
-  .question-nav-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
   }
 
   .btn-nav-prev {
@@ -1225,17 +1105,6 @@
     cursor: not-allowed;
   }
 
-  .btn-nav-next {
-    background: #4e73df;
-    color: #ffffff;
-    border: none;
-    padding: 0.6rem 1.15rem;
-    border-radius: 6px;
-    font-weight: 750;
-    font-size: 0.85rem;
-    cursor: pointer;
-  }
-
   .btn-finish-exam {
     background: #1cc88a;
     color: #ffffff;
@@ -1245,213 +1114,6 @@
     font-weight: 800;
     font-size: 0.85rem;
     cursor: pointer;
-  }
-
-  /* PALETTE */
-  .palette-panel {
-    background: #f8f9fc;
-    border: 1px solid #eaecf4;
-    border-radius: 8px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .palette-heading {
-    font-size: 11px;
-    font-weight: 850;
-    color: #4e73df;
-    letter-spacing: 0.05em;
-  }
-
-  .palette-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.5rem;
-  }
-
-  .palette-btn {
-    height: 38px;
-    border: 1px solid #d1d3e2;
-    background: #ffffff;
-    color: #4e73df;
-    font-weight: 800;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.12s ease;
-  }
-
-  .palette-btn--current {
-    box-shadow: 0 0 0 2px #4e73df;
-  }
-
-  .palette-btn--answered {
-    background: #1cc88a;
-    color: #ffffff;
-    border-color: #1cc88a;
-  }
-
-  .palette-btn--doubt {
-    background: #f6c23e;
-    color: #ffffff;
-    border-color: #f6c23e;
-  }
-
-  .palette-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    font-size: 11.5px;
-    color: #5a5c69;
-    padding-top: 0.5rem;
-    border-top: 1px solid #eaecf4;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-
-  .dot--answered { background: #1cc88a; }
-  .dot--doubt { background: #f6c23e; }
-  .dot--empty { background: #ffffff; border: 1px solid #d1d3e2; }
-
-  .btn-finish-sidebar {
-    width: 100%;
-    background: #e74a3b;
-    color: #ffffff;
-    border: none;
-    padding: 0.65rem;
-    border-radius: 6px;
-    font-weight: 800;
-    font-size: 0.85rem;
-    cursor: pointer;
-    margin-top: auto;
-  }
-
-  /* RESULT SCORECARD */
-  .result-scorecard {
-    text-align: center;
-    padding: 1rem 0;
-  }
-
-  .result-score-circle {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    margin: 0 auto 1.25rem;
-    background: #e74a3b;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 20px rgba(231, 74, 59, 0.35);
-  }
-
-  .result-score-circle--pass {
-    background: #1cc88a;
-    box-shadow: 0 8px 20px rgba(28, 200, 138, 0.35);
-  }
-
-  .score-number {
-    font-size: 2.5rem;
-    font-weight: 900;
-    line-height: 1;
-  }
-
-  .score-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    opacity: 0.9;
-  }
-
-  .result-status-title {
-    font-size: 1.4rem;
-    font-weight: 850;
-    color: #2e384d;
-    margin: 0 0 0.4rem;
-  }
-
-  .result-status-desc {
-    color: #718096;
-    max-width: 600px;
-    margin: 0 auto 1.5rem;
-    font-size: 0.95rem;
-  }
-
-  .review-box {
-    text-align: left;
-    margin: 1.5rem 0;
-    max-height: 350px;
-    overflow-y: auto;
-    border: 1px solid #eaecf4;
-    border-radius: 8px;
-    padding: 1rem;
-    background: #f8f9fc;
-  }
-
-  .review-title {
-    font-size: 12px;
-    font-weight: 850;
-    color: #4e73df;
-    margin-bottom: 0.85rem;
-  }
-
-  .review-item {
-    background: #ffffff;
-    border-radius: 6px;
-    padding: 0.85rem;
-    margin-bottom: 0.85rem;
-    border-left: 4px solid #d1d3e2;
-  }
-
-  .review-item--correct { border-left-color: #1cc88a; }
-  .review-item--wrong { border-left-color: #e74a3b; }
-
-  .review-item__header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11.5px;
-    font-weight: 750;
-    color: #5a5c69;
-    margin-bottom: 0.35rem;
-  }
-
-  .review-stem {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #2e384d;
-    margin-bottom: 0.4rem;
-  }
-
-  .review-ans {
-    font-size: 12px;
-    color: #4a5568;
-    margin-bottom: 0.35rem;
-  }
-
-  .review-exp {
-    font-size: 12px;
-    color: #2b6cb0;
-    background: #ebf8ff;
-    padding: 0.5rem;
-    border-radius: 4px;
-  }
-
-  .result-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
   }
 
   /* DETAIL MODAL */
@@ -1548,9 +1210,7 @@
     .btn-primary-launch,
     .btn-secondary-launch,
     .btn-finish-exam,
-    .btn-nav-prev,
-    .btn-nav-next,
-    .btn-finish-sidebar {
+    .btn-nav-prev {
       justify-content: center;
       min-height: clamp(2.75rem, 6dvh, 3rem);
     }
@@ -1582,9 +1242,6 @@
       padding: 0.75rem;
     }
 
-    .question-meta,
-    .question-nav-buttons,
-    .result-actions,
     .detail-actions {
       flex-wrap: wrap;
       gap: 0.5rem;
