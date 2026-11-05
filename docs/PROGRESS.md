@@ -1,7 +1,7 @@
 # PROGRESS — Perbaikan WebCAT
 
 **Terakhir diperbarui:** 5 November 2026
-**Status keseluruhan:** 🟡 Fase 0, 1 & 2 selesai — Fase 3 (soal bergambar) berikutnya
+**Status keseluruhan:** 🟢 Fase 0–4 selesai — Fase 5 (gap fitur) berjalan **3/16**
 **Peta fase:** [`BREAKDOWN-FASE.md`](./BREAKDOWN-FASE.md) · **Strategi:** [`RENCANA-PERBAIKAN.md`](./RENCANA-PERBAIKAN.md)
 **Ringkasan otomatis:** `pnpm progress` · **Cek konsistensi ID:** `pnpm progress:check`
 
@@ -37,10 +37,10 @@
 | 0 | Persiapan & jaring pengaman | P0 | 10 | 10 | `██████████` 100% |
 | 1 | Alur CAT fungsional (B1 & B2) | P0 | 19 | 19 | `██████████` 100% |
 | 2 | Integration test & anti-regresi | P0 | 10 | 10 | `██████████` 100% |
-| 3 | Soal bergambar end-to-end | P1 | 0 | 31 | `░░░░░░░░░░` 0% |
-| 4 | Bank soal & konten | P1 | 0 | 9 | `░░░░░░░░░░` 0% |
-| 5 | Gap fitur P1/P2 | P1/P2 | 0 | 16 | `░░░░░░░░░░` 0% |
-| **Total** | | | **39** | **95** | **41%** |
+| 3 | Soal bergambar end-to-end | P1 | 31 | 31 | `██████████` 100% |
+| 4 | Bank soal & konten | P1 | 9 | 9 | `██████████` 100% |
+| 5 | Gap fitur P1/P2 | P1/P2 | 3 | 16 | `██░░░░░░░░` 19% |
+| **Total** | | | **82** | **95** | **86%** |
 
 ---
 
@@ -333,7 +333,7 @@ tidak ada lagi fallback senyap ke fixture.
 | --- | --- | --- | --- | --- |
 | F5-01 | Pulihkan `/pricing` | ✅ | Dipulihkan dari `e0b23fd^` (`(site)/pricing/*`, `PlanCard.svelte`), migrasi `$app/stores`→`$app/state`, tautan nav dikembalikan. Bukti runtime dua arah: DB `MONTHLY=151000` → halaman `Rp 151.000` (149.000 hilang), lalu revert `149000` → `Rp 149.000` (151.000 hilang). 6 test `page.server.spec.ts` + 3 test `PlanCard.spec.ts` | 2026-11-05 |
 | F5-02 | CRUD plan admin | ✅ | `subscription_plans.deleted_at` (migrasi `20261105140000_f5_02_plan_soft_delete`), `DELETE /admin/plans/:id` + `POST /:id/restore` (wajib alasan), `GET ?includeDeleted=true`. UI `[panel]/plans` kini CRUD penuh (form + tab Arsip), sebelumnya baca-saja & memakai endpoint publik. Audit `plan.create/update/delete/restore` | 2026-11-05 |
-| F5-03 | Detail user admin | ⬜ | — | — |
+| F5-03 | Detail user admin | ✅ | `GET /admin/users/:id/overview` — satu request berisi profil, verifikasi, langganan aktif + riwayat, agregat & riwayat ujian, agregat & riwayat pembayaran; agregat dihitung di DB. `GET /admin/transactions?userId=` untuk riwayat pembayaran peserta. Halaman `[panel]/users/[id]` + tautan dari daftar. 13 test `users-overview.spec.ts` + 2 test filter `payments.service.spec.ts`. Bukti runtime 18/18 cek, semua angka cocok dengan query DB | 2026-11-05 |
 | F5-04 | Detail transaksi admin | ⬜ | — | — |
 | F5-05 | Worker job queue terjadwal | ⬜ | — | — |
 | F5-06 | Rate limit API | ⬜ | — | — |
@@ -388,6 +388,27 @@ tidak ada lagi fallback senyap ke fixture.
 > **Kenapa `DELETE` membawa body.** Alasan hapus wajib masuk audit; body JSON
 > lebih aman daripada query string yang sering dipangkas log proxy.
 
+#### Verifikasi penutup F5-03 (5 Nov 2026)
+
+| Perintah / bukti | Hasil |
+| --- | --- |
+| `vitest run test/users-overview.spec.ts` | ✅ **13/13** (profil, langganan aktif vs kedaluwarsa, agregat ujian, sesi di-void, pembayaran) |
+| `vitest run test/billing/payments.service.spec.ts` | ✅ **25/25** (termasuk 2 test filter `userId`) |
+| `vitest run` (API penuh) | ✅ 35 berkas / **344** test |
+| `vitest run` (web penuh) | ✅ 8 berkas / **70** test (termasuk 13 `user-detail.spec.ts`) |
+| `tsc --noEmit` (API) · `tsc -p tsconfig.build.json` | ✅ exit 0 keduanya |
+| `svelte-check --tsconfig ./tsconfig.json` | ✅ **0 error, 0 warning** (474 berkas) |
+| `eslint src --max-warnings 0` (API & web) | ✅ exit 0 keduanya |
+| Uji HTTP nyata (API `dist` + DB dev) | ✅ **18/18** cek. `GET /admin/users/:id/overview` → 200; sesi 1 = DB 1, skor 100 = DB 100, transaksi 1 = DB 1, total bayar Rp149.000 = DB; langganan habis 2027-01-04. `?userId=` → 1 baris milik peserta, peserta lain 0 baris; UUID invalid → 422 `COMMON_VALIDATION_FAILED`; tanpa token → 401; id asing → 404 `USER_NOT_FOUND` |
+| Halaman detail | ✅ SSR `/admin/users/:id` dengan cookie sesi nyata → **200**, 33.892 byte (bukan redirect login) |
+| Data pembayaran nyata | ✅ checkout `MONTHLY` → `WC-MW3JCNY9-PGY8CJ`, lalu `POST /payments/fake/settle` → `SUCCESS` / Rp149.000; dipakai sebagai bukti lalu dibersihkan |
+| DB akhir | ✅ sesi uji dihapus (0 `exam_sessions`), transaksi & langganan uji dihapus (0 `transactions`, kembali 3 `subscriptions` baseline) |
+
+> **Flaky test ikut diperbaiki.** `google-oauth.spec.ts` menamper tanda tangan
+> dengan `state.slice(0, -1) + 'A'`; bila HMAC kebetulan berakhiran `A`
+> (≈1/64) string tidak berubah dan `verifyState` mengembalikan `true`. Kini
+> karakter terakhir dijamin berbeda.
+
 ### P2
 
 | ID | Pekerjaan | Status | Bukti / Catatan | Tanggal |
@@ -414,6 +435,34 @@ Format entri:
 **Hambatan:** —
 **Berikutnya:** F1-04
 ```
+
+### 2026-11-05 — Fase 5: F5-03 selesai
+
+**Dikerjakan:** F5-03
+**Hasil:** Fase 5 ✅ 3/16. Admin bisa membuka detail peserta dan langsung
+melihat berapa kali ikut ujian, skor terbaik/rata-rata, kapan langganan habis,
+dan berapa total yang sudah dibayar — semuanya dari satu endpoint. Tracker:
+**82/95 = 86%**.
+
+**Bukti:**
+
+- `GET /admin/users/:id/overview` menggabungkan profil, verifikasi, langganan
+  aktif + riwayat, agregat & riwayat ujian, agregat & riwayat pembayaran.
+  Agregat dihitung di DB (`count`/`aggregate`); sesi yang di-void dikecualikan.
+- `GET /admin/transactions?userId=` menyaring riwayat pembayaran per peserta
+  (2 test baru di `payments.service.spec.ts`).
+- Halaman `[panel]/users/[id]` + tautan dari daftar; helper label di
+  `lib/admin/user-detail.ts` (13 test). `cacheTtlMs: 0` agar angka segar.
+- Uji HTTP nyata **18/18**: angka overview cocok dengan query DB, filter
+  `userId` tidak membocorkan peserta lain, otorisasi 401/404/422 benar, dan
+  SSR halaman detail 200 dengan cookie sesi nyata.
+- Ikut memperbaiki flaky `google-oauth.spec.ts` (tamper tanda tangan bisa
+  menghasilkan string yang sama bila HMAC berakhiran `A`).
+- DB uji dibersihkan: 0 sesi, 0 transaksi, 3 langganan baseline.
+
+**Hambatan:** —
+**Berikutnya:** F5-04 — detail transaksi admin (perlu keputusan soal bukti
+bayar & sumber riwayat status).
 
 ### 2026-11-05 — Fase 5: F5-02 selesai
 

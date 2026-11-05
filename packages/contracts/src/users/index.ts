@@ -141,3 +141,88 @@ export interface AdminCreateUserResponse {
   /** Ditampilkan ke admin agar bisa diteruskan manual bila email gagal. */
   inviteUrl: string | null;
 }
+
+/* ------------------------------------------------------------------ detail peserta */
+
+/**
+ * Proyeksi baris untuk halaman detail peserta (F5-03).
+ *
+ * Tipe-tipe ini sengaja didefinisikan lokal, bukan memakai tipe modul billing/
+ * exams, supaya kontrak halaman detail tidak ikut berubah setiap kali kontrak
+ * modul lain berevolusi — halaman ini hanya butuh kolom yang ditampilkan.
+ */
+export interface AdminUserSubscriptionRow {
+  id: string;
+  planCode: string | null;
+  planName: string | null;
+  status: string;
+  source: string;
+  startsAt: string;
+  endsAt: string;
+  remainingDays: number;
+  revokedAt: string | null;
+  revokeReason: string | null;
+  createdAt: string;
+}
+
+export interface AdminUserExamRow {
+  id: string;
+  examDate: string;
+  status: string;
+  startedAt: string | null;
+  finishedAt: string | null;
+  totalScore: number | null;
+  passed: boolean | null;
+  eliminatedSubtestCode: string | null;
+}
+
+export interface AdminUserPaymentRow {
+  id: string;
+  orderId: string;
+  status: string;
+  amountIdr: number;
+  planCode: string | null;
+  planName: string | null;
+  paidAt: string | null;
+  createdAt: string;
+}
+
+/**
+ * Ringkasan satu peserta untuk halaman detail admin (F5-03).
+ *
+ * Halaman ini harus menjawab tiga pertanyaan tanpa query manual:
+ *   1. berapa kali dia ikut ujian dan skornya berapa,
+ *   2. langganannya kapan habis,
+ *   3. berapa yang sudah dia bayar.
+ *
+ * Karena itu `exams` dan `payments` membawa agregat sekaligus daftar terbaru,
+ * bukan hanya daftar mentah yang harus dijumlahkan klien.
+ */
+export interface AdminUserOverview {
+  profile: AdminUserSummary;
+  /** Langganan yang sedang aktif (bila ada). */
+  subscription: AdminUserSubscriptionRow | null;
+  /** Riwayat langganan terbaru, termasuk yang sudah berakhir/dicabut. */
+  subscriptionHistory: AdminUserSubscriptionRow[];
+  exams: {
+    total: number;
+    completed: number;
+    passed: number;
+    /** Rata-rata `totalScore` ujian yang selesai (null bila belum ada). */
+    averageScore: number | null;
+    /** Skor tertinggi yang pernah dicapai (null bila belum ada). */
+    bestScore: number | null;
+    lastExamAt: string | null;
+    /** Sesi terbaru, terbaru lebih dulu. */
+    recent: AdminUserExamRow[];
+  };
+  payments: {
+    totalTransactions: number;
+    /** Transaksi berstatus SUCCESS. */
+    paidTransactions: number;
+    /** Jumlah rupiah dari transaksi SUCCESS. */
+    totalPaidIdr: number;
+    lastPaidAt: string | null;
+    recent: AdminUserPaymentRow[];
+  };
+}

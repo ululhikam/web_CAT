@@ -13,6 +13,10 @@ import {
   canManageRole,
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
+  type AdminUserExamRow,
+  type AdminUserOverview,
+  type AdminUserPaymentRow,
+  type AdminUserSubscriptionRow,
   type AdminUserSummary,
   type AvatarUploadResponse,
   type QuotaResetResponse,
@@ -154,6 +158,169 @@ export class UsersService {
     if (!user)
       throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
     return this.toSummary(user);
+  }
+
+
+  /**
+   * Ringkasan lengkap satu peserta (F5-03).
+   *
+   * Halaman detail admin harus bisa menjawab "berapa kali ikut ujian, skornya
+   * berapa, dan langganannya habis kapan" tanpa query manual. Karena itu
+   * agregatnya dihitung di database (`count`/`aggregate`), bukan di klien, dan
+   * `exams.completed` sengaja berarti "sesi yang sudah berakhir" (COMPLETED
+   * atau ELIMINATED) — hanya sesi seperti itu yang punya `totalScore`.
+   */
+  async overview(id: string): Promise<AdminUserOverview> {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
+      include: USER_INCLUDE,
+    });
+    if (!user)
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+
+    const now = new Date();
+    const recentLimit = 10;
+    const examWhere: Prisma.ExamSessionWhereInput = { userId: id, voidedAt: null };
+    const paidWhere: Prisma.TransactionWhereInput = { userId: id, status: 'SUCCESS' };
+
+    const [
+      subscriptionRows,
+      examTotal,
+      finishedAgg,
+      passedCount,
+      lastExam,
+      examRows,
+      transactionTotal,
+      paidAgg,
+      lastPaid,
+      transactionRows,
+    ] = await Promise.all([
+      this.prisma.subscription.findMany({
+        where: { userId: id },
+        include: { plan: { select: { code: true, name: true } } },
+        orderBy: [{ endsAt: 'desc' }, { createdAt: 'desc' }],
+        take: recentLimit,
+      }),
+      this.prisma.examSession.count({ where: examWhere }),
+      this.prisma.examSession.aggregate({
+        where: { ...examWhere, status: { in: ['COMPLETED', 'ELIMINATED'] } },
+        _count: { _all: true },
+        _avg: { totalScore: true },
+        _max: { totalScore: true },
+      }),
+      this.prisma.examSession.count({ where: { ...examWhere, passed: true } }),
+      this.prisma.examSession.findFirst({
+        where: examWhere,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        select: { createdAt: true, startedAt: true, finishedAt: true },
+      }),
+      this.prisma.examSession.findMany({
+        where: examWhere,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        take: recentLimit,
+        select: {
+          id: true,
+          examDate: true,
+          status: true,
+          startedAt: true,
+          finishedAt: true,
+          totalScore: true,
+          passed: true,
+          eliminatedSubtestCode: true,
+        },
+      }),
+      this.prisma.transaction.count({ where: { userId: id } }),
+      this.prisma.transaction.aggregate({
+        where: paidWhere,
+        _count: { _all: true },
+        _sum: { amountIdr: true },
+      }),
+      this.prisma.transaction.findFirst({
+        where: paidWhere,
+        orderBy: [{ paidAt: 'desc' }, { createdAt: 'desc' }],
+        select: { paidAt: true },
+      }),
+      this.prisma.transaction.findMany({
+        where: { userId: id },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        take: recentLimit,
+        include: { plan: { select: { code: true, name: true } } },
+      }),
+    ]);
+
+    const subscriptionHistory: AdminUserSubscriptionRow[] = subscriptionRows.map((row) => ({
+      id: row.id,
+      planCode: row.plan?.code ?? null,
+      planName: row.plan?.name ?? null,
+      status: row.status,
+      source: row.source,
+      startsAt: row.startsAt.toISOString(),
+      endsAt: row.endsAt.toISOString(),
+      remainingDays: Math.max(
+        0,
+        Math.ceil((row.endsAt.getTime() - now.getTime()) / (24 * 3600 * 1000)),
+      ),
+      revokedAt: row.revokedAt?.toISOString() ?? null,
+      revokeReason: row.revokeReason,
+      createdAt: row.createdAt.toISOString(),
+    }));
+
+    // "Aktif" = status ACTIVE dan belum lewat tanggal berakhir. Baris ACTIVE yang
+    // sudah kedaluwarsa tetap muncul di riwayat, tapi bukan langganan aktif.
+    const activeSubscription =
+      subscriptionHistory.find(
+        (row) => row.status === 'ACTIVE' && new Date(row.endsAt).getTime() > now.getTime(),
+      ) ?? null;
+
+    const lastExamAt = lastExam
+      ? (lastExam.finishedAt ?? lastExam.startedAt ?? lastExam.createdAt).toISOString()
+      : null;
+
+    const examHistory: AdminUserExamRow[] = examRows.map((row) => ({
+      id: row.id,
+      examDate: row.examDate.toISOString(),
+      status: row.status,
+      startedAt: row.startedAt?.toISOString() ?? null,
+      finishedAt: row.finishedAt?.toISOString() ?? null,
+      totalScore: row.totalScore === null ? null : Number(row.totalScore),
+      passed: row.passed,
+      eliminatedSubtestCode: row.eliminatedSubtestCode,
+    }));
+
+    const paymentHistory: AdminUserPaymentRow[] = transactionRows.map((row) => ({
+      id: row.id,
+      orderId: row.orderId,
+      status: row.status,
+      amountIdr: row.amountIdr,
+      planCode: row.plan?.code ?? null,
+      planName: row.plan?.name ?? null,
+      paidAt: row.paidAt?.toISOString() ?? null,
+      createdAt: row.createdAt.toISOString(),
+    }));
+
+    return {
+      profile: this.toSummary(user),
+      subscription: activeSubscription,
+      subscriptionHistory,
+      exams: {
+        total: examTotal,
+        completed: finishedAgg._count._all,
+        passed: passedCount,
+        averageScore:
+          finishedAgg._avg.totalScore === null ? null : Number(finishedAgg._avg.totalScore),
+        bestScore:
+          finishedAgg._max.totalScore === null ? null : Number(finishedAgg._max.totalScore),
+        lastExamAt,
+        recent: examHistory,
+      },
+      payments: {
+        totalTransactions: transactionTotal,
+        paidTransactions: paidAgg._count._all,
+        totalPaidIdr: paidAgg._sum.amountIdr ?? 0,
+        lastPaidAt: lastPaid?.paidAt?.toISOString() ?? null,
+        recent: paymentHistory,
+      },
+    };
   }
 
   // ------------------------------------------------------------------ provisioning

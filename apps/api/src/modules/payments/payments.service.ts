@@ -344,6 +344,7 @@ export class PaymentsService {
     const conditions: Prisma.TransactionWhereInput[] = [];
 
     if (query.status) conditions.push({ status: query.status });
+    if (query.userId) conditions.push({ userId: query.userId });
     if (query.planCode) conditions.push({ plan: { code: query.planCode.toUpperCase() } });
     if (query.from || query.to) {
       conditions.push({

@@ -103,8 +103,10 @@
           {#each users as user (user.id)}
             <tr>
               <td>
-                <p class="user__name">{user.fullName}</p>
-                <p class="user__email">{user.email}</p>
+                <a class="user__link" href={`${adminBase()}/users/${user.id}`}>
+                  <span class="user__name">{user.fullName}</span>
+                  <span class="user__email">{user.email}</span>
+                </a>
               </td>
               <td><Badge tone={user.role === 'USER' ? 'neutral' : 'brand'}>{user.role}</Badge></td>
               <td><Badge tone={statusTone(user.status)}>{user.status}</Badge></td>
@@ -128,11 +130,23 @@
 </div>
 
 <style>
+  .user__link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .user__link:hover .user__name {
+    text-decoration: underline;
+  }
+
   .user__name {
+    display: block;
     font-weight: 600;
   }
 
   .user__email {
+    display: block;
     font-size: var(--text-xs);
     color: var(--color-text-muted);
     overflow-wrap: anywhere;

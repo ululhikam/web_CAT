@@ -11,6 +11,7 @@ import {
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
   type AdminResetPasswordInput,
+  type AdminUserOverview,
   type AdminUserSummary,
   type QuotaResetInput,
   type QuotaResetResponse,
@@ -45,6 +46,12 @@ export class UsersController {
   @Get()
   list(@Query(zodPipe(userListQuerySchema)) query: UserListQuery) {
     return this.users.list(query);
+  }
+
+  @RequirePermissions('users.read')
+  @Get(':id/overview')
+  overview(@Param('id') id: string): Promise<AdminUserOverview> {
+    return this.users.overview(id);
   }
 
   @RequirePermissions('users.read')

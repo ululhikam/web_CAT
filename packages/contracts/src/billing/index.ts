@@ -104,6 +104,11 @@ export const adminTransactionListQuerySchema = transactionListQuerySchema.extend
   planCode: z.string().trim().max(50).optional(),
   from: z.coerce.date().optional(),
   to: z.coerce.date().optional(),
+  /**
+   * Filter per peserta (F5-03). Dipakai halaman detail user untuk menjawab
+   * "berapa kali dia membayar" tanpa memindai seluruh tabel.
+   */
+  userId: z.string().uuid().optional(),
 });
 export type AdminTransactionListQuery = z.infer<typeof adminTransactionListQuerySchema>;
 

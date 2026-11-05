@@ -670,6 +670,28 @@ describe('PaymentsService — admin', () => {
       expect.objectContaining({ orderId: 'WC-TEST-1' }),
     );
   });
+
+  it('listAdmin menyaring transaksi per peserta bila userId diberikan', async () => {
+    const harness = createHarness();
+    harness.prisma.transaction.findMany.mockResolvedValue([transactionRow()]);
+
+    await harness.service.listAdmin({ limit: 20, userId: 'user-1' });
+
+    expect(harness.prisma.transaction.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { AND: [{ userId: 'user-1' }] } }),
+    );
+  });
+
+  it('listAdmin tanpa userId tidak menambahkan filter peserta', async () => {
+    const harness = createHarness();
+    harness.prisma.transaction.findMany.mockResolvedValue([]);
+
+    await harness.service.listAdmin({ limit: 20 });
+
+    expect(harness.prisma.transaction.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: {} }),
+    );
+  });
 });
 
 describe('PaymentsService — riwayat & expiry', () => {

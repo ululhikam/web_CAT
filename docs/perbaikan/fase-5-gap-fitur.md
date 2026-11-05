@@ -126,20 +126,74 @@ menyembunyikan alasan di query string (yang mudah hilang di log proxy).
 
 ---
 
-### F5-03 / F5-04 — Detail user & transaksi admin
+### F5-03 — Detail user admin ✅
 
-Daftar user/transaksi sudah ada tetapi detail minim. Tambahkan:
+Daftar user sudah ada tetapi detail minim. Halaman `[panel]/users/[id]` kini
+merangkum profil, status verifikasi, langganan aktif + riwayat, riwayat sesi
+ujian, dan riwayat pembayaran.
 
-| Halaman | Isi |
+**Implementasi**
+
+| Bagian | Detail |
 | --- | --- |
-| Detail user | profil, status verifikasi, langganan aktif, riwayat sesi ujian, riwayat pembayaran |
-| Detail transaksi | status, metode, bukti bayar (media), riwayat status, aksi refund/verifikasi |
+| API | `GET /admin/users/:id/overview` — satu request; agregat dihitung di DB (`count`/`aggregate`), bukan di memori |
+| Kontrak | `AdminUserOverview` + tipe baris lokal (`AdminUserSubscriptionRow`, `AdminUserExamRow`, `AdminUserPaymentRow`). Tipe baris sengaja lokal agar halaman tidak ikut berubah setiap kontrak modul lain berevolusi |
+| Filter transaksi | `userId` opsional pada `GET /admin/transactions` (dipakai halaman detail dan tautan "lihat semua") |
+| UI | `[panel]/users/[id]/+page.svelte`; baris daftar user menaut ke detail; `cacheTtlMs: 0` agar angka selalu segar; helper label di `lib/admin/user-detail.ts` (13 test) |
+
+**Keputusan desain**
+
+1. **Satu endpoint agregat, bukan empat request.** Halaman detail hanya butuh
+   satu round-trip; `exams` dan `payments` dihitung dengan `count`/`aggregate`
+   di DB.
+2. **`null` ≠ `0`.** `bestScore`, `averageScore`, dan `lastPaidAt` bernilai
+   `null` bila belum ada data; `0` berarti ada data dengan nilai nol.
+3. **Sesi yang di-void tidak dihitung.** Semua agregat ujian memakai
+   `voidedAt: null`. `exams.completed` = sesi `COMPLETED` + `ELIMINATED` (hanya
+   keduanya punya `totalScore`); `exams.passed` dihitung terpisah dari
+   `passed: true`.
+4. **Riwayat langganan menyimpan baris `ACTIVE` yang sudah kedaluwarsa.**
+   "Langganan aktif" mensyaratkan `status = ACTIVE` **dan** `endsAt > now`;
+   baris lama tetap tampil di riwayat, bukan di kartu langganan aktif.
+5. **Pembayaran:** `totalPaidIdr` hanya menjumlahkan `status = SUCCESS`,
+   sedangkan `totalTransactions` menghitung semua status.
 
 **Kriteria selesai**
 
 - Admin bisa menjawab "user ini pernah ikut ujian berapa kali, skornya berapa,
-  dan langganannya kapan habis" tanpa query manual.
-- Aksi verifikasi/refund tercatat di audit.
+  dan langganannya kapan habis" tanpa query manual. ✅ (satu request; angka
+  dibandingkan langsung dengan query DB)
+- Aksi verifikasi/refund tercatat di audit. ✅ untuk endpoint
+  `mark-paid`/`refund`; aksi dari halaman transaksi dikerjakan di F5-04.
+
+---
+
+### F5-04 — Detail transaksi admin
+
+Halaman `[panel]/transactions/[id]` belum ada. Yang perlu ditampilkan: status,
+metode, bukti bayar (media), riwayat status, dan aksi refund/verifikasi.
+
+**Catatan penting**
+
+- Model `Transaction` **tidak punya** kolom metode pembayaran atau bukti bayar.
+  Kolom yang tersedia: `provider`, `providerRef`, `snapToken`, `redirectUrl`,
+  `rawPayload`, `refundedAt`, `refundReason`, `refundedById`.
+- Riwayat status harus diambil dari `audit_logs`
+  (`transaction.mark_paid`, `transaction.refund`, `transaction.<status>`) dan/atau
+  `payment_webhook_events`.
+- Endpoint `mark-paid` dan `refund` sudah ada dan sudah menulis audit.
+
+**Keputusan yang perlu diambil sebelum mulai**
+
+1. Tambah unggah bukti bayar (kolom + alur media) **atau** nyatakan sebagai
+   deviasi eksplisit dengan alasan (mis. pembayaran hanya lewat gateway).
+2. Sumber riwayat status: `audit_logs` saja, atau digabung dengan
+   `payment_webhook_events` agar replay webhook terlihat.
+
+**Kriteria selesai**
+
+- Admin bisa melihat detail transaksi dan riwayat statusnya tanpa query manual.
+- Aksi verifikasi/refund dari halaman transaksi tercatat di audit.
 
 ---
 
