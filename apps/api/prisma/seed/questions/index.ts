@@ -650,7 +650,6 @@ export function buildSeedQuestions(): SeedQuestion[] {
     ...buildTpk(),
     ...buildTkkChoices(),
     ...buildTkkMultiChoices(),
-    ...buildFiguralTkk(),
   ];
 }
 

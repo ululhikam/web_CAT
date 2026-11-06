@@ -81,7 +81,7 @@ describe('komposisi bank soal', () => {
     expect(only('TKK').length).toBeGreaterThanOrEqual(100);
   });
 
-  it('TKK terbagi ke perangkat keras, perangkat lunak, jaringan, keamanan, penalaran, dan figural', () => {
+  it('TKK terbagi ke perangkat keras, perangkat lunak, jaringan, keamanan, dan penalaran', () => {
     const tkk = only('TKK');
     const perCategory = new Map<string, number>();
     for (const question of tkk) {
@@ -93,7 +93,6 @@ describe('komposisi bank soal', () => {
     expect(perCategory.get('tkk/jaringan')).toBeGreaterThanOrEqual(18);
     expect(perCategory.get('tkk/keamanan')).toBeGreaterThanOrEqual(17);
     expect(perCategory.get('tkk/penalaran')).toBeGreaterThanOrEqual(14);
-    expect(perCategory.get('tkk/figural')).toBeGreaterThanOrEqual(10);
   });
 
   it('memakai kode publik unik', () => {
@@ -211,10 +210,10 @@ describe('bentuk soal', () => {
 describe('kelengkapan media soal bergambar (F3-26)', () => {
   const imageChoice = questions.filter((question) => question.type === 'IMAGE_CHOICE');
 
-  it('seed memuat soal bergambar untuk Kecerdasan dan TKK', () => {
+  it('seed memuat soal bergambar untuk Kecerdasan', () => {
     expect(imageChoice.length).toBeGreaterThanOrEqual(20);
     expect(new Set(imageChoice.map((question) => question.subtestCode))).toEqual(
-      new Set(['KECERDASAN', 'TKK']),
+      new Set(['KECERDASAN']),
     );
   });
 

@@ -135,17 +135,16 @@
     <div class="hero-copy">
       <div class="status-pill">
         <span class="status-pill__dot"></span>
-        <span class="status-pill__text">STANDAR SELEKSI MABES POLRI</span>
+        <span class="status-pill__text">STANDAR SELEKSI SEKOLAH INSPEKTUR POLISI (SIP)</span>
       </div>
 
       <h1 class="hero-headline">
         Latihan Ujian CAT Polri.<br />
-        Fokus Lolos Seleksi Asli.
+        Khusus Sekolah Inspektur Polisi.
       </h1>
 
       <p class="hero-lead">
-        TES CAT (Computer Assisted Test) resmi untuk Akpol, Bintara, dan Tamtama. Dilengkapi
-        timer server anti-curang, sistem gugur bertahap, dan kalkulasi nilai ambang batas otomatis.
+        Platform Computer Assisted Test (CAT) terstandarisasi khusus persiapan seleksi Sekolah Inspektur Polisi (SIP). Dilengkapi timer server real-time, Tes Psikologi, Kecermatan 10 Kolom, TKK Komputer, dan TPK.
       </p>
 
       <div class="hero-cta-group">

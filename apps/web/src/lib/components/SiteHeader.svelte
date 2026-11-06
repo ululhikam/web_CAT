@@ -8,7 +8,6 @@
     { href: '/#tes-cat', label: 'TES CAT Interaktif' },
     { href: '/#struktur', label: 'Struktur Seleksi' },
     { href: '/#kalkulator', label: 'Kalkulator Ambang Batas' },
-    ...(PRICING_ENABLED ? [{ href: '/pricing', label: 'Harga & Paket' }] : []),
     { href: '/#faq', label: 'FAQ' },
   ];
 
