@@ -299,17 +299,23 @@
 
 <div class="sim-page">
   {#if !isStarted}
-    <!-- LAYAR PILIH TES & SUBTES PRETEST CAT -->
-    <header class="sim-header">
-      <div class="sim-header__left">
-        <button class="back-link" type="button" onclick={() => goto('/dashboard')}>
-          <AdminIcon name="chevron" size={16} />
-          <span>Kembali ke dashboard</span>
-        </button>
-        <div>
-          <h1>Pretest CAT Bebas Latihan Mandiri</h1>
-          <p>
-            Pilih materi Pretest CAT yang ingin Anda uji coba. Latihan mandiri standar CAT Polri dengan timer resmi, evaluasi bobot jawaban, format monokrom, dan pembahasan menyeluruh.
+    <!-- LAYAR PILIH TES & SUBTES PRETEST CAT (MODERN & PROFESIONAL) -->
+    <header class="sim-hero">
+      <div class="sim-hero__container">
+        <div class="sim-hero__top">
+          <button class="back-link" type="button" onclick={() => goto('/dashboard')}>
+            <AdminIcon name="chevron" size={16} />
+            <span>Kembali ke Dashboard</span>
+          </button>
+          <div class="sim-hero__badge">
+            <span class="status-pulse-dot"></span>
+            <span>Standar CAT Polri Lulus SIP</span>
+          </div>
+        </div>
+        <div class="sim-hero__body">
+          <h1 class="sim-hero__title">Pretest CAT Mandiri</h1>
+          <p class="sim-hero__desc">
+            Uji kesiapan seleksi Anda dengan sistem Computer Assisted Test (CAT) mandiri. Dilengkapi timer dinas, skala penilaian bobot komposit, format monokrom, dan pembahasan soal menyeluruh.
           </p>
         </div>
       </div>
@@ -321,8 +327,8 @@
         <div class="section-title-wrap">
           <span class="step-badge">1</span>
           <div>
-            <h2 class="section-title">Pilih Materi Tes CAT</h2>
-            <p class="section-subtitle">Pilih modul ujian yang ingin Anda latih saat ini</p>
+            <h2 class="section-title">Pilih Modul Ujian CAT</h2>
+            <p class="section-subtitle">Setiap modul terstandar rata-rata 100 butir soal relevan dengan seleksi kepolisian</p>
           </div>
         </div>
 
@@ -330,89 +336,105 @@
           <!-- Opsi 1: PSIKOTES -->
           <button
             type="button"
-            class="category-card"
-            class:category-card--active={selectedCategoryId === 'PSIKOTES'}
+            class="cat-tile"
+            class:cat-tile--active={selectedCategoryId === 'PSIKOTES'}
             onclick={() => {
               selectedCategoryId = 'PSIKOTES';
             }}
           >
-            <div class="category-card__icon">
-              <AdminIcon name="questions" size={24} />
+            <div class="cat-tile__head">
+              <div class="cat-tile__icon cat-tile__icon--indigo">
+                <AdminIcon name="questions" size={22} />
+              </div>
+              <span class="cat-tile__badge">3 Subtes • @100 Butir</span>
             </div>
-            <div class="category-card__body">
-              <div class="category-card__tag">3 Subtes • @100 Soal</div>
-              <h3 class="category-card__name">Tes Psikologi (Psikotes)</h3>
-              <p class="category-card__desc">
-                Rata-rata 100 soal per subtes: Kecerdasan (100 soal), Mental Kepribadian (100 soal), dan Kecermatan (100 soal) berbasis studi kasus kedinasan Polri.
-              </p>
+            <h3 class="cat-tile__name">Tes Psikologi (Psikotes)</h3>
+            <p class="cat-tile__desc">
+              Kecerdasan (100), Mental Kepribadian SJT (100), dan Kecermatan CAT (100).
+            </p>
+            <div class="cat-tile__footer">
+              <span class="cat-tile__indicator" class:cat-tile__indicator--active={selectedCategoryId === 'PSIKOTES'}>
+                {selectedCategoryId === 'PSIKOTES' ? '✓ Aktif Terpilih' : 'Pilih Modul'}
+              </span>
             </div>
-            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'PSIKOTES'}></span>
           </button>
 
           <!-- Opsi 2: TKK -->
           <button
             type="button"
-            class="category-card"
-            class:category-card--active={selectedCategoryId === 'TKK'}
+            class="cat-tile"
+            class:cat-tile--active={selectedCategoryId === 'TKK'}
             onclick={() => {
               selectedCategoryId = 'TKK';
             }}
           >
-            <div class="category-card__icon">
-              <AdminIcon name="devices" size={24} />
+            <div class="cat-tile__head">
+              <div class="cat-tile__icon cat-tile__icon--blue">
+                <AdminIcon name="devices" size={22} />
+              </div>
+              <span class="cat-tile__badge">100 Butir • 90 Menit</span>
             </div>
-            <div class="category-card__body">
-              <div class="category-card__tag">100 Butir Soal</div>
-              <h3 class="category-card__name">Tes Kemampuan Komputer (TKK / TKP)</h3>
-              <p class="category-card__desc">
-                100 soal hardware, jaringan, keamanan siber/phishing, 2FA, integritas data kedinasan, dan teknologi operasional Polri (90 menit).
-              </p>
+            <h3 class="cat-tile__name">Kemampuan Komputer (TKK)</h3>
+            <p class="cat-tile__desc">
+              Hardware, jaringan, keamanan siber, enkripsi data, dan etika digital TI Polri.
+            </p>
+            <div class="cat-tile__footer">
+              <span class="cat-tile__indicator" class:cat-tile__indicator--active={selectedCategoryId === 'TKK'}>
+                {selectedCategoryId === 'TKK' ? '✓ Aktif Terpilih' : 'Pilih Modul'}
+              </span>
             </div>
-            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'TKK'}></span>
           </button>
 
           <!-- Opsi 3: TPK -->
           <button
             type="button"
-            class="category-card"
-            class:category-card--active={selectedCategoryId === 'TPK'}
+            class="cat-tile"
+            class:cat-tile--active={selectedCategoryId === 'TPK'}
             onclick={() => {
               selectedCategoryId = 'TPK';
             }}
           >
-            <div class="category-card__icon">
-              <AdminIcon name="shield" size={24} />
+            <div class="cat-tile__head">
+              <div class="cat-tile__icon cat-tile__icon--amber">
+                <AdminIcon name="shield" size={22} />
+              </div>
+              <span class="cat-tile__badge">100 Butir • 60 Menit</span>
             </div>
-            <div class="category-card__body">
-              <div class="category-card__tag">100 Butir Soal</div>
-              <h3 class="category-card__name">Tes Pengetahuan Kepolisian (TPK)</h3>
-              <p class="category-card__desc">
-                100 soal UU No. 2/2002, diskresi kepolisian, KUHAP Pasal 184 alat bukti, falsafah Tribrata, dan Perpol kode etik profesi Polri (60 menit).
-              </p>
+            <h3 class="cat-tile__name">Pengetahuan Kepolisian (TPK)</h3>
+            <p class="cat-tile__desc">
+              UU 2/2002, diskresi kepolisian, KUHAP 184 alat bukti, Tribrata &amp; Kode Etik.
+            </p>
+            <div class="cat-tile__footer">
+              <span class="cat-tile__indicator" class:cat-tile__indicator--active={selectedCategoryId === 'TPK'}>
+                {selectedCategoryId === 'TPK' ? '✓ Aktif Terpilih' : 'Pilih Modul'}
+              </span>
             </div>
-            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'TPK'}></span>
           </button>
 
           <!-- Opsi 4: ALL (LENGKAP) -->
           <button
             type="button"
-            class="category-card"
-            class:category-card--active={selectedCategoryId === 'ALL'}
+            class="cat-tile"
+            class:cat-tile--active={selectedCategoryId === 'ALL'}
             onclick={() => {
               selectedCategoryId = 'ALL';
             }}
           >
-            <div class="category-card__icon">
-              <AdminIcon name="sparkles" size={24} />
+            <div class="cat-tile__head">
+              <div class="cat-tile__icon cat-tile__icon--emerald">
+                <AdminIcon name="sparkles" size={22} />
+              </div>
+              <span class="cat-tile__badge cat-tile__badge--emerald">500 Butir • Lengkap</span>
             </div>
-            <div class="category-card__body">
-              <div class="category-card__tag">500 Butir Lengkap</div>
-              <h3 class="category-card__name">Simulasi Lengkap CAT Lulus SIP</h3>
-              <p class="category-card__desc">
-                Try out komprehensif seluruh subtes: Kecerdasan 100, Kepribadian 100, Kecermatan 100, TKK 100, dan TPK 100. Total 500 butir soal riil kelulusan SIP.
-              </p>
+            <h3 class="cat-tile__name">Simulasi Lengkap Lulus SIP</h3>
+            <p class="cat-tile__desc">
+              Try out akbar gabungan seluruh subtes (Psikotes + TKK + TPK) format resmi.
+            </p>
+            <div class="cat-tile__footer">
+              <span class="cat-tile__indicator" class:cat-tile__indicator--active={selectedCategoryId === 'ALL'}>
+                {selectedCategoryId === 'ALL' ? '✓ Aktif Terpilih' : 'Pilih Modul'}
+              </span>
             </div>
-            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'ALL'}></span>
           </button>
         </div>
       </section>
@@ -423,156 +445,136 @@
           <div class="section-title-wrap">
             <span class="step-badge">2</span>
             <div>
-              <h2 class="section-title">Pilih Subtes Psikologi (Standar 100 Soal)</h2>
-              <p class="section-subtitle">Setiap subtes dirancang rata-rata 100 butir soal relevan dengan seleksi kepolisian</p>
+              <h2 class="section-title">Pilih Subtes Psikologi</h2>
+              <p class="section-subtitle">Pilih untuk menguji salah satu pilar psikotes atau seluruhnya sekaligus</p>
             </div>
           </div>
 
-          <div class="subtest-grid">
+          <div class="subtest-segment-row">
             <button
               type="button"
-              class="subtest-chip"
-              class:subtest-chip--active={selectedSubtestId === 'ALL'}
+              class="subtest-pill"
+              class:subtest-pill--active={selectedSubtestId === 'ALL'}
               onclick={() => (selectedSubtestId = 'ALL')}
             >
-              <div class="subtest-chip__icon">✦</div>
-              <div>
+              <span class="subtest-pill__icon">✦</span>
+              <div class="subtest-pill__body">
                 <strong>Semua Subtes Psikotes</strong>
-                <span>Total 300 Butir (Kecerdasan 100 + Kepribadian 100 + Kecermatan 100)</span>
+                <span>300 Butir (Kecerdasan, Kepribadian &amp; Kecermatan)</span>
               </div>
             </button>
 
             <button
               type="button"
-              class="subtest-chip"
-              class:subtest-chip--active={selectedSubtestId === 'KECERDASAN'}
+              class="subtest-pill"
+              class:subtest-pill--active={selectedSubtestId === 'KECERDASAN'}
               onclick={() => (selectedSubtestId = 'KECERDASAN')}
             >
-              <div class="subtest-chip__icon">🧠</div>
-              <div>
+              <span class="subtest-pill__icon">🧠</span>
+              <div class="subtest-pill__body">
                 <strong>Kecerdasan</strong>
-                <span>100 Butir • 90 Menit (Verbal, numerik patroli, logika alibi &amp; denah wilayah)</span>
+                <span>100 Butir • 90 Menit (Verbal, Deret, Alibi &amp; Denah)</span>
               </div>
             </button>
 
             <button
               type="button"
-              class="subtest-chip"
-              class:subtest-chip--active={selectedSubtestId === 'KEPRIBADIAN'}
+              class="subtest-pill"
+              class:subtest-pill--active={selectedSubtestId === 'KEPRIBADIAN'}
               onclick={() => (selectedSubtestId = 'KEPRIBADIAN')}
             >
-              <div class="subtest-chip__icon">⚖️</div>
-              <div>
+              <span class="subtest-pill__icon">⚖️</span>
+              <div class="subtest-pill__body">
                 <strong>Mental Kepribadian</strong>
-                <span>100 Butir • 60 Menit (100 Studi kasus kedinasan Polri: integritas, emosi &amp; kepemimpinan)</span>
+                <span>100 Butir • 60 Menit (Studi Kasus SJT Kedinasan Polri)</span>
               </div>
             </button>
 
             <button
               type="button"
-              class="subtest-chip"
-              class:subtest-chip--active={selectedSubtestId === 'KECERMATAN'}
+              class="subtest-pill"
+              class:subtest-pill--active={selectedSubtestId === 'KECERMATAN'}
               onclick={() => (selectedSubtestId = 'KECERMATAN')}
             >
-              <div class="subtest-chip__icon">🎯</div>
-              <div>
-                <strong>Kecermatan (Format CAT)</strong>
-                <span>5 Kolom • 100 Butir (Angka, huruf, simbol hilang &amp; campuran, 60s/kolom)</span>
+              <span class="subtest-pill__icon">🎯</span>
+              <div class="subtest-pill__body">
+                <strong>Kecermatan Monokrom</strong>
+                <span>100 Butir • 5 Kolom (Angka, Huruf &amp; Sandi Hilang)</span>
               </div>
             </button>
-          </div>
-
-          <!-- CONTOH & KOMPOSISI STANDAR SUBTES PSIKOTES POLRI -->
-          <div class="subtest-example-box">
-            <div class="subtest-example-head">
-              <span class="subtest-example-badge">Standar Komposisi Subtes CAT Polri</span>
-              <p>Rincian subtes dengan rata-rata 100 butir soal berbasis tugas kepolisian dan anti-monoton:</p>
-            </div>
-            <div class="subtest-example-grid">
-              <div class="example-item">
-                <div class="example-item__title">🧠 Kecerdasan (100 Soal)</div>
-                <div class="example-item__text">
-                  Menguji penalaran verbal analitis, silogisme penyidikan alibi tersangka, deret aritmatika kecepatan patroli, orientasi denah tata letak wilayah tugas, dan klasifikasi data.
-                </div>
-              </div>
-              <div class="example-item">
-                <div class="example-item__title">⚖️ Kepribadian (100 Soal)</div>
-                <div class="example-item__text">
-                  100 studi kasus situasional nyata kedinasan (SJT): penolakan gratifikasi, ketegasan integritas saat intervensi, pengendalian emosi pelayanan warga, dan kepemimpinan operasional.
-                </div>
-              </div>
-              <div class="example-item">
-                <div class="example-item__title">🎯 Kecermatan (100 Soal)</div>
-                <div class="example-item__text">
-                  5 Kolom @ 20 butir (100 soal total, 60 detik per kolom) dalam format monokrom putih CAT: Angka Hilang, Huruf Hilang, Simbol Hilang, dan Campuran Sandi Taktis.
-                </div>
-              </div>
-            </div>
           </div>
         </section>
       {/if}
 
-      <!-- 3. DETAIL PAKET & PENGATURAN MODE PENGERJAAN -->
-      <section class="overview-box">
-        <div class="overview-left">
-          <div class="overview-eyebrow">Paket Simulasi Terpilih</div>
-          <h3 class="overview-title">{currentPacket.title}</h3>
-          <p class="overview-sub">{currentPacket.subtitle}</p>
-          <p class="overview-desc">{currentPacket.description}</p>
-
-          <div class="overview-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Jumlah Soal</span>
-              <strong class="metric-val">{currentPacket.questions.length} Butir</strong>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Alokasi Waktu</span>
-              <strong class="metric-val">{Math.round(currentPacket.durationSeconds / 60)} Menit</strong>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Ambang Kelulusan</span>
-              <strong class="metric-val text-brand">61.00 (MS)</strong>
-            </div>
+      <!-- 3. LEMBAR KESIAPAN & KONFIRMASI UJIAN -->
+      <section class="launch-card">
+        <div class="launch-card__header">
+          <div class="launch-card__head-info">
+            <span class="launch-card__badge">{currentPacket.badge}</span>
+            <h2 class="launch-card__title">{currentPacket.title}</h2>
+            <p class="launch-card__desc">{currentPacket.subtitle}</p>
           </div>
-        </div>
 
-        <div class="overview-right">
-          <div class="mode-control-card">
-            <div class="mode-control-head">
-              <span>Pengaturan Pengerjaan</span>
-              <a href="/profile" class="mode-setting-link" title="Buka pengaturan profil">Ubah di Profil ↗</a>
-            </div>
-            <div class="mode-current">
-              <div class="mode-badge" class:mode-badge--auto={examPreferences.mode === 'auto'}>
-                {#if examPreferences.mode === 'auto'}
-                  ⚡ Otomatis Lanjut (Auto Next)
-                {:else}
-                  ✋ Manual (Klik Berikutnya)
-                {/if}
-              </div>
-              <p class="mode-hint">
-                {#if examPreferences.mode === 'auto'}
-                  Pindah ke butir berikutnya otomatis saat memilih opsi.
-                {:else}
-                  Nomor soal tetap diam setelah memilih sampai Anda klik tombol Berikutnya.
-                {/if}
-              </p>
-            </div>
-            <!-- Quick toggle -->
+          <div class="launch-card__mode-box">
+            <span class="mode-box-label">Mode Pengerjaan:</span>
             <button
               type="button"
-              class="quick-toggle-btn"
+              class="mode-switch-pill"
+              class:mode-switch-pill--auto={examPreferences.mode === 'auto'}
+              title="Klik untuk beralih mode pengerjaan"
               onclick={() =>
                 examPreferences.setMode(
                   examPreferences.mode === 'auto' ? 'manual' : 'auto',
                 )}
             >
-              Ganti ke mode {examPreferences.mode === 'auto' ? 'Manual' : 'Auto Next'}
+              <span class="mode-switch-dot"></span>
+              <strong>{examPreferences.mode === 'auto' ? '⚡ Auto Next' : '✋ Manual Next'}</strong>
+              <span class="mode-switch-hint">Ubah</span>
             </button>
           </div>
+        </div>
 
-          <button class="button button--primary button--lg start-btn" type="button" onclick={startSimulation}>
-            <span>Mulai Simulasi Sekarang</span>
+        <div class="launch-card__metrics-grid">
+          <div class="metric-tile">
+            <span class="metric-tile__icon">📋</span>
+            <div class="metric-tile__content">
+              <span class="metric-tile__label">Jumlah Soal</span>
+              <strong class="metric-tile__value">{currentPacket.questions.length} Butir</strong>
+            </div>
+          </div>
+
+          <div class="metric-tile">
+            <span class="metric-tile__icon">⏱️</span>
+            <div class="metric-tile__content">
+              <span class="metric-tile__label">Alokasi Waktu</span>
+              <strong class="metric-tile__value">{Math.round(currentPacket.durationSeconds / 60)} Menit</strong>
+            </div>
+          </div>
+
+          <div class="metric-tile">
+            <span class="metric-tile__icon">🎯</span>
+            <div class="metric-tile__content">
+              <span class="metric-tile__label">Ambang Kelulusan</span>
+              <strong class="metric-tile__value text-brand">61.00 (MS)</strong>
+            </div>
+          </div>
+
+          <div class="metric-tile">
+            <span class="metric-tile__icon">📊</span>
+            <div class="metric-tile__content">
+              <span class="metric-tile__label">Evaluasi &amp; Ulasan</span>
+              <strong class="metric-tile__value">Skor &amp; Pembahasan</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="launch-card__footer">
+          <div class="launch-card__tip">
+            💡 <span>Jawaban tersimpan otomatis secara real-time. Anda dapat menandai ragu-ragu dan berpindah nomor soal kapan saja.</span>
+          </div>
+
+          <button class="launch-btn" type="button" onclick={startSimulation}>
+            <span>Mulai Pretest CAT Sekarang</span>
             <AdminIcon name="arrow-right" size={18} />
           </button>
         </div>
@@ -1452,7 +1454,63 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* ------------------- SELECTION VIEW STYLES ------------------- */
+  /* ------------------- MODERN PRETEST SELECTION STYLES ------------------- */
+  .sim-hero {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 6%, var(--color-surface)) 0%, var(--color-surface) 100%);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 15%, var(--color-border));
+    border-radius: var(--radius-lg);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    margin-bottom: var(--space-6);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+
+  .sim-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .sim-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .status-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+
+  .sim-hero__title {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+  }
+
+  .sim-hero__desc {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    max-width: 75ch;
+  }
+
   .selection-container {
     display: flex;
     flex-direction: column;
@@ -1474,38 +1532,39 @@
   .step-badge {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: var(--color-primary);
     color: #fff;
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     font-weight: 700;
     flex-shrink: 0;
   }
 
   .section-title {
     margin: 0;
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     font-weight: 700;
+    color: var(--color-text);
   }
 
   .section-subtitle {
-    margin: 0.15rem 0 0;
+    margin: 0.1rem 0 0;
     font-size: var(--text-xs);
     color: var(--color-text-muted);
   }
 
+  /* 4 Category Tiles */
   .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-4);
   }
 
-  .category-card {
+  .cat-tile {
     display: flex;
-    align-items: flex-start;
-    gap: var(--space-3);
+    flex-direction: column;
     padding: var(--space-4);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -1514,83 +1573,118 @@
     text-align: left;
     font: inherit;
     position: relative;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .category-card:hover {
+  .cat-tile:hover {
     border-color: var(--color-primary-soft, #93c5fd);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
-  .category-card--active {
+  .cat-tile--active {
     border-color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
-    box-shadow: 0 0 0 1px var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 4%, var(--color-surface));
+    box-shadow: 0 0 0 1px var(--color-primary), 0 4px 16px rgba(37, 99, 235, 0.08);
   }
 
-  .category-card__icon {
+  .cat-tile__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .cat-tile__icon {
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-md);
-    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
-    color: var(--color-primary);
     flex-shrink: 0;
   }
 
-  .category-card__body {
-    flex: 1;
-    min-width: 0;
+  .cat-tile__icon--indigo {
+    background: #e0e7ff;
+    color: #4338ca;
   }
 
-  .category-card__tag {
-    font-size: 0.7rem;
+  .cat-tile__icon--blue {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .cat-tile__icon--amber {
+    background: #fef3c7;
+    color: #b45309;
+  }
+
+  .cat-tile__icon--emerald {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  .cat-tile__badge {
+    font-size: 0.68rem;
     font-weight: 700;
-    color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.25rem;
+    color: var(--color-text-muted);
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.02em;
   }
 
-  .category-card__name {
+  .cat-tile__badge--emerald {
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+  }
+
+  .cat-tile__name {
     margin: 0 0 0.35rem;
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     font-weight: 700;
     color: var(--color-text);
+    line-height: 1.35;
   }
 
-  .category-card__desc {
-    margin: 0;
-    font-size: var(--text-xs);
+  .cat-tile__desc {
+    margin: 0 0 var(--space-3);
+    font-size: 0.76rem;
     color: var(--color-text-muted);
     line-height: 1.45;
+    flex: 1;
   }
 
-  .category-radio {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--color-border);
-    flex-shrink: 0;
-    margin-top: 0.25rem;
+  .cat-tile__footer {
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+    padding-top: var(--space-2);
   }
 
-  .category-radio--active {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
-    box-shadow: inset 0 0 0 3px #fff;
+  .cat-tile__indicator {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
   }
 
-  /* Subtest selector chips */
-  .subtest-grid {
+  .cat-tile__indicator--active {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  /* Subtest Segment Pills */
+  .subtest-segment-row {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: var(--space-3);
   }
 
-  .subtest-chip {
+  .subtest-pill {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -1604,162 +1698,224 @@
     transition: all 0.15s ease;
   }
 
-  .subtest-chip:hover {
-    border-color: var(--color-primary);
+  .subtest-pill:hover {
+    border-color: var(--color-primary-soft, #93c5fd);
   }
 
-  .subtest-chip--active {
+  .subtest-pill--active {
     border-color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+    background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+    box-shadow: 0 0 0 1px var(--color-primary);
   }
 
-  .subtest-chip__icon {
-    font-size: 1.35rem;
+  .subtest-pill__icon {
+    font-size: 1.25rem;
     line-height: 1;
     flex-shrink: 0;
   }
 
-  .subtest-chip strong {
+  .subtest-pill__body {
+    min-width: 0;
+  }
+
+  .subtest-pill__body strong {
     display: block;
-    font-size: var(--text-sm);
+    font-size: 0.82rem;
     color: var(--color-text);
+    line-height: 1.3;
   }
 
-  .subtest-chip span {
+  .subtest-pill__body span {
     display: block;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* Subtest Example Breakdown Box */
-  .subtest-example-box {
-    margin-top: var(--space-4);
-    padding: var(--space-4);
-    background: var(--color-surface-subtle);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-md);
-  }
-
-  .subtest-example-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-3);
-  }
-
-  .subtest-example-head p {
-    margin: 0;
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-
-  .subtest-example-badge {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.15rem 0.5rem;
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
-    color: var(--color-primary);
-  }
-
-  .subtest-example-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-3);
-  }
-
-  .example-item {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: var(--space-3);
-  }
-
-  .example-item__title {
-    font-size: var(--text-xs);
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: 0.25rem;
-  }
-
-  .example-item__text {
-    font-size: 0.74rem;
-    line-height: 1.45;
-    color: var(--color-text-muted);
-  }
-
-  /* Overview & Control Box */
-  .overview-box {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-    padding: clamp(1.2rem, 3vw, 1.8rem);
+  /* Lembar Konfirmasi & Launch Card */
+  .launch-card {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: var(--color-surface);
-    box-shadow: var(--shadow-sm);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
   }
 
-  @media (min-width: 860px) {
-    .overview-box {
-      grid-template-columns: 1.4fr 1fr;
-      align-items: center;
-    }
+  .launch-card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-4);
   }
 
-  .overview-eyebrow {
-    font-size: var(--text-xs);
+  .launch-card__badge {
+    display: inline-block;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
     color: var(--color-primary);
+    margin-bottom: 0.35rem;
   }
 
-  .overview-title {
-    margin: 0.3rem 0 0.2rem;
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  .launch-card__title {
+    margin: 0 0 0.25rem;
+    font-size: clamp(1.15rem, 2.5vw, 1.45rem);
     font-weight: 700;
+    color: var(--color-text);
   }
 
-  .overview-sub {
-    margin: 0 0 0.6rem;
-    font-size: var(--text-sm);
-    color: var(--color-primary);
+  .launch-card__desc {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.45;
+  }
+
+  .launch-card__mode-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+  }
+
+  .mode-box-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
     font-weight: 600;
   }
 
-  .overview-desc {
-    margin: 0 0 var(--space-4);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    line-height: 1.5;
+  .mode-switch-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-surface-subtle);
+    font: inherit;
+    font-size: 0.74rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
   }
 
-  .overview-metrics {
+  .mode-switch-pill:hover {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  }
+
+  .mode-switch-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+  }
+
+  .mode-switch-pill--auto .mode-switch-dot {
+    background: #10b981;
+    box-shadow: 0 0 0 2px #d1fae5;
+  }
+
+  .mode-switch-hint {
+    font-size: 0.68rem;
+    color: var(--color-primary);
+    text-decoration: underline;
+    margin-left: 0.2rem;
+  }
+
+  .launch-card__metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .metric-tile {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
   }
 
-  .metric-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+  .metric-tile__icon {
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
   }
 
-  .metric-label {
-    font-size: 0.7rem;
+  .metric-tile__label {
+    display: block;
+    font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-muted);
   }
 
-  .metric-val {
-    font-size: 1.15rem;
+  .metric-tile__value {
+    display: block;
+    font-size: var(--text-sm);
     font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .launch-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+  }
+
+  .launch-card__tip {
+    font-size: 0.74rem;
+    color: var(--color-text-muted);
+    max-width: 55ch;
+    line-height: 1.45;
+  }
+
+  .launch-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 0.75rem 1.6rem;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: #fff;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .launch-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    filter: brightness(1.05);
+  }
+
+  .launch-btn:active {
+    transform: translateY(0);
   }
 
   .text-brand {
@@ -1772,89 +1928,6 @@
 
   .text-danger {
     color: #ef4444;
-  }
-
-  .overview-right {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .mode-control-card {
-    padding: var(--space-3) var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: var(--color-surface-muted, #f8fafc);
-  }
-
-  .mode-control-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-muted);
-    margin-bottom: 0.4rem;
-  }
-
-  .mode-setting-link {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  .mode-setting-link:hover {
-    text-decoration: underline;
-  }
-
-  .mode-badge {
-    display: inline-block;
-    padding: 0.25rem 0.6rem;
-    border-radius: var(--radius-sm);
-    background: #e2e8f0;
-    color: #334155;
-    font-size: var(--text-xs);
-    font-weight: 700;
-    margin-bottom: 0.35rem;
-  }
-
-  .mode-badge--auto {
-    background: #dcfce7;
-    color: #15803d;
-  }
-
-  .mode-hint {
-    margin: 0 0 0.5rem;
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    line-height: 1.4;
-  }
-
-  .quick-toggle-btn {
-    padding: 0.35rem 0.65rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    background: var(--color-surface);
-    color: var(--color-text);
-    font: inherit;
-    font-size: 0.72rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .quick-toggle-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
-
-  .start-btn {
-    width: 100%;
-    padding: 0.85rem 1.4rem;
-    font-size: 1rem;
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
   }
 
   /* ------------------- RUNNING SIMULATION STYLES ------------------- */

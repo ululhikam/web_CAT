@@ -237,14 +237,14 @@
         Dilengkapi pengatur waktu terpisah per subtes, bobot penilaian resmi, serta pendeteksi ambang batas kelulusan Memenuhi Syarat (MS) sesuai pengaturan ujian.
       </p>
       <div class="banner-buttons">
-        <button class="btn-primary-launch" type="button" onclick={() => goto('/exam')}>
-          <AdminIcon name="shield" size={17} />
-          <span>Mulai TES CAT Sekarang</span>
+        <button class="btn-primary-launch" type="button" onclick={() => goto('/simulation')}>
+          <AdminIcon name="sparkles" size={17} />
+          <span>Mulai Pretest CAT Mandiri</span>
         </button>
-        <a href="#riwayat" class="btn-secondary-launch">
-          <AdminIcon name="list" size={17} />
-          <span>Lihat Riwayat Nilai</span>
-        </a>
+        <button class="btn-secondary-launch" type="button" onclick={() => goto('/exam')}>
+          <AdminIcon name="shield" size={17} />
+          <span>Ujian Terjadwal</span>
+        </button>
       </div>
     </div>
   </section>
