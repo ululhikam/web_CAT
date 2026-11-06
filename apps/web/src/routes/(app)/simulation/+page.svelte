@@ -340,10 +340,10 @@
               <AdminIcon name="questions" size={24} />
             </div>
             <div class="category-card__body">
-              <div class="category-card__tag">3 Subtes Tersedia</div>
+              <div class="category-card__tag">3 Subtes • @100 Soal</div>
               <h3 class="category-card__name">Tes Psikologi (Psikotes)</h3>
               <p class="category-card__desc">
-                Kecerdasan (verbal, numerik, denah), Mental Kepribadian (integritas &amp; emosi), serta Kecermatan kolom hilang format CAT.
+                Rata-rata 100 soal per subtes: Kecerdasan (100 soal), Mental Kepribadian (100 soal), dan Kecermatan (100 soal) berbasis studi kasus kedinasan Polri.
               </p>
             </div>
             <span class="category-radio" class:category-radio--active={selectedCategoryId === 'PSIKOTES'}></span>
@@ -362,10 +362,10 @@
               <AdminIcon name="devices" size={24} />
             </div>
             <div class="category-card__body">
-              <div class="category-card__tag">10 Butir Soal</div>
-              <h3 class="category-card__name">Tes Kemampuan Komputer (TKK)</h3>
+              <div class="category-card__tag">100 Butir Soal</div>
+              <h3 class="category-card__name">Tes Kemampuan Komputer (TKK / TKP)</h3>
               <p class="category-card__desc">
-                Hardware, jaringan komputer, keamanan siber/phishing, 2FA, data kedinasan, dan etika digital UU ITE.
+                100 soal hardware, jaringan, keamanan siber/phishing, 2FA, integritas data kedinasan, dan teknologi operasional Polri (90 menit).
               </p>
             </div>
             <span class="category-radio" class:category-radio--active={selectedCategoryId === 'TKK'}></span>
@@ -384,10 +384,10 @@
               <AdminIcon name="shield" size={24} />
             </div>
             <div class="category-card__body">
-              <div class="category-card__tag">10 Butir Soal</div>
+              <div class="category-card__tag">100 Butir Soal</div>
               <h3 class="category-card__name">Tes Pengetahuan Kepolisian (TPK)</h3>
               <p class="category-card__desc">
-                UU No. 2/2002, diskresi kepolisian, KUHAP Pasal 184 alat bukti, falsafah Tribrata, serta Perpol kode etik.
+                100 soal UU No. 2/2002, diskresi kepolisian, KUHAP Pasal 184 alat bukti, falsafah Tribrata, dan Perpol kode etik profesi Polri (60 menit).
               </p>
             </div>
             <span class="category-radio" class:category-radio--active={selectedCategoryId === 'TPK'}></span>
@@ -406,10 +406,10 @@
               <AdminIcon name="sparkles" size={24} />
             </div>
             <div class="category-card__body">
-              <div class="category-card__tag">16 Butir Campuran</div>
-              <h3 class="category-card__name">Simulasi Lengkap CAT SIP</h3>
+              <div class="category-card__tag">500 Butir Lengkap</div>
+              <h3 class="category-card__name">Simulasi Lengkap CAT Lulus SIP</h3>
               <p class="category-card__desc">
-                Paket komprehensif gabungan seluruh modul (Psikotes, TKK, dan TPK) untuk mengukur kesiapan menyeluruh.
+                Try out komprehensif seluruh subtes: Kecerdasan 100, Kepribadian 100, Kecermatan 100, TKK 100, dan TPK 100. Total 500 butir soal riil kelulusan SIP.
               </p>
             </div>
             <span class="category-radio" class:category-radio--active={selectedCategoryId === 'ALL'}></span>
@@ -423,8 +423,8 @@
           <div class="section-title-wrap">
             <span class="step-badge">2</span>
             <div>
-              <h2 class="section-title">Pilih Subtes Psikologi</h2>
-              <p class="section-subtitle">Pilih subtes spesifik atau latih seluruh subtes psikotes sekaligus</p>
+              <h2 class="section-title">Pilih Subtes Psikologi (Standar 100 Soal)</h2>
+              <p class="section-subtitle">Setiap subtes dirancang rata-rata 100 butir soal relevan dengan seleksi kepolisian</p>
             </div>
           </div>
 
@@ -438,7 +438,7 @@
               <div class="subtest-chip__icon">✦</div>
               <div>
                 <strong>Semua Subtes Psikotes</strong>
-                <span>Campuran 12 butir (Kecerdasan + Kepribadian + Kecermatan)</span>
+                <span>Total 300 Butir (Kecerdasan 100 + Kepribadian 100 + Kecermatan 100)</span>
               </div>
             </button>
 
@@ -451,7 +451,7 @@
               <div class="subtest-chip__icon">🧠</div>
               <div>
                 <strong>Kecerdasan</strong>
-                <span>10 butir (Analogi, deret, silogisme &amp; denah lokasi)</span>
+                <span>100 Butir • 90 Menit (Verbal, numerik patroli, logika alibi &amp; denah wilayah)</span>
               </div>
             </button>
 
@@ -464,7 +464,7 @@
               <div class="subtest-chip__icon">⚖️</div>
               <div>
                 <strong>Mental Kepribadian</strong>
-                <span>10 butir (Integritas, emosi, loyalitas &amp; disiplin)</span>
+                <span>100 Butir • 60 Menit (100 Studi kasus kedinasan Polri: integritas, emosi &amp; kepemimpinan)</span>
               </div>
             </button>
 
@@ -477,9 +477,37 @@
               <div class="subtest-chip__icon">🎯</div>
               <div>
                 <strong>Kecermatan (Format CAT)</strong>
-                <span>3 Kolom • 30 butir (Tabel patokan acuan, tombol A-E, 60s/kolom)</span>
+                <span>5 Kolom • 100 Butir (Angka, huruf, simbol hilang &amp; campuran, 60s/kolom)</span>
               </div>
             </button>
+          </div>
+
+          <!-- CONTOH & KOMPOSISI STANDAR SUBTES PSIKOTES POLRI -->
+          <div class="subtest-example-box">
+            <div class="subtest-example-head">
+              <span class="subtest-example-badge">Standar Komposisi Subtes CAT Polri</span>
+              <p>Rincian subtes dengan rata-rata 100 butir soal berbasis tugas kepolisian dan anti-monoton:</p>
+            </div>
+            <div class="subtest-example-grid">
+              <div class="example-item">
+                <div class="example-item__title">🧠 Kecerdasan (100 Soal)</div>
+                <div class="example-item__text">
+                  Menguji penalaran verbal analitis, silogisme penyidikan alibi tersangka, deret aritmatika kecepatan patroli, orientasi denah tata letak wilayah tugas, dan klasifikasi data.
+                </div>
+              </div>
+              <div class="example-item">
+                <div class="example-item__title">⚖️ Kepribadian (100 Soal)</div>
+                <div class="example-item__text">
+                  100 studi kasus situasional nyata kedinasan (SJT): penolakan gratifikasi, ketegasan integritas saat intervensi, pengendalian emosi pelayanan warga, dan kepemimpinan operasional.
+                </div>
+              </div>
+              <div class="example-item">
+                <div class="example-item__title">🎯 Kecermatan (100 Soal)</div>
+                <div class="example-item__text">
+                  5 Kolom @ 20 butir (100 soal total, 60 detik per kolom) dalam format monokrom putih CAT: Angka Hilang, Huruf Hilang, Simbol Hilang, dan Campuran Sandi Taktis.
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       {/if}
@@ -1600,6 +1628,66 @@
   .subtest-chip span {
     display: block;
     font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Subtest Example Breakdown Box */
+  .subtest-example-box {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-surface-subtle);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .subtest-example-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .subtest-example-head p {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .subtest-example-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    color: var(--color-primary);
+  }
+
+  .subtest-example-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .example-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+  }
+
+  .example-item__title {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+  }
+
+  .example-item__text {
+    font-size: 0.74rem;
+    line-height: 1.45;
     color: var(--color-text-muted);
   }
 
