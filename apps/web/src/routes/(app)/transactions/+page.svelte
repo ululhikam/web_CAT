@@ -48,7 +48,11 @@
       if (!reset && nextCursor) params.set('cursor', nextCursor);
 
       const page = await apiPage<TransactionSummary>(`/transactions?${params}`, session.accessToken);
-      items = reset ? page.items : [...items, ...page.items];
+      if (reset) {
+        items = page.items;
+      } else {
+        items = [...items, ...page.items];
+      }
       nextCursor = page.nextCursor;
       hasMore = page.hasMore;
     } catch (cause) {
@@ -59,8 +63,18 @@
     }
   }
 
+  /**
+   * `accessToken` hanya hidup di memori, jadi saat halaman dibuka langsung
+   * (reload / URL ditempel) nilainya masih `null` ketika `onMount` berjalan —
+   * `onMount` anak dieksekusi sebelum `onMount` layout yang memulihkan sesi.
+   * Tanpa menunggu `restore()`, `load()` keluar lebih awal dan spinner
+   * berputar selamanya.
+   */
   onMount(() => {
-    void load();
+    void (async () => {
+      await session.restore();
+      await load();
+    })();
   });
 
   function statusTone(value: TransactionStatus) {

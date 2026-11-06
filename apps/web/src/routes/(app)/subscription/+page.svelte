@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { page } from '$app/stores';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Badge from '@webcat/ui/components/Badge.svelte';
@@ -32,28 +33,45 @@
   let loading = $state(!initialSub);
   let error = $state<string | null>(null);
 
+  /**
+   * Muat langganan aktif + riwayatnya.
+   *
+   * PENTING: `subscription` dibaca di dalam `untrack`. Effect ini juga
+   * *menulis* `subscription` dan `history`, jadi tanpa `untrack` pembacaan
+   * `if (!subscription)` akan mendaftarkan `subscription` sebagai dependency
+   * dan setiap hasil fetch (objek baru dari JSON) memicu effect lagi —
+   * fetch loop tanpa henti yang membuat tab browser hang lalu crash.
+   *
+   * Dependency satu-satunya adalah `session.accessToken`, yang memang baru
+   * terisi setelah `restore()` selesai.
+   */
   $effect(() => {
-    if (!session.accessToken) return;
+    const token = session.accessToken;
+    if (!token) return;
+
+    if (untrack(() => !subscription)) loading = true;
+
     let cancelled = false;
 
     void (async () => {
-      if (!subscription) loading = true;
       error = null;
       try {
         const [active, rows] = await Promise.all([
           apiRequest<SubscriptionSummary | null>('/subscriptions/me', {
-            token: session.accessToken,
+            token,
             cacheTtlMs: 20000,
           }),
           apiRequest<SubscriptionHistoryItem[]>('/subscriptions/me/history', {
-            token: session.accessToken,
+            token,
             cacheTtlMs: 20000,
           }),
         ]);
-        if (!cancelled) {
-          subscription = active;
-          history = rows;
-          if (typeof window !== 'undefined' && active) sessionStorage.setItem(SUB_CACHE_KEY, JSON.stringify(active));
+        if (cancelled) return;
+
+        subscription = active;
+        history = rows;
+        if (typeof window !== 'undefined' && active) {
+          sessionStorage.setItem(SUB_CACHE_KEY, JSON.stringify(active));
         }
       } catch (cause) {
         if (!cancelled) error = apiErrorMessage(cause);

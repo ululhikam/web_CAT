@@ -35,8 +35,18 @@
     }
   }
 
+  /**
+   * `accessToken` hanya ada di memori, jadi pada pembukaan langsung (reload /
+   * URL ditempel) nilainya masih `null` saat `onMount` berjalan — `onMount`
+   * anak dieksekusi sebelum `onMount` layout yang memulihkan sesi. Tanpa
+   * menunggu `restore()`, `load()` keluar lebih awal dan spinner tidak pernah
+   * berhenti.
+   */
   onMount(() => {
-    void load($page.params.id ?? '');
+    void (async () => {
+      await session.restore();
+      await load($page.params.id ?? '');
+    })();
   });
 
   const paid = $derived(transaction?.status === 'SUCCESS');
