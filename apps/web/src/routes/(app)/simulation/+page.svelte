@@ -1,275 +1,62 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
+  import { examPreferences } from '$lib/stores/examPreferences.svelte';
+  import {
+    SIMULATION_PACKETS,
+    type SimPacket,
+    type SimQuestion,
+  } from './simulation-packets';
 
-  interface Question {
-    id: number;
-    module: string;
-    stem: string;
-    options: { key: string; text: string }[];
-    correctKey: string;
-    explanation: string;
-  }
+  let selectedCategoryId = $state<'PSIKOTES' | 'TKK' | 'TPK' | 'ALL'>('PSIKOTES');
+  let selectedSubtestId = $state<'ALL' | 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN'>('ALL');
+  let isStarted = $state(false);
 
-  const questions: Question[] = [
-    /* --------------------------------------------------- 1. TES PSIKOLOGI (PSIKOTES) */
-    {
-      id: 1,
-      module: 'Tes Psikologi — Kecerdasan (Verbal & Analogi)',
-      stem: 'POLISI : HUKUM = HAKIM : ...',
-      options: [
-        { key: 'A', text: 'Pengadilan' },
-        { key: 'B', text: 'Keadilan' },
-        { key: 'C', text: 'Terdakwa' },
-        { key: 'D', text: 'Penjara' },
-        { key: 'E', text: 'Undang-Undang' },
-      ],
-      correctKey: 'B',
-      explanation: 'Analogi fungsi/tujuan tugas: Polisi bertugas menegakkan hukum; Hakim bertugas menegakkan keadilan di persidangan.',
-    },
-    {
-      id: 2,
-      module: 'Tes Psikologi — Kecerdasan (Numerik & Deret)',
-      stem: 'Tentukan bilangan kelanjutan dari deret berikut: 3, 7, 15, 31, 63, ...',
-      options: [
-        { key: 'A', text: '125' },
-        { key: 'B', text: '127' },
-        { key: 'C', text: '129' },
-        { key: 'D', text: '131' },
-        { key: 'E', text: '135' },
-      ],
-      correctKey: 'B',
-      explanation: 'Pola deret adalah (angka × 2) + 1. Perhitungannya: 3×2+1=7; 7×2+1=15; 15×2+1=31; 31×2+1=63; 63×2+1 = 127.',
-    },
-    {
-      id: 3,
-      module: 'Tes Psikologi — Kecerdasan (Logika Silogisme)',
-      stem: 'Semua perwira Polri wajib menjunjung tinggi etika profesi dan integritas dinas. Inspektur Polisi Arya adalah seorang perwira Polri. Kesimpulan yang tepat adalah...',
-      options: [
-        { key: 'A', text: 'Inspektur Polisi Arya tidak terikat kode etik kepolisian.' },
-        { key: 'B', text: 'Inspektur Polisi Arya wajib menjunjung tinggi etika profesi dan integritas dinas.' },
-        { key: 'C', text: 'Sebagian perwira Polri diperbolehkan mengabaikan integritas bila situasi darurat.' },
-        { key: 'D', text: 'Inspektur Polisi Arya hanya terikat aturan administrasi biasa.' },
-        { key: 'E', text: 'Integritas hanya diwajibkan bagi perwira menengah ke atas.' },
-      ],
-      correctKey: 'B',
-      explanation: 'Silogisme kategorik standar: Semua A adalah B; C adalah A; maka C adalah B (Inspektur Polisi Arya wajib menjunjung tinggi etika profesi dan integritas).',
-    },
-    {
-      id: 4,
-      module: 'Tes Psikologi — Kecerdasan (Peta & Denah Lokasi)',
-      stem: 'Pada denah penugasan: Pos Polisi berada di sebelah barat Lapangan Kota, sedangkan Rumah Sakit berada tepat di sebelah utara Pos Polisi. Arah Rumah Sakit jika dilihat dari Lapangan Kota adalah...',
-      options: [
-        { key: 'A', text: 'Barat Laut' },
-        { key: 'B', text: 'Barat Daya' },
-        { key: 'C', text: 'Timur Laut' },
-        { key: 'D', text: 'Tenggara' },
-        { key: 'E', text: 'Utara' },
-      ],
-      correctKey: 'A',
-      explanation: 'Dari Lapangan Kota, Pos Polisi berada di arah Barat. Dari Pos Polisi bergerak ke arah Utara menuju Rumah Sakit. Maka posisi Rumah Sakit dari Lapangan Kota adalah arah Barat Laut.',
-    },
-    {
-      id: 5,
-      module: 'Tes Psikologi — Mental Kepribadian (Integritas)',
-      stem: 'Seorang rekan kerja satu angkatan meminta Anda untuk tidak mencatat pelanggaran disiplin ringan yang dilakukannya saat bertugas jaga. Sikap Anda adalah...',
-      options: [
-        { key: 'A', text: 'Mengabulkan permintaannya demi menjaga solidaritas pertemanan satu angkatan.' },
-        { key: 'B', text: 'Menolak dengan santun namun tegas dan tetap mencatat serta melaporkan sesuai prosedur kedinasan.' },
-        { key: 'C', text: 'Membiarkannya tanpa membuat catatan apa pun dan pura-pura tidak tahu.' },
-        { key: 'D', text: 'Meminta imbalan tertentu jika rekan tersebut ingin dibantu penghapusan catatan.' },
-        { key: 'E', text: 'Menyebarkan pelanggaran rekan tersebut kepada anggota tim lain agar menjadi bahan pembicaraan.' },
-      ],
-      correctKey: 'B',
-      explanation: 'Integritas profesi menuntut ketaatan pada prosedur tanpa kompromi, dengan tetap menjaga kesantunan dan profesionalitas komunikasi.',
-    },
-    {
-      id: 6,
-      module: 'Tes Psikologi — Mental Kepribadian (Pengendalian Emosi)',
-      stem: 'Ketika Anda sedang melayani masyarakat di loket pelayanan kedinasan, seorang warga datang dengan nada marah dan mencela kinerja unit. Tindakan Anda adalah...',
-      options: [
-        { key: 'A', text: 'Membalas membentak warga tersebut agar menyadari bahwa kantor kepolisian harus dihormati.' },
-        { key: 'B', text: 'Meninggalkan loket dan menyuruh petugas keamanan mengusir warga tersebut keluar.' },
-        { key: 'C', text: 'Tetap tenang, mendengarkan keluhan dengan sabar tanpa terpancing emosi, lalu memberikan penjelasan aturan dan solusi secara runtut.' },
-        { key: 'D', text: 'Mengabaikan keluhannya dan melayani warga berikutnya tanpa menanggapi.' },
-        { key: 'E', text: 'Menutup loket pelayanan secara sepihak sampai warga tersebut tenang.' },
-      ],
-      correctKey: 'C',
-      explanation: 'Pengendalian diri, empati, dan orientasi pelayanan prima adalah karakteristik utama perwira Polri dalam menyelesaikan komplain masyarakat secara elegan.',
-    },
-    {
-      id: 7,
-      module: 'Tes Psikologi — Kecermatan (Huruf Hilang)',
-      stem: 'Tentukan huruf yang HILANG dari kelompok huruf patokan:\n\nPatokan: [ K   M   P   R   T ]\n\nSoal: [ P   R   K   T ]',
-      options: [
-        { key: 'A', text: 'K' },
-        { key: 'B', text: 'M' },
-        { key: 'C', text: 'P' },
-        { key: 'D', text: 'R' },
-        { key: 'E', text: 'T' },
-      ],
-      correctKey: 'B',
-      explanation: 'Kelompok patokan memuat {K, M, P, R, T}. Pada soal terdapat {P, R, K, T}. Huruf yang hilang adalah "M" (opsi B).',
-    },
+  const currentPacket = $derived.by<SimPacket>(() => {
+    if (selectedCategoryId === 'PSIKOTES') {
+      return (
+        SIMULATION_PACKETS.find(
+          (p) => p.category === 'PSIKOTES' && p.subtest === selectedSubtestId,
+        ) ?? SIMULATION_PACKETS[0]
+      );
+    }
+    return (
+      SIMULATION_PACKETS.find((p) => p.category === selectedCategoryId) ??
+      SIMULATION_PACKETS[0]
+    );
+  });
 
-    /* --------------------------------------------------- 2. TES KEMAMPUAN KOMPUTER (TKK) */
-    {
-      id: 8,
-      module: 'Tes Kemampuan Komputer (TKK) — Perangkat Keras',
-      stem: 'Komponen perangkat keras komputer yang berfungsi sebagai otak utama untuk memproses seluruh instruksi logika dan perhitungan data adalah...',
-      options: [
-        { key: 'A', text: 'Central Processing Unit (CPU)' },
-        { key: 'B', text: 'Random Access Memory (RAM)' },
-        { key: 'C', text: 'Hard Disk Drive (HDD)' },
-        { key: 'D', text: 'Power Supply Unit (PSU)' },
-        { key: 'E', text: 'Solid State Drive (SSD)' },
-      ],
-      correctKey: 'A',
-      explanation: 'CPU (Central Processing Unit) atau prosesor adalah unit pengolah pusat yang menjalankan seluruh komputasi dan instruksi program.',
-    },
-    {
-      id: 9,
-      module: 'Tes Kemampuan Komputer (TKK) — Perangkat Lunak',
-      stem: 'Perangkat lunak sistem yang berfungsi mengelola sumber daya perangkat keras dan menyediakan antarmuka bagi pengguna serta aplikasi komputer disebut...',
-      options: [
-        { key: 'A', text: 'Sistem Operasi (Operating System)' },
-        { key: 'B', text: 'Peramban Web (Web Browser)' },
-        { key: 'C', text: 'Database Management System (DBMS)' },
-        { key: 'D', text: 'Program Utilitas Grafis' },
-        { key: 'E', text: 'Compiler Pemrograman' },
-      ],
-      correctKey: 'A',
-      explanation: 'Sistem Operasi (seperti Windows, Linux, macOS) bertanggung jawab menjembatani interaksi perangkat keras dan aplikasi perangkat lunak.',
-    },
-    {
-      id: 10,
-      module: 'Tes Kemampuan Komputer (TKK) — Jaringan Komputer',
-      stem: 'Alamat unik berbasis numerik (seperti 192.168.1.1) yang digunakan untuk mengidentifikasi perangkat komputer di dalam sebuah jaringan komunikasi dinamakan...',
-      options: [
-        { key: 'A', text: 'MAC Address' },
-        { key: 'B', text: 'IP Address (Internet Protocol Address)' },
-        { key: 'C', text: 'Subnet Mask' },
-        { key: 'D', text: 'Default Gateway' },
-        { key: 'E', text: 'Domain Name' },
-      ],
-      correctKey: 'B',
-      explanation: 'IP Address adalah alamat protokol internet logis yang mengidentifikasi setiap host atau perangkat dalam jaringan TCP/IP.',
-    },
-    {
-      id: 11,
-      module: 'Tes Kemampuan Komputer (TKK) — Keamanan Informasi',
-      stem: 'Upaya penipuan digital di mana pelaku menyamar sebagai instansi resmi melalui pesan email atau tautan palsu untuk mencuri data rahasia/kata sandi pengguna disebut...',
-      options: [
-        { key: 'A', text: 'Phishing' },
-        { key: 'B', text: 'DDoS Attack' },
-        { key: 'C', text: 'Defacing' },
-        { key: 'D', text: 'Brute Force' },
-        { key: 'E', text: 'Spyware' },
-      ],
-      correctKey: 'A',
-      explanation: 'Phishing adalah rekayasa sosial (social engineering) dengan membuat pesan atau situs tiruan untuk mengelabui korban agar menyerahkan data sensitif.',
-    },
-    {
-      id: 12,
-      module: 'Tes Kemampuan Komputer (TKK) — Etika & Keamanan Digital',
-      stem: 'Langkah pengamanan paling efektif untuk mencegah akses ilegal ke akun kedinasan digital selain menggunakan kata sandi yang kuat adalah...',
-      options: [
-        { key: 'A', text: 'Menyimpan kata sandi di kertas catatan dekat monitor komputer kantor' },
-        { key: 'B', text: 'Mengaktifkan Autentikasi Dua Faktor (Two-Factor Authentication / 2FA)' },
-        { key: 'C', text: 'Menggunakan tanggal lahir sebagai kombinasi kata sandi' },
-        { key: 'D', text: 'Membagikan kata sandi kepada rekan satu regu piket' },
-        { key: 'E', text: 'Tidak pernah keluar (logout) dari komputer dinas bersama' },
-      ],
-      correctKey: 'B',
-      explanation: 'Two-Factor Authentication (2FA) memberikan lapisan keamanan ganda sehingga akun tetap aman meskipun kata sandi diketahui pihak lain.',
-    },
-
-    /* --------------------------------------------------- 3. TES PENGETAHUAN KEPOLISIAN (TPK) */
-    {
-      id: 13,
-      module: 'Tes Pengetahuan Kepolisian (TPK) — Tugas Pokok Polri',
-      stem: 'Berdasarkan Undang-Undang No. 2 Tahun 2002 Pasal 13, tugas pokok Kepolisian Negara Republik Indonesia adalah...',
-      options: [
-        { key: 'A', text: 'Memelihara keamanan dan ketertiban masyarakat, menegakkan hukum, serta memberikan perlindungan, pengayoman, dan pelayanan kepada masyarakat.' },
-        { key: 'B', text: 'Menjaga pertahanan kedaulatan negara dari ancaman agresi militer luar negeri.' },
-        { key: 'C', text: 'Melakukan penuntutan perkara pidana umum di persidangan pengadilan negeri.' },
-        { key: 'D', text: 'Menjatuhkan vonis sanksi hukum kepada tersangka tindak pidana.' },
-        { key: 'E', text: 'Mengelola dan mengatur anggaran keuangan pemerintah daerah.' },
-      ],
-      correctKey: 'A',
-      explanation: 'Pasal 13 UU No. 2 Tahun 2002 menegaskan tiga pilar tugas pokok Polri: harkamtibmas, penegakan hukum, dan perlindungan, pengayoman, serta pelayanan masyarakat.',
-    },
-    {
-      id: 14,
-      module: 'Tes Pengetahuan Kepolisian (TPK) — Kewenangan & Diskresi',
-      stem: 'Tindakan perwira/anggota Polri yang dilakukan demi kepentingan umum berdasarkan penilaiannya sendiri saat menghadapi situasi mendesak di lapangan merupakan perwujudan dari...',
-      options: [
-        { key: 'A', text: 'Diskresi Kepolisian (Pasal 18 UU No. 2 Tahun 2002)' },
-        { key: 'B', text: 'Hak Kekebalan Hukum Mutlak' },
-        { key: 'C', text: 'Kewenangan Yudikatif' },
-        { key: 'D', text: 'Hak Prerogatif Pribadi' },
-        { key: 'E', text: 'Instruksi Khusus Pemerintah' },
-      ],
-      correctKey: 'A',
-      explanation: 'Pasal 18 ayat (1) UU No. 2 Tahun 2002 mengatur bahwa untuk kepentingan umum, pejabat Polri dalam melaksanakan tugas dan wewenangnya dapat bertindak menurut penilaiannya sendiri (diskresi) yang dapat dipertanggungjawabkan.',
-    },
-    {
-      id: 15,
-      module: 'Tes Pengetahuan Kepolisian (TPK) — Hukum Acara Pidana',
-      stem: 'Berdasarkan Pasal 184 Kitab Undang-Undang Hukum Acara Pidana (KUHAP), yang termasuk ke dalam alat bukti yang sah dalam persidangan adalah...',
-      options: [
-        { key: 'A', text: 'Keterangan saksi, keterangan ahli, surat, petunjuk, dan keterangan terdakwa' },
-        { key: 'B', text: 'Opini publik, hasil jajak pendapat, dan rekaman percakapan pribadi' },
-        { key: 'C', text: 'Keterangan satu saksi saja tanpa didukung alat bukti lain apa pun' },
-        { key: 'D', text: 'Pengakuan sepihak dari keluarga korban tindak pidana' },
-        { key: 'E', text: 'Laporan desas-desus masyarakat di media sosial' },
-      ],
-      correctKey: 'A',
-      explanation: 'Pasal 184 ayat (1) KUHAP menyebutkan 5 alat bukti yang sah: (a) keterangan saksi, (b) keterangan ahli, (c) surat, (d) petunjuk, dan (e) keterangan terdakwa.',
-    },
-    {
-      id: 16,
-      module: 'Tes Pengetahuan Kepolisian (TPK) — Doktrin & Etika Polri',
-      stem: 'Pedoman hidup anggota Polri yang menjadi falsafah pengabdian insan Bhayangkara kepada nusa dan bangsa adalah...',
-      options: [
-        { key: 'A', text: 'Tribrata' },
-        { key: 'B', text: 'Sapta Marga' },
-        { key: 'C', text: 'Panca Dharma Usadha' },
-        { key: 'D', text: 'Dasa Darma' },
-        { key: 'E', text: 'Tri Krama Adhyaksa' },
-      ],
-      correctKey: 'A',
-      explanation: 'Tribrata merupakan pedoman hidup Polri, sedangkan Catur Prasetya merupakan pedoman kerja kesatuan Polri.',
-    },
-  ];
-
-  const DURATION_SECONDS = 900;
+  const questions = $derived(currentPacket.questions);
 
   let currentIndex = $state(0);
   let answers = $state<Record<number, string>>({});
   let doubts = $state<Record<number, boolean>>({});
   let finished = $state(false);
-  let remaining = $state(DURATION_SECONDS);
+  let remaining = $state(600);
   let timer: ReturnType<typeof setInterval> | null = null;
+  let advanceTimer: ReturnType<typeof setTimeout> | null = null;
 
   const current = $derived(questions[currentIndex]);
   const answeredCount = $derived(Object.keys(answers).length);
   const formattedTime = $derived(
     `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`,
   );
-  const progress = $derived(Math.round((answeredCount / questions.length) * 100));
+  const progress = $derived(
+    questions.length ? Math.round((answeredCount / questions.length) * 100) : 0,
+  );
+
+  const correctCount = $derived(
+    questions.filter((question, index) => answers[index] === question.correctKey).length,
+  );
 
   const score = $derived(
-    Math.round(
-      (questions.filter((question, index) => answers[index] === question.correctKey).length /
-        questions.length) *
-        100,
-    ),
+    questions.length ? Math.round((correctCount / questions.length) * 100) : 0,
   );
   const passed = $derived(score >= 61);
 
-  onMount(() => {
+  function startTimer() {
+    if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (remaining > 0) {
         remaining -= 1;
@@ -277,19 +64,32 @@
         finish();
       }
     }, 1000);
+  }
 
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  });
-
-  onDestroy(() => {
-    if (timer) clearInterval(timer);
-  });
+  function startSimulation() {
+    answers = {};
+    doubts = {};
+    currentIndex = 0;
+    remaining = currentPacket.durationSeconds;
+    finished = false;
+    isStarted = true;
+    startTimer();
+  }
 
   function selectOption(key: string) {
     if (finished) return;
     answers[currentIndex] = key;
+
+    // Sesuai preferensi user di pengaturan: jika mode 'auto', otomatis lanjut ke soal berikutnya
+    if (examPreferences.mode === 'auto') {
+      if (advanceTimer) clearTimeout(advanceTimer);
+      advanceTimer = setTimeout(() => {
+        advanceTimer = null;
+        if (currentIndex < questions.length - 1) {
+          currentIndex += 1;
+        }
+      }, 230);
+    }
   }
 
   function toggleDoubt() {
@@ -306,204 +106,502 @@
       clearInterval(timer);
       timer = null;
     }
+    if (advanceTimer) {
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+    }
     finished = true;
   }
 
   function restart() {
+    startSimulation();
+  }
+
+  function exitToSelection() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+    if (advanceTimer) {
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+    }
+    finished = false;
+    isStarted = false;
     answers = {};
     doubts = {};
     currentIndex = 0;
-    remaining = DURATION_SECONDS;
-    finished = false;
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-      if (remaining > 0) {
-        remaining -= 1;
-      } else {
-        finish();
-      }
-    }, 1000);
   }
+
+  onDestroy(() => {
+    if (timer) clearInterval(timer);
+    if (advanceTimer) clearTimeout(advanceTimer);
+  });
 </script>
 
 <svelte:head>
-  <title>Simulasi CAT — Web CAT POLRI</title>
+  <title>Simulasi CAT — Seleksi Sekolah Inspektur Polisi</title>
 </svelte:head>
 
 <div class="sim-page">
-  <header class="sim-header">
-    <div class="sim-header__left">
-      <button class="back-link" type="button" onclick={() => goto('/dashboard')}>
-        <AdminIcon name="chevron" size={16} />
-        <span>Kembali ke dashboard</span>
-      </button>
-      <div>
-        <h1>Simulasi CAT</h1>
-        <p>Latihan mandiri dengan timer dan penilaian otomatis. Tidak memengaruhi sesi ujian resmi.</p>
+  {#if !isStarted}
+    <!-- LAYAR PILIH TES & SUBTES SIMULASI -->
+    <header class="sim-header">
+      <div class="sim-header__left">
+        <button class="back-link" type="button" onclick={() => goto('/dashboard')}>
+          <AdminIcon name="chevron" size={16} />
+          <span>Kembali ke dashboard</span>
+        </button>
+        <div>
+          <h1>Simulasi CAT Bebas Latihan</h1>
+          <p>
+            Pilih jenis tes dan subtes yang ingin Anda uji coba. Latihan mandiri tanpa mengurangi limit tes harian, lengkap dengan timer resmi dan pembahasan jawaban.
+          </p>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div class="timer-card" class:timer-card--danger={remaining <= 60 && !finished}>
-      <AdminIcon name="clock" size={18} />
-      <div>
-        <span>Sisa waktu</span>
-        <strong>{finished ? 'Selesai' : formattedTime}</strong>
-      </div>
-    </div>
-  </header>
-
-  {#if finished}
-    <section class="result-card">
-      <div class="result-copy">
-        <span class="eyebrow">Hasil simulasi</span>
-        <h2>{score >= 61 ? 'Ambang batas tercapai' : 'Perlu latihan lagi'}</h2>
-        <p>
-          Skor akhir <strong>{score}</strong> dari 100. Ambang kelulusan simulasi adalah 61.
-        </p>
-        <div class="result-stats">
+    <div class="selection-container">
+      <!-- 1. KATEGORI UTAMA TES -->
+      <section class="selection-section">
+        <div class="section-title-wrap">
+          <span class="step-badge">1</span>
           <div>
-            <span>Benar</span>
-            <strong>{questions.filter((question, index) => answers[index] === question.correctKey).length}/{questions.length}</strong>
-          </div>
-          <div>
-            <span>Terjawab</span>
-            <strong>{answeredCount}/{questions.length}</strong>
-          </div>
-          <div>
-            <span>Status</span>
-            <strong>{passed ? 'Lulus (MS)' : 'Gugur (TMS)'}</strong>
+            <h2 class="section-title">Pilih Materi Tes CAT</h2>
+            <p class="section-subtitle">Pilih modul ujian yang ingin Anda latih saat ini</p>
           </div>
         </div>
-        <div class="result-actions">
-          <button class="button button--primary" type="button" onclick={restart}>Ulangi simulasi</button>
-          <button class="button button--ghost" type="button" onclick={() => goto('/dashboard')}>
-            Kembali ke dashboard
-          </button>
-        </div>
-      </div>
-      <div class="score-ring" class:score-ring--pass={passed}>
-        <strong>{score}</strong>
-        <span>dari 100</span>
-      </div>
-    </section>
 
-    <section class="review-card">
-      <h2>Pembahasan</h2>
-      <div class="review-list">
-        {#each questions as question, index (question.id)}
-          {@const selected = answers[index]}
-          <article class="review-item">
-            <div class="review-item__head">
-              <span class="review-number">{index + 1}</span>
-              <div>
-                <span class="review-module">{question.module}</span>
-                <p>{question.stem}</p>
-              </div>
-              <span class="review-status" class:review-status--ok={selected === question.correctKey}>
-                {selected === question.correctKey ? 'Benar' : 'Salah'}
-              </span>
-            </div>
-            <div class="review-answer">
-              <span>Jawaban Anda: <strong>{selected ?? 'Tidak dijawab'}</strong></span>
-              <span>Kunci: <strong>{question.correctKey}</strong></span>
-            </div>
-            <p class="review-explanation">{question.explanation}</p>
-          </article>
-        {/each}
-      </div>
-    </section>
-  {:else}
-    <div class="progress-strip">
-      <div class="progress-strip__label">
-        <span>Progres jawaban</span>
-        <strong>{answeredCount}/{questions.length} terjawab</strong>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" style:width={`${progress}%`}></div>
-      </div>
-    </div>
-
-    <div class="sim-grid">
-      <section class="question-card">
-        <div class="question-meta">
-          <span class="question-number">Soal {currentIndex + 1} dari {questions.length}</span>
-          <span class="question-module">{current.module}</span>
-        </div>
-
-        <h2 class="question-stem">{current.stem}</h2>
-
-        <div class="options">
-          {#each current.options as option (option.key)}
-            <button
-              class="option"
-              class:option--selected={answers[currentIndex] === option.key}
-              type="button"
-              onclick={() => selectOption(option.key)}
-            >
-              <span class="option-key">{option.key}</span>
-              <span>{option.text}</span>
-            </button>
-          {/each}
-        </div>
-
-        <div class="question-actions">
+        <div class="category-grid">
+          <!-- Opsi 1: PSIKOTES -->
           <button
-            class="button button--ghost"
             type="button"
-            disabled={currentIndex === 0}
-            onclick={() => goTo(currentIndex - 1)}
+            class="category-card"
+            class:category-card--active={selectedCategoryId === 'PSIKOTES'}
+            onclick={() => {
+              selectedCategoryId = 'PSIKOTES';
+            }}
           >
-            Sebelumnya
+            <div class="category-card__icon">
+              <AdminIcon name="questions" size={24} />
+            </div>
+            <div class="category-card__body">
+              <div class="category-card__tag">3 Subtes Tersedia</div>
+              <h3 class="category-card__name">Tes Psikologi (Psikotes)</h3>
+              <p class="category-card__desc">
+                Kecerdasan (verbal, numerik, denah), Mental Kepribadian (integritas &amp; emosi), serta Kecermatan kolom hilang.
+              </p>
+            </div>
+            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'PSIKOTES'}></span>
           </button>
+
+          <!-- Opsi 2: TKK -->
           <button
-            class="doubt-button"
-            class:doubt-button--active={doubts[currentIndex]}
             type="button"
-            onclick={toggleDoubt}
+            class="category-card"
+            class:category-card--active={selectedCategoryId === 'TKK'}
+            onclick={() => {
+              selectedCategoryId = 'TKK';
+            }}
           >
-            {doubts[currentIndex] ? 'Tandai ragu' : 'Ragu-ragu'}
+            <div class="category-card__icon">
+              <AdminIcon name="devices" size={24} />
+            </div>
+            <div class="category-card__body">
+              <div class="category-card__tag">10 Butir Soal</div>
+              <h3 class="category-card__name">Tes Kemampuan Komputer (TKK)</h3>
+              <p class="category-card__desc">
+                Hardware, jaringan komputer, keamanan siber/phishing, 2FA, data kedinasan, dan etika digital UU ITE.
+              </p>
+            </div>
+            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'TKK'}></span>
           </button>
-          {#if currentIndex === questions.length - 1}
-            <button class="button button--primary" type="button" onclick={finish}>Selesai</button>
-          {:else}
-            <button class="button button--primary" type="button" onclick={() => goTo(currentIndex + 1)}>
-              Berikutnya
-            </button>
-          {/if}
+
+          <!-- Opsi 3: TPK -->
+          <button
+            type="button"
+            class="category-card"
+            class:category-card--active={selectedCategoryId === 'TPK'}
+            onclick={() => {
+              selectedCategoryId = 'TPK';
+            }}
+          >
+            <div class="category-card__icon">
+              <AdminIcon name="shield" size={24} />
+            </div>
+            <div class="category-card__body">
+              <div class="category-card__tag">10 Butir Soal</div>
+              <h3 class="category-card__name">Tes Pengetahuan Kepolisian (TPK)</h3>
+              <p class="category-card__desc">
+                UU No. 2/2002, diskresi kepolisian, KUHAP Pasal 184 alat bukti, falsafah Tribrata, serta Perpol kode etik.
+              </p>
+            </div>
+            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'TPK'}></span>
+          </button>
+
+          <!-- Opsi 4: ALL (LENGKAP) -->
+          <button
+            type="button"
+            class="category-card"
+            class:category-card--active={selectedCategoryId === 'ALL'}
+            onclick={() => {
+              selectedCategoryId = 'ALL';
+            }}
+          >
+            <div class="category-card__icon">
+              <AdminIcon name="sparkles" size={24} />
+            </div>
+            <div class="category-card__body">
+              <div class="category-card__tag">16 Butir Campuran</div>
+              <h3 class="category-card__name">Simulasi Lengkap CAT SIP</h3>
+              <p class="category-card__desc">
+                Paket komprehensif gabungan seluruh modul (Psikotes, TKK, dan TPK) untuk mengukur kesiapan menyeluruh.
+              </p>
+            </div>
+            <span class="category-radio" class:category-radio--active={selectedCategoryId === 'ALL'}></span>
+          </button>
         </div>
       </section>
 
-      <aside class="palette-card">
-        <div class="palette-head">
-          <h2>Navigasi soal</h2>
-          <span>{answeredCount} terjawab</span>
-        </div>
-        <div class="palette-grid">
-          {#each questions as question, index (question.id)}
+      <!-- 2. SUBTES (HANYA MUNCUL JIKA MEMILIH PSIKOTES) -->
+      {#if selectedCategoryId === 'PSIKOTES'}
+        <section class="selection-section">
+          <div class="section-title-wrap">
+            <span class="step-badge">2</span>
+            <div>
+              <h2 class="section-title">Pilih Subtes Psikologi</h2>
+              <p class="section-subtitle">Pilih subtes spesifik atau latih seluruh subtes psikotes sekaligus</p>
+            </div>
+          </div>
+
+          <div class="subtest-grid">
             <button
-              class="palette-button"
-              class:palette-button--active={index === currentIndex}
-              class:palette-button--answered={answers[index] !== undefined}
-              class:palette-button--doubt={doubts[index]}
               type="button"
-              onclick={() => goTo(index)}
-              aria-label={`Soal ${index + 1}`}
+              class="subtest-chip"
+              class:subtest-chip--active={selectedSubtestId === 'ALL'}
+              onclick={() => (selectedSubtestId = 'ALL')}
             >
-              {index + 1}
+              <div class="subtest-chip__icon">✦</div>
+              <div>
+                <strong>Semua Subtes Psikotes</strong>
+                <span>Campuran 12 butir (Kecerdasan + Kepribadian + Kecermatan)</span>
+              </div>
             </button>
+
+            <button
+              type="button"
+              class="subtest-chip"
+              class:subtest-chip--active={selectedSubtestId === 'KECERDASAN'}
+              onclick={() => (selectedSubtestId = 'KECERDASAN')}
+            >
+              <div class="subtest-chip__icon">🧠</div>
+              <div>
+                <strong>Kecerdasan</strong>
+                <span>10 butir (Analogi, deret, silogisme &amp; denah lokasi)</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              class="subtest-chip"
+              class:subtest-chip--active={selectedSubtestId === 'KEPRIBADIAN'}
+              onclick={() => (selectedSubtestId = 'KEPRIBADIAN')}
+            >
+              <div class="subtest-chip__icon">⚖️</div>
+              <div>
+                <strong>Mental Kepribadian</strong>
+                <span>10 butir (Integritas, emosi, loyalitas &amp; disiplin)</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              class="subtest-chip"
+              class:subtest-chip--active={selectedSubtestId === 'KECERMATAN'}
+              onclick={() => (selectedSubtestId = 'KECERMATAN')}
+            >
+              <div class="subtest-chip__icon">🎯</div>
+              <div>
+                <strong>Kecermatan</strong>
+                <span>8 butir (Persepsi visual huruf/angka kolom hilang)</span>
+              </div>
+            </button>
+          </div>
+        </section>
+      {/if}
+
+      <!-- 3. DETAIL PAKET & PENGATURAN MODE PENGERJAAN -->
+      <section class="overview-box">
+        <div class="overview-left">
+          <div class="overview-eyebrow">Paket Simulasi Terpilih</div>
+          <h3 class="overview-title">{currentPacket.title}</h3>
+          <p class="overview-sub">{currentPacket.subtitle}</p>
+          <p class="overview-desc">{currentPacket.description}</p>
+
+          <div class="overview-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Jumlah Soal</span>
+              <strong class="metric-val">{currentPacket.questions.length} Butir</strong>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Alokasi Waktu</span>
+              <strong class="metric-val">{Math.round(currentPacket.durationSeconds / 60)} Menit</strong>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Ambang Kelulusan</span>
+              <strong class="metric-val text-brand">61.00 (MS)</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-right">
+          <div class="mode-control-card">
+            <div class="mode-control-head">
+              <span>Pengaturan Pengerjaan</span>
+              <a href="/profile" class="mode-setting-link" title="Buka pengaturan profil">Ubah di Profil ↗</a>
+            </div>
+            <div class="mode-current">
+              <div class="mode-badge" class:mode-badge--auto={examPreferences.mode === 'auto'}>
+                {#if examPreferences.mode === 'auto'}
+                  ⚡ Otomatis Lanjut (Auto Next)
+                {:else}
+                  ✋ Manual (Klik Berikutnya)
+                {/if}
+              </div>
+              <p class="mode-hint">
+                {#if examPreferences.mode === 'auto'}
+                  Pindah ke butir berikutnya otomatis saat memilih opsi.
+                {:else}
+                  Nomor soal tetap diam setelah memilih sampai Anda klik tombol Berikutnya.
+                {/if}
+              </p>
+            </div>
+            <!-- Quick toggle -->
+            <button
+              type="button"
+              class="quick-toggle-btn"
+              onclick={() =>
+                examPreferences.setMode(
+                  examPreferences.mode === 'auto' ? 'manual' : 'auto',
+                )}
+            >
+              Ganti ke mode {examPreferences.mode === 'auto' ? 'Manual' : 'Auto Next'}
+            </button>
+          </div>
+
+          <button class="button button--primary button--lg start-btn" type="button" onclick={startSimulation}>
+            <span>Mulai Simulasi Sekarang</span>
+            <AdminIcon name="arrow-right" size={18} />
+          </button>
+        </div>
+      </section>
+    </div>
+  {:else}
+    <!-- SIMULASI SEDANG BERJALAN ATAU SELESAI -->
+    <header class="sim-header">
+      <div class="sim-header__left">
+        <button class="back-link" type="button" onclick={exitToSelection}>
+          <AdminIcon name="chevron" size={16} />
+          <span>Ganti Materi Simulasi</span>
+        </button>
+        <div>
+          <h1>{currentPacket.title}</h1>
+          <p>{currentPacket.subtitle}</p>
+        </div>
+      </div>
+
+      <div class="header-right-tools">
+        <!-- Pill mode pengerjaan aktif -->
+        <button
+          type="button"
+          class="mode-pill"
+          title="Klik untuk beralih mode pengerjaan"
+          onclick={() =>
+            examPreferences.setMode(
+              examPreferences.mode === 'auto' ? 'manual' : 'auto',
+            )}
+        >
+          <span class="mode-pill__dot" class:mode-pill__dot--auto={examPreferences.mode === 'auto'}></span>
+          <span>{examPreferences.mode === 'auto' ? 'Auto Next' : 'Manual Next'}</span>
+        </button>
+
+        <div class="timer-card" class:timer-card--danger={remaining <= 60 && !finished}>
+          <AdminIcon name="clock" size={18} />
+          <div>
+            <span>Sisa waktu</span>
+            <strong>{finished ? 'Selesai' : formattedTime}</strong>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {#if finished}
+      <!-- HASIL SIMULASI -->
+      <section class="result-card">
+        <div class="result-copy">
+          <span class="eyebrow">Hasil Simulasi CAT</span>
+          <h2>{score >= 61 ? 'Memenuhi Syarat (MS)' : 'Perlu Pendalaman (TMS)'}</h2>
+          <p>
+            Skor akhir Anda <strong>{score}</strong> dari 100. Ambang batas kelulusan seleksi adalah <strong>61.00</strong>.
+          </p>
+          <div class="result-stats">
+            <div>
+              <span>Benar</span>
+              <strong class="text-success">{correctCount}/{questions.length}</strong>
+            </div>
+            <div>
+              <span>Salah / Kosong</span>
+              <strong class="text-danger">{questions.length - correctCount}/{questions.length}</strong>
+            </div>
+            <div>
+              <span>Terjawab</span>
+              <strong>{answeredCount}/{questions.length}</strong>
+            </div>
+            <div>
+              <span>Status</span>
+              <strong class={passed ? 'text-success' : 'text-danger'}>{passed ? 'MS (Lulus)' : 'TMS (Gugur)'}</strong>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="button button--primary" type="button" onclick={restart}>Ulangi Simulasi Ini</button>
+            <button class="button button--ghost" type="button" onclick={exitToSelection}>Pilih Materi Lain</button>
+            <button class="button button--ghost" type="button" onclick={() => goto('/dashboard')}>
+              Ke Dashboard
+            </button>
+          </div>
+        </div>
+        <div class="score-ring" class:score-ring--pass={passed}>
+          <strong>{score}</strong>
+          <span>dari 100</span>
+        </div>
+      </section>
+
+      <!-- PEMBAHASAN LENGKAP -->
+      <section class="review-card">
+        <div class="review-card__header">
+          <h2>Kunci Jawaban &amp; Pembahasan Soal</h2>
+          <p class="muted">Pelajari rasionalisasi setiap butir soal untuk meningkatkan pemahaman pada tes sebenarnya.</p>
+        </div>
+        <div class="review-list">
+          {#each questions as question, index (question.id)}
+            {@const selected = answers[index]}
+            <article class="review-item" class:review-item--correct={selected === question.correctKey}>
+              <div class="review-item__head">
+                <span class="review-number">{index + 1}</span>
+                <div>
+                  <span class="review-module">{question.module}</span>
+                  <p class="review-stem">{question.stem}</p>
+                </div>
+                <span class="review-status" class:review-status--ok={selected === question.correctKey}>
+                  {selected === question.correctKey ? 'Benar' : 'Salah'}
+                </span>
+              </div>
+              <div class="review-answer">
+                <span>Jawaban Anda: <strong class:text-danger={selected !== question.correctKey}>{selected ?? 'Kosong'}</strong></span>
+                <span>Kunci Resmi: <strong class="text-success">{question.correctKey}</strong></span>
+              </div>
+              <div class="review-explanation-box">
+                <strong>Pembahasan:</strong>
+                <p>{question.explanation}</p>
+              </div>
+            </article>
           {/each}
         </div>
-        <div class="palette-legend">
-          <span><i class="dot dot--answered"></i>Terjawab</span>
-          <span><i class="dot dot--doubt"></i>Ragu</span>
-          <span><i class="dot dot--empty"></i>Belum</span>
+      </section>
+    {:else}
+      <!-- PROGRESS BAR -->
+      <div class="progress-strip">
+        <div class="progress-strip__label">
+          <span>Progres pengerjaan ({currentPacket.title})</span>
+          <strong>{answeredCount}/{questions.length} terjawab</strong>
         </div>
-        <button class="button button--primary palette-finish" type="button" onclick={finish}>
-          Akhiri simulasi
-        </button>
-        <p class="palette-note">Timer berjalan otomatis. Simulasi berakhir saat waktu habis.</p>
-      </aside>
-    </div>
+        <div class="progress-track">
+          <div class="progress-fill" style:width={`${progress}%`}></div>
+        </div>
+      </div>
+
+      <div class="sim-grid">
+        <section class="question-card">
+          <div class="question-meta">
+            <span class="question-number">Soal {currentIndex + 1} dari {questions.length}</span>
+            <span class="question-module">{current.module}</span>
+          </div>
+
+          <h2 class="question-stem">{current.stem}</h2>
+
+          <div class="options">
+            {#each current.options as option (option.key)}
+              <button
+                class="option"
+                class:option--selected={answers[currentIndex] === option.key}
+                type="button"
+                onclick={() => selectOption(option.key)}
+              >
+                <span class="option-key">{option.key}</span>
+                <span>{option.text}</span>
+              </button>
+            {/each}
+          </div>
+
+          <div class="question-actions">
+            <button
+              class="button button--ghost"
+              type="button"
+              disabled={currentIndex === 0}
+              onclick={() => goTo(currentIndex - 1)}
+            >
+              Sebelumnya
+            </button>
+            <button
+              class="doubt-button"
+              class:doubt-button--active={doubts[currentIndex]}
+              type="button"
+              onclick={toggleDoubt}
+            >
+              {doubts[currentIndex] ? 'Tandai ragu' : 'Ragu-ragu'}
+            </button>
+            {#if currentIndex === questions.length - 1}
+              <button class="button button--primary" type="button" onclick={finish}>Selesai Ujian</button>
+            {:else}
+              <button class="button button--primary" type="button" onclick={() => goTo(currentIndex + 1)}>
+                Berikutnya
+              </button>
+            {/if}
+          </div>
+        </section>
+
+        <aside class="palette-card">
+          <div class="palette-head">
+            <h2>Navigasi Soal</h2>
+            <span>{answeredCount} terjawab</span>
+          </div>
+          <div class="palette-grid">
+            {#each questions as question, index (question.id)}
+              <button
+                class="palette-button"
+                class:palette-button--active={index === currentIndex}
+                class:palette-button--answered={answers[index] !== undefined}
+                class:palette-button--doubt={doubts[index]}
+                type="button"
+                onclick={() => goTo(index)}
+                aria-label={`Soal ${index + 1}`}
+              >
+                {index + 1}
+              </button>
+            {/each}
+          </div>
+          <div class="palette-legend">
+            <span><i class="dot dot--answered"></i>Terjawab</span>
+            <span><i class="dot dot--doubt"></i>Ragu</span>
+            <span><i class="dot dot--empty"></i>Belum</span>
+          </div>
+          <button class="button button--primary palette-finish" type="button" onclick={finish}>
+            Akhiri Simulasi
+          </button>
+          <p class="palette-note">Mode: {examPreferences.mode === 'auto' ? 'Auto Next' : 'Manual'}. Timer berjalan otomatis.</p>
+        </aside>
+      </div>
+    {/if}
   {/if}
 </div>
 
@@ -564,7 +662,44 @@
     margin: 0.35rem 0 0;
     color: var(--color-text-muted);
     font-size: var(--text-sm);
-    max-width: 62ch;
+    max-width: 65ch;
+  }
+
+  .header-right-tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .mode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .mode-pill:hover {
+    border-color: var(--color-primary);
+  }
+
+  .mode-pill__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+  }
+
+  .mode-pill__dot--auto {
+    background: #10b981;
   }
 
   .timer-card {
@@ -597,6 +732,352 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ------------------- SELECTION VIEW STYLES ------------------- */
+  .selection-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .selection-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .step-badge {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .section-subtitle {
+    margin: 0.15rem 0 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .category-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .category-card:hover {
+    border-color: var(--color-primary-soft, #93c5fd);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .category-card--active {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  .category-card__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  .category-card__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .category-card__tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .category-card__name {
+    margin: 0 0 0.35rem;
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .category-card__desc {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.45;
+  }
+
+  .category-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+
+  .category-radio--active {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+
+  /* Subtest selector chips */
+  .subtest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .subtest-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    transition: all 0.15s ease;
+  }
+
+  .subtest-chip:hover {
+    border-color: var(--color-primary);
+  }
+
+  .subtest-chip--active {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  }
+
+  .subtest-chip__icon {
+    font-size: 1.35rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .subtest-chip strong {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .subtest-chip span {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Overview & Control Box */
+  .overview-box {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 860px) {
+    .overview-box {
+      grid-template-columns: 1.4fr 1fr;
+      align-items: center;
+    }
+  }
+
+  .overview-eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+  }
+
+  .overview-title {
+    margin: 0.3rem 0 0.2rem;
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+  }
+
+  .overview-sub {
+    margin: 0 0 0.6rem;
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .overview-desc {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .overview-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .metric-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .metric-val {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .text-brand {
+    color: var(--color-primary);
+  }
+
+  .text-success {
+    color: #10b981;
+  }
+
+  .text-danger {
+    color: #ef4444;
+  }
+
+  .overview-right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .mode-control-card {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted, #f8fafc);
+  }
+
+  .mode-control-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .mode-setting-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .mode-setting-link:hover {
+    text-decoration: underline;
+  }
+
+  .mode-badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    background: #e2e8f0;
+    color: #334155;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+
+  .mode-badge--auto {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  .mode-hint {
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+
+  .quick-toggle-btn {
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .quick-toggle-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 0.85rem 1.4rem;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+
+  /* ------------------- RUNNING SIMULATION STYLES ------------------- */
   .progress-strip {
     display: flex;
     flex-direction: column;
@@ -880,6 +1361,7 @@
     font-size: var(--text-sm);
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.15s ease;
   }
 
   .button:disabled {
@@ -892,10 +1374,18 @@
     color: white;
   }
 
+  .button--primary:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-primary) 90%, black);
+  }
+
   .button--ghost {
     border-color: var(--color-border);
     background: var(--color-surface);
     color: var(--color-text);
+  }
+
+  .button--ghost:hover:not(:disabled) {
+    background: var(--color-surface-muted);
   }
 
   .result-card {
@@ -986,9 +1476,18 @@
     padding: clamp(1rem, 3vw, 1.5rem);
   }
 
-  .review-card h2 {
-    margin: 0 0 var(--space-4);
+  .review-card__header {
+    margin-bottom: var(--space-4);
+  }
+
+  .review-card__header h2 {
+    margin: 0;
     font-size: var(--text-lg);
+  }
+
+  .review-card__header p {
+    margin: 0.25rem 0 0;
+    font-size: var(--text-sm);
   }
 
   .review-list {
@@ -1001,6 +1500,11 @@
     padding: var(--space-4);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .review-item--correct {
+    border-left: 4px solid #10b981;
   }
 
   .review-item__head {
@@ -1014,9 +1518,10 @@
     min-width: 0;
   }
 
-  .review-item__head p {
+  .review-stem {
     margin: 0.25rem 0 0;
     font-size: var(--text-sm);
+    font-weight: 600;
     white-space: pre-line;
   }
 
@@ -1059,13 +1564,29 @@
     flex-wrap: wrap;
     gap: var(--space-4);
     margin-top: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--color-border);
     font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
 
-  .review-explanation {
-    margin: var(--space-2) 0 0;
+  .review-explanation-box {
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-muted, #f8fafc);
     font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
+  .review-explanation-box strong {
+    color: var(--color-text);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .review-explanation-box p {
+    margin: 0;
     color: var(--color-text-muted);
   }
 
@@ -1091,6 +1612,11 @@
 
   @media (max-width: 560px) {
     .sim-header {
+      align-items: stretch;
+    }
+
+    .header-right-tools {
+      flex-direction: column;
       align-items: stretch;
     }
 

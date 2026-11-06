@@ -9,6 +9,7 @@
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import { apiRequest, apiErrorMessage } from '$lib/api/client';
   import { session } from '$lib/stores/session.svelte';
+  import { examPreferences } from '$lib/stores/examPreferences.svelte';
   import { formatDate } from '$lib/format';
   import type { AdminUserSummary, AvatarUploadResponse, MessageResult } from '@webcat/contracts';
 
@@ -280,6 +281,56 @@
           </div>
         </form>
       </Card>
+
+      <Card title="Preferensi Mode Pengerjaan Tes" description="Atur alur perpindahan soal saat mengerjakan simulasi atau ujian resmi CAT.">
+        <div class="pref-desc">
+          Pilih bagaimana sistem merespons saat Anda memilih atau mengklik pilihan jawaban pada semua tes (Psikotes, TKK, TPK, dan Simulasi CAT).
+        </div>
+
+        <div class="pref-options">
+          <button
+            type="button"
+            class="pref-card"
+            class:pref-card--selected={examPreferences.mode === 'auto'}
+            onclick={() => examPreferences.setMode('auto')}
+          >
+            <div class="pref-card__header">
+              <span class="pref-radio" class:pref-radio--active={examPreferences.mode === 'auto'}></span>
+              <span class="pref-card__title">Otomatis Lanjut (Auto Next)</span>
+              {#if examPreferences.mode === 'auto'}
+                <Badge tone="success">Aktif</Badge>
+              {/if}
+            </div>
+            <p class="pref-card__text">
+              Seketika setelah Anda memilih jawaban, sistem langsung berpindah ke butir soal berikutnya secara otomatis tanpa perlu mengklik tombol Berikutnya.
+            </p>
+            <span class="pref-badge-hint">⚡ Menghemat waktu &amp; sangat direkomendasikan</span>
+          </button>
+
+          <button
+            type="button"
+            class="pref-card"
+            class:pref-card--selected={examPreferences.mode === 'manual'}
+            onclick={() => examPreferences.setMode('manual')}
+          >
+            <div class="pref-card__header">
+              <span class="pref-radio" class:pref-radio--active={examPreferences.mode === 'manual'}></span>
+              <span class="pref-card__title">Manual (Klik Berikutnya)</span>
+              {#if examPreferences.mode === 'manual'}
+                <Badge tone="success">Aktif</Badge>
+              {/if}
+            </div>
+            <p class="pref-card__text">
+              Jawaban tersimpan namun Anda tetap berada di nomor soal tersebut. Pindah nomor soal hanya jika Anda menekan tombol "Berikutnya" atau mengklik nomor di kisi soal.
+            </p>
+            <span class="pref-badge-hint">✋ Lebih tenang &amp; leluasa meninjau pilihan</span>
+          </button>
+        </div>
+
+        <p class="pref-note">
+          * Catatan: Subtes Kecermatan tetap bergerak otomatis per butir soal karena mengukur kecepatan respon 50 butir per kolom waktu.
+        </p>
+      </Card>
     </div>
   {/if}
 </div>
@@ -373,6 +424,91 @@
 
   .file {
     font-size: var(--text-sm);
+  }
+
+  .pref-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .pref-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .pref-card {
+    text-align: left;
+    background: var(--color-surface, #fff);
+    border: 2px solid var(--color-border, #e2e8f0);
+    border-radius: var(--radius-lg, 8px);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-family: inherit;
+  }
+
+  .pref-card:hover {
+    border-color: var(--color-primary-soft, #cbd5e1);
+    background: var(--color-surface-hover, #f8fafc);
+  }
+
+  .pref-card--selected {
+    border-color: var(--color-primary, #2563eb);
+    background: rgba(37, 99, 235, 0.04);
+  }
+
+  .pref-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .pref-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border, #cbd5e1);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .pref-radio--active {
+    border-color: var(--color-primary, #2563eb);
+    background: var(--color-primary, #2563eb);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+
+  .pref-card__title {
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    flex: 1;
+  }
+
+  .pref-card__text {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .pref-badge-hint {
+    font-size: var(--text-xs);
+    color: var(--color-primary, #2563eb);
+    font-weight: 500;
+  }
+
+  .pref-note {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-3);
+    font-style: italic;
   }
 
   @media (min-width: 900px) {

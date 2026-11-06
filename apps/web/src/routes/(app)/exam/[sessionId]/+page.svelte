@@ -9,6 +9,7 @@
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import { session } from '$lib/stores/session.svelte';
   import { examRunner } from '$lib/stores/examRunner.svelte';
+  import { examPreferences } from '$lib/stores/examPreferences.svelte';
   import { formatDateTime } from '$lib/format';
   import { examQuestionTileView } from '$lib/exams/render-adapter';
   import type { TileMedia } from '$lib/exams/render-adapter';
@@ -470,11 +471,7 @@
       }
       return;
     }
-    if (
-      questionItem.type === 'MISSING_ELEMENT' ||
-      questionItem.type === 'LIKERT_STATEMENT' ||
-      (isSpeedTest && questionItem.type !== 'PASS_HAND_COLUMN')
-    ) {
+    if (examPreferences.mode === 'auto') {
       advanceSoon();
     }
   }
@@ -491,14 +488,18 @@
   function chooseLikert(questionItem: ExamQuestion, value: number): void {
     if (examRunner.isLocked) return;
     examRunner.recordAnswer(questionItem.id, { value }, elapsed());
-    advanceSoon();
+    if (examPreferences.mode === 'auto') {
+      advanceSoon();
+    }
   }
 
   function submitMissingText(questionItem: ExamQuestion): void {
     const text = textAnswer.trim();
     if (!text || examRunner.isLocked) return;
     examRunner.recordAnswer(questionItem.id, { text }, elapsed());
-    advanceSoon();
+    if (examPreferences.mode === 'auto') {
+      advanceSoon();
+    }
   }
 
   function isChosen(questionItem: ExamQuestion, optionId: string): boolean {

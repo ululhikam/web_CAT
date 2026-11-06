@@ -35,7 +35,6 @@
           { href: '/simulation', label: 'Simulasi CAT', icon: 'clock' as const, badge: 'Bebas' },
           { href: '/exam', label: 'TES CAT', icon: 'shield' as const, badge: 'Ujian' },
           { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
-          { href: '/dashboard#latihan', label: 'Bank Soal Subtes', icon: 'questions' as const },
           { href: '/dashboard#riwayat', label: 'Riwayat & Nilai (MS/TMS)', icon: 'list' as const },
         ],
   );
@@ -54,7 +53,7 @@
     session.isAdmin
       ? []
       : [
-          { href: '/profile', label: 'Profil Peserta', icon: 'profile' as const },
+          { href: '/profile', label: 'Profil & Pengaturan', icon: 'profile' as const },
           { href: '/devices', label: 'Perangkat Aktif', icon: 'devices' as const },
         ],
   );
