@@ -680,7 +680,7 @@
           </div>
           <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit)</h2>
           <p class="jeda-card__subtitle">
-            Subtes 1 telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai subtes kecepatan tinggi berikutnya.
+            Subtes 1 telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai subtes berikutnya. Anda dapat memilih waktu jeda 5–10 menit atau langsung menekan tombol <strong>Kerjakan Sekarang</strong> bila sudah siap.
           </p>
 
           <div class="jeda-timer-box">
@@ -745,7 +745,7 @@
 
           <div class="jeda-actions">
             <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
-              🚀 Mulai Subtes Kecermatan Sekarang
+              ⚡ Kerjakan Sekarang (Mulai Subtes Kecermatan)
             </Button>
             <Button variant="secondary" onclick={enterFullscreen}>
               {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
@@ -1142,13 +1142,28 @@
               </Button>
             </div>
             <div class="runner__nav runner__nav--end">
-              <Button
-                variant="secondary"
-                disabled={index >= examRunner.questions.length - 1}
-                onclick={advance}
-              >
-                Selanjutnya
-              </Button>
+              {#if index < examRunner.questions.length - 1}
+                <Button
+                  variant="secondary"
+                  onclick={advance}
+                >
+                  Selanjutnya
+                </Button>
+              {:else if examRunner.nextSubtest}
+                <Button
+                  variant="primary"
+                  onclick={() => (confirmFinish = true)}
+                >
+                  Lanjut ke {examRunner.nextSubtest.name} →
+                </Button>
+              {:else}
+                <Button
+                  variant="danger"
+                  onclick={() => (confirmFinish = true)}
+                >
+                  Selesaikan Ujian
+                </Button>
+              {/if}
             </div>
           </footer>
         {/if}
@@ -1193,9 +1208,15 @@
             </ul>
           </div>
 
-          <Button variant="danger" fullWidth onclick={() => (confirmFinish = true)}>
-            Akhiri sesi
-          </Button>
+          {#if examRunner.nextSubtest}
+            <Button variant="primary" fullWidth onclick={() => (confirmFinish = true)}>
+              Lanjut ke {examRunner.nextSubtest.name} →
+            </Button>
+          {:else}
+            <Button variant="danger" fullWidth onclick={() => (confirmFinish = true)}>
+              Selesaikan Ujian
+            </Button>
+          {/if}
 
           <div class="sequence-card">
             <h2 class="sequence-card__title">Urutan tes</h2>
@@ -1240,11 +1261,18 @@
   {#if confirmFinish}
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="finish-title">
       <div class="modal__panel">
-        <h2 id="finish-title">Akhiri sesi ini?</h2>
-        <p class="muted">
-          Subtes akan dinilai sekarang dan tidak dapat dibuka kembali. Pastikan semua jawaban sudah
-          terkirim.
-        </p>
+        {#if examRunner.nextSubtest}
+          <h2 id="finish-title">Lanjut ke {examRunner.nextSubtest.name}?</h2>
+          <p class="muted">
+            Subtes <strong>{subtest?.name ?? 'Kecerdasan & Kepribadian'}</strong> akan dinilai sekarang dan <strong>tidak dapat dibuka kembali</strong>.
+            Setelah berpindah, Anda akan diarahkan ke halaman jeda istirahat (5–10 menit) sebelum memulai tes berikutnya.
+          </p>
+        {:else}
+          <h2 id="finish-title">Selesaikan ujian ini?</h2>
+          <p class="muted">
+            Seluruh soal telah dikerjakan. Hasil ujian akan dihitung dan langsung ditampilkan. Pastikan semua jawaban sudah tersimpan.
+          </p>
+        {/if}
         {#if examRunner.pendingCount > 0}
           <Alert tone="warning" title="Masih ada jawaban menunggu">
             {examRunner.pendingCount} jawaban belum ter-ACK server. Coba kirim ulang terlebih dahulu.
@@ -1253,11 +1281,11 @@
         <div class="actions">
           <Button variant="secondary" onclick={() => (confirmFinish = false)}>Batal</Button>
           <Button
-            variant="danger"
+            variant={examRunner.nextSubtest ? 'primary' : 'danger'}
             loading={examRunner.finishing}
             onclick={() => void finish(false)}
           >
-            Ya, selesaikan
+            {examRunner.nextSubtest ? `Ya, Lanjut ke ${examRunner.nextSubtest.name}` : 'Ya, selesaikan'}
           </Button>
           {#if examRunner.pendingCount > 0}
             <Button
