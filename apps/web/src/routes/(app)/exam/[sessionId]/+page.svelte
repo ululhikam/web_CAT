@@ -77,6 +77,8 @@
   const question = $derived(examRunner.questions[index] ?? null);
   const subtest = $derived(examRunner.currentSubtest);
   const isKecermatan = $derived(subtest?.subtestCode === 'KECERMATAN');
+  const isKepribadian = $derived(subtest?.subtestCode === 'KEPRIBADIAN');
+  const isKecerdasan = $derived(subtest?.subtestCode === 'KECERDASAN');
 
   const subtestStartedMs = $derived(
     subtest?.startedAt ? Date.parse(subtest.startedAt) : null,
@@ -763,7 +765,7 @@
         <div class="cat-exam-title">
           <span class="cat-exam-title__main">SISTEM UJIAN CAT TERPADU</span>
           <span class="cat-exam-title__sub">
-            {examRunner.active?.currentStageCode ?? 'SIMULASI'} • {subtest?.name ?? 'Sesi Ujian'}
+            {examRunner.active?.currentStageCode ?? 'SIMULASI'} • {subtest?.status === 'READY' && subtest.orderIndex > 1 ? `Waktu Jeda Istirahat (Peralihan ke ${subtest.name})` : (subtest?.name ?? 'Sesi Ujian')}
           </span>
         </div>
       </div>
@@ -834,84 +836,235 @@
       </Card>
     {:else if subtest.status === 'READY'}
       {#if isKecermatan || subtest.orderIndex > 1}
-        <div class="jeda-card">
+        <div class="jeda-card" class:jeda-card--kepribadian={isKepribadian} class:jeda-card--kecermatan={isKecermatan}>
           <div class="jeda-card__badge">
             <span class="jeda-badge-pulse"></span>
-            WAKTU JEDA ISTIRAHAT
+            WAKTU JEDA ISTIRAHAT • PERALIHAN FASE
           </div>
-          <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit)</h2>
-          <p class="jeda-card__subtitle">
-            Subtes 1 telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai subtes berikutnya. Anda dapat memilih waktu jeda 5–10 menit atau langsung menekan tombol <strong>Kerjakan Sekarang</strong> bila sudah siap.
-          </p>
 
-          <div class="jeda-timer-box">
-            <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
-            <div
-              class="jeda-timer-display"
-              class:jeda-timer-display--ended={breakRemainingSeconds === 0}
-            >
-              {formatTime(breakRemainingSeconds)}
-            </div>
-            <div class="jeda-timer-options">
-              <span class="jeda-timer-opt-title">Pilihan Durasi Jeda:</span>
-              <button
-                type="button"
-                class="jeda-opt-btn"
-                class:jeda-opt-btn--active={breakMinutes === 5}
-                onclick={() => startBreakTimer(5)}
+          {#if isKepribadian}
+            <!-- ============================================================= -->
+            <!-- JEDA PERALIHAN KHUSUS MENUJU TES MENTAL KEPRIBADIAN (SUBTES 2) -->
+            <!-- ============================================================= -->
+            <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit): Menuju Mental Kepribadian</h2>
+            <p class="jeda-card__subtitle">
+              Subtes 1 (Tes Kecerdasan) telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan pikiran sejenak sebelum memulai <strong>Subtes 2 (Tes Mental Kepribadian)</strong>. Anda dapat memilih waktu jeda 5–10 menit atau langsung menekan tombol <strong>Mulai Subtes Mental Kepribadian</strong> bila sudah siap.
+            </p>
+
+            <div class="jeda-timer-box">
+              <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
+              <div
+                class="jeda-timer-display"
+                class:jeda-timer-display--ended={breakRemainingSeconds === 0}
               >
-                5 Menit
-              </button>
-              <button
-                type="button"
-                class="jeda-opt-btn"
-                class:jeda-opt-btn--active={breakMinutes === 10}
-                onclick={() => startBreakTimer(10)}
+                {formatTime(breakRemainingSeconds)}
+              </div>
+              <div class="jeda-timer-options">
+                <span class="jeda-timer-opt-title">Pilihan Durasi Jeda:</span>
+                <button
+                  type="button"
+                  class="jeda-opt-btn"
+                  class:jeda-opt-btn--active={breakMinutes === 5}
+                  onclick={() => startBreakTimer(5)}
+                >
+                  5 Menit
+                </button>
+                <button
+                  type="button"
+                  class="jeda-opt-btn"
+                  class:jeda-opt-btn--active={breakMinutes === 10}
+                  onclick={() => startBreakTimer(10)}
+                >
+                  10 Menit
+                </button>
+              </div>
+            </div>
+
+            <div class="jeda-briefing jeda-briefing--kepribadian">
+              <h3 class="jeda-briefing__title">
+                📋 Petunjuk Subtes 2: {subtest.name}
+              </h3>
+              <div class="jeda-briefing__grid">
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Total Soal</span>
+                  <span class="jeda-briefing__val">{subtest.questionCount} Soal</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Alokasi Waktu</span>
+                  <span class="jeda-briefing__val">120 Menit (2 Jam)</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Format Jawaban</span>
+                  <span class="jeda-briefing__val">Skala Sikap 5 Opsi (Setuju s.d. Tidak Setuju)</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Model Penilaian</span>
+                  <span class="jeda-briefing__val">Bobot Nilai Setiap Jawaban (1 - 5 Poin)</span>
+                </div>
+              </div>
+              <ul class="jeda-briefing__list">
+                <li>Mengukur dimensi mental kepribadian: <strong>Integritas, Pengendalian Emosi, Tanggung Jawab, Kerjasama, Kepemimpinan, dan Disiplin</strong>.</li>
+                <li><strong>Setiap pilihan jawaban dinilai berdasarkan bobot (1 hingga 5 poin)</strong>; pilihlah jawaban yang paling mencerminkan prinsip dan integritas dinas Anda.</li>
+                <li>Pilihlah jawaban secara jujur, objektif, dan konsisten sesuai dengan jati diri dan kode etik profesi Polri.</li>
+                <li>Tidak ada pengurangan nilai (tanpa minus). Pastikan seluruh <strong>{subtest.questionCount} soal</strong> dijawab sebelum batas waktu berakhir.</li>
+                <li>Setelah subtes Mental Kepribadian ini selesai, Anda akan memasuki sesi jeda berikutnya sebelum memulai Subtes Kecermatan.</li>
+              </ul>
+            </div>
+
+            <div class="jeda-actions">
+              <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
+                ⚡ Kerjakan Sekarang (Mulai Subtes Mental Kepribadian)
+              </Button>
+              <Button variant="secondary" onclick={enterFullscreen}>
+                {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
+              </Button>
+            </div>
+          {:else if isKecermatan}
+            <!-- ============================================================= -->
+            <!-- JEDA PERALIHAN KHUSUS MENUJU TES KECERMATAN (SUBTES 3)       -->
+            <!-- ============================================================= -->
+            <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit): Menuju Tes Kecermatan</h2>
+            <p class="jeda-card__subtitle">
+              Subtes 2 (Tes Mental Kepribadian) telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai <strong>Subtes 3 (Tes Kecermatan)</strong>. Anda dapat memilih waktu jeda 5–10 menit atau langsung menekan tombol <strong>Mulai Subtes Kecermatan</strong> bila sudah siap.
+            </p>
+
+            <div class="jeda-timer-box">
+              <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
+              <div
+                class="jeda-timer-display"
+                class:jeda-timer-display--ended={breakRemainingSeconds === 0}
               >
-                10 Menit
-              </button>
-            </div>
-          </div>
-
-          <div class="jeda-briefing">
-            <h3 class="jeda-briefing__title">
-              📋 Petunjuk Subtes Berikutnya: {subtest.name}
-            </h3>
-            <div class="jeda-briefing__grid">
-              <div class="jeda-briefing__item">
-                <span class="jeda-briefing__lbl">Total Soal</span>
-                <span class="jeda-briefing__val">500 Soal (10 Kolom × 50 Soal)</span>
+                {formatTime(breakRemainingSeconds)}
               </div>
-              <div class="jeda-briefing__item">
-                <span class="jeda-briefing__lbl">Alokasi Waktu</span>
-                <span class="jeda-briefing__val">10 Menit (1 Menit per Kolom)</span>
-              </div>
-              <div class="jeda-briefing__item">
-                <span class="jeda-briefing__lbl">Karakter</span>
-                <span class="jeda-briefing__val">Huruf Kapital (A - Z)</span>
-              </div>
-              <div class="jeda-briefing__item">
-                <span class="jeda-briefing__lbl">Format Tes</span>
-                <span class="jeda-briefing__val">Kecermatan Huruf Hilang</span>
+              <div class="jeda-timer-options">
+                <span class="jeda-timer-opt-title">Pilihan Durasi Jeda:</span>
+                <button
+                  type="button"
+                  class="jeda-opt-btn"
+                  class:jeda-opt-btn--active={breakMinutes === 5}
+                  onclick={() => startBreakTimer(5)}
+                >
+                  5 Menit
+                </button>
+                <button
+                  type="button"
+                  class="jeda-opt-btn"
+                  class:jeda-opt-btn--active={breakMinutes === 10}
+                  onclick={() => startBreakTimer(10)}
+                >
+                  10 Menit
+                </button>
               </div>
             </div>
-            <ul class="jeda-briefing__list">
-              <li>Terdapat <strong>10 kolom</strong>, masing-masing berdurasi <strong>1 menit</strong> dengan <strong>50 soal</strong> per kolom.</li>
-              <li>Setiap kolom memiliki <strong>5 huruf rujukan (A, B, C, D, E)</strong>.</li>
-              <li>Perhatikan 4 huruf pada setiap soal, lalu pilih <strong>1 huruf yang hilang</strong> dari kelompok rujukan secepat mungkin.</li>
-              <li>Anda dapat menggunakan tombol mouse atau tombol keyboard <strong>A, B, C, D, E</strong> (atau angka <strong>1 - 5</strong>) untuk menjawab cepat.</li>
-              <li>Setelah subtes kecermatan ini selesai, hasil akhir ujian akan langsung ditampilkan.</li>
-            </ul>
-          </div>
 
-          <div class="jeda-actions">
-            <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
-              ⚡ Kerjakan Sekarang (Mulai Subtes Kecermatan)
-            </Button>
-            <Button variant="secondary" onclick={enterFullscreen}>
-              {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
-            </Button>
-          </div>
+            <div class="jeda-briefing jeda-briefing--kecermatan">
+              <h3 class="jeda-briefing__title">
+                📋 Petunjuk Subtes 3: {subtest.name}
+              </h3>
+              <div class="jeda-briefing__grid">
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Total Soal</span>
+                  <span class="jeda-briefing__val">{subtest.questionCount} Soal (10 Kolom × 50 Soal)</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Alokasi Waktu</span>
+                  <span class="jeda-briefing__val">10 Menit (1 Menit per Kolom)</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Karakter Patokan</span>
+                  <span class="jeda-briefing__val">Huruf / Angka / Simbol Rujukan</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Format Tes</span>
+                  <span class="jeda-briefing__val">Kecermatan Karakter Hilang (Format CAT Asli)</span>
+                </div>
+              </div>
+              <ul class="jeda-briefing__list">
+                <li>Terdapat <strong>10 kolom</strong>, masing-masing berdurasi <strong>1 menit</strong> dengan <strong>50 soal</strong> per kolom.</li>
+                <li>Setiap kolom memiliki <strong>5 huruf rujukan (A, B, C, D, E)</strong> di bagian atas.</li>
+                <li>Perhatikan 4 huruf pada setiap soal, lalu pilih <strong>1 huruf yang hilang</strong> dari kelompok rujukan secepat mungkin.</li>
+                <li>Gunakan tombol mouse atau tombol keyboard <strong>A, B, C, D, E</strong> (atau angka <strong>1 - 5</strong>) untuk menjawab cepat.</li>
+                <li>Timer kolom tereset otomatis setiap kolom berganti. Setelah subtes kecermatan ini selesai, hasil akhir ujian akan langsung ditampilkan.</li>
+              </ul>
+            </div>
+
+            <div class="jeda-actions">
+              <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
+                ⚡ Kerjakan Sekarang (Mulai Subtes Kecermatan)
+              </Button>
+              <Button variant="secondary" onclick={enterFullscreen}>
+                {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
+              </Button>
+            </div>
+          {:else}
+            <!-- JEDA SUBTES UMUM LAINNYA -->
+            <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit): Menuju {subtest.name}</h2>
+            <p class="jeda-card__subtitle">
+              Subtes sebelumnya telah selesai. Gunakan waktu jeda ini untuk beristirahat sebelum memulai subtes <strong>{subtest.name}</strong>. Anda dapat memilih waktu jeda atau langsung menekan tombol <strong>Kerjakan Sekarang</strong>.
+            </p>
+
+            <div class="jeda-timer-box">
+              <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
+              <div
+                class="jeda-timer-display"
+                class:jeda-timer-display--ended={breakRemainingSeconds === 0}
+              >
+                {formatTime(breakRemainingSeconds)}
+              </div>
+              <div class="jeda-timer-options">
+                <span class="jeda-timer-opt-title">Pilihan Durasi Jeda:</span>
+                <button
+                  type="button"
+                  class="jeda-opt-btn"
+                  class:jeda-opt-btn--active={breakMinutes === 5}
+                  onclick={() => startBreakTimer(5)}
+                >
+                  5 Menit
+                </button>
+                <button
+                  type="button"
+                  class="jeda-opt-btn"
+                  class:jeda-opt-btn--active={breakMinutes === 10}
+                  onclick={() => startBreakTimer(10)}
+                >
+                  10 Menit
+                </button>
+              </div>
+            </div>
+
+            <div class="jeda-briefing">
+              <h3 class="jeda-briefing__title">
+                📋 Petunjuk Subtes: {subtest.name}
+              </h3>
+              <div class="jeda-briefing__grid">
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Total Soal</span>
+                  <span class="jeda-briefing__val">{subtest.questionCount} Soal</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Alokasi Waktu</span>
+                  <span class="jeda-briefing__val">Standar Waktu CAT</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Format Tes</span>
+                  <span class="jeda-briefing__val">Pilihan Ganda Berbobot</span>
+                </div>
+                <div class="jeda-briefing__item">
+                  <span class="jeda-briefing__lbl">Ambang Batas</span>
+                  <span class="jeda-briefing__val">Passing Grade: 60.00</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="jeda-actions">
+              <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
+                ⚡ Kerjakan Sekarang (Mulai {subtest.name})
+              </Button>
+              <Button variant="secondary" onclick={enterFullscreen}>
+                {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
+              </Button>
+            </div>
+          {/if}
         </div>
       {:else}
         <Card
@@ -1491,7 +1644,7 @@
         {#if examRunner.nextSubtest}
           <h2 id="finish-title">Lanjut ke {examRunner.nextSubtest.name}?</h2>
           <p class="muted">
-            Subtes <strong>{subtest?.name ?? 'Kecerdasan & Kepribadian'}</strong> akan dinilai sekarang dan <strong>tidak dapat dibuka kembali</strong>.
+            Subtes <strong>{subtest?.name ?? 'ini'}</strong> akan dinilai sekarang dan <strong>tidak dapat dibuka kembali</strong>.
             Setelah berpindah, Anda akan diarahkan ke halaman jeda istirahat (5–10 menit) sebelum memulai tes berikutnya.
           </p>
         {:else}
@@ -2349,6 +2502,28 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+
+  .jeda-card--kepribadian {
+    border-color: #8b5cf6;
+    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.15);
+  }
+
+  .jeda-card--kepribadian .jeda-card__badge {
+    background: rgba(139, 92, 246, 0.12);
+    color: #7c3aed;
+  }
+
+  .jeda-card--kepribadian .jeda-badge-pulse {
+    background: #7c3aed;
+  }
+
+  .jeda-briefing--kepribadian {
+    border-left: 4px solid #8b5cf6;
+  }
+
+  .jeda-briefing--kecermatan {
+    border-left: 4px solid var(--color-brand, #3b82f6);
   }
 
   .jeda-card__badge {
