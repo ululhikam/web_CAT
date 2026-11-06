@@ -10,6 +10,12 @@
     type SimQuestion,
     type SimBenchmarkItem,
   } from './simulation-packets';
+  import {
+    evaluatePsikotesExam,
+    getOptionWeight,
+    getWeightGradeLabel,
+    type PsikotesEvaluationResult,
+  } from './psikotes-scoring';
 
   let selectedCategoryId = $state<'PSIKOTES' | 'TKK' | 'TPK' | 'ALL'>('PSIKOTES');
   let selectedSubtestId = $state<'ALL' | 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN'>('ALL');
@@ -94,10 +100,18 @@
     questions.filter((question, index) => answers[index] === question.correctKey).length,
   );
 
-  const score = $derived(
-    questions.length ? Math.round((correctCount / questions.length) * 100) : 0,
+  const psikotesResult = $derived<PsikotesEvaluationResult>(
+    evaluatePsikotesExam(currentPacket, questions, answers),
   );
-  const passed = $derived(score >= 61);
+
+  const score = $derived(
+    psikotesResult.isPsikotes
+      ? psikotesResult.finalScore
+      : (questions.length ? Math.round((correctCount / questions.length) * 100) : 0),
+  );
+  const passed = $derived(
+    psikotesResult.isPsikotes ? psikotesResult.passed : score >= 61,
+  );
 
   // Daftar seluruh nomor kolom pada paket kecermatan
   const totalColumns = $derived.by(() => {
@@ -580,29 +594,81 @@
       <!-- HASIL SIMULASI -->
       <section class="result-card">
         <div class="result-copy">
-          <span class="eyebrow">Hasil Simulasi CAT</span>
+          <span class="eyebrow">
+            {psikotesResult.isPsikotes
+              ? 'Hasil Penilaian Khusus Psikotes (Standar CAT Polri)'
+              : 'Hasil Simulasi CAT'}
+          </span>
           <h2>{score >= 61 ? 'Memenuhi Syarat (MS)' : 'Perlu Pendalaman (TMS)'}</h2>
           <p>
             Skor akhir Anda <strong>{score}</strong> dari 100. Ambang batas kelulusan seleksi adalah <strong>61.00</strong>.
           </p>
+          {#if psikotesResult.isPsikotes}
+            <p class="psikotes-summary-note">{psikotesResult.summaryExplanation}</p>
+          {/if}
+
+          <!-- Metrik Hasil Terstruktur -->
           <div class="result-stats">
-            <div>
-              <span>Benar</span>
-              <strong class="text-success">{correctCount}/{questions.length}</strong>
-            </div>
-            <div>
-              <span>Salah / Kosong</span>
-              <strong class="text-danger">{questions.length - correctCount}/{questions.length}</strong>
-            </div>
-            <div>
-              <span>Terjawab</span>
-              <strong>{answeredCount}/{questions.length}</strong>
-            </div>
-            <div>
-              <span>Status</span>
-              <strong class={passed ? 'text-success' : 'text-danger'}>{passed ? 'MS (Lulus)' : 'TMS (Gugur)'}</strong>
-            </div>
+            {#if psikotesResult.kepribadian && !psikotesResult.isMixed}
+              <div>
+                <span>Rata-Rata Bobot</span>
+                <strong class="text-primary">{psikotesResult.kepribadian.averageWeight} / 5.00</strong>
+              </div>
+              <div>
+                <span>Total Poin Bobot</span>
+                <strong class="text-success">{psikotesResult.kepribadian.totalScoreEarned} / {psikotesResult.kepribadian.maxPossibleScore}</strong>
+              </div>
+              <div>
+                <span>Terjawab</span>
+                <strong>{psikotesResult.kepribadian.attempted}/{questions.length}</strong>
+              </div>
+              <div>
+                <span>Status</span>
+                <strong class={passed ? 'text-success' : 'text-danger'}>
+                  {passed ? 'MS (Lulus)' : 'TMS (Gugur)'}
+                </strong>
+              </div>
+            {:else if psikotesResult.kecermatan && !psikotesResult.isMixed}
+              <div>
+                <span>Kecepatan (40%)</span>
+                <strong>{psikotesResult.kecermatan.speedScore}%</strong>
+              </div>
+              <div>
+                <span>Ketelitian (40%)</span>
+                <strong class="text-success">{psikotesResult.kecermatan.accuracyScore}%</strong>
+              </div>
+              <div>
+                <span>Kestabilan (20%)</span>
+                <strong class="text-primary">{psikotesResult.kecermatan.stabilityScore}%</strong>
+              </div>
+              <div>
+                <span>Status</span>
+                <strong class={passed ? 'text-success' : 'text-danger'}>
+                  {passed ? 'MS (Lulus)' : 'TMS (Gugur)'}
+                </strong>
+              </div>
+            {:else}
+              <div>
+                <span>Benar</span>
+                <strong class="text-success">{correctCount}/{questions.length}</strong>
+              </div>
+              <div>
+                <span>Salah / Kosong</span>
+                <strong class="text-danger">{questions.length - correctCount}/{questions.length}</strong>
+              </div>
+              <div>
+                <span>Terjawab</span>
+                <strong>{answeredCount}/{questions.length}</strong>
+              </div>
+              <div>
+                <span>Status</span>
+                <strong class={passed ? 'text-success' : 'text-danger'}>
+                  {passed ? 'MS (Lulus)' : 'TMS (Gugur)'}
+                </strong>
+              </div>
+            {/if}
           </div>
+
           <div class="result-actions">
             <button class="button button--primary" type="button" onclick={restart}>Ulangi Simulasi Ini</button>
             <button class="button button--ghost" type="button" onclick={exitToSelection}>Pilih Materi Lain</button>
@@ -611,11 +677,168 @@
             </button>
           </div>
         </div>
+
         <div class="score-ring" class:score-ring--pass={passed}>
           <strong>{score}</strong>
           <span>dari 100</span>
         </div>
       </section>
+
+      {#if psikotesResult.isPsikotes && psikotesResult.isMixed}
+        <!-- PANEL RINCIAN 3 SUBTES PSIKOTES (CAMPURAN) -->
+        <section class="psikotes-subtests-panel">
+          <div class="psikotes-subtests-panel__head">
+            <h3>Rincian Pembobotan 3 Subtes Psikotes</h3>
+            <p>Penggabungan nilai Kecerdasan (40%), Mental Kepribadian (30%), dan Kecermatan (30%).</p>
+          </div>
+          <div class="psikotes-subtests-grid">
+            {#if psikotesResult.kecerdasan}
+              <div class="subtest-score-card">
+                <div class="subtest-score-card__top">
+                  <span class="subtest-badge">Kecerdasan (Bobot 40%)</span>
+                  <strong class="subtest-score-val" class:text-success={psikotesResult.kecerdasan.passed} class:text-danger={!psikotesResult.kecerdasan.passed}>
+                    {psikotesResult.kecerdasan.score}
+                  </strong>
+                </div>
+                <div class="subtest-score-card__body">
+                  <div class="subtest-metric">
+                    <span>Ketepatan / Akurasi:</span>
+                    <strong>{psikotesResult.kecerdasan.accuracy}%</strong>
+                  </div>
+                  <div class="subtest-metric">
+                    <span>Benar / Total:</span>
+                    <strong>{psikotesResult.kecerdasan.correct} dari {psikotesResult.kecerdasan.totalQuestions} butir</strong>
+                  </div>
+                  <div class="subtest-metric">
+                    <span>Status Subtes:</span>
+                    <strong class={psikotesResult.kecerdasan.passed ? 'text-success' : 'text-danger'}>
+                      {psikotesResult.kecerdasan.passed ? 'Memenuhi Syarat' : 'Perlu Pendalaman'}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            {/if}
+
+            {#if psikotesResult.kepribadian}
+              <div class="subtest-score-card">
+                <div class="subtest-score-card__top">
+                  <span class="subtest-badge">Kepribadian (Bobot 30%)</span>
+                  <strong class="subtest-score-val" class:text-success={psikotesResult.kepribadian.passed} class:text-danger={!psikotesResult.kepribadian.passed}>
+                    {psikotesResult.kepribadian.score}
+                  </strong>
+                </div>
+                <div class="subtest-score-card__body">
+                  <div class="subtest-metric">
+                    <span>Rata-rata Bobot Jawaban:</span>
+                    <strong>{psikotesResult.kepribadian.averageWeight} / 5.00</strong>
+                  </div>
+                  <div class="subtest-metric">
+                    <span>Total Poin Terkumpul:</span>
+                    <strong>{psikotesResult.kepribadian.totalScoreEarned} dari {psikotesResult.kepribadian.maxPossibleScore}</strong>
+                  </div>
+                  <div class="subtest-metric">
+                    <span>Profil Sikap:</span>
+                    <strong class="text-primary">{psikotesResult.kepribadian.interpretation}</strong>
+                  </div>
+                </div>
+              </div>
+            {/if}
+
+            {#if psikotesResult.kecermatan}
+              <div class="subtest-score-card">
+                <div class="subtest-score-card__top">
+                  <span class="subtest-badge">Kecermatan (Bobot 30%)</span>
+                  <strong class="subtest-score-val" class:text-success={psikotesResult.kecermatan.passed} class:text-danger={!psikotesResult.kecermatan.passed}>
+                    {psikotesResult.kecermatan.score}
+                  </strong>
+                </div>
+                <div class="subtest-score-card__body">
+                  <div class="subtest-metric">
+                    <span>Kecepatan (40%):</span>
+                    <strong>{psikotesResult.kecermatan.speedScore}%</strong>
+                  </div>
+                  <div class="subtest-metric">
+                    <span>Ketelitian (40%):</span>
+                    <strong>{psikotesResult.kecermatan.accuracyScore}%</strong>
+                  </div>
+                  <div class="subtest-metric">
+                    <span>Kestabilan (20%):</span>
+                    <strong>{psikotesResult.kecermatan.stabilityScore}%</strong>
+                  </div>
+                </div>
+              </div>
+            {/if}
+          </div>
+        </section>
+      {/if}
+
+      {#if psikotesResult.kepribadian && !psikotesResult.isMixed}
+        <!-- PANEL DISTRIBUSI BOBOT JAWABAN KEPRIBADIAN -->
+        <section class="psikotes-detail-card">
+          <div class="psikotes-detail-card__header">
+            <h3>Distribusi Bobot Nilai Jawaban Peserta</h3>
+            <p>Setiap pilihan jawaban Anda dinilai dengan bobot 1 (sangat kurang) hingga 5 (sangat ideal).</p>
+          </div>
+          <div class="kepribadian-weights-grid">
+            <div class="weight-stat-item weight-stat-item--5">
+              <span class="weight-stat-tag">Bobot 5 (Sangat Baik)</span>
+              <strong>{psikotesResult.kepribadian.distribution.sangatBaik} butir</strong>
+            </div>
+            <div class="weight-stat-item weight-stat-item--4">
+              <span class="weight-stat-tag">Bobot 4 (Baik)</span>
+              <strong>{psikotesResult.kepribadian.distribution.baik} butir</strong>
+            </div>
+            <div class="weight-stat-item weight-stat-item--3">
+              <span class="weight-stat-tag">Bobot 3 (Cukup / Netral)</span>
+              <strong>{psikotesResult.kepribadian.distribution.cukup} butir</strong>
+            </div>
+            <div class="weight-stat-item weight-stat-item--2">
+              <span class="weight-stat-tag">Bobot 2 (Kurang Tepat)</span>
+              <strong>{psikotesResult.kepribadian.distribution.kurang} butir</strong>
+            </div>
+            <div class="weight-stat-item weight-stat-item--1">
+              <span class="weight-stat-tag">Bobot 1 (Tidak Tepat)</span>
+              <strong>{psikotesResult.kepribadian.distribution.sangatKurang} butir</strong>
+            </div>
+          </div>
+        </section>
+      {/if}
+
+      {#if psikotesResult.kecermatan && !psikotesResult.isMixed}
+        <!-- PANEL TABEL STATISTIK KOLOM KECERMATAN -->
+        <section class="psikotes-detail-card">
+          <div class="psikotes-detail-card__header">
+            <h3>Analisis Performa Kerja per Kolom</h3>
+            <p>Evaluasi konsistensi kecepatan, akurasi, dan ketahanan ritme kerja di setiap kolom.</p>
+          </div>
+          <div class="kecermatan-table-wrap">
+            <table class="kecermatan-stats-table">
+              <thead>
+                <tr>
+                  <th>Kolom</th>
+                  <th>Target Soal</th>
+                  <th>Terjawab</th>
+                  <th>Benar</th>
+                  <th>Salah</th>
+                  <th>Ketelitian</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each psikotesResult.kecermatan.columns as col}
+                  <tr>
+                    <td><strong>Kolom {col.columnNumber}</strong></td>
+                    <td>{col.total} butir</td>
+                    <td>{col.attempted}</td>
+                    <td class="text-success">{col.correct}</td>
+                    <td class="text-danger">{col.wrong}</td>
+                    <td><strong>{col.accuracy}%</strong></td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      {/if}
 
       <!-- PEMBAHASAN LENGKAP -->
       <section class="review-card">
@@ -626,7 +849,10 @@
         <div class="review-list">
           {#each questions as question, index (question.id)}
             {@const selected = answers[index]}
-            <article class="review-item" class:review-item--correct={selected === question.correctKey}>
+            {@const isKepribadian = question.subtest === 'KEPRIBADIAN' || Boolean(question.optionWeights)}
+            {@const selectedWeight = getOptionWeight(question, selected)}
+            {@const gradeInfo = getWeightGradeLabel(selectedWeight)}
+            <article class="review-item" class:review-item--correct={isKepribadian ? selectedWeight >= 4 : selected === question.correctKey}>
               <div class="review-item__head">
                 <span class="review-number">{index + 1}</span>
                 <div>
@@ -655,14 +881,57 @@
                     <p class="review-stem">{question.stem}</p>
                   {/if}
                 </div>
-                <span class="review-status" class:review-status--ok={selected === question.correctKey}>
-                  {selected === question.correctKey ? 'Benar' : 'Salah'}
-                </span>
+                {#if isKepribadian}
+                  <span class="review-status review-status--weight" class:review-status--ok={selectedWeight >= 4} class:review-status--mid={selectedWeight === 3} class:review-status--low={selectedWeight < 3}>
+                    {gradeInfo.label}
+                  </span>
+                {:else}
+                  <span class="review-status" class:review-status--ok={selected === question.correctKey}>
+                    {selected === question.correctKey ? 'Benar' : 'Salah'}
+                  </span>
+                {/if}
               </div>
-              <div class="review-answer">
-                <span>Jawaban Anda: <strong class:text-danger={selected !== question.correctKey}>{selected ?? 'Kosong'}</strong></span>
-                <span>Kunci Resmi: <strong class="text-success">{question.correctKey}</strong></span>
-              </div>
+
+              {#if isKepribadian}
+                <div class="review-answer">
+                  <span>
+                    Jawaban Anda:
+                    <strong class:text-success={selectedWeight >= 4} class:text-warning={selectedWeight === 3} class:text-danger={selectedWeight < 3}>
+                      {selected ?? 'Kosong'} (Bobot: {selectedWeight}/5 poin)
+                    </strong>
+                  </span>
+                  <span>
+                    Pilihan Ideal:
+                    <strong class="text-success">{question.correctKey} (Bobot 5/5 poin)</strong>
+                  </span>
+                </div>
+
+                <!-- Peta Bobot Semua Pilihan Jawaban -->
+                <div class="review-weights-map">
+                  <span class="review-weights-map__title">Bobot Seluruh Pilihan Jawaban:</span>
+                  <div class="review-weights-pills">
+                    {#each question.options as opt}
+                      {@const w = getOptionWeight(question, opt.key)}
+                      <span
+                        class="weight-pill"
+                        class:weight-pill--selected={selected === opt.key}
+                        class:weight-pill--best={w === 5}
+                      >
+                        <strong>{opt.key}</strong>: Bobot {w}
+                        {#if selected === opt.key}
+                          <small>(Dipilih)</small>
+                        {/if}
+                      </span>
+                    {/each}
+                  </div>
+                </div>
+              {:else}
+                <div class="review-answer">
+                  <span>Jawaban Anda: <strong class:text-danger={selected !== question.correctKey}>{selected ?? 'Kosong'}</strong></span>
+                  <span>Kunci Resmi: <strong class="text-success">{question.correctKey}</strong></span>
+                </div>
+              {/if}
+
               <div class="review-explanation-box">
                 <strong>Pembahasan:</strong>
                 <p>{question.explanation}</p>
@@ -2213,6 +2482,238 @@
   .review-explanation-box p {
     margin: 0;
     color: var(--color-text-muted);
+  }
+
+  .psikotes-summary-note {
+    font-size: var(--text-sm);
+    color: var(--color-primary, #1e3a8a);
+    background: color-mix(in srgb, var(--color-primary, #1e3a8a) 8%, transparent);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--color-primary, #1e3a8a);
+    margin-top: 0.25rem;
+  }
+
+  .psikotes-subtests-panel {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .psikotes-subtests-panel__head h3 {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .psikotes-subtests-panel__head p {
+    margin: 0.25rem 0 1rem;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .psikotes-subtests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .subtest-score-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted, #f8fafc);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .subtest-score-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .subtest-badge {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .subtest-score-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+
+  .subtest-score-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .subtest-metric {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-xs);
+  }
+
+  .subtest-metric span {
+    color: var(--color-text-muted);
+  }
+
+  .psikotes-detail-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .psikotes-detail-card__header h3 {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .psikotes-detail-card__header p {
+    margin: 0.25rem 0 1rem;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .kepribadian-weights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    gap: var(--space-3);
+  }
+
+  .weight-stat-item {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-muted, #f8fafc);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .weight-stat-item--5 {
+    border-color: #10b981;
+    background: #ecfdf5;
+  }
+
+  .weight-stat-item--4 {
+    border-color: #3b82f6;
+    background: #eff6ff;
+  }
+
+  .weight-stat-item--3 {
+    border-color: #f59e0b;
+    background: #fffbeb;
+  }
+
+  .weight-stat-item--2 {
+    border-color: #f97316;
+    background: #fff7ed;
+  }
+
+  .weight-stat-item--1 {
+    border-color: #ef4444;
+    background: #fef2f2;
+  }
+
+  .weight-stat-tag {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .weight-stat-item strong {
+    font-size: 1.1rem;
+  }
+
+  .kecermatan-table-wrap {
+    overflow-x: auto;
+  }
+
+  .kecermatan-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .kecermatan-stats-table th,
+  .kecermatan-stats-table td {
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .kecermatan-stats-table th {
+    background: var(--color-surface-muted, #f8fafc);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 700;
+  }
+
+  .review-status--weight {
+    border: 1px solid currentColor;
+  }
+
+  .review-status--mid {
+    background: color-mix(in srgb, var(--color-warning) 14%, var(--color-surface));
+    color: var(--color-warning);
+  }
+
+  .review-status--low {
+    background: color-mix(in srgb, var(--color-danger) 14%, var(--color-surface));
+    color: var(--color-danger);
+  }
+
+  .review-weights-map {
+    margin-top: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .review-weights-map__title {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .review-weights-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .weight-pill {
+    font-size: var(--text-xs);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-muted, #f1f5f9);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .weight-pill--best {
+    border-color: #10b981;
+    background: #ecfdf5;
+    color: #065f46;
+    font-weight: 600;
+  }
+
+  .weight-pill--selected {
+    outline: 2px solid var(--color-primary);
+    font-weight: 700;
   }
 
   @media (min-width: 900px) {
