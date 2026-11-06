@@ -533,7 +533,48 @@ export class AuthService {
       include: { user: { include: this.includeRole } },
     });
 
-    if (!session || session.revokedAt || session.expiresAt <= new Date()) {
+    if (!session || session.expiresAt <= new Date()) {
+      throw new UnauthorizedException({
+        code: ERROR_CODES.AUTH_SESSION_REVOKED,
+        message: 'Sesi sudah berakhir. Silakan masuk kembali.',
+      });
+    }
+
+    // Toleransi race condition untuk concurrent refresh request:
+    // Bila token baru saja dicabut dalam rentang 30 detik (misal akibat request paralel / multi-tab),
+    // jangan batalkan sesi melainkan kembalikan access token untuk sesi aktif yang baru.
+    if (session.revokedAt) {
+      const gracePeriodMs = 30_000;
+      const isWithinGrace = Date.now() - session.revokedAt.getTime() < gracePeriodMs;
+      if (isWithinGrace) {
+        const activeSession = await this.prisma.session.findFirst({
+          where: {
+            userId: session.userId,
+            familyId: session.familyId,
+            revokedAt: null,
+            expiresAt: { gt: new Date() },
+          },
+          include: { user: { include: this.includeRole } },
+        });
+
+        if (activeSession) {
+          const activeUser = activeSession.user;
+          if (!activeUser.deletedAt && activeUser.status === 'ACTIVE') {
+            const accessToken = this.jwt.signAccessToken({
+              sub: activeUser.id,
+              sid: activeSession.id,
+              role: activeUser.role.code,
+              ver: activeUser.tokenVersion,
+            });
+            return {
+              accessToken,
+              refreshToken,
+              user: this.toAuthUser(activeUser),
+            };
+          }
+        }
+      }
+
       throw new UnauthorizedException({
         code: ERROR_CODES.AUTH_SESSION_REVOKED,
         message: 'Sesi sudah berakhir. Silakan masuk kembali.',
@@ -869,13 +910,23 @@ export class AuthService {
       where: {
         id: input.sid,
         userId: input.sub,
-        revokedAt: null,
         expiresAt: { gt: new Date() },
       },
       include: { user: { include: this.includeRole } },
     });
 
     if (!session) return null;
+
+    // Jika sesi baru saja dicabut (mis. karena rotasi refresh token di request lain),
+    // berikan grace period 60 detik agar in-flight request yang memegang access token ini
+    // tetap dapat menyelesaikan tugasnya tanpa kegagalan sesi tiba-tiba.
+    if (session.revokedAt) {
+      const gracePeriodMs = 60_000;
+      const isWithinGrace = Date.now() - session.revokedAt.getTime() < gracePeriodMs;
+      if (!isWithinGrace) {
+        return null;
+      }
+    }
 
     const user = session.user;
     if (user.deletedAt || user.status !== 'ACTIVE' || user.tokenVersion !== input.ver) {

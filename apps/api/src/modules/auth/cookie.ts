@@ -12,13 +12,20 @@ export const REFRESH_COOKIE = REFRESH_COOKIE_NAME;
 
 export function refreshCookieOptions(config: AppConfigService): CookieOptions {
   const isProd = config.isProduction;
+  const cookieDomain = config.value.COOKIE_DOMAIN?.trim();
+  const hasValidDomain =
+    isProd &&
+    cookieDomain &&
+    cookieDomain !== 'localhost' &&
+    !cookieDomain.startsWith('127.');
+
   return {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'lax' : 'lax',
     path: '/',
     maxAge: 30 * 24 * 3600 * 1000,
-    ...(isProd && config.value.COOKIE_DOMAIN ? { domain: config.value.COOKIE_DOMAIN } : {}),
+    ...(hasValidDomain ? { domain: cookieDomain } : {}),
   };
 }
 

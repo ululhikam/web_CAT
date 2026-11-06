@@ -152,6 +152,8 @@ describe('komposisi bank soal', () => {
         'psikologi/kecerdasan/numerik',
         'psikologi/kecerdasan/logis',
         'psikologi/kecerdasan/figural',
+        'psikologi/kecerdasan/petadenah',
+        'psikologi/kecerdasan/kepribadian',
       ]),
     );
   });
@@ -398,13 +400,11 @@ describe('kecermatan', () => {
     expect(variantChars.size).toBeGreaterThan(20);
   });
 
-  it('memakai tiga kategori varian karakter', () => {
+  it('memakai varian karakter huruf', () => {
     const paths = new Set(only('KECERMATAN').map((question) => question.categoryPath));
     expect(paths).toEqual(
       new Set([
-        'psikologi/kecermatan/angka',
         'psikologi/kecermatan/huruf',
-        'psikologi/kecermatan/simbol',
       ]),
     );
   });

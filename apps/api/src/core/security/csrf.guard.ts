@@ -29,9 +29,9 @@ export class CsrfGuard implements CanActivate {
 
     const expected = cookies[CSRF_COOKIE];
     if (!expected) {
-      // Migrasi sesi lama: refresh boleh berjalan tanpa token CSRF dan akan
-      // menerbitkan token baru. Request lain tetap ditolak.
+      // Izinkan refresh sesi lama/transisi yang belum memiliki cookie CSRF
       if (/\/auth\/refresh$/.test(req.path ?? req.url ?? '')) return true;
+
       throw new ForbiddenException({
         code: 'COMMON_CSRF_FAILED',
         message: 'Token CSRF tidak ada. Muat ulang halaman lalu coba lagi.',

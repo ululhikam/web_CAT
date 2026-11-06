@@ -20,13 +20,20 @@ export function generateCsrfToken(): string {
 
 export function csrfCookieOptions(config: AppConfigService): CookieOptions {
   const isProd = config.isProduction;
+  const cookieDomain = config.value.COOKIE_DOMAIN?.trim();
+  const hasValidDomain =
+    isProd &&
+    cookieDomain &&
+    cookieDomain !== 'localhost' &&
+    !cookieDomain.startsWith('127.');
+
   return {
     httpOnly: false,
     secure: isProd,
     sameSite: 'lax',
     path: '/',
     maxAge: 30 * 24 * 3600 * 1000,
-    ...(isProd && config.value.COOKIE_DOMAIN ? { domain: config.value.COOKIE_DOMAIN } : {}),
+    ...(hasValidDomain ? { domain: cookieDomain } : {}),
   };
 }
 

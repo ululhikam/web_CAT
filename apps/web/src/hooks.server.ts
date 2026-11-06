@@ -44,10 +44,11 @@ export const handle: Handle = async ({ event, resolve }) => {
     redirect(307, '/');
   }
 
-  if (isProtected(event.url.pathname) && !event.cookies.get(REFRESH_COOKIE_NAME)) {
-    const target = event.url.pathname + event.url.search;
-    redirect(303, `/login?redirect=${encodeURIComponent(target)}`);
-  }
+  // Catatan: Otorisasi dan pengecekan sesi dilakukan di sisi klien melalui
+  // `session.restore()` di root layout dan guard per-layout `(app)` & `(admin)`.
+  // Kami tidak melakukan redirect agresif di SSR pada ketiadaan cookie httpOnly
+  // agar lingkungan dev (port berbeda), reverse proxy, dan transisi sesi tidak
+  // memutus sesi pengguna secara prematur.
 
   const response = await resolve(event);
 

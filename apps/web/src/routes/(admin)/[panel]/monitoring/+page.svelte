@@ -256,7 +256,11 @@
                     {/if}
                   </td>
                   <td>
-                    <Button size="sm" variant="secondary" href={`${adminBase()}/monitoring/${row.id}`}>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      href={`${adminBase()}/monitoring/${row.id}`}
+                    >
                       Detail
                     </Button>
                   </td>

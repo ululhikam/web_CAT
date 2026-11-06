@@ -97,6 +97,7 @@ export class AuthController {
   }
 
   @Public()
+  @Public()
   @RateLimit({ limit: 60, windowSeconds: 900 })
   @HttpCode(200)
   @Post('refresh')
