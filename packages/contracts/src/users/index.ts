@@ -113,6 +113,11 @@ export interface AvatarUploadResponse {
 
 /* ------------------------------------------------------------------ kuota harian */
 
+export const updateUserDailyLimitSchema = z.object({
+  dailyLimit: z.coerce.number().int().min(1, 'Limit minimal 1').max(100, 'Limit maksimal 100'),
+});
+export type UpdateUserDailyLimitInput = z.infer<typeof updateUserDailyLimitSchema>;
+
 /** Alasan wajib: reset kuota membebaskan kesempatan ujian hari itu. */
 export const quotaResetSchema = z.object({
   reason: z.string().trim().min(10, 'Alasan minimal 10 karakter').max(500),
@@ -214,6 +219,7 @@ export interface AdminUserSummary {
   emailVerified: boolean;
   createdAt: string;
   createdBy: string | null;
+  dailyExamLimit?: number | null;
   subscription: {
     status: SubscriptionState;
     endsAt: string | null;

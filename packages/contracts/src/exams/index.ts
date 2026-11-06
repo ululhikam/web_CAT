@@ -220,6 +220,7 @@ export interface ExamEligibility {
   poolProblems: PoolShortage[];
   activeSubscription: { endsAt: string; remainingDays: number } | null;
   sessionsToday: number;
+  maxSessionsPerDay?: number;
   nextAvailableAt: string | null;
   /** Sesi yang masih berjalan (bila ada) — klien wajib melanjutkan sesi ini. */
   activeSessionId: string | null;

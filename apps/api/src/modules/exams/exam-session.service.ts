@@ -124,12 +124,19 @@ export class ExamSessionService {
 
     const active = await this.safeFindActive(userId);
     const sessionsToday = await this.safeCountSessions(userId, examDate);
+    const userRow = this.prisma.user?.findUnique
+      ? await this.prisma.user.findUnique({
+          where: { id: userId },
+          select: { dailyExamLimit: true },
+        })
+      : null;
+    const maxDailyLimit = userRow?.dailyExamLimit ?? settings.maxSessionsPerDay;
     const reasons = new Set<string>();
 
     // Admin tidak dibatasi langganan maupun kuota harian.
     if (!privileged) {
       if (!access.allowed) reasons.add(access.code);
-      if (sessionsToday >= settings.maxSessionsPerDay) reasons.add('DAILY_LIMIT_REACHED');
+      if (sessionsToday >= maxDailyLimit) reasons.add('DAILY_LIMIT_REACHED');
     }
     // Sesi aktif tetap dilaporkan agar klien melanjutkannya, bukan membuat
     // sesi kedua (unique index harian juga akan menolaknya).
@@ -179,7 +186,7 @@ export class ExamSessionService {
     if (!anyStageAvailable) reasons.add('EXAM_POOL_INSUFFICIENT');
 
     const nextAvailableAt =
-      !privileged && sessionsToday >= settings.maxSessionsPerDay
+      !privileged && sessionsToday >= maxDailyLimit
         ? nextLocalMidnight(now, settings.timezone).toISOString()
         : null;
 
@@ -194,6 +201,7 @@ export class ExamSessionService {
           }
         : null,
       sessionsToday,
+      maxSessionsPerDay: maxDailyLimit,
       nextAvailableAt,
       activeSessionId: active?.id ?? null,
       stages: stageOptions,
@@ -340,6 +348,14 @@ export class ExamSessionService {
         await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`exam-session:${userId}:${examDate.toISOString()}`}))`;
 
         if (!privileged) {
+          const userRow = tx.user?.findUnique
+            ? await tx.user.findUnique({
+                where: { id: userId },
+                select: { dailyExamLimit: true },
+              })
+            : null;
+          const effectiveDailyLimit = userRow?.dailyExamLimit ?? snapshot.maxSessionsPerDay;
+
           const sessionsToday = await tx.examSession.count({
             where: {
               userId,
@@ -348,11 +364,11 @@ export class ExamSessionService {
               status: { not: 'VOIDED' },
             },
           });
-          if (sessionsToday >= snapshot.maxSessionsPerDay) {
+          if (sessionsToday >= effectiveDailyLimit) {
             throw new AppError({
               code: 'EXAM_SESSION_ALREADY_TODAY',
               status: 409,
-              message: 'Kuota sesi ujian hari ini sudah habis (maksimal 3 sesi per hari). Coba lagi besok.',
+              message: `Kuota sesi ujian hari ini sudah habis (maksimal ${effectiveDailyLimit} sesi per hari). Coba lagi besok.`,
             });
           }
         }

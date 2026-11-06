@@ -9,6 +9,7 @@ import {
   changeUserRoleSchema,
   newSignupsQuerySchema,
   quotaResetSchema,
+  updateUserDailyLimitSchema,
   updateUserStatusSchema,
   userListQuerySchema,
   type AdminCreateUserInput,
@@ -22,6 +23,7 @@ import {
   type NewSignupsSummary,
   type QuotaResetInput,
   type QuotaResetResponse,
+  type UpdateUserDailyLimitInput,
   type UserListQuery,
 } from '@webcat/contracts';
 import { AuthUser } from '../../core/auth/decorators/current-user.decorator';
@@ -162,5 +164,17 @@ export class UsersController {
     @Req() req: Request,
   ): Promise<QuotaResetResponse> {
     return this.users.resetQuota(id, body.reason, this.actor(user, req));
+  }
+
+  @RequirePermissions('users.update')
+  @Patch(':id/daily-limit')
+  @ApiOperation({ summary: 'Atur batas kuota ujian harian peserta' })
+  updateDailyLimit(
+    @Param('id') id: string,
+    @Body(zodPipe(updateUserDailyLimitSchema)) body: UpdateUserDailyLimitInput,
+    @AuthUser() user: AuthPrincipal,
+    @Req() req: Request,
+  ): Promise<AdminUserSummary> {
+    return this.users.updateDailyLimit(id, body.dailyLimit, this.actor(user, req));
   }
 }

@@ -111,8 +111,9 @@
     </div>
     <div class="page__header-actions">
       {#if eligibility}
-        <Badge tone={3 - (eligibility.sessionsToday ?? 0) > 0 ? 'brand' : 'danger'}>
-          Sisa Kuota: {Math.max(0, 3 - (eligibility.sessionsToday ?? 0))} / 3 sesi hari ini
+        {@const maxQuota = eligibility.maxSessionsPerDay ?? 3}
+        <Badge tone={maxQuota - (eligibility.sessionsToday ?? 0) > 0 ? 'brand' : 'danger'}>
+          Sisa Kuota: {Math.max(0, maxQuota - (eligibility.sessionsToday ?? 0))} / {maxQuota} sesi hari ini
         </Badge>
       {/if}
       {#if activeSessionId}

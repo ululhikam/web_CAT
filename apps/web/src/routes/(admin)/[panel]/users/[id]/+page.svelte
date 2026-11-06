@@ -72,6 +72,11 @@
   let quotaError = $state<string | null>(null);
   let quotaNotice = $state<string | null>(null);
 
+  let dailyLimitInput = $state(3);
+  let savingDailyLimit = $state(false);
+  let dailyLimitError = $state<string | null>(null);
+  let dailyLimitNotice = $state<string | null>(null);
+
   // --- langganan -----------------------------------------------------------
   let subPlanCode = $state('');
   let subDays = $state(30);
@@ -107,6 +112,7 @@
       editName = overview.profile.fullName;
       editPhone = overview.profile.phone ?? '';
       roleValue = overview.profile.role;
+      dailyLimitInput = overview.quota.dailyLimit;
 
       // Daftar paket hanya dibutuhkan tombol "Beri langganan"; kegagalannya
       // tidak boleh menggagalkan seluruh halaman.
@@ -249,6 +255,28 @@
       quotaError = apiErrorMessage(cause);
     } finally {
       resettingQuota = false;
+    }
+  }
+
+  async function saveDailyLimit(event: SubmitEvent) {
+    event.preventDefault();
+    if (savingDailyLimit) return;
+    savingDailyLimit = true;
+    dailyLimitError = null;
+    dailyLimitNotice = null;
+
+    try {
+      await apiRequest(`/admin/users/${id}/daily-limit`, {
+        method: 'PATCH',
+        token: session.accessToken,
+        body: { dailyLimit: Number(dailyLimitInput) },
+      });
+      dailyLimitNotice = `Batas ujian harian berhasil disimpan: ${dailyLimitInput} sesi/hari.`;
+      await load();
+    } catch (cause) {
+      dailyLimitError = apiErrorMessage(cause);
+    } finally {
+      savingDailyLimit = false;
     }
   }
 
@@ -613,6 +641,41 @@
             {/if}
           </dl>
 
+          {#if session.isSuperAdmin || session.can('users.update')}
+            <form class="form limit-form" onsubmit={saveDailyLimit}>
+              <Field
+                label="Batas kuota ujian per hari"
+                for="dailyLimitInput"
+                hint="Jumlah maksimal sesi ujian yang dapat diikuti peserta dalam 1 hari (default: 3)."
+              >
+                <div class="limit-input-group">
+                  <Input
+                    id="dailyLimitInput"
+                    type="number"
+                    min={1}
+                    max={100}
+                    bind:value={dailyLimitInput}
+                    required
+                  />
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    loading={savingDailyLimit}
+                  >
+                    Simpan limit
+                  </Button>
+                </div>
+              </Field>
+
+              {#if dailyLimitError}
+                <Alert tone="danger" title="Gagal menyimpan limit">{dailyLimitError}</Alert>
+              {/if}
+              {#if dailyLimitNotice}
+                <Alert tone="success" title="Limit disimpan">{dailyLimitNotice}</Alert>
+              {/if}
+            </form>
+          {/if}
+
           <form class="form" onsubmit={resetDailyQuota}>
             <Field
               label="Alasan reset"
@@ -935,5 +998,18 @@
     padding: var(--space-4);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
+  }
+
+  .limit-form {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .limit-input-group {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    max-width: 320px;
   }
 </style>

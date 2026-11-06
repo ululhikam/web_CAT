@@ -113,6 +113,7 @@ export class UsersService {
       emailVerified: user.emailVerifiedAt !== null,
       createdAt: user.createdAt.toISOString(),
       createdBy: user.createdById,
+      dailyExamLimit: user.dailyExamLimit ?? null,
       subscription: sub
         ? {
             status: 'ACTIVE',
@@ -374,10 +375,10 @@ export class UsersService {
       subscriptionHistory,
       quota: {
         examDate: today.toISOString().slice(0, 10),
-        dailyLimit: DAILY_EXAM_SESSION_LIMIT,
+        dailyLimit: user.dailyExamLimit ?? DAILY_EXAM_SESSION_LIMIT,
         usedToday: todayUsed,
         voidedToday: todayVoided,
-        remainingToday: Math.max(0, DAILY_EXAM_SESSION_LIMIT - todayUsed),
+        remainingToday: Math.max(0, (user.dailyExamLimit ?? DAILY_EXAM_SESSION_LIMIT) - todayUsed),
       },
       exams: {
         total: examTotal,
@@ -826,6 +827,39 @@ export class UsersService {
           ? `${sessions.length} sesi ujian hari ini dibatalkan; kuota dapat dipakai lagi.`
           : 'Tidak ada sesi ujian hari ini; kuota tetap tersedia.',
     };
+  }
+
+  async updateDailyLimit(
+    id: string,
+    dailyLimit: number,
+    actor: Actor,
+  ): Promise<AdminUserSummary> {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
+      include: USER_INCLUDE,
+    });
+    if (!user) {
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User tidak ditemukan' });
+    }
+
+    const previousLimit = user.dailyExamLimit;
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data: { dailyExamLimit: dailyLimit },
+      include: USER_INCLUDE,
+    });
+
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.daily_limit_update',
+      entityType: 'user',
+      entityId: id,
+      metadata: { previousLimit, newLimit: dailyLimit },
+      ip: actor.ip ?? null,
+      userAgent: actor.userAgent ?? null,
+    });
+
+    return this.toSummary(updated);
   }
 
   // ------------------------------------------------------------------ profil sendiri
