@@ -1591,6 +1591,16 @@
                 "SUPER_ADMIN"
               ]
             }
+          },
+          {
+            "name": "registeredWithinDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            }
           }
         ],
         "responses": {
@@ -1831,6 +1841,110 @@
         ]
       }
     },
+    "/api/v1/admin/users/new-signups": {
+      "get": {
+        "operationId": "UsersController_newSignups",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90,
+              "default": 7
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi gagal (`COMMON_VALIDATION_FAILED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Pendaftar baru untuk notifikasi dashboard admin",
+        "tags": [
+          "Admin — Users"
+        ],
+        "x-public": false,
+        "x-required-permissions": [
+          "users.read"
+        ]
+      }
+    },
     "/api/v1/admin/users/{id}/overview": {
       "get": {
         "operationId": "UsersController_overview",
@@ -1988,6 +2102,231 @@
         "x-public": false,
         "x-required-permissions": [
           "users.read"
+        ]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi gagal (`COMMON_VALIDATION_FAILED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Perbaiki data profil peserta (nama/telepon)",
+        "tags": [
+          "Admin — Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120
+                  },
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^\\+?62\\d{8,14}$",
+                    "nullable": true
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 500
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "x-public": false,
+        "x-required-permissions": [
+          "users.update"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi gagal (`COMMON_VALIDATION_FAILED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Hapus akun peserta (hapus-lunak, riwayat tetap disimpan)",
+        "tags": [
+          "Admin — Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "x-public": false,
+        "x-required-permissions": [
+          "users.delete"
         ]
       }
     },
@@ -5415,7 +5754,7 @@
             "bearer": []
           }
         ],
-        "summary": "Pratinjau media untuk admin",
+        "summary": "Pratinjau media untuk admin (opsional ?variant=thumb)",
         "tags": [
           "Admin — Media"
         ],
@@ -5566,7 +5905,7 @@
             }
           }
         },
-        "summary": "Sajikan isi media melalui signed URL",
+        "summary": "Sajikan isi media melalui signed URL (opsional ?variant=thumb)",
         "tags": [
           "Media"
         ],
@@ -5666,7 +6005,7 @@
               "type": "string",
               "enum": [
                 "PSIKOLOGI",
-                "TPA",
+                "TKK",
                 "TPK"
               ]
             }
@@ -5682,7 +6021,7 @@
                 "KEPRIBADIAN",
                 "KECERMATAN",
                 "PASS_HAND",
-                "TPA",
+                "TKK",
                 "TPK"
               ]
             }
@@ -5937,7 +6276,7 @@
                     "type": "string",
                     "enum": [
                       "PSIKOLOGI",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -5948,7 +6287,7 @@
                       "KEPRIBADIAN",
                       "KECERMATAN",
                       "PASS_HAND",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -6314,7 +6653,7 @@
                     "type": "string",
                     "enum": [
                       "PSIKOLOGI",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -6325,7 +6664,7 @@
                       "KEPRIBADIAN",
                       "KECERMATAN",
                       "PASS_HAND",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -6827,7 +7166,7 @@
                     "type": "string",
                     "enum": [
                       "PSIKOLOGI",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -6838,7 +7177,7 @@
                       "KEPRIBADIAN",
                       "KECERMATAN",
                       "PASS_HAND",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -7631,7 +7970,7 @@
                     "type": "string",
                     "enum": [
                       "PSIKOLOGI",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -7642,7 +7981,7 @@
                       "KEPRIBADIAN",
                       "KECERMATAN",
                       "PASS_HAND",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -8217,7 +8556,7 @@
                         "type": "string",
                         "enum": [
                           "PSIKOLOGI",
-                          "TPA",
+                          "TKK",
                           "TPK"
                         ]
                       },
@@ -8228,7 +8567,7 @@
                           "KEPRIBADIAN",
                           "KECERMATAN",
                           "PASS_HAND",
-                          "TPA",
+                          "TKK",
                           "TPK"
                         ]
                       },
@@ -8810,6 +9149,442 @@
         "x-public": false,
         "x-required-permissions": [
           "questions.import"
+        ]
+      }
+    },
+    "/api/v1/admin/media/import/preview": {
+      "post": {
+        "operationId": "MediaZipImportController_preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Pindai ZIP gambar tanpa menyimpan apa pun",
+        "tags": [
+          "Admin — Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "x-public": false,
+        "x-required-permissions": [
+          "questions.import"
+        ]
+      }
+    },
+    "/api/v1/admin/media/import/apply": {
+      "post": {
+        "operationId": "MediaZipImportController_apply",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi gagal (`COMMON_VALIDATION_FAILED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Simpan gambar dari ZIP dan pasang sesuai pemetaan",
+        "tags": [
+          "Admin — Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mapping": {
+                    "allOf": [
+                      {
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 200000
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mappings": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "fileName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 400
+                                },
+                                "questionId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "publicCode": {
+                                  "type": "string",
+                                  "maxLength": 60
+                                },
+                                "role": {
+                                  "type": "string",
+                                  "enum": [
+                                    "STEM",
+                                    "OPTION",
+                                    "EXPLANATION"
+                                  ],
+                                  "default": "STEM"
+                                },
+                                "optionLabel": {
+                                  "type": "string",
+                                  "pattern": "^[A-J]$"
+                                }
+                              },
+                              "required": [
+                                "fileName"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1,
+                            "maxItems": 200
+                          }
+                        },
+                        "required": [
+                          "mappings"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "mapping",
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "x-public": false,
+        "x-required-permissions": [
+          "questions.import"
+        ]
+      }
+    },
+    "/api/v1/admin/media/import/questions": {
+      "get": {
+        "operationId": "MediaZipImportController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cari soal untuk pemetaan gambar",
+        "tags": [
+          "Admin — Media"
+        ],
+        "x-public": false,
+        "x-required-permissions": [
+          "questions.read"
+        ]
+      }
+    },
+    "/api/v1/admin/media/import/questions/resolve": {
+      "post": {
+        "operationId": "MediaZipImportController_resolve",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sukses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token tidak ada atau tidak valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Tidak punya izin, email belum terverifikasi, atau role tidak sesuai.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi gagal (`COMMON_VALIDATION_FAILED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit terlampaui (`COMMON_RATE_LIMITED`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Galat internal (`COMMON_INTERNAL_ERROR`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cari beberapa soal sekaligus berdasarkan kode",
+        "tags": [
+          "Admin — Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "codes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "minItems": 1,
+                    "maxItems": 200
+                  }
+                },
+                "required": [
+                  "codes"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "x-public": false,
+        "x-required-permissions": [
+          "questions.read"
         ]
       }
     },
@@ -10117,6 +10892,14 @@
                     "enum": [
                       true
                     ]
+                  },
+                  "stageCode": {
+                    "type": "string",
+                    "enum": [
+                      "PSIKOLOGI",
+                      "TKK",
+                      "TPK"
+                    ]
                   }
                 },
                 "required": [
@@ -11255,7 +12038,7 @@
                     "type": "string",
                     "enum": [
                       "PSIKOLOGI",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -11266,7 +12049,7 @@
                       "KEPRIBADIAN",
                       "KECERMATAN",
                       "PASS_HAND",
-                      "TPA",
+                      "TKK",
                       "TPK"
                     ]
                   },
@@ -11882,7 +12665,8 @@
                             "HEARTBEAT_LOST",
                             "SESSION_REPLACED",
                             "ENVIRONMENT_CHANGED",
-                            "IDLE"
+                            "IDLE",
+                            "ANSWER_CHANGE_BURST"
                           ]
                         },
                         "occurredAt": {
@@ -12771,8 +13555,8 @@
     }
   },
   "info": {
-    "title": "Web CAT API",
-    "description": "Simulasi ujian Polri — Tes Psikologi (Kecerdasan, Kepribadian, Kecermatan, Pass Hand), TPA, TPK.\n\n**Format respons**: semua endpoint mengembalikan envelope\n`{ success, data, meta, error, requestId }`. Lihat `docs/api/README.md`.\n\n**Autentikasi**: `Authorization: Bearer <access token>` untuk endpoint non-publik.\nEndpoint yang memakai cookie refresh juga mewajibkan header `x-csrf-token`.",
+    "title": "TES CAT API",
+    "description": "TES CAT ujian Polri — Tes Psikologi (Kecerdasan, Kepribadian, Kecermatan, Pass Hand), TKK, TPK.\n\n**Format respons**: semua endpoint mengembalikan envelope\n`{ success, data, meta, error, requestId }`. Lihat `docs/api/README.md`.\n\n**Autentikasi**: `Authorization: Bearer <access token>` untuk endpoint non-publik.\nEndpoint yang memakai cookie refresh juga mewajibkan header `x-csrf-token`.",
     "version": "1.0.0",
     "contact": {}
   },

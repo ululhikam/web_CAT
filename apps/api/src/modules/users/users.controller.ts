@@ -7,6 +7,7 @@ import {
   adminResetPasswordSchema,
   adminUpdateUserSchema,
   changeUserRoleSchema,
+  newSignupsQuerySchema,
   quotaResetSchema,
   updateUserStatusSchema,
   userListQuerySchema,
@@ -17,6 +18,8 @@ import {
   type AdminUpdateUserInput,
   type AdminUserOverview,
   type AdminUserSummary,
+  type NewSignupsQuery,
+  type NewSignupsSummary,
   type QuotaResetInput,
   type QuotaResetResponse,
   type UserListQuery,
@@ -51,6 +54,13 @@ export class UsersController {
   @ApiOperation({ summary: 'Daftar peserta dengan filter dan pagination' })
   list(@Query(zodPipe(userListQuerySchema)) query: UserListQuery) {
     return this.users.list(query);
+  }
+
+  @RequirePermissions('users.read')
+  @Get('new-signups')
+  @ApiOperation({ summary: 'Pendaftar baru untuk notifikasi dashboard admin' })
+  newSignups(@Query(zodPipe(newSignupsQuerySchema)) query: NewSignupsQuery): Promise<NewSignupsSummary> {
+    return this.users.newSignups(query);
   }
 
   @RequirePermissions('users.read')

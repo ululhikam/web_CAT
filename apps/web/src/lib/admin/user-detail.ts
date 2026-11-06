@@ -63,6 +63,21 @@ export const transactionStatus = (value: string | null | undefined): StatusMeta 
 export const userStatus = (value: string | null | undefined): StatusMeta =>
   lookup(USER_STATUS, value);
 
+const ROLE_LABEL: Record<string, string> = {
+  USER: 'Peserta',
+  ADMIN: 'Admin',
+  SUPER_ADMIN: 'Super Admin',
+};
+
+/**
+ * Label role untuk manusia. Kode mentah (`SUPER_ADMIN`) tetap dipakai di API
+ * dan audit, tetapi tidak enak dibaca di tabel panel.
+ */
+export function roleLabel(value: string | null | undefined): string {
+  if (!value) return '—';
+  return ROLE_LABEL[value] ?? value;
+}
+
 /** Skor `totalScore` adalah 0..1000 dengan 4 desimal; tampilkan tanpa nol ekor. */
 export function formatScore(score: number | null): string {
   if (score === null || Number.isNaN(score)) return '—';
@@ -106,4 +121,19 @@ export function remainingDaysLabel(days: number): string {
   if (days <= 0) return 'habis hari ini';
   if (days === 1) return 'tersisa 1 hari';
   return `tersisa ${days} hari`;
+}
+
+/**
+ * Ringkasan kuota ujian hari ini.
+ *
+ * Contoh: `2 dari 1 sesi terpakai — tidak ada sisa kuota`. Angka `usedToday`
+ * bisa melebihi `dailyLimit` pada data lama (sebelum aturan ini berlaku), jadi
+ * kalimatnya tidak boleh mengasumsikan `used <= limit`.
+ */
+export function quotaSummaryLine(quota: AdminUserOverview['quota']): string {
+  if (quota.usedToday === 0) return `Belum ada sesi ujian hari ini (kuota ${quota.dailyLimit}).`;
+  if (quota.remainingToday > 0) {
+    return `${quota.usedToday} dari ${quota.dailyLimit} sesi terpakai — sisa ${quota.remainingToday}.`;
+  }
+  return `${quota.usedToday} dari ${quota.dailyLimit} sesi terpakai — kuota hari ini habis.`;
 }

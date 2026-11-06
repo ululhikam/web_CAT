@@ -15,6 +15,7 @@
     AdminUserSummary,
     AuditLogItem,
     CursorPage,
+    NewSignupsSummary,
     QuestionStatsResponse,
   } from '@webcat/contracts';
 
@@ -34,8 +35,12 @@
   let stats = $state<QuestionStatsResponse | null>(initialStats);
   let recentUsers = $state<AdminUserSummary[]>([]);
   let recentAudit = $state<AuditLogItem[]>([]);
+  let newSignups = $state<NewSignupsSummary | null>(null);
   let loading = $state(!initialStats);
   let error = $state<string | null>(null);
+
+  /** Jendela notifikasi "pendaftar baru", dalam hari. */
+  const SIGNUP_WINDOW_DAYS = 7;
 
   const panel: AdminPanel = $derived(
     page.params.panel === 'super-admin' ? 'super-admin' : 'admin',
@@ -96,6 +101,15 @@
           cacheTtlMs: 15000,
         }).then((result) => {
           recentUsers = result.items;
+        }),
+      );
+
+      jobs.push(
+        apiRequest<NewSignupsSummary>(
+          `/admin/users/new-signups?days=${SIGNUP_WINDOW_DAYS}&limit=5`,
+          { token, cacheTtlMs: 60000 },
+        ).then((result) => {
+          newSignups = result;
         }),
       );
     }
@@ -212,20 +226,22 @@
         </div>
       </div>
 
-      <!-- Card 3: Total Pengguna Baru (Cyan Users) -->
-      <div class="stat-card">
+      <!-- Card 3: Pendaftar baru (Cyan Users) -->
+      <a class="stat-card stat-card--link" href={`${base}/users?registeredWithinDays=${SIGNUP_WINDOW_DAYS}`}>
         <div class="stat-card__left">
-          <span class="stat-label">PENGGUNA TERBARU</span>
-          <div class="stat-value">{recentUsers.length}</div>
+          <span class="stat-label">PENDAFTAR BARU</span>
+          <div class="stat-value">{newSignups?.total ?? '—'}</div>
           <div class="stat-trend stat-trend--up">
-            <span>↑ Aktif Terdaftar</span>
-            <span class="trend-text">Akun peserta & admin</span>
+            <span>↑ {SIGNUP_WINDOW_DAYS} hari terakhir</span>
+            <span class="trend-text">
+              {newSignups?.unverified ?? 0} belum verifikasi email
+            </span>
           </div>
         </div>
         <div class="stat-card__right stat-icon--cyan">
           <AdminIcon name="users" size={26} />
         </div>
-      </div>
+      </a>
 
       <!-- Card 4: Status Otorisasi (Orange Shield) -->
       <div class="stat-card">
@@ -242,6 +258,35 @@
         </div>
       </div>
     </section>
+
+    <!-- NOTIFIKASI PENDAFTAR BARU -->
+    {#if newSignups && newSignups.total > 0}
+      <div class="signup-notice">
+        <div class="signup-notice__head">
+          <div class="signup-notice__title">
+            <span class="signup-notice__dot" aria-hidden="true"></span>
+            <strong>{newSignups.total} pendaftar baru</strong>
+            <span class="signup-notice__window">dalam {SIGNUP_WINDOW_DAYS} hari terakhir</span>
+          </div>
+          <a class="signup-notice__all" href={`${base}/users?registeredWithinDays=${SIGNUP_WINDOW_DAYS}`}>
+            Lihat semua ›
+          </a>
+        </div>
+        <ul class="signup-notice__list">
+          {#each newSignups.items as user (user.id)}
+            <li>
+              <a class="signup-notice__item" href={`${base}/users/${user.id}`}>
+                <span class="signup-notice__name">{user.fullName}</span>
+                <span class="signup-notice__meta">{user.email} · {formatDate(user.createdAt)}</span>
+                {#if !user.emailVerified}
+                  <span class="signup-notice__tag">Belum verifikasi</span>
+                {/if}
+              </a>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
 
     <!-- MAIN 2-COLUMN SECTION: Chart & Question Coverage (70% / 30%) -->
     <div class="content-row">
@@ -632,6 +677,17 @@
     flex-direction: column;
   }
 
+  .stat-card--link {
+    color: inherit;
+    text-decoration: none;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+
+  .stat-card--link:hover {
+    box-shadow: 0 0.35rem 2rem 0 rgba(58, 59, 69, 0.16);
+    transform: translateY(-1px);
+  }
+
   .stat-label {
     font-size: 11px;
     font-weight: 800;
@@ -694,6 +750,110 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  /* NOTIFIKASI PENDAFTAR BARU */
+  .signup-notice {
+    background: #ffffff;
+    border: 1px solid #eaecf4;
+    border-left: 4px solid #1cc88a;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.08);
+    overflow: hidden;
+  }
+
+  .signup-notice__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid #f2f4f8;
+  }
+
+  .signup-notice__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    color: #2c3e50;
+  }
+
+  .signup-notice__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1cc88a;
+  }
+
+  .signup-notice__window {
+    color: #858796;
+    font-size: var(--text-xs);
+  }
+
+  .signup-notice__all {
+    color: #4e73df;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .signup-notice__all:hover {
+    text-decoration: underline;
+  }
+
+  .signup-notice__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 900px) {
+    .signup-notice__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .signup-notice__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.7rem 1.15rem;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid #f2f4f8;
+  }
+
+  .signup-notice__item:hover {
+    background: #f8f9fc;
+  }
+
+  .signup-notice__name {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: #2c3e50;
+  }
+
+  .signup-notice__meta {
+    font-size: var(--text-xs);
+    color: #858796;
+    overflow-wrap: anywhere;
+  }
+
+  .signup-notice__tag {
+    width: fit-content;
+    margin-top: 2px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #fffbeb;
+    color: #92400e;
+    font-size: 10px;
+    font-weight: 700;
   }
 
   @media (min-width: 980px) {

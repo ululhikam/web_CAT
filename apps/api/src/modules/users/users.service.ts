@@ -11,6 +11,7 @@ import {
   decodeCursor,
   encodeCursor,
   canManageRole,
+  DAILY_EXAM_SESSION_LIMIT,
   type AdminCreateUserInput,
   type AdminCreateUserResponse,
   type AdminUpdateUserInput,
@@ -20,6 +21,8 @@ import {
   type AdminUserSubscriptionRow,
   type AdminUserSummary,
   type AvatarUploadResponse,
+  type NewSignupsQuery,
+  type NewSignupsSummary,
   type QuotaResetResponse,
   type Role,
   type UpdateProfileInput,
@@ -39,6 +42,8 @@ interface ListParams {
   q?: string;
   status?: string;
   role?: string;
+  /** Hanya akun yang dibuat dalam N hari terakhir (notifikasi pendaftar baru). */
+  registeredWithinDays?: number;
 }
 
 interface Actor {
@@ -113,6 +118,13 @@ export class UsersService {
 
     if (params.status) where.status = params.status as never;
     if (params.role) where.role = { code: params.role as never };
+    if (params.registeredWithinDays) {
+      // Jendela bergerak dari "sekarang", bukan awal hari: tujuannya "siapa
+      // yang baru mendaftar", bukan laporan harian.
+      where.createdAt = {
+        gte: new Date(Date.now() - params.registeredWithinDays * 24 * 3600 * 1000),
+      };
+    }
     if (params.q) {
       const q = params.q.trim();
       where.OR = [
@@ -161,6 +173,35 @@ export class UsersService {
     return this.toSummary(user);
   }
 
+  /**
+   * Pendaftar baru untuk notifikasi dashboard admin/superadmin.
+   *
+   * Sengaja memakai `count()` terpisah dari daftar: badge lonceng harus
+   * menunjukkan jumlah sebenarnya walaupun daftar dipotong `limit`. Akun yang
+   * dihapus-lunak tidak ikut dihitung agar angka tidak "berhantu".
+   */
+  async newSignups(query: NewSignupsQuery): Promise<NewSignupsSummary> {
+    const since = new Date(Date.now() - query.days * 24 * 3600 * 1000);
+    const where: Prisma.UserWhereInput = { deletedAt: null, createdAt: { gte: since } };
+
+    const [total, unverified, rows] = await Promise.all([
+      this.prisma.user.count({ where }),
+      this.prisma.user.count({ where: { ...where, emailVerifiedAt: null } }),
+      this.prisma.user.findMany({
+        where,
+        include: USER_INCLUDE,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        take: query.limit,
+      }),
+    ]);
+
+    return {
+      days: query.days,
+      total,
+      unverified,
+      items: rows.map((row) => this.toSummary(row)),
+    };
+  }
 
   /**
    * Ringkasan lengkap satu peserta (F5-03).
@@ -183,6 +224,7 @@ export class UsersService {
     const recentLimit = 10;
     const examWhere: Prisma.ExamSessionWhereInput = { userId: id, voidedAt: null };
     const paidWhere: Prisma.TransactionWhereInput = { userId: id, status: 'SUCCESS' };
+    const today = examDateOnly(now);
 
     const [
       subscriptionRows,
@@ -195,6 +237,8 @@ export class UsersService {
       paidAgg,
       lastPaid,
       transactionRows,
+      todayUsed,
+      todayVoided,
     ] = await Promise.all([
       this.prisma.subscription.findMany({
         where: { userId: id },
@@ -246,6 +290,11 @@ export class UsersService {
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: recentLimit,
         include: { plan: { select: { code: true, name: true } } },
+      }),
+      // Kuota harian: dihitung dari `examDate` (DATE, WIB), bukan rentang jam.
+      this.prisma.examSession.count({ where: { userId: id, examDate: today, voidedAt: null } }),
+      this.prisma.examSession.count({
+        where: { userId: id, examDate: today, voidedAt: { not: null } },
       }),
     ]);
 
@@ -303,6 +352,13 @@ export class UsersService {
       profile: this.toSummary(user),
       subscription: activeSubscription,
       subscriptionHistory,
+      quota: {
+        examDate: today.toISOString().slice(0, 10),
+        dailyLimit: DAILY_EXAM_SESSION_LIMIT,
+        usedToday: todayUsed,
+        voidedToday: todayVoided,
+        remainingToday: Math.max(0, DAILY_EXAM_SESSION_LIMIT - todayUsed),
+      },
       exams: {
         total: examTotal,
         completed: finishedAgg._count._all,

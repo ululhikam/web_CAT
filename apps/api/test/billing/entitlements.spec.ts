@@ -9,7 +9,7 @@ function createHarness() {
   const prisma = {
     user: { findFirst: vi.fn() },
     subscription: { findFirst: vi.fn() },
-    examSession: { findFirst: vi.fn().mockResolvedValue(null) },
+    examSession: { findMany: vi.fn().mockResolvedValue([]) },
   };
   const policy = new BillingAccessPolicy(prisma as unknown as PrismaService);
   return { prisma, policy };
@@ -127,20 +127,21 @@ describe('BillingAccessPolicy — assert', () => {
     prisma.subscription.findFirst.mockResolvedValue({
       endsAt: new Date(NOW.getTime() + DAY_MS),
     });
-    prisma.examSession.findFirst.mockResolvedValue({ id: 'session-1' });
+    prisma.examSession.findMany.mockResolvedValue([{ id: 'session-1' }]);
 
     await expect(policy.assertCanStartExam('user-1')).rejects.toMatchObject({
       code: 'EXAM_SESSION_ALREADY_TODAY',
       status: 409,
       details: { sessionId: 'session-1' },
     });
-    expect(prisma.examSession.findFirst).toHaveBeenCalledWith({
+    expect(prisma.examSession.findMany).toHaveBeenCalledWith({
       where: {
         userId: 'user-1',
         examDate: new Date('2026-11-05T00:00:00.000Z'),
         voidedAt: null,
       },
       select: { id: true },
+      take: 1,
     });
 
     // Melanjutkan sesi yang sudah berjalan tidak terkena batas harian.

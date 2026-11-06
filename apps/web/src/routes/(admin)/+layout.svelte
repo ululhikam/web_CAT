@@ -6,6 +6,7 @@
   import { page } from '$app/state';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
+  import NewSignupsBell from '$lib/components/admin/NewSignupsBell.svelte';
   import {
     activeAdminHref,
     adminBreadcrumbs,
@@ -225,17 +226,7 @@
             <AdminIcon name="search" size={17} />
           </button>
 
-          <!-- Notification Bell with Red Badge -->
-          <button class="topbar-icon-btn" type="button" aria-label="Notifikasi">
-            <AdminIcon name="bell" size={17} />
-            <span class="badge-count badge-count--red">3+</span>
-          </button>
-
-          <!-- Envelope with Orange Badge -->
-          <button class="topbar-icon-btn" type="button" aria-label="Pesan">
-            <AdminIcon name="envelope" size={17} />
-            <span class="badge-count badge-count--orange">2</span>
-          </button>
+          <NewSignupsBell />
 
           <div class="topbar-divider"></div>
 
@@ -617,26 +608,6 @@
   .topbar-icon-btn:hover {
     background: rgba(255, 255, 255, 0.15);
   }
-
-  .badge-count {
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    font-size: 9.5px;
-    font-weight: 850;
-    color: #ffffff;
-    padding: 1px 4.5px;
-    border-radius: 999px;
-    line-height: 1.2;
-    border: 1.5px solid #4e73df;
-  }
-
-  .shell--super .badge-count {
-    border-color: #6d28d9;
-  }
-
-  .badge-count--red { background: #e74a3b; }
-  .badge-count--orange { background: #f6c23e; }
 
   .topbar-divider {
     width: 1px;

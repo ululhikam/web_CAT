@@ -277,11 +277,35 @@ describe('UsersService.overview — ujian', () => {
     await service.overview('user-1');
 
     for (const call of prisma.examSession.count.mock.calls) {
-      expect(call[0].where.voidedAt).toBeNull();
+      const voidedAt = call[0].where.voidedAt;
+      // Satu-satunya pengecualian disengaja: hitungan sesi yang dibatalkan admin
+      // untuk kartu kuota harian.
+      if (voidedAt && typeof voidedAt === 'object') continue;
+      expect(voidedAt).toBeNull();
     }
     expect(prisma.examSession.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ voidedAt: null }) }),
     );
+  });
+
+  it('melaporkan pemakaian kuota harian', async () => {
+    const { service, prisma } = createHarness();
+    prisma.examSession.count.mockImplementation(
+      async ({ where }: { where: Record<string, unknown> }) => {
+        if (where.voidedAt && typeof where.voidedAt === 'object') return 0;
+        return 1;
+      },
+    );
+
+    const result = await service.overview('user-1');
+
+    expect(result.quota).toMatchObject({
+      dailyLimit: 1,
+      usedToday: 1,
+      voidedToday: 0,
+      remainingToday: 0,
+    });
+    expect(result.quota.examDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 });
 

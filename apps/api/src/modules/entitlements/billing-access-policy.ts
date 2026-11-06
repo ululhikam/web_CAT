@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { jakartaDateKey, type AccessDecision, type AccessPolicyPort } from '@webcat/contracts';
+import {
+  DAILY_EXAM_SESSION_LIMIT,
+  jakartaDateKey,
+  type AccessDecision,
+  type AccessPolicyPort,
+} from '@webcat/contracts';
 import { AppError } from '../../core/http/app-error';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
@@ -92,19 +97,20 @@ export class BillingAccessPolicy implements AccessPolicyPort {
   async assertCanStartExam(userId: string): Promise<void> {
     await this.assertAllowed(userId);
 
-    // Maksimal satu sesi ujian per hari (Asia/Jakarta). Sesi yang di-void admin
-    // tidak menghalangi peserta mencoba lagi.
+    // Maksimal `DAILY_EXAM_SESSION_LIMIT` sesi ujian per hari (Asia/Jakarta).
+    // Sesi yang di-void admin tidak menghalangi peserta mencoba lagi.
     const today = new Date(`${jakartaDateKey(new Date())}T00:00:00.000Z`);
-    const existing = await this.prisma.examSession.findFirst({
+    const existing = await this.prisma.examSession.findMany({
       where: { userId, examDate: today, voidedAt: null },
       select: { id: true },
+      take: DAILY_EXAM_SESSION_LIMIT,
     });
-    if (existing) {
+    if (existing.length >= DAILY_EXAM_SESSION_LIMIT) {
       throw new AppError({
         code: 'EXAM_SESSION_ALREADY_TODAY',
         status: 409,
         message: 'Anda sudah memiliki sesi ujian hari ini. Coba lagi besok.',
-        details: { sessionId: existing.id },
+        details: { sessionId: existing[0]?.id ?? null },
       });
     }
   }

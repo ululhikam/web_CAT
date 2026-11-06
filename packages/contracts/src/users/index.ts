@@ -127,6 +127,29 @@ export interface QuotaResetResponse {
   message: string;
 }
 
+/**
+ * Batas sesi ujian per hari (WIB).
+ *
+ * Satu angka ini dipakai bersama oleh `BillingAccessPolicy` (yang menolak sesi
+ * berikutnya) dan panel admin (yang menampilkan sisa kuota). Kalau aturannya
+ * berubah, hanya satu tempat yang perlu disentuh.
+ */
+export const DAILY_EXAM_SESSION_LIMIT = 1;
+
+/** Pemakaian kuota ujian hari ini untuk satu peserta (cermin read-only). */
+export interface AdminUserQuotaToday {
+  /** Tanggal ujian WIB, format YYYY-MM-DD. */
+  examDate: string;
+  /** Batas sesi per hari yang berlaku. */
+  dailyLimit: number;
+  /** Sesi hari ini yang masih dihitung (belum di-void). */
+  usedToday: number;
+  /** Sesi hari ini yang dibatalkan admin. */
+  voidedToday: number;
+  /** Sisa kesempatan hari ini (tidak pernah negatif). */
+  remainingToday: number;
+}
+
 /* ------------------------------------------------------------------ queries */
 
 export const userListQuerySchema = z.object({
@@ -135,8 +158,46 @@ export const userListQuerySchema = z.object({
   q: z.string().trim().max(120).optional(),
   status: z.enum(['PENDING_INVITE', 'ACTIVE', 'SUSPENDED', 'DELETED']).optional(),
   role: z.enum(ROLES).optional(),
+  /**
+   * Hanya akun yang dibuat dalam N hari terakhir.
+   *
+   * Dipakai lonceng notifikasi "pendaftar baru" agar admin bisa langsung
+   * membuka daftar yang sudah terfilter, bukan sekadar melihat angkanya.
+   */
+  registeredWithinDays: z.coerce.number().int().min(1).max(365).optional(),
 });
 export type UserListQuery = z.infer<typeof userListQuerySchema>;
+
+/**
+ * Ringkasan pendaftar baru untuk notifikasi dashboard admin.
+ *
+ * `total` sengaja dihitung terpisah dari `items`: lonceng hanya butuh angka,
+ * sedangkan kartu dashboard butuh beberapa baris terbaru. Keduanya diambil
+ * dalam satu request agar badge dan daftar tidak pernah berbeda.
+ */
+export const newSignupsQuerySchema = z.object({
+  days: z.coerce.number().int().min(1).max(90).default(7),
+  limit: z.coerce.number().int().min(1).max(20).default(5),
+});
+export type NewSignupsQuery = z.infer<typeof newSignupsQuerySchema>;
+
+/**
+ * Hasil `GET /admin/users/new-signups` — sumber tunggal untuk badge lonceng
+ * dan kartu "Pendaftar baru" di dashboard admin/superadmin.
+ *
+ * `total` dihitung dengan `count()` terpisah dari `items`, karena badge hanya
+ * butuh angka dan tidak boleh ikut mengecil saat daftar dipotong `limit`.
+ */
+export interface NewSignupsSummary {
+  /** Jendela waktu yang dipakai, dalam hari. */
+  days: number;
+  /** Jumlah akun baru dalam jendela waktu tersebut. */
+  total: number;
+  /** Dari `total`, berapa yang belum memverifikasi email. */
+  unverified: number;
+  /** Akun terbaru, terbaru lebih dulu (maksimum `limit`). */
+  items: AdminUserSummary[];
+}
 
 /* ------------------------------------------------------------------ responses */
 
@@ -229,6 +290,8 @@ export interface AdminUserOverview {
   subscription: AdminUserSubscriptionRow | null;
   /** Riwayat langganan terbaru, termasuk yang sudah berakhir/dicabut. */
   subscriptionHistory: AdminUserSubscriptionRow[];
+  /** Pemakaian kuota ujian hari ini (WIB). */
+  quota: AdminUserQuotaToday;
   exams: {
     total: number;
     completed: number;
