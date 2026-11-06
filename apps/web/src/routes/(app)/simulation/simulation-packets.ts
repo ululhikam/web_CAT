@@ -3,6 +3,11 @@ export interface SimOption {
   text: string;
 }
 
+export interface SimBenchmarkItem {
+  char: string;
+  label: string;
+}
+
 export interface SimQuestion {
   id: number;
   module: string;
@@ -10,6 +15,10 @@ export interface SimQuestion {
   options: SimOption[];
   correctKey: string;
   explanation: string;
+  isKecermatan?: boolean;
+  columnNumber?: number;
+  benchmark?: SimBenchmarkItem[];
+  questionChars?: string[];
 }
 
 export interface SimPacket {
@@ -21,11 +30,13 @@ export interface SimPacket {
   description: string;
   badge: string;
   durationSeconds: number;
+  isKecermatanOnly?: boolean;
+  columnDurationSeconds?: number;
   questions: SimQuestion[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* KUMPULAN SOAL SIMULASI                                                     */
+/* KUMPULAN SOAL KECERDASAN (10 Butir)                                        */
 /* -------------------------------------------------------------------------- */
 
 const QUESTIONS_KECERDASAN: SimQuestion[] = [
@@ -171,6 +182,10 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
   },
 ];
 
+/* -------------------------------------------------------------------------- */
+/* KUMPULAN SOAL MENTAL KEPRIBADIAN (10 Butir)                                */
+/* -------------------------------------------------------------------------- */
+
 const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
   {
     id: 201,
@@ -314,120 +329,418 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
   },
 ];
 
+/* -------------------------------------------------------------------------- */
+/* KUMPULAN SOAL KECERMATAN ASLI DENGAN KOLOM & FORMAT CAT POLRI              */
+/* -------------------------------------------------------------------------- */
+
+// Kolom 1 Patokan: K M P R T
+const BENCHMARK_COL_1: SimBenchmarkItem[] = [
+  { char: 'K', label: 'A' },
+  { char: 'M', label: 'B' },
+  { char: 'P', label: 'C' },
+  { char: 'R', label: 'D' },
+  { char: 'T', label: 'E' },
+];
+
+// Kolom 2 Patokan: 3 5 7 8 9
+const BENCHMARK_COL_2: SimBenchmarkItem[] = [
+  { char: '3', label: 'A' },
+  { char: '5', label: 'B' },
+  { char: '7', label: 'C' },
+  { char: '8', label: 'D' },
+  { char: '9', label: 'E' },
+];
+
+// Kolom 3 Patokan: B D G J N
+const BENCHMARK_COL_3: SimBenchmarkItem[] = [
+  { char: 'B', label: 'A' },
+  { char: 'D', label: 'B' },
+  { char: 'G', label: 'C' },
+  { char: 'J', label: 'D' },
+  { char: 'N', label: 'E' },
+];
+
+function makeKecermatanOptions(): SimOption[] {
+  return [
+    { key: 'A', text: 'A' },
+    { key: 'B', text: 'B' },
+    { key: 'C', text: 'C' },
+    { key: 'D', text: 'D' },
+    { key: 'E', text: 'E' },
+  ];
+}
+
 const QUESTIONS_KECERMATAN: SimQuestion[] = [
+  /* --- KOLOM 1: K M P R T --- */
   {
     id: 301,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: K | B: M | C: P | D: R | E: T ]\n\nKarakter yang HILANG pada kelompok soal berikut [ M - T - K - R ] adalah...',
-    options: [
-      { key: 'A', text: 'K' },
-      { key: 'B', text: 'M' },
-      { key: 'C', text: 'P' },
-      { key: 'D', text: 'R' },
-      { key: 'E', text: 'T' },
-    ],
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
     correctKey: 'C',
-    explanation: 'Pada patokan terdapat huruf K, M, P, R, T. Pada soal terdapat huruf M, T, K, R. Huruf yang hilang adalah P, yang berada pada opsi C.',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [M, T, K, R]. Karakter yang hilang adalah "P", yang mewakili opsi C.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['M', 'T', 'K', 'R'],
   },
   {
     id: 302,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: B | B: D | C: G | D: J | E: N ]\n\nKarakter yang HILANG pada kelompok soal berikut [ G - B - N - D ] adalah...',
-    options: [
-      { key: 'A', text: 'B' },
-      { key: 'B', text: 'D' },
-      { key: 'C', text: 'G' },
-      { key: 'D', text: 'J' },
-      { key: 'E', text: 'N' },
-    ],
-    correctKey: 'D',
-    explanation: 'Pada patokan terdapat huruf B, D, G, J, N. Pada soal terdapat G, B, N, D. Huruf yang tidak ada adalah J, yang berada pada opsi D.',
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'A',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [P, R, M, T]. Karakter yang hilang adalah "K", yang mewakili opsi A.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['P', 'R', 'M', 'T'],
   },
   {
     id: 303,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: 3 | B: 5 | C: 7 | D: 8 | E: 9 ]\n\nKarakter angka yang HILANG pada kelompok soal berikut [ 9 - 3 - 8 - 7 ] adalah...',
-    options: [
-      { key: 'A', text: '3' },
-      { key: 'B', text: '5' },
-      { key: 'C', text: '7' },
-      { key: 'D', text: '8' },
-      { key: 'E', text: '9' },
-    ],
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
     correctKey: 'B',
-    explanation: 'Pada patokan terdapat angka 3, 5, 7, 8, 9. Pada soal terdapat 9, 3, 8, 7. Angka yang hilang adalah 5, yang berada pada opsi B.',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [K, P, T, R]. Karakter yang hilang adalah "M", yang mewakili opsi B.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['K', 'P', 'T', 'R'],
   },
   {
     id: 304,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: H | B: L | C: Q | D: S | E: W ]\n\nKarakter yang HILANG pada kelompok soal berikut [ W - Q - H - L ] adalah...',
-    options: [
-      { key: 'A', text: 'H' },
-      { key: 'B', text: 'L' },
-      { key: 'C', text: 'Q' },
-      { key: 'D', text: 'S' },
-      { key: 'E', text: 'W' },
-    ],
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
     correctKey: 'D',
-    explanation: 'Pada patokan terdapat huruf H, L, Q, S, W. Pada soal terdapat W, Q, H, L. Huruf yang hilang adalah S, yang berada pada opsi D.',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [M, K, P, T]. Karakter yang hilang adalah "R", yang mewakili opsi D.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['M', 'K', 'P', 'T'],
   },
   {
     id: 305,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: 2 | B: 4 | C: 6 | D: 7 | E: 8 ]\n\nKarakter angka yang HILANG pada kelompok soal berikut [ 7 - 4 - 8 - 6 ] adalah...',
-    options: [
-      { key: 'A', text: '2' },
-      { key: 'B', text: '4' },
-      { key: 'C', text: '6' },
-      { key: 'D', text: '7' },
-      { key: 'E', text: '8' },
-    ],
-    correctKey: 'A',
-    explanation: 'Pada patokan terdapat angka 2, 4, 6, 7, 8. Pada soal terdapat 7, 4, 8, 6. Angka yang hilang adalah 2, yang berada pada opsi A.',
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'E',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [R, P, K, M]. Karakter yang hilang adalah "T", yang mewakili opsi E.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['R', 'P', 'K', 'M'],
   },
   {
     id: 306,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: C | B: F | C: K | D: X | E: Z ]\n\nKarakter yang HILANG pada kelompok soal berikut [ K - F - C - X ] adalah...',
-    options: [
-      { key: 'A', text: 'C' },
-      { key: 'B', text: 'F' },
-      { key: 'C', text: 'K' },
-      { key: 'D', text: 'X' },
-      { key: 'E', text: 'Z' },
-    ],
-    correctKey: 'E',
-    explanation: 'Pada patokan terdapat huruf C, F, K, X, Z. Pada soal terdapat K, F, C, X. Karakter yang tidak ada adalah Z, yang berada pada opsi E.',
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'A',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [T, M, R, P]. Karakter yang hilang adalah "K", yang mewakili opsi A.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['T', 'M', 'R', 'P'],
   },
   {
     id: 307,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: @ | B: # | C: $ | D: % | E: & ]\n\nSimbol yang HILANG pada kelompok soal berikut [ % - & - @ - $ ] adalah...',
-    options: [
-      { key: 'A', text: '@' },
-      { key: 'B', text: '#' },
-      { key: 'C', text: '$' },
-      { key: 'D', text: '%' },
-      { key: 'E', text: '&' },
-    ],
-    correctKey: 'B',
-    explanation: 'Pada patokan simbol terdapat @, #, $, %, &. Pada soal terdapat %, &, @, $. Simbol yang hilang adalah #, yang berada pada opsi B.',
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'C',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [K, R, T, M]. Karakter yang hilang adalah "P", yang mewakili opsi C.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['K', 'R', 'T', 'M'],
   },
   {
     id: 308,
-    module: 'Tes Psikologi — Kecermatan (Kolom Karakter Hilang)',
-    stem: 'KOLOM PATOKAN: [ A: V | B: X | C: Y | D: Z | E: W ]\n\nKarakter yang HILANG pada kelompok soal berikut [ W - Z - V - Y ] adalah...',
-    options: [
-      { key: 'A', text: 'V' },
-      { key: 'B', text: 'X' },
-      { key: 'C', text: 'Y' },
-      { key: 'D', text: 'Z' },
-      { key: 'E', text: 'W' },
-    ],
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'E',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [P, K, M, R]. Karakter yang hilang adalah "T", yang mewakili opsi E.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['P', 'K', 'M', 'R'],
+  },
+  {
+    id: 309,
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
     correctKey: 'B',
-    explanation: 'Pada patokan terdapat V, X, Y, Z, W. Pada soal terdapat W, Z, V, Y. Karakter yang tidak muncul adalah X, yang berada pada opsi B.',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [T, K, P, R]. Karakter yang hilang adalah "M", yang mewakili opsi B.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['T', 'K', 'P', 'R'],
+  },
+  {
+    id: 310,
+    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'D',
+    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [M, P, K, T]. Karakter yang hilang adalah "R", yang mewakili opsi D.',
+    isKecermatan: true,
+    columnNumber: 1,
+    benchmark: BENCHMARK_COL_1,
+    questionChars: ['M', 'P', 'K', 'T'],
+  },
+
+  /* --- KOLOM 2: 3 5 7 8 9 --- */
+  {
+    id: 311,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'B',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [9, 3, 8, 7]. Angka yang hilang adalah "5", yang mewakili opsi B.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['9', '3', '8', '7'],
+  },
+  {
+    id: 312,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'A',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [5, 7, 9, 8]. Angka yang hilang adalah "3", yang mewakili opsi A.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['5', '7', '9', '8'],
+  },
+  {
+    id: 313,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'C',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [3, 8, 5, 9]. Angka yang hilang adalah "7", yang mewakili opsi C.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['3', '8', '5', '9'],
+  },
+  {
+    id: 314,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'D',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [7, 9, 3, 5]. Angka yang hilang adalah "8", yang mewakili opsi D.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['7', '9', '3', '5'],
+  },
+  {
+    id: 315,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'E',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [8, 3, 7, 5]. Angka yang hilang adalah "9", yang mewakili opsi E.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['8', '3', '7', '5'],
+  },
+  {
+    id: 316,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'A',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [9, 5, 8, 7]. Angka yang hilang adalah "3", yang mewakili opsi A.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['9', '5', '8', '7'],
+  },
+  {
+    id: 317,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'B',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [3, 7, 9, 8]. Angka yang hilang adalah "5", yang mewakili opsi B.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['3', '7', '9', '8'],
+  },
+  {
+    id: 318,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'C',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [5, 9, 8, 3]. Angka yang hilang adalah "7", yang mewakili opsi C.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['5', '9', '8', '3'],
+  },
+  {
+    id: 319,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'D',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [7, 5, 9, 3]. Angka yang hilang adalah "8", yang mewakili opsi D.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['7', '5', '9', '3'],
+  },
+  {
+    id: 320,
+    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'E',
+    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [3, 8, 7, 5]. Angka yang hilang adalah "9", yang mewakili opsi E.',
+    isKecermatan: true,
+    columnNumber: 2,
+    benchmark: BENCHMARK_COL_2,
+    questionChars: ['3', '8', '7', '5'],
+  },
+
+  /* --- KOLOM 3: B D G J N --- */
+  {
+    id: 321,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'D',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [G, B, N, D]. Karakter yang hilang adalah "J", yang mewakili opsi D.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['G', 'B', 'N', 'D'],
+  },
+  {
+    id: 322,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'A',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [D, J, N, G]. Karakter yang hilang adalah "B", yang mewakili opsi A.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['D', 'J', 'N', 'G'],
+  },
+  {
+    id: 323,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'C',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [B, N, J, D]. Karakter yang hilang adalah "G", yang mewakili opsi C.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['B', 'N', 'J', 'D'],
+  },
+  {
+    id: 324,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'B',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [J, G, B, N]. Karakter yang hilang adalah "D", yang mewakili opsi B.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['J', 'G', 'B', 'N'],
+  },
+  {
+    id: 325,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'E',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [B, D, G, J]. Karakter yang hilang adalah "N", yang mewakili opsi E.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['B', 'D', 'G', 'J'],
+  },
+  {
+    id: 326,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'A',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [N, D, G, J]. Karakter yang hilang adalah "B", yang mewakili opsi A.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['N', 'D', 'G', 'J'],
+  },
+  {
+    id: 327,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'B',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [J, B, N, G]. Karakter yang hilang adalah "D", yang mewakili opsi B.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['J', 'B', 'N', 'G'],
+  },
+  {
+    id: 328,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'C',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [D, N, B, J]. Karakter yang hilang adalah "G", yang mewakili opsi C.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['D', 'N', 'B', 'J'],
+  },
+  {
+    id: 329,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'D',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [G, D, B, N]. Karakter yang hilang adalah "J", yang mewakili opsi D.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['G', 'D', 'B', 'N'],
+  },
+  {
+    id: 330,
+    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
+    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
+    options: makeKecermatanOptions(),
+    correctKey: 'E',
+    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [J, G, D, B]. Karakter yang hilang adalah "N", yang mewakili opsi E.',
+    isKecermatan: true,
+    columnNumber: 3,
+    benchmark: BENCHMARK_COL_3,
+    questionChars: ['J', 'G', 'D', 'B'],
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* KUMPULAN SOAL TKK & TPK                                                    */
+/* -------------------------------------------------------------------------- */
 
 const QUESTIONS_TKK: SimQuestion[] = [
   {
@@ -761,11 +1074,13 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     id: 'psikotes-kecermatan',
     category: 'PSIKOTES',
     subtest: 'KECERMATAN',
-    title: 'Tes Psikologi — Subtes Kecermatan',
-    subtitle: 'Kecepatan Respon Visual Kolom Hilang (A-E)',
-    description: 'Latihan menemukan karakter huruf, angka, atau simbol yang hilang berdasarkan 5 karakter kolom patokan khas CAT Polri.',
-    badge: '8 Butir Soal • 5 Menit',
-    durationSeconds: 300,
+    title: 'Tes Psikologi — Subtes Kecermatan (Format CAT)',
+    subtitle: '3 Kolom Simbol/Huruf/Angka • 60 Detik per Kolom',
+    description: 'Format autentik CAT Polri: tabel 5 karakter patokan acuan di atas, 4 karakter soal, tombol pilihan A B C D E besar, dan perputaran kolom otomatis dengan reset timer per kolom.',
+    badge: '3 Kolom • 30 Butir (1 mnt/kolom)',
+    durationSeconds: 180,
+    isKecermatanOnly: true,
+    columnDurationSeconds: 60,
     questions: QUESTIONS_KECERMATAN,
   },
   {
@@ -816,4 +1131,3 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     ],
   },
 ];
-
