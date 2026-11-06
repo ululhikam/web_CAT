@@ -13,74 +13,238 @@
   }
 
   const questions: Question[] = [
+    /* --------------------------------------------------- 1. TES PSIKOLOGI (PSIKOTES) */
     {
       id: 1,
-      module: 'Tes Psikologi — Penalaran Logis',
-      stem: 'Semua perwira Polri wajib menjunjung tinggi etika profesi dan integritas dinas. Inspektur Polisi Dua Arya adalah seorang perwira Polri. Kesimpulan yang sah adalah...',
-      options: [
-        { key: 'A', text: 'Inspektur Polisi Dua Arya tidak terikat kode etik kepolisian.' },
-        { key: 'B', text: 'Inspektur Polisi Dua Arya wajib menjunjung tinggi etika profesi dan integritas dinas.' },
-        { key: 'C', text: 'Sebagian perwira Polri diperbolehkan mengabaikan integritas bila mendesak.' },
-        { key: 'D', text: 'Inspektur Polisi Dua Arya hanya terikat aturan administrasi biasa.' },
-      ],
-      correctKey: 'B',
-      explanation: 'Silogisme kategorik premis mayor dan minor mutlak: Semua P adalah Q; X adalah P; maka X adalah Q.',
-    },
-    {
-      id: 2,
-      module: 'Tes Potensi Akademik — Hubungan Kata (Analogi)',
+      module: 'Tes Psikologi — Kecerdasan (Verbal & Analogi)',
       stem: 'POLISI : HUKUM = HAKIM : ...',
       options: [
         { key: 'A', text: 'Pengadilan' },
         { key: 'B', text: 'Keadilan' },
         { key: 'C', text: 'Terdakwa' },
-        { key: 'D', text: 'Vonis' },
+        { key: 'D', text: 'Penjara' },
+        { key: 'E', text: 'Undang-Undang' },
       ],
       correctKey: 'B',
-      explanation: 'Polisi bertugas menegakkan hukum; Hakim bertugas menegakkan keadilan.',
+      explanation: 'Analogi fungsi/tujuan tugas: Polisi bertugas menegakkan hukum; Hakim bertugas menegakkan keadilan di persidangan.',
     },
     {
-      id: 3,
-      module: 'Tes Pengetahuan Kepolisian (TPK)',
-      stem: 'Berdasarkan Undang-Undang No. 2 Tahun 2002 Pasal 13, tugas pokok Kepolisian Negara Republik Indonesia adalah...',
-      options: [
-        { key: 'A', text: 'Memelihara keamanan dan ketertiban masyarakat, menegakkan hukum, serta memberikan perlindungan, pengayoman, dan pelayanan kepada masyarakat.' },
-        { key: 'B', text: 'Menjaga pertahanan teritorial kedaulatan negara dari ancaman invasi militer asing.' },
-        { key: 'C', text: 'Melakukan penuntutan perkara pidana umum di hadapan majelis persidangan pengadilan negeri.' },
-        { key: 'D', text: 'Menetapkan vonis dan putusan hukum terhadap setiap pelaku pelanggaran tindak pidana.' },
-      ],
-      correctKey: 'A',
-      explanation: 'Pasal 13 UU No. 2 Tahun 2002 tegas menyebutkan tiga tupoksi pokok Polri.',
-    },
-    {
-      id: 4,
-      module: 'Tes Psikologi — Deret Logika Numerik',
-      stem: 'Tentukan angka kelanjutan dari pola deret berikut: 3, 7, 15, 31, 63, ...',
+      id: 2,
+      module: 'Tes Psikologi — Kecerdasan (Numerik & Deret)',
+      stem: 'Tentukan bilangan kelanjutan dari deret berikut: 3, 7, 15, 31, 63, ...',
       options: [
         { key: 'A', text: '125' },
         { key: 'B', text: '127' },
         { key: 'C', text: '129' },
         { key: 'D', text: '131' },
+        { key: 'E', text: '135' },
       ],
       correctKey: 'B',
-      explanation: 'Pola: (n × 2) + 1. Jadi 63 × 2 + 1 = 126 + 1 = 127.',
+      explanation: 'Pola deret adalah (angka × 2) + 1. Perhitungannya: 3×2+1=7; 7×2+1=15; 15×2+1=31; 31×2+1=63; 63×2+1 = 127.',
+    },
+    {
+      id: 3,
+      module: 'Tes Psikologi — Kecerdasan (Logika Silogisme)',
+      stem: 'Semua perwira Polri wajib menjunjung tinggi etika profesi dan integritas dinas. Inspektur Polisi Arya adalah seorang perwira Polri. Kesimpulan yang tepat adalah...',
+      options: [
+        { key: 'A', text: 'Inspektur Polisi Arya tidak terikat kode etik kepolisian.' },
+        { key: 'B', text: 'Inspektur Polisi Arya wajib menjunjung tinggi etika profesi dan integritas dinas.' },
+        { key: 'C', text: 'Sebagian perwira Polri diperbolehkan mengabaikan integritas bila situasi darurat.' },
+        { key: 'D', text: 'Inspektur Polisi Arya hanya terikat aturan administrasi biasa.' },
+        { key: 'E', text: 'Integritas hanya diwajibkan bagi perwira menengah ke atas.' },
+      ],
+      correctKey: 'B',
+      explanation: 'Silogisme kategorik standar: Semua A adalah B; C adalah A; maka C adalah B (Inspektur Polisi Arya wajib menjunjung tinggi etika profesi dan integritas).',
+    },
+    {
+      id: 4,
+      module: 'Tes Psikologi — Kecerdasan (Peta & Denah Lokasi)',
+      stem: 'Pada denah penugasan: Pos Polisi berada di sebelah barat Lapangan Kota, sedangkan Rumah Sakit berada tepat di sebelah utara Pos Polisi. Arah Rumah Sakit jika dilihat dari Lapangan Kota adalah...',
+      options: [
+        { key: 'A', text: 'Barat Laut' },
+        { key: 'B', text: 'Barat Daya' },
+        { key: 'C', text: 'Timur Laut' },
+        { key: 'D', text: 'Tenggara' },
+        { key: 'E', text: 'Utara' },
+      ],
+      correctKey: 'A',
+      explanation: 'Dari Lapangan Kota, Pos Polisi berada di arah Barat. Dari Pos Polisi bergerak ke arah Utara menuju Rumah Sakit. Maka posisi Rumah Sakit dari Lapangan Kota adalah arah Barat Laut.',
     },
     {
       id: 5,
-      module: 'Tes Pengetahuan Kepolisian — Wewenang Polri',
-      stem: 'Tindakan kepolisian yang dilakukan demi kepentingan umum berdasarkan penilaian perwira atau anggota Polri di lapangan dinamakan kewenangan...',
+      module: 'Tes Psikologi — Mental Kepribadian (Integritas)',
+      stem: 'Seorang rekan kerja satu angkatan meminta Anda untuk tidak mencatat pelanggaran disiplin ringan yang dilakukannya saat bertugas jaga. Sikap Anda adalah...',
       options: [
-        { key: 'A', text: 'Diskresi Kepolisian' },
-        { key: 'B', text: 'Imunitas Hukum' },
-        { key: 'C', text: 'Hak Prerogatif' },
-        { key: 'D', text: 'Penyelidikan Tertutup' },
+        { key: 'A', text: 'Mengabulkan permintaannya demi menjaga solidaritas pertemanan satu angkatan.' },
+        { key: 'B', text: 'Menolak dengan santun namun tegas dan tetap mencatat serta melaporkan sesuai prosedur kedinasan.' },
+        { key: 'C', text: 'Membiarkannya tanpa membuat catatan apa pun dan pura-pura tidak tahu.' },
+        { key: 'D', text: 'Meminta imbalan tertentu jika rekan tersebut ingin dibantu penghapusan catatan.' },
+        { key: 'E', text: 'Menyebarkan pelanggaran rekan tersebut kepada anggota tim lain agar menjadi bahan pembicaraan.' },
+      ],
+      correctKey: 'B',
+      explanation: 'Integritas profesi menuntut ketaatan pada prosedur tanpa kompromi, dengan tetap menjaga kesantunan dan profesionalitas komunikasi.',
+    },
+    {
+      id: 6,
+      module: 'Tes Psikologi — Mental Kepribadian (Pengendalian Emosi)',
+      stem: 'Ketika Anda sedang melayani masyarakat di loket pelayanan kedinasan, seorang warga datang dengan nada marah dan mencela kinerja unit. Tindakan Anda adalah...',
+      options: [
+        { key: 'A', text: 'Membalas membentak warga tersebut agar menyadari bahwa kantor kepolisian harus dihormati.' },
+        { key: 'B', text: 'Meninggalkan loket dan menyuruh petugas keamanan mengusir warga tersebut keluar.' },
+        { key: 'C', text: 'Tetap tenang, mendengarkan keluhan dengan sabar tanpa terpancing emosi, lalu memberikan penjelasan aturan dan solusi secara runtut.' },
+        { key: 'D', text: 'Mengabaikan keluhannya dan melayani warga berikutnya tanpa menanggapi.' },
+        { key: 'E', text: 'Menutup loket pelayanan secara sepihak sampai warga tersebut tenang.' },
+      ],
+      correctKey: 'C',
+      explanation: 'Pengendalian diri, empati, dan orientasi pelayanan prima adalah karakteristik utama perwira Polri dalam menyelesaikan komplain masyarakat secara elegan.',
+    },
+    {
+      id: 7,
+      module: 'Tes Psikologi — Kecermatan (Huruf Hilang)',
+      stem: 'Tentukan huruf yang HILANG dari kelompok huruf patokan:\n\nPatokan: [ K   M   P   R   T ]\n\nSoal: [ P   R   K   T ]',
+      options: [
+        { key: 'A', text: 'K' },
+        { key: 'B', text: 'M' },
+        { key: 'C', text: 'P' },
+        { key: 'D', text: 'R' },
+        { key: 'E', text: 'T' },
+      ],
+      correctKey: 'B',
+      explanation: 'Kelompok patokan memuat {K, M, P, R, T}. Pada soal terdapat {P, R, K, T}. Huruf yang hilang adalah "M" (opsi B).',
+    },
+
+    /* --------------------------------------------------- 2. TES KEMAMPUAN KOMPUTER (TKK) */
+    {
+      id: 8,
+      module: 'Tes Kemampuan Komputer (TKK) — Perangkat Keras',
+      stem: 'Komponen perangkat keras komputer yang berfungsi sebagai otak utama untuk memproses seluruh instruksi logika dan perhitungan data adalah...',
+      options: [
+        { key: 'A', text: 'Central Processing Unit (CPU)' },
+        { key: 'B', text: 'Random Access Memory (RAM)' },
+        { key: 'C', text: 'Hard Disk Drive (HDD)' },
+        { key: 'D', text: 'Power Supply Unit (PSU)' },
+        { key: 'E', text: 'Solid State Drive (SSD)' },
       ],
       correctKey: 'A',
-      explanation: 'Pasal 18 ayat (1) UU No. 2/2002 mengatur kewenangan diskresi demi kepentingan umum.',
+      explanation: 'CPU (Central Processing Unit) atau prosesor adalah unit pengolah pusat yang menjalankan seluruh komputasi dan instruksi program.',
+    },
+    {
+      id: 9,
+      module: 'Tes Kemampuan Komputer (TKK) — Perangkat Lunak',
+      stem: 'Perangkat lunak sistem yang berfungsi mengelola sumber daya perangkat keras dan menyediakan antarmuka bagi pengguna serta aplikasi komputer disebut...',
+      options: [
+        { key: 'A', text: 'Sistem Operasi (Operating System)' },
+        { key: 'B', text: 'Peramban Web (Web Browser)' },
+        { key: 'C', text: 'Database Management System (DBMS)' },
+        { key: 'D', text: 'Program Utilitas Grafis' },
+        { key: 'E', text: 'Compiler Pemrograman' },
+      ],
+      correctKey: 'A',
+      explanation: 'Sistem Operasi (seperti Windows, Linux, macOS) bertanggung jawab menjembatani interaksi perangkat keras dan aplikasi perangkat lunak.',
+    },
+    {
+      id: 10,
+      module: 'Tes Kemampuan Komputer (TKK) — Jaringan Komputer',
+      stem: 'Alamat unik berbasis numerik (seperti 192.168.1.1) yang digunakan untuk mengidentifikasi perangkat komputer di dalam sebuah jaringan komunikasi dinamakan...',
+      options: [
+        { key: 'A', text: 'MAC Address' },
+        { key: 'B', text: 'IP Address (Internet Protocol Address)' },
+        { key: 'C', text: 'Subnet Mask' },
+        { key: 'D', text: 'Default Gateway' },
+        { key: 'E', text: 'Domain Name' },
+      ],
+      correctKey: 'B',
+      explanation: 'IP Address adalah alamat protokol internet logis yang mengidentifikasi setiap host atau perangkat dalam jaringan TCP/IP.',
+    },
+    {
+      id: 11,
+      module: 'Tes Kemampuan Komputer (TKK) — Keamanan Informasi',
+      stem: 'Upaya penipuan digital di mana pelaku menyamar sebagai instansi resmi melalui pesan email atau tautan palsu untuk mencuri data rahasia/kata sandi pengguna disebut...',
+      options: [
+        { key: 'A', text: 'Phishing' },
+        { key: 'B', text: 'DDoS Attack' },
+        { key: 'C', text: 'Defacing' },
+        { key: 'D', text: 'Brute Force' },
+        { key: 'E', text: 'Spyware' },
+      ],
+      correctKey: 'A',
+      explanation: 'Phishing adalah rekayasa sosial (social engineering) dengan membuat pesan atau situs tiruan untuk mengelabui korban agar menyerahkan data sensitif.',
+    },
+    {
+      id: 12,
+      module: 'Tes Kemampuan Komputer (TKK) — Etika & Keamanan Digital',
+      stem: 'Langkah pengamanan paling efektif untuk mencegah akses ilegal ke akun kedinasan digital selain menggunakan kata sandi yang kuat adalah...',
+      options: [
+        { key: 'A', text: 'Menyimpan kata sandi di kertas catatan dekat monitor komputer kantor' },
+        { key: 'B', text: 'Mengaktifkan Autentikasi Dua Faktor (Two-Factor Authentication / 2FA)' },
+        { key: 'C', text: 'Menggunakan tanggal lahir sebagai kombinasi kata sandi' },
+        { key: 'D', text: 'Membagikan kata sandi kepada rekan satu regu piket' },
+        { key: 'E', text: 'Tidak pernah keluar (logout) dari komputer dinas bersama' },
+      ],
+      correctKey: 'B',
+      explanation: 'Two-Factor Authentication (2FA) memberikan lapisan keamanan ganda sehingga akun tetap aman meskipun kata sandi diketahui pihak lain.',
+    },
+
+    /* --------------------------------------------------- 3. TES PENGETAHUAN KEPOLISIAN (TPK) */
+    {
+      id: 13,
+      module: 'Tes Pengetahuan Kepolisian (TPK) — Tugas Pokok Polri',
+      stem: 'Berdasarkan Undang-Undang No. 2 Tahun 2002 Pasal 13, tugas pokok Kepolisian Negara Republik Indonesia adalah...',
+      options: [
+        { key: 'A', text: 'Memelihara keamanan dan ketertiban masyarakat, menegakkan hukum, serta memberikan perlindungan, pengayoman, dan pelayanan kepada masyarakat.' },
+        { key: 'B', text: 'Menjaga pertahanan kedaulatan negara dari ancaman agresi militer luar negeri.' },
+        { key: 'C', text: 'Melakukan penuntutan perkara pidana umum di persidangan pengadilan negeri.' },
+        { key: 'D', text: 'Menjatuhkan vonis sanksi hukum kepada tersangka tindak pidana.' },
+        { key: 'E', text: 'Mengelola dan mengatur anggaran keuangan pemerintah daerah.' },
+      ],
+      correctKey: 'A',
+      explanation: 'Pasal 13 UU No. 2 Tahun 2002 menegaskan tiga pilar tugas pokok Polri: harkamtibmas, penegakan hukum, dan perlindungan, pengayoman, serta pelayanan masyarakat.',
+    },
+    {
+      id: 14,
+      module: 'Tes Pengetahuan Kepolisian (TPK) — Kewenangan & Diskresi',
+      stem: 'Tindakan perwira/anggota Polri yang dilakukan demi kepentingan umum berdasarkan penilaiannya sendiri saat menghadapi situasi mendesak di lapangan merupakan perwujudan dari...',
+      options: [
+        { key: 'A', text: 'Diskresi Kepolisian (Pasal 18 UU No. 2 Tahun 2002)' },
+        { key: 'B', text: 'Hak Kekebalan Hukum Mutlak' },
+        { key: 'C', text: 'Kewenangan Yudikatif' },
+        { key: 'D', text: 'Hak Prerogatif Pribadi' },
+        { key: 'E', text: 'Instruksi Khusus Pemerintah' },
+      ],
+      correctKey: 'A',
+      explanation: 'Pasal 18 ayat (1) UU No. 2 Tahun 2002 mengatur bahwa untuk kepentingan umum, pejabat Polri dalam melaksanakan tugas dan wewenangnya dapat bertindak menurut penilaiannya sendiri (diskresi) yang dapat dipertanggungjawabkan.',
+    },
+    {
+      id: 15,
+      module: 'Tes Pengetahuan Kepolisian (TPK) — Hukum Acara Pidana',
+      stem: 'Berdasarkan Pasal 184 Kitab Undang-Undang Hukum Acara Pidana (KUHAP), yang termasuk ke dalam alat bukti yang sah dalam persidangan adalah...',
+      options: [
+        { key: 'A', text: 'Keterangan saksi, keterangan ahli, surat, petunjuk, dan keterangan terdakwa' },
+        { key: 'B', text: 'Opini publik, hasil jajak pendapat, dan rekaman percakapan pribadi' },
+        { key: 'C', text: 'Keterangan satu saksi saja tanpa didukung alat bukti lain apa pun' },
+        { key: 'D', text: 'Pengakuan sepihak dari keluarga korban tindak pidana' },
+        { key: 'E', text: 'Laporan desas-desus masyarakat di media sosial' },
+      ],
+      correctKey: 'A',
+      explanation: 'Pasal 184 ayat (1) KUHAP menyebutkan 5 alat bukti yang sah: (a) keterangan saksi, (b) keterangan ahli, (c) surat, (d) petunjuk, dan (e) keterangan terdakwa.',
+    },
+    {
+      id: 16,
+      module: 'Tes Pengetahuan Kepolisian (TPK) — Doktrin & Etika Polri',
+      stem: 'Pedoman hidup anggota Polri yang menjadi falsafah pengabdian insan Bhayangkara kepada nusa dan bangsa adalah...',
+      options: [
+        { key: 'A', text: 'Tribrata' },
+        { key: 'B', text: 'Sapta Marga' },
+        { key: 'C', text: 'Panca Dharma Usadha' },
+        { key: 'D', text: 'Dasa Darma' },
+        { key: 'E', text: 'Tri Krama Adhyaksa' },
+      ],
+      correctKey: 'A',
+      explanation: 'Tribrata merupakan pedoman hidup Polri, sedangkan Catur Prasetya merupakan pedoman kerja kesatuan Polri.',
     },
   ];
 
-  const DURATION_SECONDS = 600;
+  const DURATION_SECONDS = 900;
 
   let currentIndex = $state(0);
   let answers = $state<Record<number, string>>({});
@@ -516,6 +680,7 @@
     margin: 0;
     font-size: clamp(1rem, 2.6vw, 1.2rem);
     line-height: 1.55;
+    white-space: pre-line;
   }
 
   .options {
@@ -852,6 +1017,7 @@
   .review-item__head p {
     margin: 0.25rem 0 0;
     font-size: var(--text-sm);
+    white-space: pre-line;
   }
 
   .review-number {
