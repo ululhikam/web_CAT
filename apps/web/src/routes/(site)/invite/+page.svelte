@@ -5,11 +5,12 @@
   import Button from '@webcat/ui/components/Button.svelte';
   import Field from '@webcat/ui/components/Field.svelte';
   import Input from '@webcat/ui/components/Input.svelte';
-  import { apiRequest, apiErrorMessage } from '$lib/api/client';
+  import { apiErrorMessage } from '$lib/api/client';
+  import { homePathFor } from '$lib/panel';
+  import { session } from '$lib/stores/session.svelte';
 
   let password = $state('');
   let confirm = $state('');
-  let fullName = $state('');
   let submitting = $state(false);
   let error = $state<string | null>(null);
 
@@ -24,13 +25,8 @@
     error = null;
 
     try {
-      await apiRequest('/auth/activate-invite', {
-        method: 'POST',
-        body: { token, password, ...(fullName.trim() ? { fullName: fullName.trim() } : {}) },
-        token: undefined,
-        skipRefresh: true,
-      });
-      await goto('/login');
+      const user = await session.activateInvite(token, password);
+      await goto(homePathFor(user.role), { replaceState: true });
     } catch (cause) {
       error = apiErrorMessage(cause);
     } finally {
@@ -54,8 +50,8 @@
       </Alert>
     {:else}
       <p class="auth__lede">
-        Buat password untuk mengaktifkan akun Anda. Setelah aktif, Anda bisa masuk dan memilih paket
-        latihan.
+        Akun Anda sudah dibuat oleh admin. Cukup buat password di bawah ini; setelah aktif Anda
+        otomatis masuk dan bisa memilih paket latihan.
       </p>
 
       {#if error}
@@ -63,10 +59,6 @@
       {/if}
 
       <form class="auth__form" onsubmit={submit} novalidate>
-        <Field label="Nama lengkap" for="fullName" hint="Kosongkan bila sudah benar.">
-          <Input id="fullName" bind:value={fullName} autocomplete="name" />
-        </Field>
-
         <Field label="Password" for="password" required hint="Minimal 10 karakter, ada huruf besar/kecil dan angka.">
           <Input
             id="password"
@@ -92,8 +84,13 @@
           />
         </Field>
 
-        <Button type="submit" fullWidth loading={submitting} disabled={!password || mismatch}>
-          Aktifkan akun
+        <Button
+          type="submit"
+          fullWidth
+          loading={submitting}
+          disabled={!password || !confirm || mismatch}
+        >
+          Aktifkan akun &amp; masuk
         </Button>
       </form>
     {/if}

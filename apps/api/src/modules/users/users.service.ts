@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
@@ -64,8 +65,27 @@ const USER_INCLUDE = {
 
 type UserWithRelations = Prisma.UserGetPayload<{ include: typeof USER_INCLUDE }>;
 
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => {
+    switch (char) {
+      case '&':
+        return '&amp;';
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      case '"':
+        return '&quot;';
+      default:
+        return '&#39;';
+    }
+  });
+}
+
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: AppConfigService,
@@ -435,20 +455,54 @@ export class UsersService {
     });
 
     let inviteUrl: string | null = null;
+    let emailSent = false;
 
     if (input.activation === 'INVITE_EMAIL') {
       const invite = await this.auth.createInvite(user.id);
-      inviteUrl = `${this.config.value.APP_URL}/invite/${invite.token}`;
+      const appUrl = this.config.value.APP_URL.replace(/\/+$/, '');
+      inviteUrl = `${appUrl}/invite/${invite.token}`;
+      const greetingName = escapeHtml(user.fullName);
 
       try {
         await this.mail.send({
           to: user.email,
-          subject: 'Undangan akun TES CAT',
-          html: `<p>Halo ${user.fullName},</p><p>Akun TES CAT Anda sudah dibuat. Klik tautan berikut untuk membuat password (berlaku 7 hari):</p><p><a href="${inviteUrl}">${inviteUrl}</a></p>`,
-          text: `Aktifkan akun TES CAT Anda: ${inviteUrl}`,
+          subject: 'Verifikasi & aktivasi akun TES CAT',
+          html: `
+            <div style="max-width:560px;margin:0 auto;color:#0f172a;font-family:Arial,Helvetica,sans-serif;line-height:1.6">
+              <h2 style="margin:0 0 16px">Verifikasi &amp; aktivasi akun TES CAT</h2>
+              <p>Halo ${greetingName},</p>
+              <p>Admin telah membuatkan akun TES CAT untuk email ini. Klik tombol di bawah untuk memverifikasi email sekaligus mengaktifkan akun Anda.</p>
+              <p style="margin:24px 0">
+                <a href="${inviteUrl}" style="display:inline-block;padding:12px 20px;border-radius:8px;background:#2563eb;color:#fff;text-decoration:none;font-weight:700">
+                  Verifikasi &amp; aktifkan akun
+                </a>
+              </p>
+              <p>Anda hanya perlu membuat password. Setelah itu Anda otomatis masuk ke dashboard.</p>
+              <p>Tautan ini berlaku 7 hari. Abaikan email ini bila Anda tidak merasa membutuhkan akun TES CAT.</p>
+              <p style="margin-top:24px;font-size:12px;color:#64748b">
+                Jika tombol tidak berfungsi, salin tautan berikut:<br />
+                <a href="${inviteUrl}" style="color:#2563eb;word-break:break-all">${inviteUrl}</a>
+              </p>
+            </div>
+          `,
+          text: [
+            `Halo ${user.fullName},`,
+            '',
+            'Admin telah membuatkan akun TES CAT untuk email ini.',
+            'Buka tautan berikut untuk memverifikasi email sekaligus mengaktifkan akun:',
+            inviteUrl,
+            '',
+            'Anda hanya perlu membuat password. Setelah itu Anda otomatis masuk ke dashboard.',
+            'Tautan berlaku 7 hari.',
+          ].join('\n'),
         });
-      } catch {
-        // Undangan tetap bisa diberikan manual oleh admin (inviteUrl di respons).
+        emailSent = true;
+      } catch (error) {
+        // Akun tetap dibuat; admin bisa meneruskan tautan cadangan secara manual.
+        this.logger.error(
+          `Gagal mengirim email undangan ke ${user.email}`,
+          error instanceof Error ? error.stack : String(error),
+        );
       }
     }
 
@@ -481,7 +535,7 @@ export class UsersService {
       userAgent: actor.userAgent ?? null,
     });
 
-    return { user: this.toSummary(user), inviteUrl };
+    return { user: this.toSummary(user), emailSent, inviteUrl };
   }
 
   // ------------------------------------------------------------------ lifecycle

@@ -61,7 +61,7 @@
 <div class="adm-page adm-page--narrow">
   <AdminPageHeader
     title="Tambah pengguna"
-    description="Akun dibuat tanpa pendaftaran mandiri. Peserta menerima email undangan untuk membuat password."
+    description="Admin mengisi data akun. Resend mengirim email verifikasi & aktivasi; peserta hanya membuat password lalu otomatis masuk."
   >
     {#snippet actions()}
       <Button variant="ghost" onclick={() => goto(`${adminBase()}/users`)}>Kembali</Button>
@@ -69,13 +69,28 @@
   </AdminPageHeader>
 
   {#if result}
-    <Alert tone="success" title="Akun dibuat">
+    <Alert
+      tone={result.emailSent ? 'success' : 'warning'}
+      title={result.emailSent ? 'Akun dibuat & email terkirim' : 'Akun dibuat, email gagal dikirim'}
+    >
       <p>{result.user.fullName} — {result.user.email}</p>
-      {#if result.inviteUrl}
-        <p class="invite">
-          Tautan undangan: <code>{result.inviteUrl}</code>
+      {#if result.emailSent}
+        <p>
+          Email verifikasi &amp; aktivasi sudah dikirim. Peserta tinggal membuka tautan, membuat
+          password, lalu otomatis masuk.
         </p>
-        <p class="muted text-sm">Teruskan tautan ini bila email tidak sampai. Berlaku 7 hari.</p>
+      {:else}
+        <p>
+          Akun tetap aktif menunggu aktivasi, tetapi email undangan gagal dikirim. Teruskan tautan
+          cadangan di bawah ini secara manual.
+        </p>
+      {/if}
+      {#if result.inviteUrl}
+        <details class="invite">
+          <summary>Tautan cadangan</summary>
+          <p><code>{result.inviteUrl}</code></p>
+          <p class="muted text-sm">Berlaku 7 hari. Jangan bagikan tautan ini ke orang lain.</p>
+        </details>
       {/if}
     </Alert>
   {/if}
@@ -90,7 +105,12 @@
         <Input id="fullName" bind:value={fullName} required autocomplete="name" />
       </Field>
 
-      <Field label="Email" for="email" required hint="Email ini menerima tautan aktivasi.">
+      <Field
+        label="Email"
+        for="email"
+        required
+        hint="Email ini menerima tautan verifikasi & aktivasi dari Resend."
+      >
         <Input id="email" type="email" bind:value={email} required autocomplete="email" />
       </Field>
 
@@ -154,6 +174,15 @@
 
   .actions {
     margin-top: var(--space-2);
+  }
+
+  .invite {
+    margin-top: var(--space-2);
+  }
+
+  .invite summary {
+    cursor: pointer;
+    font-weight: 600;
   }
 
   .invite code {

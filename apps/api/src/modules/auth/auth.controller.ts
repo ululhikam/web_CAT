@@ -139,9 +139,15 @@ export class AuthController {
   @RateLimit({ limit: 5, windowSeconds: 900 })
   @HttpCode(200)
   @Post('activate-invite')
-  @ApiOperation({ summary: 'Aktivasi akun undangan dari admin' })
-  activateInvite(@Body(zodPipe(activateInviteSchema)) body: ActivateInviteInput) {
-    return this.auth.activateInvite(body);
+  @ApiOperation({ summary: 'Aktivasi akun undangan dari admin dan login otomatis' })
+  async activateInvite(
+    @Body(zodPipe(activateInviteSchema)) body: ActivateInviteInput,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.auth.activateInvite(body, this.meta(req));
+    setRefreshCookie(res, this.config, result.refreshToken);
+    return { accessToken: result.accessToken, user: result.user };
   }
 
   @ApiBearerAuth()

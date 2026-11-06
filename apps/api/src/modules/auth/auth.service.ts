@@ -749,13 +749,15 @@ export class AuthService {
 
   /**
    * Aktivasi akun yang dibuat admin lewat tautan undangan.
-   * Token sekali pakai, berlaku 7 hari, disimpan sebagai hash.
+   *
+   * Token sekali pakai, berlaku 7 hari, disimpan sebagai hash. Setelah user
+   * hanya mengisi password, akun langsung diverifikasi dan sesi login dibuat
+   * agar user tidak perlu masuk ulang.
    */
-  async activateInvite(input: {
-    token: string;
-    password: string;
-    fullName?: string;
-  }): Promise<MessageResult> {
+  async activateInvite(
+    input: { token: string; password: string },
+    meta: RequestMeta = {},
+  ): Promise<AuthTokens> {
     const record = await this.prisma.verificationToken.findFirst({
       where: {
         purpose: 'INVITE',
@@ -763,7 +765,7 @@ export class AuthService {
         usedAt: null,
         expiresAt: { gt: new Date() },
       },
-      include: { user: { select: { id: true, deletedAt: true } } },
+      include: { user: { include: this.includeRole } },
     });
 
     if (!record || record.user.deletedAt) {
@@ -773,33 +775,48 @@ export class AuthService {
       });
     }
 
+    if (record.user.status === 'SUSPENDED') {
+      throw new ForbiddenException({
+        code: ERROR_CODES.USER_SUSPENDED,
+        status: ERROR_STATUS.USER_SUSPENDED,
+        message: 'Akun Anda dinonaktifkan. Hubungi admin.',
+      });
+    }
+
     const passwordHash = await this.passwords.hash(input.password);
 
-    await this.prisma.$transaction([
-      this.prisma.verificationToken.update({
+    const user = await this.prisma.$transaction(async (tx) => {
+      await tx.verificationToken.update({
         where: { id: record.id },
         data: { usedAt: new Date() },
-      }),
-      this.prisma.user.update({
+      });
+
+      return tx.user.update({
         where: { id: record.userId },
         data: {
           passwordHash,
           status: 'ACTIVE',
           emailVerifiedAt: new Date(),
           mustChangePassword: false,
-          ...(input.fullName ? { fullName: input.fullName.trim() } : {}),
+          lastLoginAt: new Date(),
         },
-      }),
-    ]);
-
-    await this.audit.record({
-      actorUserId: record.userId,
-      action: 'auth.invite_activated',
-      entityType: 'user',
-      entityId: record.userId,
+        include: this.includeRole,
+      });
     });
 
-    return { message: 'Akun berhasil diaktifkan. Silakan masuk.' };
+    const policy = await this.assertSessionPolicy(user.id);
+    const tokens = await this.issueSession(user, meta, undefined, policy);
+
+    await this.audit.record({
+      actorUserId: user.id,
+      action: 'auth.invite_activated',
+      entityType: 'user',
+      entityId: user.id,
+      ip: meta.ip ?? null,
+      userAgent: meta.userAgent ?? null,
+    });
+
+    return tokens;
   }
 
   // ------------------------------------------------------------------ invite

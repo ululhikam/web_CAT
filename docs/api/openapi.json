@@ -816,7 +816,7 @@
             }
           }
         },
-        "summary": "Aktivasi akun undangan dari admin",
+        "summary": "Aktivasi akun undangan dari admin dan login otomatis",
         "tags": [
           "Auth"
         ],
@@ -846,11 +846,6 @@
                         "pattern": "\\d"
                       }
                     ]
-                  },
-                  "fullName": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 120
                   }
                 },
                 "required": [
@@ -11421,6 +11416,9 @@
                                 "maxLength": 12
                               },
                               "maxItems": 200
+                            },
+                            "cleared": {
+                              "type": "boolean"
                             }
                           },
                           "additionalProperties": false

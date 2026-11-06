@@ -64,7 +64,6 @@ export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export const activateInviteSchema = z.object({
   token: z.string().min(20, 'Token undangan tidak valid'),
   password: passwordSchema,
-  fullName: z.string().trim().min(2).max(120).optional(),
 });
 export type ActivateInviteInput = z.infer<typeof activateInviteSchema>;
 

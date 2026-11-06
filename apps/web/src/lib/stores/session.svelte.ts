@@ -119,10 +119,33 @@ class SessionStore {
       skipRefresh: true,
     });
 
+    this.applyAuth(result);
+    return result.user;
+  }
+
+  /**
+   * Aktivasi undangan sekaligus menerapkan sesi login yang dibuat API.
+   * User hanya perlu membuat password; refresh cookie sudah dipasang respons.
+   */
+  async activateInvite(token: string, password: string): Promise<AuthUser> {
+    const result = await apiRequest<{ accessToken: string; user: AuthUser }>(
+      '/auth/activate-invite',
+      {
+        method: 'POST',
+        body: { token, password },
+        token: undefined,
+        skipRefresh: true,
+      },
+    );
+
+    this.applyAuth(result);
+    return result.user;
+  }
+
+  private applyAuth(result: { accessToken: string; user: AuthUser }): void {
     this.accessToken = result.accessToken;
     this.user = result.user;
     writeCachedUser(result.user);
-    return result.user;
   }
 
   async logout(): Promise<void> {

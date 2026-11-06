@@ -224,6 +224,11 @@ export interface AdminUserSummary {
 
 export interface AdminCreateUserResponse {
   user: AdminUserSummary;
+  /**
+   * `true` bila email undangan berhasil diterima penyedia email (Resend).
+   * Bila `false`, admin tetap bisa meneruskan `inviteUrl` secara manual.
+   */
+  emailSent: boolean;
   /** Ditampilkan ke admin agar bisa diteruskan manual bila email gagal. */
   inviteUrl: string | null;
 }
