@@ -962,11 +962,15 @@ export class ExamSessionService {
             continue;
           }
 
+          const isClearing = Boolean(item.payload.cleared);
+
           await tx.examSessionQuestion.update({
             where: { id: item.questionId },
             data: {
-              answerPayload: item.payload as unknown as Prisma.InputJsonValue,
-              answeredAt: now,
+              answerPayload: isClearing
+                ? Prisma.DbNull
+                : (item.payload as unknown as Prisma.InputJsonValue),
+              answeredAt: isClearing ? null : now,
               revision: { increment: 1 },
               timeSpentMs: { increment: item.timeSpentMs },
             },
@@ -1414,6 +1418,10 @@ function validateAnswerForSnapshot(
   snapshot: ReturnType<typeof parseQuestionSnapshot>,
   payload: AnswerPayload,
 ): string | null {
+  if (payload.cleared) {
+    return null;
+  }
+
   if (snapshot.type === 'LIKERT_STATEMENT') {
     const scale = snapshot.scale ?? 5;
     if (

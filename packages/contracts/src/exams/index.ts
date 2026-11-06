@@ -388,9 +388,11 @@ export const answerPayloadSchema = z
     value: z.number().int().min(0).max(10).optional(),
     text: z.string().trim().max(200).optional(),
     values: z.array(z.string().trim().max(12)).max(200).optional(),
+    cleared: z.boolean().optional(),
   })
   .refine(
     (payload) =>
+      payload.cleared === true ||
       payload.optionIds !== undefined ||
       payload.value !== undefined ||
       payload.text !== undefined ||

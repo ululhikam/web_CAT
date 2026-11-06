@@ -374,6 +374,45 @@ export class ExamRunnerStore {
     });
   }
 
+  /**
+   * Menghapus jawaban lokal + antrean IndexedDB (mengirim payload { cleared: true }).
+   */
+  clearAnswer(questionId: string, timeSpentMs = 0): void {
+    const subtest = this.currentSubtest;
+    if (!subtest || this.lockedReason) return;
+    if (this.answers[questionId] === undefined) return;
+
+    const elapsed = Math.max(0, Math.min(86_400_000, Math.round(timeSpentMs)));
+    this.trackAnswerChange(questionId);
+
+    const next = { ...this.answers };
+    delete next[questionId];
+    this.answers = next;
+
+    const payload: AnswerPayload = { cleared: true };
+    this.pendingMirror.set(questionId, {
+      questionId,
+      payload,
+      timeSpentMs: elapsed,
+      clientSeq: 0,
+    });
+
+    this.queueWrite = this.queueWrite.then(async () => {
+      try {
+        await enqueueAnswer({
+          subtestId: subtest.id,
+          questionId,
+          payload,
+          timeSpentMs: elapsed,
+        });
+        this.pendingCount = this.pendingMirror.size;
+        this.scheduleFlush();
+      } catch (cause) {
+        this.handleError(cause);
+      }
+    });
+  }
+
   scheduleFlush(delay = FLUSH_DELAY_MS): void {
     if (this.flushTimer !== null) return;
     this.flushTimer = setTimeout(() => {

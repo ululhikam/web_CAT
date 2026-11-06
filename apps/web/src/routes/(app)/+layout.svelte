@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { onMount, type Snippet } from 'svelte';
   import { goto, afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
@@ -59,6 +59,9 @@
 
   let currentPath = $derived(page.url.pathname);
   let currentHash = $derived(page.url.hash);
+  const isExamSession = $derived(
+    currentPath.startsWith('/exam/') && currentPath !== '/exam'
+  );
 
   const initials = $derived(
     (session.user?.fullName ?? 'P')
@@ -155,6 +158,10 @@
 
 {#if !session.user || (session.isAdmin && !adminAllowedHere)}
   <div class="loading"><Spinner size={32} label="Memeriksa status sesi" /></div>
+{:else if isExamSession}
+  <div class="exam-app-wrapper">
+    {@render children()}
+  </div>
 {:else}
   <!-- Backdrop Mobile -->
   {#if mobileDrawerOpen}
@@ -485,6 +492,16 @@
   }
 
   /* LAYOUT SHELL */
+  .exam-app-wrapper {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    background: #f8f9fc;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
   .app-layout {
     display: flex;
     min-height: 100vh;

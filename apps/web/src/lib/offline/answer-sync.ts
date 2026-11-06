@@ -38,9 +38,20 @@ export function mergePendingAnswers(
   const merged: Record<string, AnswerPayload> = { ...serverAnswers };
   const ordered = [...queued].sort((a, b) => a.id - b.id);
   for (const entry of ordered) {
-    merged[entry.questionId] = entry.payload;
+    if (entry.payload.cleared) {
+      delete merged[entry.questionId];
+    } else {
+      merged[entry.questionId] = entry.payload;
+    }
   }
-  return { ...merged, ...localAnswers };
+  for (const [questionId, payload] of Object.entries(localAnswers)) {
+    if (payload.cleared) {
+      delete merged[questionId];
+    } else {
+      merged[questionId] = payload;
+    }
+  }
+  return merged;
 }
 
 /**

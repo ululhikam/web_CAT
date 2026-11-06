@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { goto } from '$app/navigation';
+  import { goto, beforeNavigate } from '$app/navigation';
   import { page } from '$app/state';
   import Button from '@webcat/ui/components/Button.svelte';
   import Card from '@webcat/ui/components/Card.svelte';
@@ -22,6 +22,7 @@
   let booted = false;
   let index = $state(0);
   let confirmFinish = $state(false);
+  let isFinishing = $state(false);
   let passHandValues = $state<string[]>([]);
   let textAnswer = $state('');
   /** Soal yang ditandai "ragu-ragu" agar mudah ditinjau ulang. */
@@ -57,6 +58,36 @@
       : Math.round((examRunner.answeredCount / examRunner.totalQuestions) * 100),
   );
   const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  const currentAnswer = $derived(question ? examRunner.answerOf(question.id) : null);
+  const hasAnswer = $derived(
+    currentAnswer !== null &&
+      ((currentAnswer.optionIds && currentAnswer.optionIds.length > 0) ||
+        typeof currentAnswer.value === 'number' ||
+        (typeof currentAnswer.text === 'string' && currentAnswer.text.trim().length > 0) ||
+        (currentAnswer.values && currentAnswer.values.some((v) => v.trim().length > 0)))
+  );
+
+  function clearCurrentAnswer(): void {
+    if (!question || examRunner.isLocked) return;
+    examRunner.clearAnswer(question.id, elapsed());
+    textAnswer = '';
+    if (question.type === 'PASS_HAND_COLUMN') {
+      passHandValues = Array.from(
+        { length: passHandPairCount(question) },
+        () => '',
+      );
+    }
+  }
+
+  beforeNavigate(({ cancel, to }) => {
+    if (isFinishing || examRunner.isTerminal) return;
+    if (to?.url.pathname.startsWith('/results/')) return;
+    if (subtest?.status === 'ACTIVE' || subtest?.status === 'READY') {
+      cancel();
+      alert('Ujian sedang berlangsung! Anda tidak dapat meninggalkan halaman ini sebelum menyelesaikan sesi ujian.');
+    }
+  });
 
   /**
    * F3-15 — media soal dibaca lewat adapter yang sama dengan pratinjau admin,
@@ -272,8 +303,12 @@
   }
 
   async function finish(force = false): Promise<void> {
+    isFinishing = true;
     const result = await examRunner.finishSubtest(force);
-    if (!result) return;
+    if (!result) {
+      isFinishing = false;
+      return;
+    }
     confirmFinish = false;
     index = 0;
     if (!result.session) return;
@@ -382,6 +417,11 @@
         goBack();
         return;
       }
+      if (event.key === 'Delete') {
+        event.preventDefault();
+        clearCurrentAnswer();
+        return;
+      }
       if (!question || examRunner.isLocked) return;
 
       if (question.type === 'LIKERT_STATEMENT' && /^[1-5]$/.test(event.key)) {
@@ -473,6 +513,33 @@
   </div>
 {:else}
   <div class="page" class:page--wide={subtest?.status === 'ACTIVE'}>
+    <!-- TOPBAR UJIAN CAT (Mandiri & Fokus Penuh) -->
+    <header class="cat-exam-bar">
+      <div class="cat-exam-bar__left">
+        <div class="cat-exam-badge">TES CAT</div>
+        <div class="cat-exam-title">
+          <span class="cat-exam-title__main">SISTEM UJIAN CAT TERPADU</span>
+          <span class="cat-exam-title__sub">
+            {examRunner.active?.currentStageCode ?? 'SIMULASI'} • {subtest?.name ?? 'Sesi Ujian'}
+          </span>
+        </div>
+      </div>
+
+      <div class="cat-exam-bar__right">
+        <div class="cat-exam-user">
+          <span class="cat-exam-user__label">Peserta:</span>
+          <span class="cat-exam-user__name">{session.user?.fullName ?? 'Peserta'}</span>
+        </div>
+        <button
+          type="button"
+          class="cat-exam-btn-fullscreen"
+          onclick={enterFullscreen}
+          title="Beralih ke mode layar penuh"
+        >
+          {isFullscreen ? '⤢ Layar Penuh' : '⛶ Layar Penuh'}
+        </button>
+      </div>
+    </header>
     {#if examRunner.error}
       <Alert tone="danger" title="Perhatian" onclose={() => (examRunner.error = null)}>
         {examRunner.error}
@@ -586,43 +653,7 @@
       </Card>
     {:else if subtest.status === 'ACTIVE'}
       <div class="runner">
-        <!-- KIRI: navigasi soal + tombol akhiri sesi -->
-        <aside class="runner__side runner__side--left" aria-label="Daftar soal">
-          <div class="palette-card">
-            <header class="palette-card__head">
-              <h2 class="palette-card__title">Daftar soal</h2>
-              <span class="palette-card__count">
-                {examRunner.answeredCount}/{examRunner.totalQuestions}
-              </span>
-            </header>
-            <div class="palette">
-              {#each examRunner.questions as entry, entryIndex (entry.id)}
-                <button
-                  type="button"
-                  class="palette__item"
-                  class:palette__item--current={entryIndex === index}
-                  class:palette__item--answered={examRunner.answerOf(entry.id) !== null}
-                  class:palette__item--flagged={flagged.has(entry.id)}
-                  aria-current={entryIndex === index ? 'true' : undefined}
-                  onclick={() => (index = entryIndex)}
-                >
-                  {entryIndex + 1}
-                </button>
-              {/each}
-            </div>
-            <ul class="legend">
-              <li><span class="dot dot--current"></span>Dikerjakan sekarang</li>
-              <li><span class="dot dot--answered"></span>Sudah dijawab</li>
-              <li><span class="dot dot--flagged"></span>Ragu-ragu</li>
-            </ul>
-          </div>
-
-          <Button variant="danger" fullWidth onclick={() => (confirmFinish = true)}>
-            Akhiri sesi
-          </Button>
-        </aside>
-
-        <!-- TENGAH: soal + jawaban + navigasi bawah -->
+        <!-- KIRI / UTAMA: soal + jawaban + navigasi bawah -->
         <main class="runner__main">
           <header class="runner__header">
             <div class="runner__identity">
@@ -914,6 +945,14 @@
               >
                 {question && flagged.has(question.id) ? 'Ragu-ragu ✓' : 'Ragu-ragu'}
               </Button>
+              <Button
+                variant="danger"
+                disabled={!hasAnswer}
+                onclick={clearCurrentAnswer}
+                title="Hapus jawaban yang dipilih pada nomor ini"
+              >
+                Hapus Jawaban
+              </Button>
             </div>
             <div class="runner__nav runner__nav--end">
               <Button
@@ -928,8 +967,49 @@
         {/if}
         </main>
 
-        <!-- KANAN: urutan tes -->
-        <aside class="runner__side runner__side--right" aria-label="Urutan tes">
+        <!-- KANAN: Daftar nomor soal + Akhiri sesi + Urutan tes -->
+        <aside class="runner__side runner__side--right" aria-label="Daftar soal dan info ujian">
+          <div class="palette-card">
+            <header class="palette-card__head">
+              <div>
+                <h2 class="palette-card__title">Daftar Soal</h2>
+                <span class="palette-card__sub">Pilih nomor untuk membuka soal</span>
+              </div>
+              <span class="palette-card__count">
+                {examRunner.answeredCount}/{examRunner.totalQuestions}
+              </span>
+            </header>
+            <div class="palette">
+              {#each examRunner.questions as entry, entryIndex (entry.id)}
+                {@const isAns = examRunner.answerOf(entry.id) !== null}
+                {@const isCur = entryIndex === index}
+                {@const isFlg = flagged.has(entry.id)}
+                <button
+                  type="button"
+                  class="palette__item"
+                  class:palette__item--current={isCur}
+                  class:palette__item--answered={isAns}
+                  class:palette__item--flagged={isFlg}
+                  aria-current={isCur ? 'true' : undefined}
+                  onclick={() => (index = entryIndex)}
+                  title={`Soal nomor ${entryIndex + 1}${isAns ? ' (Sudah dijawab)' : ''}${isFlg ? ' (Ragu-ragu)' : ''}`}
+                >
+                  {entryIndex + 1}
+                </button>
+              {/each}
+            </div>
+            <ul class="legend">
+              <li><span class="dot dot--current"></span>Dikerjakan sekarang</li>
+              <li><span class="dot dot--answered"></span>Sudah dijawab</li>
+              <li><span class="dot dot--flagged"></span>Ragu-ragu</li>
+              <li><span class="dot dot--unanswered"></span>Belum dijawab</li>
+            </ul>
+          </div>
+
+          <Button variant="danger" fullWidth onclick={() => (confirmFinish = true)}>
+            Akhiri sesi
+          </Button>
+
           <div class="sequence-card">
             <h2 class="sequence-card__title">Urutan tes</h2>
             <ol class="sequence">
@@ -1028,10 +1108,96 @@
   }
 
   .page--wide {
-    max-width: 1320px;
+    max-width: 1440px;
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
   }
 
-  /* ---------------------------------------------- runner: palet | soal | alur */
+  /* ---------------------------------------------- cat exam topbar */
+
+  .cat-exam-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: #ffffff;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.18);
+  }
+
+  .cat-exam-bar__left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .cat-exam-badge {
+    padding: 0.25rem 0.6rem;
+    background: #f59e0b;
+    color: #0f172a;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    border-radius: var(--radius-sm);
+  }
+
+  .cat-exam-title {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cat-exam-title__main {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .cat-exam-title__sub {
+    font-size: 0.75rem;
+    opacity: 0.85;
+  }
+
+  .cat-exam-bar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .cat-exam-user {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+  }
+
+  .cat-exam-user__label {
+    opacity: 0.8;
+  }
+
+  .cat-exam-user__name {
+    font-weight: 700;
+  }
+
+  .cat-exam-btn-fullscreen {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .cat-exam-btn-fullscreen:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  /* ---------------------------------------------- runner: soal | palet */
 
   .runner {
     display: grid;
@@ -1054,28 +1220,20 @@
     min-width: 0;
   }
 
-  @media (min-width: 900px) {
+  @media (min-width: 960px) {
     .runner {
-      grid-template-columns: 210px minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) 320px;
     }
 
     .runner__side--right {
-      grid-column: 1 / -1;
+      position: sticky;
+      top: var(--space-3);
     }
   }
 
-  @media (min-width: 1180px) {
+  @media (min-width: 1200px) {
     .runner {
-      grid-template-columns: 210px minmax(0, 1fr) 240px;
-    }
-
-    .runner__side--right {
-      grid-column: auto;
-    }
-
-    .runner__side {
-      position: sticky;
-      top: var(--space-4);
+      grid-template-columns: minmax(0, 1fr) 350px;
     }
   }
 
@@ -1107,6 +1265,16 @@
     color: var(--color-text-subtle);
   }
 
+  .palette-card__sub {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    margin-top: 2px;
+  }
+
   .palette-card__count {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
@@ -1131,32 +1299,31 @@
   }
 
   .dot {
-    width: 0.65rem;
-    height: 0.65rem;
+    width: 0.7rem;
+    height: 0.7rem;
     border-radius: var(--radius-full);
     background: var(--color-surface-muted);
     border: 1px solid var(--color-border-strong);
   }
 
   .dot--current {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
+    background: #2563eb;
+    border-color: #2563eb;
   }
 
   .dot--answered {
-    background: var(--color-success);
-    border-color: var(--color-success);
+    background: #16a34a;
+    border-color: #16a34a;
   }
 
   .dot--flagged {
-    background: var(--color-warning);
-    border-color: var(--color-warning);
+    background: #f59e0b;
+    border-color: #f59e0b;
   }
 
-  .palette__item--flagged {
-    background: var(--color-warning-soft);
-    border-color: var(--color-warning);
-    color: var(--color-warning);
+  .dot--unanswered {
+    background: #ffffff;
+    border: 1.5px solid #94a3b8;
   }
 
   .sequence {
@@ -1618,36 +1785,66 @@
 
   .palette {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr));
-    gap: var(--space-1);
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
     padding: var(--space-3);
-    border: 1px solid var(--color-border);
+    border: 1.5px solid var(--color-border);
     border-radius: var(--radius-md);
-    background: var(--color-surface);
-    max-height: 220px;
+    background: #f8fafc;
+    /* Terlihat semua nomornya, kapasitas tinggi dan nyaman */
+    max-height: min(72vh, 650px);
     overflow-y: auto;
   }
 
   .palette__item {
-    padding: 0.35rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    background: var(--color-surface);
-    color: var(--color-text-muted);
-    font-size: var(--text-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 4px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: var(--radius-md);
+    background: #ffffff;
+    color: #1e293b;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.15s ease-out;
   }
 
-  .palette__item--answered {
-    background: var(--color-success-soft);
-    border-color: var(--color-success);
-    color: var(--color-success);
+  .palette__item:hover {
+    border-color: var(--color-primary);
+    background: #f1f5f9;
   }
 
   .palette__item--current {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 1px;
-    font-weight: 700;
+    border-color: #2563eb !important;
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    font-weight: 800;
+  }
+
+  .palette__item--answered {
+    background: #16a34a !important;
+    border-color: #15803d !important;
+    color: #ffffff !important;
+  }
+
+  .palette__item--flagged {
+    background: #f59e0b !important;
+    border-color: #d97706 !important;
+    color: #ffffff !important;
+  }
+
+  .palette__item--current.palette__item--answered {
+    box-shadow: 0 0 0 3px #2563eb, inset 0 0 0 1px #ffffff;
+  }
+
+  .palette__item--current.palette__item--flagged {
+    box-shadow: 0 0 0 3px #2563eb, inset 0 0 0 1px #ffffff;
   }
 
   .facts {
