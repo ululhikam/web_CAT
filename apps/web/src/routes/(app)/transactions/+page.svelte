@@ -7,6 +7,7 @@
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import { apiErrorMessage } from '$lib/api/client';
   import { apiPage } from '$lib/billing/api';
+  import { PRICING_ENABLED } from '$lib/features';
   import { session } from '$lib/stores/session.svelte';
   import { formatDateTime, formatIdr } from '$lib/format';
   import type { TransactionStatus, TransactionSummary } from '@webcat/contracts';
@@ -80,7 +81,9 @@
       <h1 class="page__title">Riwayat transaksi</h1>
       <p class="muted">Semua tagihan dan pembayaran akun Anda.</p>
     </div>
-    <Button href="/pricing" size="sm">Beli paket</Button>
+    {#if PRICING_ENABLED}
+      <Button href="/pricing" size="sm">Beli paket</Button>
+    {/if}
   </header>
 
   <div class="filters">
@@ -106,9 +109,11 @@
   {:else if items.length === 0}
     <Card title="Belum ada transaksi">
       <p class="muted">Transaksi akan muncul di sini setelah Anda memilih paket.</p>
-      <div class="actions">
-        <Button href="/pricing">Lihat paket</Button>
-      </div>
+      {#if PRICING_ENABLED}
+        <div class="actions">
+          <Button href="/pricing">Lihat paket</Button>
+        </div>
+      {/if}
     </Card>
   {:else}
     <div class="table-wrap">

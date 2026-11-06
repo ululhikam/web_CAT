@@ -1,15 +1,16 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { PRICING_ENABLED } from '$lib/features';
   import { homePathFor } from '$lib/panel';
   import { session } from '$lib/stores/session.svelte';
 
-  const nav = [
+  const nav: ReadonlyArray<{ href: string; label: string }> = [
     { href: '/#tes-cat', label: 'TES CAT Interaktif' },
     { href: '/#struktur', label: 'Struktur Seleksi' },
     { href: '/#kalkulator', label: 'Kalkulator Ambang Batas' },
-    { href: '/pricing', label: 'Harga & Paket' },
+    ...(PRICING_ENABLED ? [{ href: '/pricing', label: 'Harga & Paket' }] : []),
     { href: '/#faq', label: 'FAQ' },
-  ] as const;
+  ];
 
   const home = $derived(homePathFor(session.user?.role));
 

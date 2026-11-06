@@ -11,6 +11,7 @@
  * layout klien akan memulihkan sesi, gagal, lalu mengarahkan ke /login.
  */
 import { redirect, type Handle } from '@sveltejs/kit';
+import { PRICING_ENABLED } from '$lib/features';
 
 /**
  * Harus sama dengan `REFRESH_COOKIE_NAME` di `@webcat/contracts/auth`.
@@ -36,6 +37,12 @@ function isProtected(pathname: string): boolean {
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.user = null;
+
+  // Halaman paket disembunyikan sementara (`$lib/features`). Redirect 307
+  // dipilih alih-alih 404 supaya tautan lama tetap mendarat di beranda.
+  if (!PRICING_ENABLED && event.url.pathname === '/pricing') {
+    redirect(307, '/');
+  }
 
   if (isProtected(event.url.pathname) && !event.cookies.get(REFRESH_COOKIE_NAME)) {
     const target = event.url.pathname + event.url.search;

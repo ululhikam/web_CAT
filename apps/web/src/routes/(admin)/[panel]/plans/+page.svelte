@@ -9,6 +9,7 @@
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
   import { apiErrorMessage, apiRequest } from '$lib/api/client';
+  import { PRICING_ENABLED } from '$lib/features';
   import { adminBase } from '$lib/panel-route';
   import { session } from '$lib/stores/session.svelte';
   import { formatIdr, formatDateTime } from '$lib/format';
@@ -217,7 +218,9 @@
     description="Harga adalah data, bukan konstanta: perubahan di sini langsung dipakai halaman /pricing dan checkout berikutnya tanpa deploy."
   >
     {#snippet actions()}
-      <Button href="/pricing" variant="secondary">Lihat /pricing</Button>
+      {#if PRICING_ENABLED}
+        <Button href="/pricing" variant="secondary">Lihat /pricing</Button>
+      {/if}
       {#if canWrite}
         <Button onclick={() => resetForm()}>Paket baru</Button>
       {/if}

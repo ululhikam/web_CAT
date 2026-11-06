@@ -7,6 +7,7 @@
   import Card from '@webcat/ui/components/Card.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import { apiRequest, apiErrorMessage } from '$lib/api/client';
+  import { PRICING_ENABLED } from '$lib/features';
   import { session } from '$lib/stores/session.svelte';
   import { formatDateTime, formatIdr } from '$lib/format';
   import type { CheckoutResult, TransactionStatus, TransactionSummary } from '@webcat/contracts';
@@ -199,9 +200,11 @@
   {:else if !transaction}
     <Card title="Tidak ada transaksi">
       <p class="muted">Pilih paket terlebih dahulu untuk membuat tagihan.</p>
-      <div class="actions">
-        <Button href="/pricing">Lihat paket</Button>
-      </div>
+      {#if PRICING_ENABLED}
+        <div class="actions">
+          <Button href="/pricing">Lihat paket</Button>
+        </div>
+      {/if}
     </Card>
   {:else}
     <Card>
@@ -264,7 +267,7 @@
         {#if isFinal}
           {#if transaction.status === 'SUCCESS'}
             <Button href="/subscription">Lihat langganan</Button>
-          {:else}
+          {:else if PRICING_ENABLED}
             <Button href="/pricing">Coba lagi</Button>
           {/if}
           <Button variant="secondary" href="/transactions">Riwayat transaksi</Button>
