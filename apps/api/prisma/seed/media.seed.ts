@@ -59,6 +59,8 @@ export function renderSeedMedia(ref: SeedMediaRef): Buffer {
   return Buffer.from(renderFigure(ref.spec, ref.variant), 'utf8');
 }
 
+export const DENAH_PETA_ASSET_CODE = 'DENAH-SIP-PETA-1';
+
 /**
  * Menyimpan seluruh aset dan mengembalikan peta kode → id.
  *
@@ -78,22 +80,32 @@ export async function seedMediaAssets(
     idByCode.set(ref.code, stored.id);
   }
 
+  // Aset gambar denah lokasi / peta acuan SIP (50 soal kecerdasan)
+  const denahBuffer = await readSeedMediaFile('denah-lokasi-sip');
+  if (denahBuffer) {
+    const stored = await media.storeBuffer(denahBuffer, 'image/png', null);
+    idByCode.set(DENAH_PETA_ASSET_CODE, stored.id);
+  }
+
   const after = await prisma.mediaAsset.count();
 
-  return { idByCode, total: refs.length, created: after - before };
+  return { idByCode, total: refs.length + (denahBuffer ? 1 : 0), created: after - before };
 }
 
 /**
  * Membaca aset dari disk bila ada (mode "aset nyata"), dengan fallback ke
  * generator. Dipakai bila suatu saat aset figural diganti foto/ilustrasi
- * manual: cukup taruh berkas di `prisma/seed/media/assets/<kode>.webp`.
+ * manual: cukup taruh berkas di `prisma/seed/media/assets/<kode>.(png|webp)`.
  */
 export async function readSeedMediaFile(code: string): Promise<Buffer | null> {
-  try {
-    return await readFile(join(__dirname, 'media', 'assets', `${code}.webp`));
-  } catch {
-    return null;
+  for (const ext of ['png', 'webp', 'jpg']) {
+    try {
+      return await readFile(join(__dirname, 'media', 'assets', `${code}.${ext}`));
+    } catch {
+      // lanjut cari ekstensi lain
+    }
   }
+  return null;
 }
 
 export { STEM_VARIANT };

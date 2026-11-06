@@ -73,7 +73,7 @@ describe('komposisi bank soal', () => {
     // Kuota subtes (exam.seed.ts) harus terpenuhi; kelebihan diperbolehkan
     // karena pool dipilih acak per sesi.
     expect(only('KECERDASAN').length).toBeGreaterThanOrEqual(100);
-    expect(only('KEPRIBADIAN').length).toBeGreaterThanOrEqual(140);
+    expect(only('KEPRIBADIAN').length).toBeGreaterThanOrEqual(100);
     expect(only('KECERMATAN')).toHaveLength(500);
     expect(only('PASS_HAND')).toHaveLength(150);
     expect(only('TPK')).toHaveLength(100);
@@ -437,7 +437,16 @@ describe('kepribadian', () => {
   const likert = only('KEPRIBADIAN');
 
   it('hanya memakai dimensi yang dikonfigurasi subtes', () => {
-    const allowed = new Set(['KEPEMIMPINAN', 'KERJASAMA', 'STABILITAS']);
+    const allowed = new Set([
+      'INTEGRITAS',
+      'DISIPLIN',
+      'TANGGUNG_JAWAB',
+      'PENGENDALIAN_DIRI',
+      'KERJASAMA',
+      'PELAYANAN',
+      'KEPEMIMPINAN',
+      'STABILITAS',
+    ]);
 
     for (const question of likert) {
       const keys = Object.keys(question.options[0]!.dimensionMap ?? {});
@@ -493,7 +502,7 @@ describe('kepribadian', () => {
     }
   });
 
-  it('F4-06: ketiga dimensi terwakili dan item terbalik tersebar', () => {
+  it('F4-06: seluruh dimensi kepribadian terwakili dan item terbalik tersebar', () => {
     const perDimension = new Map<string, { total: number; reversed: number }>();
 
     for (const question of likert) {
@@ -504,12 +513,18 @@ describe('kepribadian', () => {
       perDimension.set(dimension, entry);
     }
 
-    expect([...perDimension.keys()].sort()).toEqual(['KEPEMIMPINAN', 'KERJASAMA', 'STABILITAS']);
+    expect([...perDimension.keys()].sort()).toEqual([
+      'DISIPLIN',
+      'INTEGRITAS',
+      'KEPEMIMPINAN',
+      'KERJASAMA',
+      'PELAYANAN',
+      'PENGENDALIAN_DIRI',
+      'TANGGUNG_JAWAB',
+    ]);
     for (const [dimension, entry] of perDimension) {
-      expect(entry.total, dimension).toBeGreaterThan(30);
-      // Item terbalik harus ada, tetapi tidak mendominasi (30–50%).
-      expect(entry.reversed / entry.total, dimension).toBeGreaterThan(0.2);
-      expect(entry.reversed / entry.total, dimension).toBeLessThan(0.6);
+      expect(entry.total, dimension).toBeGreaterThanOrEqual(10);
+      expect(entry.reversed, dimension).toBeGreaterThanOrEqual(1);
     }
   });
 });

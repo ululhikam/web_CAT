@@ -14,6 +14,7 @@ import {
 } from './figural';
 import { figureAltText, STEM_VARIANT, type FigureSpec } from '../media/figural';
 import { buildOptions, createRng, OPTION_LABELS } from './rng';
+import { DENAH_LOKASI_QUESTIONS } from './denah';
 import { KECERDASAN_QUESTIONS, MULTI_KECERDASAN } from './kecerdasan';
 import { KECERMATAN_QUESTIONS } from './kecermatan';
 import { KEPRIBADIAN_QUESTIONS } from './kepribadian';
@@ -240,6 +241,38 @@ function buildKecerdasan(): SeedQuestion[] {
     dedupeOverride: false,
     options: choiceOptions(row.options, row.answer),
     media: [],
+    tags: [...row.tags],
+  }));
+}
+
+function buildDenahLokasi(): SeedQuestion[] {
+  return DENAH_LOKASI_QUESTIONS.map((row) => ({
+    publicCode: row.code,
+    stageCode: PSIKOLOGI,
+    subtestCode: 'KECERDASAN',
+    categoryPath: 'psikologi/kecerdasan/petadenah',
+    type: 'SINGLE_CHOICE',
+    difficulty: 'MEDIUM',
+    stemText: `Perhatikan Denah/Peta Acuan di atas.\n\n${row.stem}`,
+    explanation: row.explanation,
+    scoringStrategy: 'KEYED_CORRECT',
+    scoringConfig: {},
+    pairGroup: null,
+    columnIndex: null,
+    dedupeHash: hashOf(
+      row.stem,
+      row.options.map((contentText) => ({ contentText })),
+    ),
+    dedupeOverride: false,
+    options: choiceOptions(row.options, row.answer),
+    media: [
+      {
+        role: 'STEM',
+        assetCode: 'DENAH-SIP-PETA-1',
+        altText: 'Denah Tata Letak Wilayah / Peta Acuan Soal',
+        sortOrder: 0,
+      },
+    ],
     tags: [...row.tags],
   }));
 }
@@ -642,6 +675,7 @@ function buildFiguralTkk(): SeedQuestion[] {
 export function buildSeedQuestions(): SeedQuestion[] {
   return [
     ...buildKecerdasan(),
+    ...buildDenahLokasi(),
     ...buildKecerdasanMulti(),
     ...buildFiguralKecerdasan(),
     ...buildKepribadian(),

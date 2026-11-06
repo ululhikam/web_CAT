@@ -41,7 +41,7 @@ const STAGES: StageSeed[] = [
   {
     code: 'PSIKOLOGI',
     name: 'Tes Psikologi',
-    description: 'Bagian 1: Kecerdasan & Kepribadian (100 soal, 120 menit). Bagian 2: Kecermatan Huruf (10 kolom x 50 soal, 10 menit).',
+    description: 'Subtes 1: Kecerdasan (100 soal, 120 menit). Subtes 2: Mental Kepribadian (100 soal, 120 menit). Subtes 3: Kecermatan Huruf (10 kolom x 50 soal, 10 menit).',
     orderIndex: 1,
     weight: 50,
     passingScore: 60,
@@ -49,22 +49,45 @@ const STAGES: StageSeed[] = [
     subtests: [
       {
         code: 'KECERDASAN',
-        name: 'Tes Kecerdasan & Kepribadian',
+        name: 'Tes Kecerdasan',
         orderIndex: 1,
         questionCount: 100,
         durationMinutes: 120,
-        weight: 50,
+        weight: 40,
         passingScore: 60,
         scoringStrategy: 'KEYED_CORRECT',
         eliminationEnabled: false,
       },
       {
+        code: 'KEPRIBADIAN',
+        name: 'Tes Mental Kepribadian',
+        orderIndex: 2,
+        questionCount: 100,
+        durationMinutes: 120,
+        weight: 30,
+        passingScore: 60,
+        scoringStrategy: 'DIMENSION_PROFILE',
+        scoringConfig: {
+          scale: 5,
+          dimensions: [
+            'INTEGRITAS',
+            'DISIPLIN',
+            'TANGGUNG_JAWAB',
+            'PENGENDALIAN_DIRI',
+            'KERJASAMA',
+            'PELAYANAN',
+            'KEPEMIMPINAN',
+          ],
+        },
+        eliminationEnabled: false,
+      },
+      {
         code: 'KECERMATAN',
         name: 'Tes Kecermatan (Huruf)',
-        orderIndex: 2,
+        orderIndex: 3,
         questionCount: 500,
         durationMinutes: 10,
-        weight: 50,
+        weight: 30,
         passingScore: 55,
         scoringStrategy: 'CORRECT_MINUS_PENALTY',
         scoringConfig: { penalty: 0 },
@@ -195,6 +218,12 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
         eliminationEnabled: stage.eliminationEnabled,
         isActive: true,
       },
+    });
+
+    // Hindari bentrok unique constraint (stage_id, order_index) saat reordering subtes
+    await prisma.subtest.updateMany({
+      where: { stageId: stageRow.id },
+      data: { orderIndex: { increment: 100 } },
     });
 
     for (const subtest of stage.subtests) {

@@ -1291,7 +1291,7 @@
                     variant="primary"
                     size="sm"
                     onclick={() => {
-                      index = (kecermatanColumnIndex + 1) * 50;
+                      advanceKecermatanColumn();
                     }}
                   >
                     Lanjut Kolom {kecermatanColumnIndex + 2} →
