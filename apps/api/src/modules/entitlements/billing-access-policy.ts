@@ -109,7 +109,7 @@ export class BillingAccessPolicy implements AccessPolicyPort {
       throw new AppError({
         code: 'EXAM_SESSION_ALREADY_TODAY',
         status: 409,
-        message: 'Anda sudah memiliki sesi ujian hari ini. Coba lagi besok.',
+        message: 'Anda sudah mencapai batas kuota 3 sesi ujian hari ini. Coba lagi besok.',
         details: { sessionId: existing[0]?.id ?? null },
       });
     }

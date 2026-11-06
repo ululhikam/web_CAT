@@ -300,10 +300,10 @@ describe('UsersService.overview — ujian', () => {
     const result = await service.overview('user-1');
 
     expect(result.quota).toMatchObject({
-      dailyLimit: 1,
+      dailyLimit: 3,
       usedToday: 1,
       voidedToday: 0,
-      remainingToday: 0,
+      remainingToday: 2,
     });
     expect(result.quota.examDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });

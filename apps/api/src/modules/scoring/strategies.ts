@@ -451,7 +451,19 @@ export const correctMinusPenalty: ScoringStrategyHandler = {
       const textKey = (item.snapshot.missingElement?.answer ?? '').trim().toUpperCase();
       const textMatch = answeredText.length > 0 && textKey.length > 0 && answeredText === textKey;
 
-      if ((picked.length > 0 && sameSet(picked, expected)) || textMatch) {
+      const chosenOptionIds = new Set(item.answer?.optionIds ?? []);
+      const pickedOptions = item.snapshot.options.filter((opt) => chosenOptionIds.has(opt.id));
+      const isOptionMarkedCorrect = pickedOptions.some((opt) => opt.isCorrect);
+      const isCharMatch =
+        textKey.length > 0 &&
+        pickedOptions.some((opt) => (opt.text ?? '').trim().toUpperCase() === textKey);
+
+      if (
+        (picked.length > 0 && sameSet(picked, expected)) ||
+        textMatch ||
+        isOptionMarkedCorrect ||
+        isCharMatch
+      ) {
         correct += 1;
         columnCorrect[safeCol] += 1;
       } else {

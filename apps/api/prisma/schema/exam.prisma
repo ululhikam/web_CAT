@@ -83,7 +83,7 @@ model ExamSetting {
   id                  String   @id @default("singleton")
   timezone            String   @default("Asia/Jakarta")
   totalPassingScore   Decimal  @default(60) @map("total_passing_score") @db.Decimal(5, 2)
-  maxSessionsPerDay   Int      @default(1) @map("max_sessions_per_day")
+  maxSessionsPerDay   Int      @default(3) @map("max_sessions_per_day")
   gracePeriodShortMs  Int      @default(3000) @map("grace_period_short_ms")
   gracePeriodLongMs   Int      @default(8000) @map("grace_period_long_ms")
   /// on_open | immediate — kapan timer subtes berikutnya mulai berjalan.

@@ -115,7 +115,11 @@ describe.skipIf(!integrationEnabled)('startSession (Postgres)', () => {
     const user = await createExamUser(prisma);
     await engine.sessions.startSession(user.id);
 
-    // Tutup sesi tanpa mengubah hari → kuota `maxSessionsPerDay` (=1) terpakai.
+    // Selesaikan 3 sesi berturut-turut untuk menghabiskan kuota harian (3 sesi).
+    await prisma.examSession.updateMany({ data: { status: 'COMPLETED', finishedAt: new Date() } });
+    await engine.sessions.startSession(user.id);
+    await prisma.examSession.updateMany({ data: { status: 'COMPLETED', finishedAt: new Date() } });
+    await engine.sessions.startSession(user.id);
     await prisma.examSession.updateMany({ data: { status: 'COMPLETED', finishedAt: new Date() } });
 
     await expect(engine.sessions.startSession(user.id)).rejects.toMatchObject({

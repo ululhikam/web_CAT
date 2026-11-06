@@ -121,13 +121,17 @@ describe('BillingAccessPolicy — assert', () => {
     });
   });
 
-  it('menolak sesi kedua pada hari yang sama tetapi mengizinkan lanjut', async () => {
+  it('menolak sesi ke-4 pada hari yang sama (kuota 3 sesi per hari)', async () => {
     const { prisma, policy } = createHarness();
     prisma.user.findFirst.mockResolvedValue({ status: 'ACTIVE' });
     prisma.subscription.findFirst.mockResolvedValue({
       endsAt: new Date(NOW.getTime() + DAY_MS),
     });
-    prisma.examSession.findMany.mockResolvedValue([{ id: 'session-1' }]);
+    prisma.examSession.findMany.mockResolvedValue([
+      { id: 'session-1' },
+      { id: 'session-2' },
+      { id: 'session-3' },
+    ]);
 
     await expect(policy.assertCanStartExam('user-1')).rejects.toMatchObject({
       code: 'EXAM_SESSION_ALREADY_TODAY',
@@ -141,7 +145,7 @@ describe('BillingAccessPolicy — assert', () => {
         voidedAt: null,
       },
       select: { id: true },
-      take: 1,
+      take: 3,
     });
 
     // Melanjutkan sesi yang sudah berjalan tidak terkena batas harian.

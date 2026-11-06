@@ -109,13 +109,20 @@
         dibuka ulang setelah berakhir.
       </p>
     </div>
-    {#if activeSessionId}
-      <Badge tone="warning">Sesi berjalan</Badge>
-    {:else if stages.some((stage) => stage.available)}
-      <Badge tone="success">Siap dimulai</Badge>
-    {:else}
-      <Badge tone="neutral">Belum dapat dimulai</Badge>
-    {/if}
+    <div class="page__header-actions">
+      {#if eligibility}
+        <Badge tone={3 - (eligibility.sessionsToday ?? 0) > 0 ? 'brand' : 'danger'}>
+          Sisa Kuota: {Math.max(0, 3 - (eligibility.sessionsToday ?? 0))} / 3 sesi hari ini
+        </Badge>
+      {/if}
+      {#if activeSessionId}
+        <Badge tone="warning">Sesi berjalan</Badge>
+      {:else if stages.some((stage) => stage.available)}
+        <Badge tone="success">Siap dimulai</Badge>
+      {:else}
+        <Badge tone="neutral">Belum dapat dimulai</Badge>
+      {/if}
+    </div>
   </header>
 
   {#if error}
@@ -317,6 +324,13 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-3);
+  }
+
+  .page__header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   .page__title {

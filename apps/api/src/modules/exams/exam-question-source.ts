@@ -586,6 +586,30 @@ export class ExamQuestionSource {
     );
 
     if (dbQuestions.length >= input.count) {
+      if (input.subtestCode === 'KECERMATAN') {
+        // Kelompokkan 500 soal ketat per kolom 0..9 (masing-masing 50 soal).
+        // Setiap kolom memiliki 1 sampel patokan yang sama dan tidak boleh bercampur antar kolom.
+        const byColumn = new Map<number, QuestionRow[]>();
+        for (const row of dbQuestions) {
+          const col = row.columnIndex ?? 0;
+          const list = byColumn.get(col) ?? [];
+          list.push(row);
+          byColumn.set(col, list);
+        }
+        const orderedQuestions: QuestionRow[] = [];
+        const sortedCols = [...byColumn.keys()].sort((a, b) => a - b);
+        for (const col of sortedCols) {
+          const colQuestions = byColumn.get(col)!;
+          const colRng = createRng(hashSeed(`${input.subtestSessionId}:col:${col}`));
+          orderedQuestions.push(...shuffle(colRng, colQuestions));
+        }
+        return {
+          kind: 'database',
+          available: dbQuestions.length,
+          seeds: orderedQuestions.map((row, index) => mapDbQuestion(row, index + 1)),
+        };
+      }
+
       const rng = createRng(hashSeed(input.subtestSessionId));
       return {
         kind: 'database',

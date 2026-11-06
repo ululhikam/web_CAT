@@ -106,17 +106,24 @@
     isKecermatan ? (index % 50) + 1 : null
   );
 
+  const columnBenchmarkQuestion = $derived(() => {
+    if (!isKecermatan) return question;
+    const colStart = kecermatanColumnIndex * 50;
+    return examRunner.questions[colStart] ?? question;
+  });
+
   const benchmarkLetters = $derived(() => {
-    if (!question) return [];
-    if (question.missingElement?.left) {
-      const leftStr = question.missingElement.left.replace(/\s+/g, '');
+    const q = isKecermatan ? columnBenchmarkQuestion() : question;
+    if (!q) return [];
+    if (q.missingElement?.left) {
+      const leftStr = q.missingElement.left.replace(/\s+/g, '');
       return leftStr.split('').map((char, i) => ({
         label: optionLetters[i] ?? String.fromCharCode(65 + i),
         char,
       }));
     }
-    if (question.options && question.options.length === 5) {
-      return question.options.map((opt, i) => ({
+    if (q.options && q.options.length === 5) {
+      return q.options.map((opt, i) => ({
         label: optionLetters[i] ?? opt.label,
         char: opt.text || opt.label,
       }));
@@ -167,6 +174,11 @@
         typeof currentAnswer.value === 'number' ||
         (typeof currentAnswer.text === 'string' && currentAnswer.text.trim().length > 0) ||
         (currentAnswer.values && currentAnswer.values.some((v) => v.trim().length > 0)))
+  );
+
+  const maxColQuestionIndex = $derived((kecermatanColumnIndex + 1) * 50 - 1);
+  const isColumnFinished = $derived(
+    isKecermatan && index >= maxColQuestionIndex && hasAnswer
   );
 
   function clearCurrentAnswer(): void {
@@ -352,6 +364,11 @@
   }
 
   function advance(): void {
+    if (isKecermatan) {
+      const maxColIdx = (kecermatanColumnIndex + 1) * 50 - 1;
+      if (index < maxColIdx) index += 1;
+      return;
+    }
     if (index < examRunner.questions.length - 1) {
       index += 1;
     }
@@ -374,12 +391,11 @@
     if (examRunner.isLocked) return;
     examRunner.recordAnswer(questionItem.id, { optionIds: [option.id] }, elapsed());
     if (isKecermatan) {
-      const maxColQuestionIndex = (kecermatanColumnIndex + 1) * 50 - 1;
-      if (index < maxColQuestionIndex) {
-        index += 1;
-      } else if (index < examRunner.questions.length - 1) {
+      const maxColIdx = (kecermatanColumnIndex + 1) * 50 - 1;
+      if (index < maxColIdx) {
         index += 1;
       }
+      // Bila sudah mencapai soal ke-50 kolom ini, tunggu sampai timer 1 menit habis
       return;
     }
     if (
@@ -571,6 +587,9 @@
       if (event.key === 'Delete') {
         event.preventDefault();
         clearCurrentAnswer();
+        return;
+      }
+      if (isKecermatan && isColumnFinished) {
         return;
       }
       if (!question || examRunner.isLocked) return;
@@ -1139,19 +1158,43 @@
                 </div>
               </div>
 
-              <!-- PILIHAN JAWABAN (TOMBOL A B C D E) -->
-              <div class="kecermatan-choices-row" role="group" aria-label="Pilih huruf yang hilang">
-                {#each question.options as option, optionIndex (option.id)}
-                  <button
-                    type="button"
-                    class="kecermatan-choice-key"
-                    class:kecermatan-choice-key--active={isChosen(question, option.id)}
-                    onclick={() => chooseOption(question, option)}
-                  >
-                    <span>{option.label || optionLetters[optionIndex]}</span>
-                  </button>
-                {/each}
-              </div>
+              {#if isColumnFinished}
+                <div class="kecermatan-waiting-box">
+                  <div class="kecermatan-waiting-icon">⏳</div>
+                  <div class="kecermatan-waiting-body">
+                    <div class="kecermatan-waiting-title">
+                      {#if kecermatanColumnIndex >= 9}
+                        Kolom 10 Selesai Dikerjakan!
+                      {:else}
+                        Kolom {kecermatanColumnIndex + 1} Selesai Dikerjakan!
+                      {/if}
+                    </div>
+                    <p class="kecermatan-waiting-desc">
+                      {#if kecermatanColumnIndex >= 9}
+                        Anda telah menyelesaikan seluruh 50 soal di kolom terakhir. Menunggu sisa waktu
+                        <strong>00:{String(kecermatanColumnRemainingSeconds).padStart(2, '0')}</strong> untuk otomatis menyelesaikan tes kecermatan.
+                      {:else}
+                        Anda telah menyelesaikan seluruh 50 soal pada kolom ini. Menunggu sisa waktu
+                        <strong>00:{String(kecermatanColumnRemainingSeconds).padStart(2, '0')}</strong> untuk otomatis berpindah ke Kolom {kecermatanColumnIndex + 2}.
+                      {/if}
+                    </p>
+                  </div>
+                </div>
+              {:else}
+                <!-- PILIHAN JAWABAN (TOMBOL A B C D E) -->
+                <div class="kecermatan-choices-row" role="group" aria-label="Pilih huruf yang hilang">
+                  {#each question.options as option, optionIndex (option.id)}
+                    <button
+                      type="button"
+                      class="kecermatan-choice-key"
+                      class:kecermatan-choice-key--active={isChosen(question, option.id)}
+                      onclick={() => chooseOption(question, option)}
+                    >
+                      <span>{option.label || optionLetters[optionIndex]}</span>
+                    </button>
+                  {/each}
+                </div>
+              {/if}
             </div>
           {:else}
             <div class="options" role="group" aria-label="Pilih jawaban">
@@ -2568,6 +2611,50 @@
     grid-template-columns: repeat(5, 1fr);
     gap: var(--space-2);
     width: 100%;
+  }
+
+  /* KOTAK MENUNGGU PERPINDAHAN KOLOM KECERMATAN */
+  .kecermatan-waiting-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    padding: var(--space-4) var(--space-5);
+    background: #1e293b;
+    border: 2px solid #3b82f6;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .kecermatan-waiting-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+    animation: pulse 1.5s infinite;
+  }
+
+  .kecermatan-waiting-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .kecermatan-waiting-title {
+    font-size: var(--text-base);
+    font-weight: 800;
+    color: #60a5fa;
+  }
+
+  .kecermatan-waiting-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: #e2e8f0;
+    line-height: 1.4;
+  }
+
+  .kecermatan-waiting-desc strong {
+    color: #38bdf8;
+    font-family: var(--font-mono);
   }
 
   .kecermatan-choice-key {

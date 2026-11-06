@@ -275,7 +275,7 @@ export class ExamSessionService {
       throw new AppError({
         code: 'EXAM_SESSION_ALREADY_TODAY',
         status: 409,
-        message: 'Kuota sesi ujian hari ini sudah habis',
+        message: 'Kuota sesi ujian hari ini sudah habis (maksimal 3 sesi per hari). Coba lagi besok.',
         details: { nextAvailableAt: eligibility.nextAvailableAt },
       });
     }
@@ -352,7 +352,7 @@ export class ExamSessionService {
             throw new AppError({
               code: 'EXAM_SESSION_ALREADY_TODAY',
               status: 409,
-              message: 'Kuota sesi ujian hari ini sudah habis',
+              message: 'Kuota sesi ujian hari ini sudah habis (maksimal 3 sesi per hari). Coba lagi besok.',
             });
           }
         }

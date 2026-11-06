@@ -134,7 +134,7 @@ export interface QuotaResetResponse {
  * berikutnya) dan panel admin (yang menampilkan sisa kuota). Kalau aturannya
  * berubah, hanya satu tempat yang perlu disentuh.
  */
-export const DAILY_EXAM_SESSION_LIMIT = 1;
+export const DAILY_EXAM_SESSION_LIMIT = 3;
 
 /** Pemakaian kuota ujian hari ini untuk satu peserta (cermin read-only). */
 export interface AdminUserQuotaToday {

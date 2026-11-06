@@ -53,7 +53,19 @@ function dropStalePrebundle(): boolean {
   if (previous === current) return false;
 
   // Hanya folder `deps`; cache `vitest` dan metadata lain dibiarkan.
-  rmSync(depsDir, { recursive: true, force: true });
+  try {
+    rmSync(depsDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code;
+    // Di Windows, dev server lain atau antivirus bisa mengunci berkas cache.
+    // Jangan matikan dev server hanya karena cache gagal dibuang; percobaan
+    // berikutnya akan mengulang penghapusan karena stamp belum diperbarui.
+    console.warn(
+      `[webcat] gagal membuang cache pre-bundle kontrak (${code ?? 'unknown'}); ` +
+        'kemungkinan ada dev server lain yang memakai cache ini.',
+    );
+    return false;
+  }
   mkdirSync(viteCache, { recursive: true });
   writeFileSync(stampFile, current, 'utf8');
   console.info('[webcat] cache pre-bundle kontrak dibuang karena `dist` berubah');

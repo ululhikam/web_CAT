@@ -59,7 +59,7 @@ export const DEFAULT_VIOLATION_POLICY: ViolationPolicy = {
 };
 
 export const DEFAULT_TOTAL_PASSING_SCORE = 60;
-export const DEFAULT_MAX_SESSIONS_PER_DAY = 1;
+export const DEFAULT_MAX_SESSIONS_PER_DAY = 3;
 export const DEFAULT_GRACE_SHORT_MS = 3_000;
 export const DEFAULT_GRACE_LONG_MS = 8_000;
 export const DEFAULT_TIMEZONE = 'Asia/Jakarta';

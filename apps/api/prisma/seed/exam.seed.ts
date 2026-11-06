@@ -256,7 +256,7 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
     update: {
       timezone: 'Asia/Jakarta',
       totalPassingScore: 60,
-      maxSessionsPerDay: 1,
+      maxSessionsPerDay: 3,
       gracePeriodShortMs: 3000,
       gracePeriodLongMs: 8000,
       subtestTransition: 'on_open',
@@ -266,7 +266,7 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
       id: 'singleton',
       timezone: 'Asia/Jakarta',
       totalPassingScore: 60,
-      maxSessionsPerDay: 1,
+      maxSessionsPerDay: 3,
       gracePeriodShortMs: 3000,
       gracePeriodLongMs: 8000,
       subtestTransition: 'on_open',
