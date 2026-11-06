@@ -284,7 +284,7 @@
 
       <Card title="Preferensi Mode Pengerjaan Tes" description="Atur alur perpindahan soal saat mengerjakan simulasi atau ujian resmi CAT.">
         <div class="pref-desc">
-          Pilih bagaimana sistem merespons saat Anda memilih atau mengklik pilihan jawaban pada semua tes (Psikotes, TKK, TPK, dan Simulasi CAT).
+          Pilih bagaimana sistem merespons saat Anda memilih atau mengklik pilihan jawaban pada semua tes (Psikotes, TKK, TPK, dan Pretest CAT).
         </div>
 
         <div class="pref-options">

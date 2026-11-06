@@ -2698,54 +2698,59 @@
     gap: var(--space-3);
   }
 
-  /* -------------------------------------------------------- KECERMATAN RUNNER */
+  /* -------------------------------------------------------- KECERMATAN RUNNER (MONOKROM CAT POLRI) */
   .kecermatan-flow {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-5);
+    gap: var(--space-3);
     width: 100%;
-    max-width: 620px;
+    max-width: 520px;
     margin: 0 auto;
-    padding: var(--space-3) 0;
+    padding: var(--space-2) 0;
   }
 
   .kecermatan-timer-badge {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-size: clamp(1.2rem, 3vw, 1.45rem);
     font-weight: 800;
-    color: var(--color-primary);
+    color: #0f172a;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
     text-align: center;
     letter-spacing: 0.05em;
   }
 
   .kecermatan-sample-box {
     width: 100%;
-    background: #0b1329;
-    color: #ffffff;
-    border: 3px solid #3b82f6;
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
 
   :global(.theme-light) .kecermatan-sample-box {
-    background: #1e293b;
-    border-color: #2563eb;
+    background: #ffffff;
+    border-color: #0f172a;
   }
 
   .kecermatan-sample-header {
-    background: #1e3a8a;
-    color: #ffffff;
-    font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 0.95rem;
     font-weight: 800;
     text-align: center;
-    padding: var(--space-2) var(--space-4);
+    padding: 6px 12px;
     letter-spacing: 0.05em;
-    border-bottom: 2px solid #3b82f6;
+    text-transform: uppercase;
+    border-bottom: 2px solid #0f172a;
   }
 
   .kecermatan-sample-grid {
@@ -2759,20 +2764,20 @@
   }
 
   .kecermatan-sample-row--chars {
-    border-bottom: 2px solid #334155;
-    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid #cbd5e1;
+    background: #ffffff;
   }
 
   .kecermatan-sample-row--labels {
-    background: #1e293b;
+    background: #f8fafc;
   }
 
   .kecermatan-sample-cell {
     display: grid;
     place-items: center;
-    padding: var(--space-3) var(--space-1);
+    padding: 8px 4px;
     font-family: var(--font-mono);
-    border-right: 2px solid #334155;
+    border-right: 1px solid #cbd5e1;
   }
 
   .kecermatan-sample-cell:last-child {
@@ -2780,32 +2785,32 @@
   }
 
   .kecermatan-sample-cell--char {
-    font-size: clamp(2rem, 5.5vw, 2.8rem);
+    font-size: clamp(1.4rem, 3.2vw, 1.8rem);
     font-weight: 900;
-    color: #ffffff;
-    line-height: 1;
+    color: #0f172a;
+    line-height: 1.1;
   }
 
   .kecermatan-sample-cell--label {
-    font-size: clamp(1.3rem, 3.2vw, 1.6rem);
-    font-weight: 800;
-    color: #93c5fd;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+    font-weight: 700;
+    color: #475569;
     line-height: 1;
   }
 
-  /* KOTAK SOAL AKTIF (4 HURUF) */
+  /* KOTAK SOAL AKTIF (4 KARAKTER) - Padat & Proporsional */
   .kecermatan-question-card {
     width: 100%;
-    background: #0b1329;
-    border: 3px solid #3b82f6;
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
   }
 
   :global(.theme-light) .kecermatan-question-card {
-    background: #1e293b;
-    border-color: #2563eb;
+    background: #ffffff;
+    border-color: #0f172a;
   }
 
   .kecermatan-question-grid {
@@ -2816,12 +2821,12 @@
   .kecermatan-question-cell {
     display: grid;
     place-items: center;
-    padding: var(--space-4) var(--space-2);
+    padding: 12px 6px;
     font-family: var(--font-mono);
-    font-size: clamp(2.2rem, 6vw, 3rem);
+    font-size: clamp(1.6rem, 3.8vw, 2.1rem);
     font-weight: 900;
-    color: #ffffff;
-    border-right: 2px solid #334155;
+    color: #0f172a;
+    border-right: 1px solid #cbd5e1;
     line-height: 1;
   }
 
@@ -2829,44 +2834,39 @@
     border-right: none;
   }
 
-  /* TOMBOL PILIHAN JAWABAN (A B C D E) */
+  /* TOMBOL PILIHAN JAWABAN (A B C D E) - Monokrom Padat */
   .kecermatan-choices-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: var(--space-2);
+    gap: 8px;
     width: 100%;
   }
 
   .kecermatan-choice-key {
     display: grid;
     place-items: center;
-    height: clamp(56px, 10vw, 76px);
-    background: #1e293b;
-    color: #ffffff;
-    border: 2px solid #3b82f6;
-    border-radius: var(--radius-md);
+    height: 48px;
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
     font-family: var(--font-mono);
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-    font-weight: 900;
+    font-size: 1.25rem;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.12s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   .kecermatan-choice-key:hover {
-    background: #2563eb;
+    background: #0f172a;
     color: #ffffff;
-    transform: translateY(-2px);
-    border-color: #60a5fa;
   }
 
   .kecermatan-choice-key:active,
   .kecermatan-choice-key--active {
-    background: #1d4ed8;
+    background: #0f172a;
     color: #ffffff;
-    transform: translateY(1px);
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.35);
   }
 
   /* SIDEBAR KOLOM KECERMATAN */

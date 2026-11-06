@@ -1,7 +1,16 @@
+/**
+ * Bank Soal & Konfigurasi Paket Pretest CAT Polri (Seleksi SIP / Akpol / Bintara)
+ * Diperbarui sesuai standar CAT Polri:
+ * 1. Kecerdasan: Logika Spasial/Figural, Denah Wilayah, Aritmatika Dasar, dan Silogisme/Verbal
+ * 2. Kepribadian: Studi Kasus Realistis Lingkungan Kedinasan Polri (SJT & Skala Bobot Jawaban)
+ * 3. Kecermatan: Format Monokrom CAT (Angka Hilang, Huruf Hilang, Simbol Hilang, dan Campuran)
+ * 4. TKK & TPK: Kompetensi Komputer dan Regulasi Kedinasan Kepolisian
+ */
+
 export interface SimOption {
   key: string;
   text: string;
-  weight?: number; // bobot nilai jawaban untuk opsi ini (1-5 pada kepribadian, atau skor poin)
+  weight?: number; // bobot nilai jawaban untuk opsi ini (1-5 pada kepribadian)
 }
 
 export interface SimBenchmarkItem {
@@ -14,11 +23,12 @@ export interface SimQuestion {
   module: string;
   subtest?: 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'TKK' | 'TPK';
   stem: string;
+  image?: string;
   options: SimOption[];
   correctKey: string;
   explanation: string;
   weight?: number; // bobot butir soal (misal 10 poin)
-  optionWeights?: Record<string, number>; // bobot tiap pilihan jawaban A-E (misal { A: 2, B: 5, C: 3, D: 1, E: 2 })
+  optionWeights?: Record<string, number>; // bobot tiap pilihan jawaban A-E
   dimension?: string; // dimensi kepribadian atau bidang materi
   isKecermatan?: boolean;
   columnNumber?: number;
@@ -41,1030 +51,6146 @@ export interface SimPacket {
 }
 
 /* -------------------------------------------------------------------------- */
-/* KUMPULAN SOAL KECERDASAN (10 Butir)                                        */
+/* 1. KUMPULAN SOAL KECERDASAN (40 Butir: Figural, Denah, Aritmatika, Logika) */
 /* -------------------------------------------------------------------------- */
-
 const QUESTIONS_KECERDASAN: SimQuestion[] = [
   {
-    id: 101,
-    module: 'Tes Psikologi — Kecerdasan (Verbal & Analogi)',
-    stem: 'POLISI : HUKUM = HAKIM : ...',
-    options: [
-      { key: 'A', text: 'Pengadilan' },
-      { key: 'B', text: 'Keadilan' },
-      { key: 'C', text: 'Terdakwa' },
-      { key: 'D', text: 'Penjara' },
-      { key: 'E', text: 'Undang-Undang' },
+    "id": 101,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 1 [Analogi]: Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_1.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Bentuk Lingkaran sempurna"
+      },
+      {
+        "key": "B",
+        "text": "Segitiga sama sisi"
+      },
+      {
+        "key": "C",
+        "text": "Persegi bertumpuk"
+      },
+      {
+        "key": "D",
+        "text": "Segi lima beraturan"
+      },
+      {
+        "key": "E",
+        "text": "Segi enam beraturan"
+      }
     ],
-    correctKey: 'B',
-    explanation: 'Analogi fungsi/tujuan utama profesi: Polisi bertugas menegakkan hukum; Hakim bertugas menegakkan keadilan di persidangan.',
+    "correctKey": "A",
+    "explanation": "Penjelasan: Pada seri analogi nomor 1, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(A)**.",
+    "weight": 10
   },
   {
-    id: 102,
-    module: 'Tes Psikologi — Kecerdasan (Numerik & Deret Bilangan)',
-    stem: 'Tentukan bilangan kelanjutan dari deret berikut: 3, 7, 15, 31, 63, ...',
-    options: [
-      { key: 'A', text: '125' },
-      { key: 'B', text: '127' },
-      { key: 'C', text: '129' },
-      { key: 'D', text: '131' },
-      { key: 'E', text: '135' },
+    "id": 102,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 2 [Serial]: Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_2.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Gambar A"
+      },
+      {
+        "key": "B",
+        "text": "Gambar B"
+      },
+      {
+        "key": "C",
+        "text": "Gambar C"
+      },
+      {
+        "key": "D",
+        "text": "Gambar D"
+      },
+      {
+        "key": "E",
+        "text": "Gambar E"
+      }
     ],
-    correctKey: 'B',
-    explanation: 'Pola deret adalah (angka × 2) + 1. Perhitungan: 3×2+1=7; 7×2+1=15; 15×2+1=31; 31×2+1=63; 63×2+1 = 127.',
+    "correctKey": "D",
+    "explanation": "Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(D)**.",
+    "weight": 10
   },
   {
-    id: 103,
-    module: 'Tes Psikologi — Kecerdasan (Logika Silogisme)',
-    stem: 'Semua perwira Polri wajib menjunjung tinggi etika profesi dan integritas dinas. Inspektur Polisi Arya adalah seorang perwira Polri. Kesimpulan yang tepat adalah...',
-    options: [
-      { key: 'A', text: 'Inspektur Polisi Arya tidak terikat kode etik kepolisian.' },
-      { key: 'B', text: 'Inspektur Polisi Arya wajib menjunjung tinggi etika profesi dan integritas dinas.' },
-      { key: 'C', text: 'Sebagian perwira Polri diperbolehkan mengabaikan integritas bila situasi darurat.' },
-      { key: 'D', text: 'Inspektur Polisi Arya hanya terikat aturan administrasi biasa.' },
-      { key: 'E', text: 'Integritas hanya diwajibkan bagi perwira menengah ke atas.' },
+    "id": 103,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 3 [Ketidaksamaan]: Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
+    "image": "/images/questions/figural_q_3.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Pola penambahan 1 garis diagonal"
+      },
+      {
+        "key": "B",
+        "text": "Rotasi 45° berlawanan jarum jam"
+      },
+      {
+        "key": "C",
+        "text": "Pengurangan elemen interior"
+      },
+      {
+        "key": "D",
+        "text": "Penggabungan dua bentuk dasar"
+      },
+      {
+        "key": "E",
+        "text": "Pencerminan horizontal"
+      }
     ],
-    correctKey: 'B',
-    explanation: 'Silogisme kategorik standar: Semua A adalah B; C adalah A; maka C adalah B (Inspektur Polisi Arya wajib menjunjung tinggi etika profesi dan integritas dinas).',
+    "correctKey": "B",
+    "explanation": "Penjelasan: Empat dari lima opsi memiliki simetri dan jumlah elemen interior yang konisten, sedangkan opsi **(B)** memiliki struktur yang tidak sesuai dengan kaidah kelompoknya.",
+    "weight": 10
   },
   {
-    id: 104,
-    module: 'Tes Psikologi — Kecerdasan (Peta & Denah Lokasi)',
-    stem: 'Pada denah penugasan: Pos Polisi berada di sebelah barat Lapangan Kota, sedangkan Rumah Sakit berada tepat di sebelah utara Pos Polisi. Arah Rumah Sakit jika dilihat dari Lapangan Kota adalah...',
-    options: [
-      { key: 'A', text: 'Barat Laut' },
-      { key: 'B', text: 'Barat Daya' },
-      { key: 'C', text: 'Timur Laut' },
-      { key: 'D', text: 'Tenggara' },
-      { key: 'E', text: 'Utara' },
+    "id": 104,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 4 [Diagram]: Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
+    "image": "/images/questions/figural_q_4.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Rotasi 90° searah jarum jam"
+      },
+      {
+        "key": "B",
+        "text": "Rotasi 180°"
+      },
+      {
+        "key": "C",
+        "text": "Refleksi vertikal"
+      },
+      {
+        "key": "D",
+        "text": "Perbesaran 2x"
+      },
+      {
+        "key": "E",
+        "text": "Inversi warna"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Dari Lapangan Kota, Pos Polisi berada di arah Barat. Dari Pos Polisi bergerak ke arah Utara menuju Rumah Sakit. Maka posisi Rumah Sakit dari Lapangan Kota berada di arah Barat Laut.',
+    "correctKey": "E",
+    "explanation": "Penjelasan: Secara horizontal (baris) dan vertikal (kolom), elemen figural bertambah dan berganti selang-seling. Opsi yang memenuhi kombinasi logika matriks tersebut adalah **(E)**.",
+    "weight": 10
   },
   {
-    id: 105,
-    module: 'Tes Psikologi — Kecerdasan (Verbal & Sinonim)',
-    stem: 'EVOKASI = ...',
-    options: [
-      { key: 'A', text: 'Penggugah rasa' },
-      { key: 'B', text: 'Penyelamatan jiwa' },
-      { key: 'C', text: 'Pengusiran paksa' },
-      { key: 'D', text: 'Pengikatan perjanjian' },
-      { key: 'E', text: 'Pembaharuan berkas' },
+    "id": 105,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 5 [Analogi]: Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_5.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Bentuk Lingkaran sempurna"
+      },
+      {
+        "key": "B",
+        "text": "Segitiga sama sisi"
+      },
+      {
+        "key": "C",
+        "text": "Persegi bertumpuk"
+      },
+      {
+        "key": "D",
+        "text": "Segi lima beraturan"
+      },
+      {
+        "key": "E",
+        "text": "Segi enam beraturan"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Menurut KBBI, evokasi adalah daya penggugah rasa atau upaya memunculkan kembali kenangan emosional dalam ingatan.',
+    "correctKey": "C",
+    "explanation": "Penjelasan: Pada seri analogi nomor 5, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(C)**.",
+    "weight": 10
   },
   {
-    id: 106,
-    module: 'Tes Psikologi — Kecerdasan (Numerik & Aritmetika Dinas)',
-    stem: 'Sebuah mobil patroli kepolisian bergerak menempuh jarak 45 km menuju lokasi kejadian dengan kecepatan rata-rata konstan 60 km/jam. Waktu tempuh perjalanan mobil patroli tersebut adalah...',
-    options: [
-      { key: 'A', text: '30 menit' },
-      { key: 'B', text: '40 menit' },
-      { key: 'C', text: '45 menit' },
-      { key: 'D', text: '50 menit' },
-      { key: 'E', text: '55 menit' },
+    "id": 106,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 6 [Serial]: Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_6.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Gambar A"
+      },
+      {
+        "key": "B",
+        "text": "Gambar B"
+      },
+      {
+        "key": "C",
+        "text": "Gambar C"
+      },
+      {
+        "key": "D",
+        "text": "Gambar D"
+      },
+      {
+        "key": "E",
+        "text": "Gambar E"
+      }
     ],
-    correctKey: 'C',
-    explanation: 'Waktu = Jarak / Kecepatan = 45 km / 60 km/jam = 0,75 jam. Dalam menit: 0,75 × 60 = 45 menit.',
+    "correctKey": "A",
+    "explanation": "Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(A)**.",
+    "weight": 10
   },
   {
-    id: 107,
-    module: 'Tes Psikologi — Kecerdasan (Logika Analitis Urutan)',
-    stem: 'Dalam penempatan pos pengamanan: Pos B berada di antara Pos A dan Pos C. Pos C berada di sebelah timur Pos B, dan Pos A berada di sebelah barat Pos B. Urutan letak pos dari arah Barat ke Timur adalah...',
-    options: [
-      { key: 'A', text: 'Pos A - Pos B - Pos C' },
-      { key: 'B', text: 'Pos C - Pos B - Pos A' },
-      { key: 'C', text: 'Pos B - Pos A - Pos C' },
-      { key: 'D', text: 'Pos A - Pos C - Pos B' },
-      { key: 'E', text: 'Pos C - Pos A - Pos B' },
+    "id": 107,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 7 [Ketidaksamaan]: Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
+    "image": "/images/questions/figural_q_7.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Pola penambahan 1 garis diagonal"
+      },
+      {
+        "key": "B",
+        "text": "Rotasi 45° berlawanan jarum jam"
+      },
+      {
+        "key": "C",
+        "text": "Pengurangan elemen interior"
+      },
+      {
+        "key": "D",
+        "text": "Penggabungan dua bentuk dasar"
+      },
+      {
+        "key": "E",
+        "text": "Pencerminan horizontal"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Pos A berada di barat B, dan B di barat C. Maka urutan posisi dari arah Barat ke Timur adalah Pos A, Pos B, lalu Pos C.',
+    "correctKey": "D",
+    "explanation": "Penjelasan: Empat dari lima opsi memiliki simetri dan jumlah elemen interior yang konisten, sedangkan opsi **(D)** memiliki struktur yang tidak sesuai dengan kaidah kelompoknya.",
+    "weight": 10
   },
   {
-    id: 108,
-    module: 'Tes Psikologi — Kecerdasan (Spasial & Rute Penugasan)',
-    stem: 'Seorang anggota patroli berangkat dari Markas Polsek menuju ke arah timur sejauh 3 km, kemudian berbelok ke arah utara sejauh 4 km menuju Pos Penjagaan. Jarak garis lurus terpendek antara Markas Polsek dan Pos Penjagaan adalah...',
-    options: [
-      { key: 'A', text: '5 km' },
-      { key: 'B', text: '6 km' },
-      { key: 'C', text: '7 km' },
-      { key: 'D', text: '8 km' },
-      { key: 'E', text: '10 km' },
+    "id": 108,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 8 [Diagram]: Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
+    "image": "/images/questions/figural_q_4.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Rotasi 90° searah jarum jam"
+      },
+      {
+        "key": "B",
+        "text": "Rotasi 180°"
+      },
+      {
+        "key": "C",
+        "text": "Refleksi vertikal"
+      },
+      {
+        "key": "D",
+        "text": "Perbesaran 2x"
+      },
+      {
+        "key": "E",
+        "text": "Inversi warna"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Berdasarkan teorema Pythagoras untuk segitiga siku-siku: Jarak = √(3² + 4²) = √(9 + 16) = √25 = 5 km.',
+    "correctKey": "B",
+    "explanation": "Penjelasan: Secara horizontal (baris) dan vertikal (kolom), elemen figural bertambah dan berganti selang-seling. Opsi yang memenuhi kombinasi logika matriks tersebut adalah **(B)**.",
+    "weight": 10
   },
   {
-    id: 109,
-    module: 'Tes Psikologi — Kecerdasan (Logika & Penalaran Kritis)',
-    stem: 'Tidak ada anggota Polri yang diperbolehkan menerima gratifikasi dalam bentuk apa pun. Oknum X terbukti menerima bingkisan berharga dari pihak yang sedang berperkara pidana. Kesimpulan yang tepat adalah...',
-    options: [
-      { key: 'A', text: 'Oknum X melanggar ketentuan larangan penerimaan gratifikasi.' },
-      { key: 'B', text: 'Bingkisan tersebut diperbolehkan selama tidak diminta secara tertulis.' },
-      { key: 'C', text: 'Larangan gratifikasi hanya berlaku di luar jam kerja resmi kepolisian.' },
-      { key: 'D', text: 'Tindakan oknum X merupakan diskresi yang dilindungi undang-undang.' },
-      { key: 'E', text: 'Oknum X tidak dapat diperiksa jika bingkisan telah dibagikan ke pihak lain.' },
+    "id": 109,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 9 [Analogi]: Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_8.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Bentuk Lingkaran sempurna"
+      },
+      {
+        "key": "B",
+        "text": "Segitiga sama sisi"
+      },
+      {
+        "key": "C",
+        "text": "Persegi bertumpuk"
+      },
+      {
+        "key": "D",
+        "text": "Segi lima beraturan"
+      },
+      {
+        "key": "E",
+        "text": "Segi enam beraturan"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Penerimaan bingkisan berharga dari pihak berperkara memenuhi unsur pelanggaran larangan penerimaan gratifikasi bagi anggota kepolisian.',
+    "correctKey": "E",
+    "explanation": "Penjelasan: Pada seri analogi nomor 9, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(E)**.",
+    "weight": 10
   },
   {
-    id: 110,
-    module: 'Tes Psikologi — Kecerdasan (Deret Huruf & Alfabet)',
-    stem: 'Tentukan huruf berikutnya dalam pola deret alfabet berikut: B, D, G, K, ...',
-    options: [
-      { key: 'A', text: 'M' },
-      { key: 'B', text: 'N' },
-      { key: 'C', text: 'O' },
-      { key: 'D', text: 'P' },
-      { key: 'E', text: 'Q' },
+    "id": 110,
+    "module": "Tes Psikologi — Kecerdasan (Logika Spasial & Figural)",
+    "subtest": "KECERDASAN",
+    "stem": "Soal Nomor 10 [Serial]: Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_9.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Gambar A"
+      },
+      {
+        "key": "B",
+        "text": "Gambar B"
+      },
+      {
+        "key": "C",
+        "text": "Gambar C"
+      },
+      {
+        "key": "D",
+        "text": "Gambar D"
+      },
+      {
+        "key": "E",
+        "text": "Gambar E"
+      }
     ],
-    correctKey: 'D',
-    explanation: 'Konversi urutan alfabet: B(2) +2 = D(4); D(4) +3 = G(7); G(7) +4 = K(11); K(11) +5 = P(16). Maka huruf berikutnya adalah P.',
+    "correctKey": "C",
+    "explanation": "Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(C)**.",
+    "weight": 10
   },
+  {
+    "id": 111,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Berdasarkan denah di atas, bangunan yang berada tepat di sebelah utara R. Budi adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Ahmad"
+      },
+      {
+        "key": "B",
+        "text": "Kantor Polisi"
+      },
+      {
+        "key": "C",
+        "text": "KUA"
+      },
+      {
+        "key": "D",
+        "text": "Gd. Serbaguna"
+      },
+      {
+        "key": "E",
+        "text": "Balai Desa"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 1 — Jawaban: C\nPembahasan: R. Budi terletak di utara Jln. Kusuma Raya. Di sebelah utara R. Budi (seberang Jln. Madukara ke arah atas) terdapat bangunan KUA.",
+    "weight": 10
+  },
+  {
+    "id": 112,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Bangunan yang terletak di sudut antara Jln. Kusuma Raya dan Jln. Rambutan di sebelah utara jalan adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Gd. Serbaguna"
+      },
+      {
+        "key": "B",
+        "text": "Kantor Polisi"
+      },
+      {
+        "key": "C",
+        "text": "R. Ahmad"
+      },
+      {
+        "key": "D",
+        "text": "KUD"
+      },
+      {
+        "key": "E",
+        "text": "R. Budi"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 2 — Jawaban: B\nPembahasan: Kantor Polisi terletak di tepi barat Jln. Kusuma Raya dan berada di sebelah timur Jln. Rambutan (di sebelah utara Jln. Kusuma Raya).",
+    "weight": 10
+  },
+  {
+    "id": 113,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Masjid terletak di sebelah... dari Lapangan.",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Barat"
+      },
+      {
+        "key": "B",
+        "text": "Timur"
+      },
+      {
+        "key": "C",
+        "text": "Utara"
+      },
+      {
+        "key": "D",
+        "text": "Selatan"
+      },
+      {
+        "key": "E",
+        "text": "Barat Daya"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 3 — Jawaban: B\nPembahasan: Lapangan dibatasi oleh Jln. Merdeka di sebelah timurnya. Di sebelah timur Jln. Merdeka terdapat Masjid. Jadi Masjid berada di sebelah timur Lapangan.",
+    "weight": 10
+  },
+  {
+    "id": 114,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Jika seseorang berada di Balai Desa dan berjalan ke arah barat menyusuri Jln. Kusuma Raya, bangunan pertama di sebelah kanan jalan yang ditemuinya adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Sinta"
+      },
+      {
+        "key": "B",
+        "text": "KUA"
+      },
+      {
+        "key": "C",
+        "text": "R. Andi"
+      },
+      {
+        "key": "D",
+        "text": "R. Budi"
+      },
+      {
+        "key": "E",
+        "text": "Kantor Polisi"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 4 — Jawaban: C\nPembahasan: Balai Desa terletak di timur Jln. Madukara. Berjalan ke barat melintasi pertigaan Jln. Madukara, di sebelah kanan (utara jalan) akan mendapati R. Andi.",
+    "weight": 10
+  },
+  {
+    "id": 115,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Bangunan yang berada paling selatan pada wilayah yang dibatasi Jln. Pemuda adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Bayu"
+      },
+      {
+        "key": "B",
+        "text": "Lapangan"
+      },
+      {
+        "key": "C",
+        "text": "R. Anita"
+      },
+      {
+        "key": "D",
+        "text": "KUD"
+      },
+      {
+        "key": "E",
+        "text": "R. Bagas"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 5 — Jawaban: C\nPembahasan: Di sepanjang Jln. Pemuda bagian timur, terdapat R. Bayu di utara dan R. Anita di posisi paling selatan.",
+    "weight": 10
+  },
+  {
+    "id": 116,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Rumah warga yang terletak tepat di sebelah timur Kantor Polisi adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Budi"
+      },
+      {
+        "key": "B",
+        "text": "R. Ahmad"
+      },
+      {
+        "key": "C",
+        "text": "R. Andi"
+      },
+      {
+        "key": "D",
+        "text": "R. Sinta"
+      },
+      {
+        "key": "E",
+        "text": "R. Sari"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 6 — Jawaban: A\nPembahasan: Berderet di sebelah utara Jln. Kusuma Raya dari barat ke timur: Kantor Polisi, R. Budi, R. Andi. Jadi di sebelah timur Kantor Polisi adalah R. Budi.",
+    "weight": 10
+  },
+  {
+    "id": 117,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Bangunan SD Brlian Jaya terletak di sebelah... Jln. Majapahit.",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Barat"
+      },
+      {
+        "key": "B",
+        "text": "Timur"
+      },
+      {
+        "key": "C",
+        "text": "Utara"
+      },
+      {
+        "key": "D",
+        "text": "Selatan"
+      },
+      {
+        "key": "E",
+        "text": "Tenggara"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 7 — Jawaban: B\nPembahasan: SD Brlian Jaya terletak di sisi timur Jln. Majapahit dan di sebelah utara Jln. Kusuma Raya.",
+    "weight": 10
+  },
+  {
+    "id": 118,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Di sebelah selatan R. Budi, dipisahkan oleh Jln. Kusuma Raya, berdiri bangunan...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Gd. Serbaguna"
+      },
+      {
+        "key": "B",
+        "text": "R. Ahmad"
+      },
+      {
+        "key": "C",
+        "text": "KUD"
+      },
+      {
+        "key": "D",
+        "text": "R. Bayu"
+      },
+      {
+        "key": "E",
+        "text": "R. Anita"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 8 — Jawaban: B\nPembahasan: R. Budi berada di sisi utara Jln. Kusuma Raya. Tepat di seberang selatannya terdapat R. Ahmad.",
+    "weight": 10
+  },
+  {
+    "id": 119,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Posisi R. Bagas terletak pada sudut persimpangan antara jalan...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Pemuda dan Jln. Sentosa"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Merdeka dan Jln. Sentosa"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Majapahit dan Jln. Kusuma Raya"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Madukara dan Jln. Kusuma Raya"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Rambutan dan Jln. Kusuma Raya"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 9 — Jawaban: B\nPembahasan: R. Bagas terletak di sebelah timur Jln. Merdeka dan di sebelah utara Jln. Sentosa (persimpangan Jln. Merdeka & Sentosa).",
+    "weight": 10
+  },
+  {
+    "id": 120,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Spasial & Denah Wilayah)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Spasial Denah Wilayah] Rumah warga yang berdekatan langsung dengan batas utara Balai Desa adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Sinta"
+      },
+      {
+        "key": "B",
+        "text": "R. Sari"
+      },
+      {
+        "key": "C",
+        "text": "R. Andi"
+      },
+      {
+        "key": "D",
+        "text": "R. Bayu"
+      },
+      {
+        "key": "E",
+        "text": "R. Anita"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Soal No. 10 — Jawaban: A\nPembahasan: R. Sinta terletak di utara Balai Desa (dipisahkan oleh kawasan permukiman/Jln. Madukara bagian utara).",
+    "weight": 10
+  },
+  {
+    "id": 121,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Berapakah hasil dari 25% dari 480 dikurangi 120 ÷ 4?",
+    "options": [
+      {
+        "key": "A",
+        "text": "90"
+      },
+      {
+        "key": "B",
+        "text": "100"
+      },
+      {
+        "key": "C",
+        "text": "110"
+      },
+      {
+        "key": "D",
+        "text": "120"
+      },
+      {
+        "key": "E",
+        "text": "130"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 122,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Hitunglah nilai dari (0,75 × 120) + (1/3 × 180).",
+    "options": [
+      {
+        "key": "A",
+        "text": "130"
+      },
+      {
+        "key": "B",
+        "text": "140"
+      },
+      {
+        "key": "C",
+        "text": "150"
+      },
+      {
+        "key": "D",
+        "text": "160"
+      },
+      {
+        "key": "E",
+        "text": "170"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 123,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Nilai dari 15² - 13² + √144 adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "64"
+      },
+      {
+        "key": "B",
+        "text": "68"
+      },
+      {
+        "key": "C",
+        "text": "72"
+      },
+      {
+        "key": "D",
+        "text": "76"
+      },
+      {
+        "key": "E",
+        "text": "80"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 124,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Jika 3x + 15 = 45, maka nilai dari 2x - 5 adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "10"
+      },
+      {
+        "key": "B",
+        "text": "15"
+      },
+      {
+        "key": "C",
+        "text": "20"
+      },
+      {
+        "key": "D",
+        "text": "25"
+      },
+      {
+        "key": "E",
+        "text": "30"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 125,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Berapakah 33,33% dari 660?",
+    "options": [
+      {
+        "key": "A",
+        "text": "200"
+      },
+      {
+        "key": "B",
+        "text": "210"
+      },
+      {
+        "key": "C",
+        "text": "220"
+      },
+      {
+        "key": "D",
+        "text": "230"
+      },
+      {
+        "key": "E",
+        "text": "240"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 126,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Hasil dari (2/5 + 3/4) × 20 adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "21"
+      },
+      {
+        "key": "B",
+        "text": "22"
+      },
+      {
+        "key": "C",
+        "text": "23"
+      },
+      {
+        "key": "D",
+        "text": "24"
+      },
+      {
+        "key": "E",
+        "text": "25"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 127,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Jika p = 6 dan q = 4, berapakah nilai dari (p³ - q³) / (p - q)?",
+    "options": [
+      {
+        "key": "A",
+        "text": "68"
+      },
+      {
+        "key": "B",
+        "text": "72"
+      },
+      {
+        "key": "C",
+        "text": "76"
+      },
+      {
+        "key": "D",
+        "text": "80"
+      },
+      {
+        "key": "E",
+        "text": "84"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 128,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Jika 40% dari suatu bilangan x adalah 160, berapakah 15% dari bilangan x tersebut?",
+    "options": [
+      {
+        "key": "A",
+        "text": "40"
+      },
+      {
+        "key": "B",
+        "text": "50"
+      },
+      {
+        "key": "C",
+        "text": "60"
+      },
+      {
+        "key": "D",
+        "text": "70"
+      },
+      {
+        "key": "E",
+        "text": "80"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 129,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Hitunglah: 144 ÷ 12 × 5 + (18 - 6) × 3",
+    "options": [
+      {
+        "key": "A",
+        "text": "84"
+      },
+      {
+        "key": "B",
+        "text": "92"
+      },
+      {
+        "key": "C",
+        "text": "96"
+      },
+      {
+        "key": "D",
+        "text": "102"
+      },
+      {
+        "key": "E",
+        "text": "108"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 130,
+    "module": "Tes Psikologi — Kecerdasan (Aritmatika Dasar & Numerik)",
+    "subtest": "KECERDASAN",
+    "stem": "[Aritmatika & Penalaran Numerik] Jika 0,625 × A = 250, berapakah nilai A?",
+    "options": [
+      {
+        "key": "A",
+        "text": "350"
+      },
+      {
+        "key": "B",
+        "text": "380"
+      },
+      {
+        "key": "C",
+        "text": "400"
+      },
+      {
+        "key": "D",
+        "text": "420"
+      },
+      {
+        "key": "E",
+        "text": "450"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 131,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Dokter : Rumah Sakit = Guru : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kantor"
+      },
+      {
+        "key": "B",
+        "text": "Sekolah"
+      },
+      {
+        "key": "C",
+        "text": "Pasar"
+      },
+      {
+        "key": "D",
+        "text": "Terminal"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 132,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Kompas : Arah = Termometer : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kecepatan"
+      },
+      {
+        "key": "B",
+        "text": "Suhu"
+      },
+      {
+        "key": "C",
+        "text": "Jarak"
+      },
+      {
+        "key": "D",
+        "text": "Berat"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 133,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Kata yang paling dekat maknanya dengan “cermat” adalah ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Ceroboh"
+      },
+      {
+        "key": "B",
+        "text": "Teliti"
+      },
+      {
+        "key": "C",
+        "text": "Lambat"
+      },
+      {
+        "key": "D",
+        "text": "Ragu"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 134,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Lawan kata “objektif” adalah ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Netral"
+      },
+      {
+        "key": "B",
+        "text": "Faktual"
+      },
+      {
+        "key": "C",
+        "text": "Subjektif"
+      },
+      {
+        "key": "D",
+        "text": "Terukur"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 135,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Sinonim “integritas” yang paling tepat adalah ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kejujuran"
+      },
+      {
+        "key": "B",
+        "text": "Kecepatan"
+      },
+      {
+        "key": "C",
+        "text": "Kekuasaan"
+      },
+      {
+        "key": "D",
+        "text": "Ketenaran"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 136,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Buku : Membaca = Makanan : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Memasak"
+      },
+      {
+        "key": "B",
+        "text": "Memakan"
+      },
+      {
+        "key": "C",
+        "text": "Membeli"
+      },
+      {
+        "key": "D",
+        "text": "Menyimpan"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 137,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Pilih kata yang tidak sekelompok.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mawar"
+      },
+      {
+        "key": "B",
+        "text": "Melati"
+      },
+      {
+        "key": "C",
+        "text": "Anggrek"
+      },
+      {
+        "key": "D",
+        "text": "Bayam"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 138,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] “Semua penyidik adalah anggota Polri. Sebagian anggota Polri bertugas di lalu lintas.” Kesimpulan yang pasti adalah ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Semua penyidik bertugas di lalu lintas"
+      },
+      {
+        "key": "B",
+        "text": "Sebagian penyidik pasti bertugas di lalu lintas"
+      },
+      {
+        "key": "C",
+        "text": "Semua penyidik adalah anggota Polri"
+      },
+      {
+        "key": "D",
+        "text": "Tidak ada penyidik di lalu lintas"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 139,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Makna ungkapan “berpikir jernih” adalah ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Berpikir tanpa emosi berlebihan dan berdasarkan fakta"
+      },
+      {
+        "key": "B",
+        "text": "Berpikir sangat cepat"
+      },
+      {
+        "key": "C",
+        "text": "Mengikuti pendapat terbanyak"
+      },
+      {
+        "key": "D",
+        "text": "Menghindari keputusan"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  },
+  {
+    "id": 140,
+    "module": "Tes Psikologi — Kecerdasan (Penalaran Verbal & Logis)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Logis] Kalimat yang paling efektif adalah ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Para peserta-peserta diminta untuk hadir semua"
+      },
+      {
+        "key": "B",
+        "text": "Kepada seluruh peserta dimohon agar supaya hadir"
+      },
+      {
+        "key": "C",
+        "text": "Seluruh peserta diminta hadir tepat waktu"
+      },
+      {
+        "key": "D",
+        "text": "Seluruh daripada peserta wajib untuk hadir"
+      },
+      {
+        "key": "B",
+        "text": "KEMAMPUAN NUMERIK"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "",
+    "weight": 10
+  }
 ];
 
 /* -------------------------------------------------------------------------- */
-/* KUMPULAN SOAL MENTAL KEPRIBADIAN (10 Butir)                                */
+/* 2. KUMPULAN SOAL KEPRIBADIAN (20 Butir Studi Kasus Polri)            */
 /* -------------------------------------------------------------------------- */
-
 const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
   {
-    id: 201,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Integritas Profesi',
-    module: 'Tes Psikologi — Mental Kepribadian (Integritas Profesi)',
-    stem: 'Seorang rekan satu angkatan meminta Anda untuk tidak mencatat pelanggaran disiplin ringan yang dilakukannya saat bertugas jaga tahanan. Sikap Anda adalah...',
-    options: [
-      { key: 'A', text: 'Mengabulkan permintaannya demi menjaga solidaritas pertemanan satu letting.', weight: 2 },
-      { key: 'B', text: 'Menolak dengan santun namun tegas dan tetap mencatat serta melaporkan sesuai prosedur kedinasan.', weight: 5 },
-      { key: 'C', text: 'Membiarkannya tanpa membuat catatan apa pun dan berpura-pura tidak mengetahuinya.', weight: 3 },
-      { key: 'D', text: 'Meminta imbalan tertentu jika rekan tersebut ingin dibantu penghapusan catatan pelanggaran.', weight: 1 },
-      { key: 'E', text: 'Menyebarkan pelanggaran rekan tersebut kepada anggota tim lain agar menjadi bahan pembicaraan.', weight: 2 },
+    "id": 201,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda mengetahui rekan mengubah angka dalam laporan agar hasil unit terlihat baik. Apa langkah paling tepat?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Membiarkannya karena bukan tanggung jawab saya.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memastikan fakta, mengingatkan rekan, dan menggunakan jalur pelaporan yang berlaku bila tidak diperbaiki.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menyebarkan cerita kepada semua rekan.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Mengubah angka lain agar seimbang.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 2, B: 5, C: 3, D: 1, E: 2 },
-    explanation: 'Integritas profesi menuntut ketaatan pada prosedur kedinasan tanpa kompromi (bobot 5), dengan tetap menjaga kesantunan dan etika komunikasi antaranggota.',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Verifikasi, koreksi, dan jalur pelaporan resmi menjaga integritas serta menghindari tuduhan tanpa dasar.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 202,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Pengendalian Emosi',
-    module: 'Tes Psikologi — Mental Kepribadian (Pengendalian Emosi)',
-    stem: 'Ketika Anda sedang melayani masyarakat di loket Sentra Pelayanan Kepolisian, seorang warga datang dengan nada suara tinggi dan mencela kecepatan layanan kantor. Tindakan Anda adalah...',
-    options: [
-      { key: 'A', text: 'Membalas membentak warga tersebut agar menyadari bahwa kantor kepolisian wajib dihormati.', weight: 1 },
-      { key: 'B', text: 'Meninggalkan loket dan menyuruh petugas keamanan mengusir warga tersebut keluar ruangan.', weight: 2 },
-      { key: 'C', text: 'Tetap tenang, mendengarkan keluhan dengan sabar tanpa terpancing emosi, lalu memberikan penjelasan aturan dan solusi secara runtut.', weight: 5 },
-      { key: 'D', text: 'Mengabaikan keluhannya dan melayani warga berikutnya tanpa menanggapi.', weight: 2 },
-      { key: 'E', text: 'Menutup loket pelayanan secara sepihak sampai suasana ruangan kembali tenang.', weight: 1 },
+    "id": 202,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Seorang kenalan meminta didahulukan dalam pelayanan tanpa alasan yang sah. Anda akan…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengabulkan karena hubungan baik.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Meminta imbalan sebagai gantinya.",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Menjelaskan prosedur dan melayani sesuai urutan serta ketentuan.",
+        "weight": 5
+      },
+      {
+        "key": "D",
+        "text": "Meminta rekan lain melakukannya diam-diam.",
+        "weight": 1
+      }
     ],
-    correctKey: 'C',
-    optionWeights: { A: 1, B: 2, C: 5, D: 2, E: 1 },
-    explanation: 'Pengendalian diri, empati, dan orientasi pelayanan prima adalah karakteristik utama perwira Polri dalam meredam ketegangan dan menyelesaikan keluhan publik secara elegan (bobot 5).',
+    "correctKey": "C",
+    "optionWeights": {
+      "A": 3,
+      "B": 2,
+      "C": 5,
+      "D": 1
+    },
+    "explanation": "Pelayanan harus objektif dan bebas dari perlakuan istimewa yang tidak sah.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 203,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Tanggung Jawab Penugasan',
-    module: 'Tes Psikologi — Mental Kepribadian (Tanggung Jawab Penugasan)',
-    stem: 'Saat Anda telah menyelesaikan jam dinas dan bersiap pulang, atasan mengumumkan adanya situasi darurat unjuk rasa yang memerlukan perkuatan personel segera. Sikap Anda adalah...',
-    options: [
-      { key: 'A', text: 'Segera melapor dan bergabung kembali dengan formasi regu tanpa mengeluh demi keselamatan umum.', weight: 5 },
-      { key: 'B', text: 'Pura-pura tidak mendengar pengumuman dan lekas meninggalkan markas sebelum diperintah langsung.', weight: 1 },
-      { key: 'C', text: 'Mengeluh kepada rekan kerja bahwa jadwal istirahat sering terganggu tugas mendadak.', weight: 2 },
-      { key: 'D', text: 'Menolak bergabung dengan alasan masa jam kerja resmi harian telah usai.', weight: 2 },
-      { key: 'E', text: 'Meminta uang lembur terlebih dahulu kepada pimpinan sebelum bersedia berangkat ke lapangan.', weight: 1 },
+    "id": 203,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda menemukan barang milik warga di ruang pelayanan. Tindakan Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menyimpannya untuk sementara tanpa catatan.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Mengumumkan detail barang di media sosial.",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Menyerahkannya melalui prosedur barang temuan dan membuat pencatatan.",
+        "weight": 5
+      },
+      {
+        "key": "D",
+        "text": "Membawanya pulang agar aman.",
+        "weight": 1
+      }
     ],
-    correctKey: 'A',
-    optionWeights: { A: 5, B: 1, C: 2, D: 2, E: 1 },
-    explanation: 'Kesiapsiagaan, dedikasi, dan loyalitas terhadap panggilan tugas negara melampaui kepentingan kenyamanan pribadi (bobot 5).',
+    "correctKey": "C",
+    "optionWeights": {
+      "A": 3,
+      "B": 2,
+      "C": 5,
+      "D": 1
+    },
+    "explanation": "Pencatatan dan mekanisme resmi melindungi pemilik maupun petugas.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 204,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Kerjasama & Soliditas Tim',
-    module: 'Tes Psikologi — Mental Kepribadian (Kerjasama & Soliditas Tim)',
-    stem: 'Dalam tim investigasi, terjadi perbedaan pendapat yang cukup tajam antara dua anggota tim mengenai arah penelusuran bukti. Selaku anggota tim, langkah Anda adalah...',
-    options: [
-      { key: 'A', text: 'Memilih pihak yang memiliki pangkat lebih tinggi tanpa mempertimbangkan keabsahan argumen.', weight: 2 },
-      { key: 'B', text: 'Mendorong kedua pihak untuk berdiskusi secara objektif berdasarkan fakta data lapangan dan petunjuk pimpinan.', weight: 5 },
-      { key: 'C', text: 'Membiarkan perdebatan berlangsung hingga terjadi pertengkaran fisik.', weight: 1 },
-      { key: 'D', text: 'Menarik diri dari tim penyelidikan karena menganggap tim tidak kompak.', weight: 2 },
-      { key: 'E', text: 'Menyalahkan kedua belah pihak di hadapan publik atau pihak di luar instansi.', weight: 1 },
+    "id": 204,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Atasan meminta Anda menyampaikan informasi yang belum terverifikasi sebagai fakta. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menyampaikannya agar atasan senang.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Menjelaskan status informasi dan mengusulkan verifikasi sebelum disampaikan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menolak dengan kata-kata kasar.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Meneruskan tanpa memberi konteks.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 2, B: 5, C: 1, D: 2, E: 1 },
-    explanation: 'Kerjasama tim mengutamakan objektivitas data ilmiah dan musyawarah profesional guna mencapai mufakat dalam penugasan kepolisian (bobot 5).',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Kejujuran informasi dan komunikasi hormat harus dijaga bersamaan.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 205,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Kepemimpinan & Keteladanan',
-    module: 'Tes Psikologi — Mental Kepribadian (Kepemimpinan & Keteladanan)',
-    stem: 'Sebagai perwira pengendali lapangan, Anda menemukan salah satu bawahan melakukan kekeliruan prosedur pengamanan barang bukti. Tindakan Anda adalah...',
-    options: [
-      { key: 'A', text: 'Memarahi bawahan tersebut di depan khalayak ramai agar menimbulkan efek jera seketika.', weight: 2 },
-      { key: 'B', text: 'Mengambil alih tindakan perbaikan, membimbing bawahan secara privat mengenai prosedur yang benar, dan mengevaluasi pemahamannya.', weight: 5 },
-      { key: 'C', text: 'Membiarkan kekeliruan tersebut selama tidak diketahui oleh pimpinan yang lebih tinggi.', weight: 1 },
-      { key: 'D', text: 'Langsung mengusulkan sanksi pencopotan tanpa memberikan pembinaan terlebih dahulu.', weight: 2 },
-      { key: 'E', text: 'Menyalahkan bawahan tersebut kepada pihak pelapor untuk menyelamatkan nama baik pribadi.', weight: 1 },
+    "id": 205,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda melakukan kesalahan administrasi yang berdampak pada proses kerja. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menyembunyikannya sampai diketahui orang lain.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Mengakui, melaporkan kepada pihak terkait, dan segera memperbaiki sesuai prosedur.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menyalahkan petugas sebelumnya.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menghapus dokumen terkait.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 2, B: 5, C: 1, D: 2, E: 1 },
-    explanation: 'Kepemimpinan Polri yang transformatif mengombinasikan tindakan perbaikan cepat, pembinaan humanis secara privat, dan edukasi berkelanjutan bagi bawahan (bobot 5).',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Akuntabilitas menuntut pengungkapan dan tindakan korektif.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 206,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Disiplin Waktu & Kerja',
-    module: 'Tes Psikologi — Mental Kepribadian (Disiplin Waktu & Kerja)',
-    stem: 'Menjelang upacara apel gelar pasukan pagi, kendaraan dinas Anda mengalami ban kempes di tengah jalan. Langkah pertama yang paling tepat Anda lakukan adalah...',
-    options: [
-      { key: 'A', text: 'Segera menghubungi atasan/piket untuk melaporkan kendala dan perkiraan waktu tiba, lalu mencari alternatif transportasi tercepat.', weight: 5 },
-      { key: 'B', text: 'Kembali ke rumah dan memutuskan tidak hadir apel tanpa memberikan kabar apa pun.', weight: 1 },
-      { key: 'C', text: 'Menunggu bengkel buka secara santai tanpa mempedulikan jadwal pelaksanaan apel.', weight: 2 },
-      { key: 'D', text: 'Menyalahkan kondisi jalan dan membuat laporan palsu mengenai alasan keterlambatan.', weight: 1 },
-      { key: 'E', text: 'Meminta rekan kerja memalsukan tanda tangan presensi kehadiran apel Anda.', weight: 1 },
+    "id": 206,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Rekan menawarkan hadiah dari pihak yang sedang berkepentingan dengan tugas Anda. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menerima karena dianggap tanda terima kasih.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Menerima lalu membaginya.",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Menolak atau melaporkan sesuai aturan gratifikasi yang berlaku.",
+        "weight": 5
+      },
+      {
+        "key": "D",
+        "text": "Menerima jika tidak diketahui orang lain.",
+        "weight": 1
+      }
     ],
-    correctKey: 'A',
-    optionWeights: { A: 5, B: 1, C: 2, D: 1, E: 1 },
-    explanation: 'Disiplin dan kejujuran diwujudkan melalui komunikasi cepat (lapor cepat), akuntabilitas kendala, dan inisiatif aktif mencari solusi transportasi darurat (bobot 5).',
+    "correctKey": "C",
+    "optionWeights": {
+      "A": 3,
+      "B": 2,
+      "C": 5,
+      "D": 1
+    },
+    "explanation": "Menjaga independensi dan mengikuti ketentuan gratifikasi mencegah konflik kepentingan.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 207,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Ketahanan Terhadap Stres',
-    module: 'Tes Psikologi — Mental Kepribadian (Ketahanan Terhadap Stres)',
-    stem: 'Anda ditugaskan menangani kasus penipuan daring yang rumit dengan tenggat waktu laporan yang sangat ketat dan sorotan media massa. Respon Anda adalah...',
-    options: [
-      { key: 'A', text: 'Merasa putus asa dan meminta pimpinan menggantikan posisi Anda dengan personel lain.', weight: 2 },
-      { key: 'B', text: 'Menyusun skala prioritas kerja, berkoordinasi dengan unit siber, dan fokus pada pencarian alat bukti secara cermat dan sistematis.', weight: 5 },
-      { key: 'C', text: 'Menyusun laporan secara asal-asalan demi memenuhi batas waktu penyerahan laporan.', weight: 2 },
-      { key: 'D', text: 'Menghindari panggilan telepon pimpinan untuk menghindari tekanan penugasan.', weight: 1 },
-      { key: 'E', text: 'Membocorkan informasi penyelidikan kepada media demi mencari simpati publik.', weight: 1 },
+    "id": 207,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda diminta membagikan dokumen kedinasan ke grup yang tidak berwenang. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengirim agar pekerjaan cepat.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memastikan kewenangan penerima dan menggunakan kanal yang disetujui.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Mengirim sebagian halaman saja.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Meminta orang lain mengirim.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 2, B: 5, C: 2, D: 1, E: 1 },
-    explanation: 'Ketahanan stres perwira tercermin dari kemampuan mengorganisir beban kerja, pemecahan masalah metodologis, dan koordinasi lintas fungsi (bobot 5).',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Informasi hanya dibagikan kepada pihak berwenang melalui kanal yang tepat.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 208,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Kejujuran & Transparansi',
-    module: 'Tes Psikologi — Mental Kepribadian (Kejujuran & Sikap Transparan)',
-    stem: 'Saat menggeledah lokasi penggerebekan, Anda menemukan amplop uang tunai tak bertuan yang tidak tercantum dalam daftar sitaan awal. Tindakan Anda adalah...',
-    options: [
-      { key: 'A', text: 'Memasukkan amplop tersebut ke saku pribadi karena tidak ada orang lain yang memperhatikan.', weight: 1 },
-      { key: 'B', text: 'Memanggil saksi dan rekan satu tim, mendokumentasikan temuan, dan memasukkannya ke daftar resmi barang bukti.', weight: 5 },
-      { key: 'C', text: 'Membagikan uang tersebut secara merata kepada rekan-rekan satu tim di lapangan.', weight: 2 },
-      { key: 'D', text: 'Membiarkan amplop tergeletak begitu saja tanpa diamankan.', weight: 2 },
-      { key: 'E', text: 'Menggunakan uang tersebut untuk makan bersama regu operasional.', weight: 1 },
+    "id": 208,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda melihat penggunaan kendaraan dinas untuk kepentingan pribadi. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menganggap hal biasa.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memastikan konteks dan menindaklanjuti melalui mekanisme internal yang berlaku.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Memotret lalu mengunggahnya ke publik.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Ikut menggunakan.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 1, B: 5, C: 2, D: 2, E: 1 },
-    explanation: 'Kejujuran dan transparansi penanganan barang bukti merupakan harga mati dalam menjaga marwah penegakan hukum Polri (bobot 5).',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Fakta perlu dipastikan dan penanganan dilakukan secara proporsional melalui jalur resmi.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 209,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Ketaatan Kode Etik',
-    module: 'Tes Psikologi — Mental Kepribadian (Ketaatan Kode Etik)',
-    stem: 'Seorang kerabat dekat terjerat kasus pelanggaran hukum dan keluarga besar meminta Anda untuk mengintervensi proses hukum di kepolisian. Sikap Anda adalah...',
-    options: [
-      { key: 'A', text: 'Menggunakan pengaruh pangkat dan jabatan untuk menghentikan proses penyidikan kerabat tersebut.', weight: 1 },
-      { key: 'B', text: 'Memberikan pemahaman kepada keluarga bahwa hukum harus ditegakkan secara adil dan menolak melakukan intervensi apa pun.', weight: 5 },
-      { key: 'C', text: 'Mengancam penyidik yang menangani perkara agar memberikan perlakuan istimewa.', weight: 1 },
-      { key: 'D', text: 'Menghilangkan barang bukti kasus kerabat tersebut di ruang penyimpanan arsip.', weight: 1 },
-      { key: 'E', text: 'Memusuhi penyidik dan memutuskan komunikasi dengan kesatuan dinas.', weight: 2 },
+    "id": 209,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Seorang teman meminta Anda menghapus catatan pelanggaran yang sah. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menghapus karena pertemanan.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Menolak secara profesional dan menjelaskan bahwa catatan harus sesuai fakta dan aturan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menunda sampai ia memberi imbalan.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Mengubah tanggal saja.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 1, B: 5, C: 1, D: 1, E: 2 },
-    explanation: 'Kepatuhan kode etik profesi melarang keras penyalahgunaan wewenang (abuse of power) demi kepentingan pribadi maupun keluarga/nepotisme (bobot 5).',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Keadilan dan integritas tidak boleh dikalahkan hubungan pribadi.",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
   {
-    id: 210,
-    subtest: 'KEPRIBADIAN',
-    dimension: 'Adaptabilitas & Inovasi',
-    module: 'Tes Psikologi — Mental Kepribadian (Adaptabilitas & Inovasi)',
-    stem: 'Kesatuan Anda menerapkan sistem pelaporan berbasis aplikasi digital baru yang menggantikan metode formulir kertas konvensional. Tanggapan Anda adalah...',
-    options: [
-      { key: 'A', text: 'Menolak menggunakan aplikasi dan tetap bertahan menggunakan formulir kertas lama.', weight: 2 },
-      { key: 'B', text: 'Mempelajari cara pengoperasian aplikasi dengan antusias dan aktif membantu rekan lain yang mengalami kesulitan teknis.', weight: 5 },
-      { key: 'C', text: 'Mengeluhkan kebijakan pimpinan di media sosial pribadi.', weight: 1 },
-      { key: 'D', text: 'Membiarkan akun aplikasi terbengkalai tanpa pernah digunakan untuk input data tugas.', weight: 2 },
-      { key: 'E', text: 'Menyuruh staf honorer mengerjakan seluruh laporan digital atas nama Anda.', weight: 1 },
+    "id": 210,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda menemukan dompet di area kantor tanpa pemilik terlihat. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengambil uangnya dan membuang dompet.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Menyerahkan kepada petugas/pengelola yang berwenang dengan pencatatan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menyimpan tanpa memberi tahu siapa pun.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Meninggalkannya begitu saja.",
+        "weight": 1
+      }
     ],
-    correctKey: 'B',
-    optionWeights: { A: 2, B: 5, C: 1, D: 2, E: 1 },
-    explanation: 'Adaptabilitas terhadap transformasi teknologi dan kemauan belajar adalah modal krusial calon perwira Polri di era kepolisian modern 4.0 (bobot 5).',
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Penyerahan tercatat memberi perlindungan dan peluang pengembalian kepada pemilik.\nDisiplin dan tanggung jawab",
+    "dimension": "Integritas & Etika Profesi Polri"
   },
+  {
+    "id": 211,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Dua tugas penting memiliki tenggat berdekatan. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengerjakan yang paling disukai dahulu.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memetakan urgensi, dampak, waktu, lalu mengomunikasikan prioritas kepada atasan bila perlu.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menunda keduanya.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menyerahkan keduanya tanpa koordinasi.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Prioritas berbasis urgensi dan dampak serta komunikasi mencegah keterlambatan.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 212,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda terlambat karena kendala perjalanan yang tidak terduga. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Tidak memberi kabar.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Segera memberi informasi, memperkirakan waktu tiba, dan mengikuti arahan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Membuat alasan palsu.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menyalahkan rekan.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Komunikasi dini dan kejujuran adalah respons yang bertanggung jawab.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 213,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Tugas rutin terasa membosankan. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengurangi ketelitian.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Tetap mengikuti standar dan mencari cara kerja lebih efisien tanpa mengubah prosedur.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menyerahkan kepada orang lain tanpa izin.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Mengabaikannya.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Konsistensi mutu tetap penting pada pekerjaan rutin.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 214,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda menerima instruksi yang belum jelas. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menebak maksudnya.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Meminta penjelasan tentang tujuan, batas, dan tenggat sebelum melaksanakan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Mengabaikan instruksi.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Meminta anggota lain menebak.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Klarifikasi lebih aman daripada asumsi yang berisiko.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 215,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Rekan satu tim tidak menyelesaikan bagian tugasnya. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Langsung mempermalukannya di depan umum.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Menghubungi secara langsung, memastikan kendala, dan menyepakati tindak lanjut.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Membiarkan seluruh pekerjaan gagal.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Mengambil alih tanpa memberi tahu.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Komunikasi langsung dan penyelesaian bersama menjaga akuntabilitas tim.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 216,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda menyadari ada tenggat yang mungkin tidak tercapai. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menunggu sampai tenggat lewat.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Melaporkan lebih awal, menjelaskan hambatan, dan menawarkan rencana pemulihan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Mengubah tanggal dokumen.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menyalahkan sistem.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Peringatan dini memberi ruang untuk mitigasi.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 217,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Setelah menyelesaikan tugas, Anda memiliki waktu tersisa. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menggunakan waktu untuk urusan pribadi tanpa izin.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memeriksa hasil, merapikan dokumentasi, atau meminta tugas prioritas berikutnya.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Mengganggu rekan.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Pulang tanpa mengikuti ketentuan.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Inisiatif tetap harus sesuai aturan dan kebutuhan unit.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 218,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda diminta menggantikan rekan yang berhalangan. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menolak tanpa mempertimbangkan situasi.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memastikan kewenangan dan kesiapan, lalu membantu sesuai arahan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Melaksanakan tugas di luar kompetensi tanpa konsultasi.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Mengeluh kepada masyarakat.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Kesediaan membantu perlu disertai pemeriksaan kompetensi dan kewenangan.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 219,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Dokumen penting perlu diperiksa sebelum dikirim. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengirim cepat tanpa pemeriksaan.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Memeriksa identitas, isi, lampiran, tujuan, dan kewenangan penerima.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Meminta orang yang tidak terkait memeriksa data rahasia.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Mengirim versi lama.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Daftar pemeriksaan sederhana mengurangi kesalahan administrasi.",
+    "dimension": "Integritas & Etika Profesi Polri"
+  },
+  {
+    "id": 220,
+    "module": "Tes Psikologi — Mental Kepribadian (Studi Kasus Lingkungan Polri)",
+    "subtest": "KEPRIBADIAN",
+    "stem": "[Studi Kasus Lingkungan Kepolisian] Anda menerima kritik atas keterlambatan kerja. Anda…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Membalas dengan emosi.",
+        "weight": 3
+      },
+      {
+        "key": "B",
+        "text": "Mendengarkan, memeriksa fakta, mengakui bagian yang benar, dan menyusun perbaikan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menghindari pemberi kritik.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menyalahkan seluruh tim.",
+        "weight": 1
+      }
+    ],
+    "correctKey": "B",
+    "optionWeights": {
+      "A": 3,
+      "B": 5,
+      "C": 2,
+      "D": 1
+    },
+    "explanation": "Sikap terbuka dan rencana perbaikan lebih produktif daripada defensif.\nPengendalian emosi dan tekanan",
+    "dimension": "Integritas & Etika Profesi Polri"
+  }
 ];
 
 /* -------------------------------------------------------------------------- */
-/* KUMPULAN SOAL KECERMATAN ASLI DENGAN KOLOM & FORMAT CAT POLRI              */
+/* 3. KUMPULAN SOAL KECERMATAN (50 Butir: 5 Kolom Monokrom CAT)         */
 /* -------------------------------------------------------------------------- */
-
-// Kolom 1 Patokan: K M P R T
-const BENCHMARK_COL_1: SimBenchmarkItem[] = [
-  { char: 'K', label: 'A' },
-  { char: 'M', label: 'B' },
-  { char: 'P', label: 'C' },
-  { char: 'R', label: 'D' },
-  { char: 'T', label: 'E' },
-];
-
-// Kolom 2 Patokan: 3 5 7 8 9
-const BENCHMARK_COL_2: SimBenchmarkItem[] = [
-  { char: '3', label: 'A' },
-  { char: '5', label: 'B' },
-  { char: '7', label: 'C' },
-  { char: '8', label: 'D' },
-  { char: '9', label: 'E' },
-];
-
-// Kolom 3 Patokan: B D G J N
-const BENCHMARK_COL_3: SimBenchmarkItem[] = [
-  { char: 'B', label: 'A' },
-  { char: 'D', label: 'B' },
-  { char: 'G', label: 'C' },
-  { char: 'J', label: 'D' },
-  { char: 'N', label: 'E' },
-];
-
-function makeKecermatanOptions(): SimOption[] {
-  return [
-    { key: 'A', text: 'A' },
-    { key: 'B', text: 'B' },
-    { key: 'C', text: 'C' },
-    { key: 'D', text: 'D' },
-    { key: 'E', text: 'E' },
-  ];
-}
-
 const QUESTIONS_KECERMATAN: SimQuestion[] = [
-  /* --- KOLOM 1: K M P R T --- */
   {
-    id: 301,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'C',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [M, T, K, R]. Karakter yang hilang adalah "P", yang mewakili opsi C.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['M', 'T', 'K', 'R'],
+    "id": 301,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [5, 3, 2, 9]. Karakter yang tidak muncul (hilang) adalah \"8\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "5",
+      "3",
+      "2",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 302,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'A',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [P, R, M, T]. Karakter yang hilang adalah "K", yang mewakili opsi A.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['P', 'R', 'M', 'T'],
+    "id": 302,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [9, 2, 8, 5]. Karakter yang tidak muncul (hilang) adalah \"3\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "2",
+      "8",
+      "5"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 303,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'B',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [K, P, T, R]. Karakter yang hilang adalah "M", yang mewakili opsi B.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['K', 'P', 'T', 'R'],
+    "id": 303,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [5, 8, 2, 3]. Karakter yang tidak muncul (hilang) adalah \"9\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "5",
+      "8",
+      "2",
+      "3"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 304,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'D',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [M, K, P, T]. Karakter yang hilang adalah "R", yang mewakili opsi D.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['M', 'K', 'P', 'T'],
+    "id": 304,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [3, 2, 8, 9]. Karakter yang tidak muncul (hilang) adalah \"5\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "3",
+      "2",
+      "8",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 305,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'E',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [R, P, K, M]. Karakter yang hilang adalah "T", yang mewakili opsi E.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['R', 'P', 'K', 'M'],
+    "id": 305,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [9, 8, 5, 3]. Karakter yang tidak muncul (hilang) adalah \"2\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "8",
+      "5",
+      "3"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 306,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'A',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [T, M, R, P]. Karakter yang hilang adalah "K", yang mewakili opsi A.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['T', 'M', 'R', 'P'],
+    "id": 306,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [9, 2, 3, 5]. Karakter yang tidak muncul (hilang) adalah \"8\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "2",
+      "3",
+      "5"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 307,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'C',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [K, R, T, M]. Karakter yang hilang adalah "P", yang mewakili opsi C.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['K', 'R', 'T', 'M'],
+    "id": 307,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [5, 8, 2, 9]. Karakter yang tidak muncul (hilang) adalah \"3\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "5",
+      "8",
+      "2",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 308,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'E',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [P, K, M, R]. Karakter yang hilang adalah "T", yang mewakili opsi E.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['P', 'K', 'M', 'R'],
+    "id": 308,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [3, 2, 8, 5]. Karakter yang tidak muncul (hilang) adalah \"9\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "3",
+      "2",
+      "8",
+      "5"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 309,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'B',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [T, K, P, R]. Karakter yang hilang adalah "M", yang mewakili opsi B.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['T', 'K', 'P', 'R'],
+    "id": 309,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [9, 8, 2, 3]. Karakter yang tidak muncul (hilang) adalah \"5\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "8",
+      "2",
+      "3"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 310,
-    module: 'Tes Psikologi — Kecermatan (Kolom 1)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'D',
-    explanation: 'Patokan kolom: K(A), M(B), P(C), R(D), T(E). Pada soal terdapat [M, P, K, T]. Karakter yang hilang adalah "R", yang mewakili opsi D.',
-    isKecermatan: true,
-    columnNumber: 1,
-    benchmark: BENCHMARK_COL_1,
-    questionChars: ['M', 'P', 'K', 'T'],
-  },
-
-  /* --- KOLOM 2: 3 5 7 8 9 --- */
-  {
-    id: 311,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'B',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [9, 3, 8, 7]. Angka yang hilang adalah "5", yang mewakili opsi B.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['9', '3', '8', '7'],
-  },
-  {
-    id: 312,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'A',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [5, 7, 9, 8]. Angka yang hilang adalah "3", yang mewakili opsi A.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['5', '7', '9', '8'],
-  },
-  {
-    id: 313,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'C',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [3, 8, 5, 9]. Angka yang hilang adalah "7", yang mewakili opsi C.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['3', '8', '5', '9'],
-  },
-  {
-    id: 314,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'D',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [7, 9, 3, 5]. Angka yang hilang adalah "8", yang mewakili opsi D.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['7', '9', '3', '5'],
-  },
-  {
-    id: 315,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'E',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [8, 3, 7, 5]. Angka yang hilang adalah "9", yang mewakili opsi E.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['8', '3', '7', '5'],
+    "id": 310,
+    "module": "Tes Kecermatan — Kolom 1: Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 1: Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 1: Angka Hilang, patokan adalah 8(A), 3(B), 9(C), 5(D), 2(E). Pada kotak soal terdapat karakter [3, 5, 8, 9]. Karakter yang tidak muncul (hilang) adalah \"2\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 1,
+    "benchmark": [
+      {
+        "char": "8",
+        "label": "A"
+      },
+      {
+        "char": "3",
+        "label": "B"
+      },
+      {
+        "char": "9",
+        "label": "C"
+      },
+      {
+        "char": "5",
+        "label": "D"
+      },
+      {
+        "char": "2",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "3",
+      "5",
+      "8",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (8)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (3)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (9)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (5)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (2)"
+      }
+    ]
   },
   {
-    id: 316,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'A',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [9, 5, 8, 7]. Angka yang hilang adalah "3", yang mewakili opsi A.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['9', '5', '8', '7'],
+    "id": 311,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [T, M, W, R]. Karakter yang tidak muncul (hilang) adalah \"G\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "T",
+      "M",
+      "W",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 317,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'B',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [3, 7, 9, 8]. Angka yang hilang adalah "5", yang mewakili opsi B.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['3', '7', '9', '8'],
+    "id": 312,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [R, W, G, T]. Karakter yang tidak muncul (hilang) adalah \"M\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "W",
+      "G",
+      "T"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 318,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'C',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [5, 9, 8, 3]. Angka yang hilang adalah "7", yang mewakili opsi C.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['5', '9', '8', '3'],
+    "id": 313,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [T, G, W, M]. Karakter yang tidak muncul (hilang) adalah \"R\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "T",
+      "G",
+      "W",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 319,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'D',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [7, 5, 9, 3]. Angka yang hilang adalah "8", yang mewakili opsi D.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['7', '5', '9', '3'],
+    "id": 314,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [M, W, G, R]. Karakter yang tidak muncul (hilang) adalah \"T\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "W",
+      "G",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 320,
-    module: 'Tes Psikologi — Kecermatan (Kolom 2)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter angka yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'E',
-    explanation: 'Patokan kolom: 3(A), 5(B), 7(C), 8(D), 9(E). Pada soal terdapat [3, 8, 7, 5]. Angka yang hilang adalah "9", yang mewakili opsi E.',
-    isKecermatan: true,
-    columnNumber: 2,
-    benchmark: BENCHMARK_COL_2,
-    questionChars: ['3', '8', '7', '5'],
-  },
-
-  /* --- KOLOM 3: B D G J N --- */
-  {
-    id: 321,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'D',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [G, B, N, D]. Karakter yang hilang adalah "J", yang mewakili opsi D.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['G', 'B', 'N', 'D'],
-  },
-  {
-    id: 322,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'A',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [D, J, N, G]. Karakter yang hilang adalah "B", yang mewakili opsi A.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['D', 'J', 'N', 'G'],
-  },
-  {
-    id: 323,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'C',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [B, N, J, D]. Karakter yang hilang adalah "G", yang mewakili opsi C.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['B', 'N', 'J', 'D'],
-  },
-  {
-    id: 324,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'B',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [J, G, B, N]. Karakter yang hilang adalah "D", yang mewakili opsi B.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['J', 'G', 'B', 'N'],
-  },
-  {
-    id: 325,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'E',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [B, D, G, J]. Karakter yang hilang adalah "N", yang mewakili opsi E.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['B', 'D', 'G', 'J'],
+    "id": 315,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [R, G, T, M]. Karakter yang tidak muncul (hilang) adalah \"W\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "G",
+      "T",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 326,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'A',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [N, D, G, J]. Karakter yang hilang adalah "B", yang mewakili opsi A.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['N', 'D', 'G', 'J'],
+    "id": 316,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [R, W, M, T]. Karakter yang tidak muncul (hilang) adalah \"G\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "W",
+      "M",
+      "T"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 327,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'B',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [J, B, N, G]. Karakter yang hilang adalah "D", yang mewakili opsi B.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['J', 'B', 'N', 'G'],
+    "id": 317,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [T, G, W, R]. Karakter yang tidak muncul (hilang) adalah \"M\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "T",
+      "G",
+      "W",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 328,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'C',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [D, N, B, J]. Karakter yang hilang adalah "G", yang mewakili opsi C.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['D', 'N', 'B', 'J'],
+    "id": 318,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [M, W, G, T]. Karakter yang tidak muncul (hilang) adalah \"R\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "W",
+      "G",
+      "T"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 329,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'D',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [G, D, B, N]. Karakter yang hilang adalah "J", yang mewakili opsi D.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['G', 'D', 'B', 'N'],
+    "id": 319,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [R, G, W, M]. Karakter yang tidak muncul (hilang) adalah \"T\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "G",
+      "W",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
   {
-    id: 330,
-    module: 'Tes Psikologi — Kecermatan (Kolom 3)',
-    stem: 'Perhatikan 5 karakter patokan pada kolom acuan di atas, lalu tentukan karakter huruf yang hilang dari kotak soal berikut:',
-    options: makeKecermatanOptions(),
-    correctKey: 'E',
-    explanation: 'Patokan kolom: B(A), D(B), G(C), J(D), N(E). Pada soal terdapat [J, G, D, B]. Karakter yang hilang adalah "N", yang mewakili opsi E.',
-    isKecermatan: true,
-    columnNumber: 3,
-    benchmark: BENCHMARK_COL_3,
-    questionChars: ['J', 'G', 'D', 'B'],
+    "id": 320,
+    "module": "Tes Kecermatan — Kolom 2: Huruf Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 2: Huruf Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 2: Huruf Hilang, patokan adalah G(A), M(B), R(C), T(D), W(E). Pada kotak soal terdapat karakter [M, T, G, R]. Karakter yang tidak muncul (hilang) adalah \"W\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 2,
+    "benchmark": [
+      {
+        "char": "G",
+        "label": "A"
+      },
+      {
+        "char": "M",
+        "label": "B"
+      },
+      {
+        "char": "R",
+        "label": "C"
+      },
+      {
+        "char": "T",
+        "label": "D"
+      },
+      {
+        "char": "W",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "T",
+      "G",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (G)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (M)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (R)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (T)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (W)"
+      }
+    ]
   },
+  {
+    "id": 321,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [%, #, @, &]. Karakter yang tidak muncul (hilang) adalah \"§\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "%",
+      "#",
+      "@",
+      "&"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 322,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [&, @, §, %]. Karakter yang tidak muncul (hilang) adalah \"#\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "&",
+      "@",
+      "§",
+      "%"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 323,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [%, §, @, #]. Karakter yang tidak muncul (hilang) adalah \"&\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "%",
+      "§",
+      "@",
+      "#"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 324,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [#, @, §, &]. Karakter yang tidak muncul (hilang) adalah \"%\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "#",
+      "@",
+      "§",
+      "&"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 325,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [&, §, %, #]. Karakter yang tidak muncul (hilang) adalah \"@\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "&",
+      "§",
+      "%",
+      "#"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 326,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [&, @, #, %]. Karakter yang tidak muncul (hilang) adalah \"§\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "&",
+      "@",
+      "#",
+      "%"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 327,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [%, §, @, &]. Karakter yang tidak muncul (hilang) adalah \"#\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "%",
+      "§",
+      "@",
+      "&"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 328,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [#, @, §, %]. Karakter yang tidak muncul (hilang) adalah \"&\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "#",
+      "@",
+      "§",
+      "%"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 329,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [&, §, @, #]. Karakter yang tidak muncul (hilang) adalah \"%\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "&",
+      "§",
+      "@",
+      "#"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 330,
+    "module": "Tes Kecermatan — Kolom 3: Simbol Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 3: Simbol Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 3: Simbol Hilang, patokan adalah §(A), #(B), &(C), %(D), @(E). Pada kotak soal terdapat karakter [#, %, §, &]. Karakter yang tidak muncul (hilang) adalah \"@\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 3,
+    "benchmark": [
+      {
+        "char": "§",
+        "label": "A"
+      },
+      {
+        "char": "#",
+        "label": "B"
+      },
+      {
+        "char": "&",
+        "label": "C"
+      },
+      {
+        "char": "%",
+        "label": "D"
+      },
+      {
+        "char": "@",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "#",
+      "%",
+      "§",
+      "&"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (§)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (#)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (&)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (%)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (@)"
+      }
+    ]
+  },
+  {
+    "id": 331,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [4, 7, X, M]. Karakter yang tidak muncul (hilang) adalah \"B\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "4",
+      "7",
+      "X",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 332,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [M, X, B, 4]. Karakter yang tidak muncul (hilang) adalah \"7\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "X",
+      "B",
+      "4"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 333,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [4, B, X, 7]. Karakter yang tidak muncul (hilang) adalah \"M\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "4",
+      "B",
+      "X",
+      "7"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 334,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [7, X, B, M]. Karakter yang tidak muncul (hilang) adalah \"4\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "7",
+      "X",
+      "B",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 335,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [M, B, 4, 7]. Karakter yang tidak muncul (hilang) adalah \"X\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "B",
+      "4",
+      "7"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 336,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [M, X, 7, 4]. Karakter yang tidak muncul (hilang) adalah \"B\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "X",
+      "7",
+      "4"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 337,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [4, B, X, M]. Karakter yang tidak muncul (hilang) adalah \"7\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "4",
+      "B",
+      "X",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 338,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [7, X, B, 4]. Karakter yang tidak muncul (hilang) adalah \"M\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "7",
+      "X",
+      "B",
+      "4"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 339,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [M, B, X, 7]. Karakter yang tidak muncul (hilang) adalah \"4\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "M",
+      "B",
+      "X",
+      "7"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 340,
+    "module": "Tes Kecermatan — Kolom 4: Campuran Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 4: Campuran Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 4: Campuran Huruf & Angka Hilang, patokan adalah B(A), 7(B), M(C), 4(D), X(E). Pada kotak soal terdapat karakter [7, 4, B, M]. Karakter yang tidak muncul (hilang) adalah \"X\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 4,
+    "benchmark": [
+      {
+        "char": "B",
+        "label": "A"
+      },
+      {
+        "char": "7",
+        "label": "B"
+      },
+      {
+        "char": "M",
+        "label": "C"
+      },
+      {
+        "char": "4",
+        "label": "D"
+      },
+      {
+        "char": "X",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "7",
+      "4",
+      "B",
+      "M"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (B)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (7)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (M)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (4)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (X)"
+      }
+    ]
+  },
+  {
+    "id": 341,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [R, 9, #, ★]. Karakter yang tidak muncul (hilang) adalah \"K\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "9",
+      "#",
+      "★"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 342,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [★, #, K, R]. Karakter yang tidak muncul (hilang) adalah \"9\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "★",
+      "#",
+      "K",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 343,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [R, K, #, 9]. Karakter yang tidak muncul (hilang) adalah \"★\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "K",
+      "#",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 344,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [9, #, K, ★]. Karakter yang tidak muncul (hilang) adalah \"R\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "#",
+      "K",
+      "★"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 345,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [★, K, R, 9]. Karakter yang tidak muncul (hilang) adalah \"#\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "★",
+      "K",
+      "R",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 346,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "A",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [★, #, 9, R]. Karakter yang tidak muncul (hilang) adalah \"K\", yang berada pada kolom (A).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "★",
+      "#",
+      "9",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 347,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "B",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [R, K, #, ★]. Karakter yang tidak muncul (hilang) adalah \"9\", yang berada pada kolom (B).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "R",
+      "K",
+      "#",
+      "★"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 348,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "C",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [9, #, K, R]. Karakter yang tidak muncul (hilang) adalah \"★\", yang berada pada kolom (C).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "#",
+      "K",
+      "R"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 349,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "D",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [★, K, #, 9]. Karakter yang tidak muncul (hilang) adalah \"R\", yang berada pada kolom (D).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "★",
+      "K",
+      "#",
+      "9"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  },
+  {
+    "id": 350,
+    "module": "Tes Kecermatan — Kolom 5: Campuran Simbol, Huruf & Angka Hilang",
+    "subtest": "KECERMATAN",
+    "stem": "Perhatikan patokan Kolom 5: Campuran Simbol, Huruf & Angka Hilang. Tentukan karakter yang HILANG pada kotak soal di bawah ini.",
+    "correctKey": "E",
+    "explanation": "Pada Kolom 5: Campuran Simbol, Huruf & Angka Hilang, patokan adalah K(A), 9(B), ★(C), R(D), #(E). Pada kotak soal terdapat karakter [9, R, K, ★]. Karakter yang tidak muncul (hilang) adalah \"#\", yang berada pada kolom (E).",
+    "weight": 1,
+    "isKecermatan": true,
+    "columnNumber": 5,
+    "benchmark": [
+      {
+        "char": "K",
+        "label": "A"
+      },
+      {
+        "char": "9",
+        "label": "B"
+      },
+      {
+        "char": "★",
+        "label": "C"
+      },
+      {
+        "char": "R",
+        "label": "D"
+      },
+      {
+        "char": "#",
+        "label": "E"
+      }
+    ],
+    "questionChars": [
+      "9",
+      "R",
+      "K",
+      "★"
+    ],
+    "options": [
+      {
+        "key": "A",
+        "text": "Pilihan A (K)"
+      },
+      {
+        "key": "B",
+        "text": "Pilihan B (9)"
+      },
+      {
+        "key": "C",
+        "text": "Pilihan C (★)"
+      },
+      {
+        "key": "D",
+        "text": "Pilihan D (R)"
+      },
+      {
+        "key": "E",
+        "text": "Pilihan E (#)"
+      }
+    ]
+  }
 ];
 
 /* -------------------------------------------------------------------------- */
-/* KUMPULAN SOAL TKK & TPK                                                    */
+/* 4. KUMPULAN SOAL TKK (20 Butir Kemampuan Komputer)                    */
 /* -------------------------------------------------------------------------- */
-
 const QUESTIONS_TKK: SimQuestion[] = [
   {
-    id: 401,
-    module: 'Tes Kemampuan Komputer (TKK) — Perangkat Keras (Hardware)',
-    stem: 'Komponen perangkat keras komputer yang berfungsi sebagai memori kerja utama yang bersifat sementara (volatile) dan mengosongkan datanya saat listrik padam adalah...',
-    options: [
-      { key: 'A', text: 'Random Access Memory (RAM)' },
-      { key: 'B', text: 'Solid State Drive (SSD)' },
-      { key: 'C', text: 'Read-Only Memory (ROM)' },
-      { key: 'D', text: 'Hard Disk Drive (HDD)' },
-      { key: 'E', text: 'Central Processing Unit (CPU)' },
+    "id": 401,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Komponen fisik komputer disebut…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Hardware"
+      },
+      {
+        "key": "B",
+        "text": "Software"
+      },
+      {
+        "key": "C",
+        "text": "Brainware"
+      },
+      {
+        "key": "D",
+        "text": "Malware"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'RAM adalah memori kerja jangka pendek sistem yang bersifat volatile, artinya data di dalamnya hilang saat aliran daya diputus.',
+    "correctKey": "A",
+    "explanation": "Hardware adalah bagian fisik seperti monitor, keyboard, dan prosesor.",
+    "weight": 10
   },
   {
-    id: 402,
-    module: 'Tes Kemampuan Komputer (TKK) — Sistem Jaringan & Internet',
-    stem: 'Protokol jaringan komputer yang bertanggung jawab menerjemahkan alamat domain yang mudah dibaca manusia (seperti polri.go.id) menjadi alamat IP numerik (seperti 103.24.56.78) adalah...',
-    options: [
-      { key: 'A', text: 'Dynamic Host Configuration Protocol (DHCP)' },
-      { key: 'B', text: 'Domain Name System (DNS)' },
-      { key: 'C', text: 'File Transfer Protocol (FTP)' },
-      { key: 'D', text: 'Simple Mail Transfer Protocol (SMTP)' },
-      { key: 'E', text: 'Hypertext Transfer Protocol (HTTP)' },
+    "id": 402,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Perangkat lunak yang mengelola perangkat keras dan aplikasi adalah…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Browser"
+      },
+      {
+        "key": "B",
+        "text": "Sistem operasi"
+      },
+      {
+        "key": "C",
+        "text": "Spreadsheet"
+      },
+      {
+        "key": "D",
+        "text": "Driver printer saja"
+      }
     ],
-    correctKey: 'B',
-    explanation: 'DNS (Domain Name System) berfungsi sebagai buku telepon internet yang memetakan nama domain ke alamat IP server tujuan.',
+    "correctKey": "B",
+    "explanation": "Sistem operasi mengelola sumber daya komputer dan menyediakan antarmuka pengguna.",
+    "weight": 10
   },
   {
-    id: 403,
-    module: 'Tes Kemampuan Komputer (TKK) — Keamanan Siber & Rekayasa Sosial',
-    stem: 'Bentuk kejahatan siber di mana pelaku menyamar sebagai instansi resmi melalui surat elektronik atau tautan palsu untuk memancing korban memasukkan kredensial akun rahasia disebut...',
-    options: [
-      { key: 'A', text: 'Phishing' },
-      { key: 'B', text: 'DDoS Attack' },
-      { key: 'C', text: 'Brute Force' },
-      { key: 'D', text: 'SQL Injection' },
-      { key: 'E', text: 'Ransomware' },
+    "id": 403,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Pusat pemrosesan instruksi komputer adalah…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Monitor"
+      },
+      {
+        "key": "B",
+        "text": "CPU/prosesor"
+      },
+      {
+        "key": "C",
+        "text": "Keyboard"
+      },
+      {
+        "key": "D",
+        "text": "Speaker"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Phishing adalah rekayasa sosial (social engineering) dengan membuat pesan atau situs tiruan untuk mengelabui korban agar menyerahkan data sensitif.',
+    "correctKey": "B",
+    "explanation": "CPU menjalankan instruksi dan mengolah data.",
+    "weight": 10
   },
   {
-    id: 404,
-    module: 'Tes Kemampuan Komputer (TKK) — Pengamanan Akun & Kredensial',
-    stem: 'Langkah pengamanan paling efektif untuk mencegah akses ilegal ke akun kedinasan digital selain menggunakan kata sandi yang kuat adalah...',
-    options: [
-      { key: 'A', text: 'Menyimpan kata sandi di kertas catatan dekat monitor kantor' },
-      { key: 'B', text: 'Mengaktifkan Autentikasi Dua Faktor (Two-Factor Authentication / 2FA)' },
-      { key: 'C', text: 'Menggunakan tanggal lahir sebagai kombinasi kata sandi' },
-      { key: 'D', text: 'Membagikan kata sandi kepada rekan satu regu piket' },
-      { key: 'E', text: 'Tidak pernah keluar (logout) dari komputer dinas bersama' },
+    "id": 404,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] RAM berfungsi sebagai…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Memori kerja sementara"
+      },
+      {
+        "key": "B",
+        "text": "Penyimpanan arsip permanen"
+      },
+      {
+        "key": "C",
+        "text": "Perangkat cetak"
+      },
+      {
+        "key": "D",
+        "text": "Penghubung internet"
+      }
     ],
-    correctKey: 'B',
-    explanation: 'Two-Factor Authentication (2FA) memberikan lapisan keamanan ganda sehingga akun tetap terlindungi meskipun kata sandi bocor atau diketahui pihak lain.',
+    "correctKey": "A",
+    "explanation": "RAM menyimpan data sementara yang sedang digunakan program.",
+    "weight": 10
   },
   {
-    id: 405,
-    module: 'Tes Kemampuan Komputer (TKK) — Perangkat Lunak & Sistem Operasi',
-    stem: 'Karakteristik utama dari perangkat lunak berbasis kode sumber terbuka (Open Source Software) adalah...',
-    options: [
-      { key: 'A', text: 'Kode sumber program dapat dilihat, dimodifikasi, dan didistribusikan kembali oleh siapa saja sesuai lisensi.' },
-      { key: 'B', text: 'Hanya boleh dioperasikan pada satu komputer tanpa izin tertulis dari pembuat kode.' },
-      { key: 'C', text: 'Dilarang diperbarui ke versi yang lebih mutakhir.' },
-      { key: 'D', text: 'Tidak dapat dipasang pada sistem operasi Linux.' },
-      { key: 'E', text: 'Selalu berbayar dengan biaya langganan bulanan yang mahal.' },
+    "id": 405,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Perangkat untuk memasukkan teks adalah…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Monitor"
+      },
+      {
+        "key": "B",
+        "text": "Printer"
+      },
+      {
+        "key": "C",
+        "text": "Keyboard"
+      },
+      {
+        "key": "D",
+        "text": "Proyektor"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Open Source Software menyediakan kode sumber secara terbuka kepada publik untuk dipelajari, dikembangkan, dan ditingkatkan fiturnya secara kolaboratif.',
+    "correctKey": "C",
+    "explanation": "Keyboard merupakan perangkat input.",
+    "weight": 10
   },
   {
-    id: 406,
-    module: 'Tes Kemampuan Komputer (TKK) — Manajemen Backup & Arsip Data',
-    stem: 'Prinsip pencadangan data cadangan (backup) yang ideal menurut standar keamanan informasi (aturan 3-2-1) mensyaratkan...',
-    options: [
-      { key: 'A', text: 'Menyimpan 3 salinan data, pada 2 media penyimpanan berbeda, dengan 1 salinan disimpan di lokasi terpisah (off-site/cloud).' },
-      { key: 'B', text: 'Menyimpan data di 3 folder berbeda pada 1 flashdisk yang sama.' },
-      { key: 'C', text: 'Melakukan backup sekali dalam 3 tahun pada 2 komputer dinas.' },
-      { key: 'D', text: 'Menghapus data asli setelah 3 hari disimpan di komputer.' },
-      { key: 'E', text: 'Membagikan salinan berkas kepada 3 orang berbeda lewat pesan singkat.' },
+    "id": 406,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Perangkat output visual adalah…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mouse"
+      },
+      {
+        "key": "B",
+        "text": "Monitor"
+      },
+      {
+        "key": "C",
+        "text": "Mikrofon"
+      },
+      {
+        "key": "D",
+        "text": "Scanner"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Aturan 3-2-1 backup: Minimal 3 salinan data, di 2 jenis media berbeda (misal SSD dan NAS), serta minimal 1 salinan di lokasi fisik berbeda atau cloud untuk mitigasi bencana.',
+    "correctKey": "B",
+    "explanation": "Monitor menampilkan teks dan gambar.",
+    "weight": 10
   },
   {
-    id: 407,
-    module: 'Tes Kemampuan Komputer (TKK) — Perangkat Jaringan (Network)',
-    stem: 'Perangkat jaringan yang berfungsi menghubungkan dua atau lebih jaringan komputer berbeda subnet serta mengarahkan paket data melalui rute terbaik adalah...',
-    options: [
-      { key: 'A', text: 'Router' },
-      { key: 'B', text: 'Hub' },
-      { key: 'C', text: 'Repeater' },
-      { key: 'D', text: 'Kabel UTP' },
-      { key: 'E', text: 'Network Interface Card (NIC)' },
+    "id": 407,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Satuan kapasitas data digital adalah…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Liter"
+      },
+      {
+        "key": "B",
+        "text": "Byte"
+      },
+      {
+        "key": "C",
+        "text": "Desibel"
+      },
+      {
+        "key": "D",
+        "text": "Ampere"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Router beroperasi di Layer 3 (Network Layer) OSI model untuk merutekan (routing) paket data antarjaringan IP yang berbeda.',
+    "correctKey": "B",
+    "explanation": "Kapasitas digital dinyatakan dalam byte dan kelipatannya.",
+    "weight": 10
   },
   {
-    id: 408,
-    module: 'Tes Kemampuan Komputer (TKK) — Enkripsi & Keamanan Jalur Komunikasi',
-    stem: 'Teknologi enkripsi di mana hanya pihak pengirim dan penerima sah yang memegang kunci untuk membaca isi pesan disebut...',
-    options: [
-      { key: 'A', text: 'End-to-End Encryption (E2EE)' },
-      { key: 'B', text: 'Plaintext Transmission' },
-      { key: 'C', text: 'Open Port Broadcasting' },
-      { key: 'D', text: 'Screen Mirroring' },
-      { key: 'E', text: 'File Sharing' },
+    "id": 408,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Alat untuk mengubah dokumen kertas menjadi digital adalah…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Scanner"
+      },
+      {
+        "key": "B",
+        "text": "Speaker"
+      },
+      {
+        "key": "C",
+        "text": "Router"
+      },
+      {
+        "key": "D",
+        "text": "Keyboard"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'End-to-End Encryption (E2EE) memastikan data terenkripsi di perangkat pengirim dan hanya dapat didekripsi di perangkat penerima tujuan.',
+    "correctKey": "A",
+    "explanation": "Scanner menangkap citra dokumen menjadi data digital.",
+    "weight": 10
   },
   {
-    id: 409,
-    module: 'Tes Kemampuan Komputer (TKK) — Etika Digital & Regulasi',
-    stem: 'Berdasarkan regulasi perlindungan data pribadi dan UU ITE, tindakan menyebarkan data pribadi kependudukan warga tanpa hak di ranah digital merupakan perbuatan...',
-    options: [
-      { key: 'A', text: 'Tindak pidana ilegal yang dapat dijerat sanksi pidana penjara dan denda.' },
-      { key: 'B', text: 'Tindakan yang sah jika dilakukan demi popularitas akun pribadi.' },
-      { key: 'C', text: 'Bukan pelanggaran hukum selama tidak meminta uang tebusan.' },
-      { key: 'D', text: 'Diperbolehkan oleh seluruh penyedia platform media sosial.' },
-      { key: 'E', text: 'Hanya dikenakan sanksi teguran lisan tanpa catatan hukum.' },
+    "id": 409,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] SSD dan HDD digunakan untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Memproses suara"
+      },
+      {
+        "key": "B",
+        "text": "Menyimpan data"
+      },
+      {
+        "key": "C",
+        "text": "Menampilkan gambar"
+      },
+      {
+        "key": "D",
+        "text": "Mengatur jaringan"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Penyebaran data pribadi tanpa persetujuan subjek data melanggar UU Perlindungan Data Pribadi (UU PDP) dan UU ITE dengan ancaman pidana dan denda.',
+    "correctKey": "B",
+    "explanation": "SSD dan HDD adalah media penyimpanan.",
+    "weight": 10
   },
   {
-    id: 410,
-    module: 'Tes Kemampuan Komputer (TKK) — Penanganan Insiden & Troubleshooting',
-    stem: 'Tindakan pertama yang paling tepat dilakukan saat komputer dinas terindikasi terinfeksi serangan ransomware berbahaya adalah...',
-    options: [
-      { key: 'A', text: 'Segera mencabut kabel LAN / memutuskan koneksi Wi-Fi komputer untuk mengisolasi penyebaran ke jaringan kantor.' },
-      { key: 'B', text: 'Membayar tebusan uang yang diminta oleh peretas melalui tautan berbahaya.' },
-      { key: 'C', text: 'Mengirimkan berkas yang terinfeksi ke komputer rekan kerja untuk memastikan gejalanya.' },
-      { key: 'D', text: 'Membuka semua berkas terenkripsi secara paksa berulang-ulang.' },
-      { key: 'E', text: 'Membiarkan komputer tetap terhubung ke server utama markas.' },
+    "id": 410,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Salinan data untuk pemulihan saat data utama hilang disebut…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Shortcut"
+      },
+      {
+        "key": "B",
+        "text": "Backup"
+      },
+      {
+        "key": "C",
+        "text": "Cache"
+      },
+      {
+        "key": "D",
+        "text": "Cookie"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Isolasi jaringan seketika (air-gapping) sangat penting untuk memutus komunikasi malware dengan command & control server dan mencegah infeksi lateral ke komputer lain di jaringan.',
-  },
-];
-
-const QUESTIONS_TPK: SimQuestion[] = [
-  {
-    id: 501,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Tugas Pokok Polri',
-    stem: 'Berdasarkan Undang-Undang No. 2 Tahun 2002 Pasal 13, tugas pokok Kepolisian Negara Republik Indonesia adalah...',
-    options: [
-      { key: 'A', text: 'Memelihara keamanan dan ketertiban masyarakat, menegakkan hukum, serta memberikan perlindungan, pengayoman, dan pelayanan kepada masyarakat.' },
-      { key: 'B', text: 'Menjaga pertahanan kedaulatan negara dari ancaman agresi militer luar negeri.' },
-      { key: 'C', text: 'Melakukan penuntutan perkara pidana umum di persidangan pengadilan negeri.' },
-      { key: 'D', text: 'Menjatuhkan vonis sanksi hukum kepada tersangka tindak pidana.' },
-      { key: 'E', text: 'Mengelola dan mengatur anggaran keuangan pemerintah daerah.' },
-    ],
-    correctKey: 'A',
-    explanation: 'Pasal 13 UU No. 2 Tahun 2002 menegaskan tiga pilar tugas pokok Polri: harkamtibmas, penegakan hukum, dan perlindungan, pengayoman, serta pelayanan masyarakat.',
+    "correctKey": "B",
+    "explanation": "Backup adalah salinan cadangan untuk pemulihan data.",
+    "weight": 10
   },
   {
-    id: 502,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Kewenangan & Diskresi',
-    stem: 'Tindakan perwira/anggota Polri yang dilakukan demi kepentingan umum berdasarkan penilaiannya sendiri saat menghadapi situasi mendesak di lapangan merupakan perwujudan dari...',
-    options: [
-      { key: 'A', text: 'Diskresi Kepolisian (Pasal 18 UU No. 2 Tahun 2002)' },
-      { key: 'B', text: 'Hak Kekebalan Hukum Mutlak' },
-      { key: 'C', text: 'Kewenangan Yudikatif' },
-      { key: 'D', text: 'Hak Prerogatif Pribadi' },
-      { key: 'E', text: 'Instruksi Khusus Pemerintah' },
+    "id": 411,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Perangkat lunak berbahaya disebut…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Firmware"
+      },
+      {
+        "key": "B",
+        "text": "Malware"
+      },
+      {
+        "key": "C",
+        "text": "Freeware"
+      },
+      {
+        "key": "D",
+        "text": "Shareware"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Pasal 18 ayat (1) UU No. 2 Tahun 2002 mengatur bahwa untuk kepentingan umum, pejabat Polri dalam melaksanakan tugas dan wewenangnya dapat bertindak menurut penilaiannya sendiri (diskresi) yang dapat dipertanggungjawabkan.',
+    "correctKey": "B",
+    "explanation": "Malware dirancang merusak, mengganggu, atau mencuri data.",
+    "weight": 10
   },
   {
-    id: 503,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Hukum Acara Pidana (KUHAP)',
-    stem: 'Berdasarkan Pasal 184 Kitab Undang-Undang Hukum Acara Pidana (KUHAP), yang termasuk ke dalam alat bukti yang sah dalam persidangan adalah...',
-    options: [
-      { key: 'A', text: 'Keterangan saksi, keterangan ahli, surat, petunjuk, dan keterangan terdakwa' },
-      { key: 'B', text: 'Opini publik, hasil jajak pendapat, dan rekaman percakapan pribadi' },
-      { key: 'C', text: 'Keterangan satu saksi saja tanpa didukung alat bukti lain apa pun' },
-      { key: 'D', text: 'Pengakuan sepihak dari keluarga korban tindak pidana' },
-      { key: 'E', text: 'Laporan desas-desus masyarakat di media sosial' },
+    "id": 412,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Papan utama tempat komponen komputer terhubung disebut…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Motherboard"
+      },
+      {
+        "key": "B",
+        "text": "Touchpad"
+      },
+      {
+        "key": "C",
+        "text": "Heatsink"
+      },
+      {
+        "key": "D",
+        "text": "Flashdisk\nWindows dan pengelolaan berkas"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Pasal 184 ayat (1) KUHAP menyebutkan 5 alat bukti yang sah: (a) keterangan saksi, (b) keterangan ahli, (c) surat, (d) petunjuk, dan (e) keterangan terdakwa.',
+    "correctKey": "A",
+    "explanation": "Motherboard menghubungkan prosesor, RAM, penyimpanan, dan komponen lain.\nWindows dan pengelolaan berkas",
+    "weight": 10
   },
   {
-    id: 504,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Falsafah Tribrata & Catur Prasetya',
-    stem: 'Pedoman hidup anggota Polri yang menjadi falsafah pengabdian insan Bhayangkara kepada nusa dan bangsa adalah...',
-    options: [
-      { key: 'A', text: 'Tribrata' },
-      { key: 'B', text: 'Sapta Marga' },
-      { key: 'C', text: 'Panca Dharma Usadha' },
-      { key: 'D', text: 'Dasa Darma' },
-      { key: 'E', text: 'Tri Krama Adhyaksa' },
+    "id": 413,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Ekstensi .docx umumnya untuk dokumen…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Word"
+      },
+      {
+        "key": "B",
+        "text": "Excel"
+      },
+      {
+        "key": "C",
+        "text": "PowerPoint"
+      },
+      {
+        "key": "D",
+        "text": "Audio"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Tribrata merupakan pedoman hidup Polri, sedangkan Catur Prasetya merupakan pedoman kerja kesatuan insan kepolisian.',
+    "correctKey": "A",
+    "explanation": ".docx adalah format dokumen Microsoft Word.",
+    "weight": 10
   },
   {
-    id: 505,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Asas Hukum Pidana',
-    stem: 'Asas yang menyatakan bahwa setiap orang yang disangka, ditangkap, ditahan, dituntut, dan/atau dihadapkan di muka sidang pengadilan wajib dianggap tidak bersalah sampai adanya putusan pengadilan yang berkekuatan hukum tetap adalah asas...',
-    options: [
-      { key: 'A', text: 'Praduga Tak Bersalah (Presumption of Innocence)' },
-      { key: 'B', text: 'Legalitas (Nullum Delictum)' },
-      { key: 'C', text: 'Oportunitas' },
-      { key: 'D', text: 'Nebis in Idem' },
-      { key: 'E', text: 'Equality Before the Law' },
+    "id": 414,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Ekstensi .xlsx digunakan untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Presentasi"
+      },
+      {
+        "key": "B",
+        "text": "Workbook Excel"
+      },
+      {
+        "key": "C",
+        "text": "Gambar"
+      },
+      {
+        "key": "D",
+        "text": "Video"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Asas praduga tak bersalah ditegaskan dalam KUHAP dan UU Kekuasaan Kehakiman sebagai prinsip perlindungan hak asasi manusia dalam proses peradilan pidana.',
+    "correctKey": "B",
+    "explanation": ".xlsx merupakan format buku kerja Excel.",
+    "weight": 10
   },
   {
-    id: 506,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Penyelidikan vs Penyidikan',
-    stem: 'Berdasarkan Pasal 1 butir 5 KUHAP, serangkaian tindakan penyelidik untuk mencari dan menemukan suatu peristiwa yang diduga sebagai tindak pidana guna menentukan dapat atau tidaknya dilakukan penyidikan disebut...',
-    options: [
-      { key: 'A', text: 'Penyelidikan' },
-      { key: 'B', text: 'Penyidikan' },
-      { key: 'C', text: 'Penuntutan' },
-      { key: 'D', text: 'Pemeriksaan saksi' },
-      { key: 'E', text: 'Penangkapan' },
+    "id": 415,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Ekstensi .pptx digunakan untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Basis data"
+      },
+      {
+        "key": "B",
+        "text": "Presentasi PowerPoint"
+      },
+      {
+        "key": "C",
+        "text": "Teks biasa"
+      },
+      {
+        "key": "D",
+        "text": "Audio"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Penyelidikan mendahului penyidikan, dengan fokus mencari dan menemukan apakah suatu peristiwa merupakan tindak pidana atau bukan.',
+    "correctKey": "B",
+    "explanation": ".pptx adalah format presentasi PowerPoint.",
+    "weight": 10
   },
   {
-    id: 507,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Kepangkatan Polri',
-    stem: 'Jenjang kepangkatan pertama dalam golongan Perwira Pertama (Pama) Polri yang diperoleh lulusan Sekolah Inspektur Polisi (SIP) adalah...',
-    options: [
-      { key: 'A', text: 'Inspektur Polisi Dua (Ipda)' },
-      { key: 'B', text: 'Inspektur Polisi Satu (Iptu)' },
-      { key: 'C', text: 'Ajun Komisaris Polisi (AKP)' },
-      { key: 'D', text: 'Komisaris Polisi (Kompol)' },
-      { key: 'E', text: 'Ajun Inspektur Polisi Dua (Aipda)' },
+    "id": 416,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Ctrl+C berfungsi untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Memotong"
+      },
+      {
+        "key": "B",
+        "text": "Menyalin"
+      },
+      {
+        "key": "C",
+        "text": "Menempel"
+      },
+      {
+        "key": "D",
+        "text": "Mencetak"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Lulusan pendidikan SIP dilantik menjadi Perwira Pertama Polri dengan pangkat Inspektur Polisi Dua (Ipda) dengan lambang satu balok emas di pundak.',
+    "correctKey": "B",
+    "explanation": "Ctrl+C menyalin pilihan ke clipboard.",
+    "weight": 10
   },
   {
-    id: 508,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Wilayah Hukum Kepolisian',
-    stem: 'Satuan organisasi kepolisian yang berkedudukan di ibu kota kabupaten/kota dan bertanggung jawab atas keamanan di wilayah kabupaten/kota tersebut adalah...',
-    options: [
-      { key: 'A', text: 'Kepolisian Resor (Polres)' },
-      { key: 'B', text: 'Kepolisian Sektor (Polsek)' },
-      { key: 'C', text: 'Kepolisian Daerah (Polda)' },
-      { key: 'D', text: 'Markas Besar Kepolisian (Mabes Polri)' },
-      { key: 'E', text: 'Pos Pelayanan Kepolisian Terpadu (Pospol)' },
+    "id": 417,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Ctrl+V berfungsi untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Undo"
+      },
+      {
+        "key": "B",
+        "text": "Paste/menempel"
+      },
+      {
+        "key": "C",
+        "text": "Menyimpan"
+      },
+      {
+        "key": "D",
+        "text": "Mencari"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Struktur komando teritorial: Mabes (Nasional), Polda (Provinsi), Polres (Kabupaten/Kota), dan Polsek (Kecamatan).',
+    "correctKey": "B",
+    "explanation": "Ctrl+V menempelkan isi clipboard.",
+    "weight": 10
   },
   {
-    id: 509,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Tindakan Pertama TKP',
-    stem: 'Tindakan awal yang wajib dilakukan petugas kepolisian pertama di Tempat Kejadian Perkara (TPTKP) sebelum tim identifikasi/Inafis tiba adalah...',
-    options: [
-      { key: 'A', text: 'Mengamankan status quo TKP dengan memasang police line, menolong korban jika ada, dan melarang orang yang tidak berkepentingan masuk.' },
-      { key: 'B', text: 'Memindahkan barang-barang bukti ke dalam kantor polisi agar tidak kehujanan.' },
-      { key: 'C', text: 'Membersihkan bercak darah di lokasi agar masyarakat tidak ketakutan.' },
-      { key: 'D', text: 'Mengizinkan wartawan mendekati korban sebelum diperiksa dokter forensik.' },
-      { key: 'E', text: 'Menyebarkan foto detail korban di status media sosial pribadi.' },
+    "id": 418,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Ctrl+Z umumnya berfungsi untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Undo"
+      },
+      {
+        "key": "B",
+        "text": "Print"
+      },
+      {
+        "key": "C",
+        "text": "Save"
+      },
+      {
+        "key": "D",
+        "text": "Refresh"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Tujuan utama TPTKP adalah mempertahankan keaslian (status quo) TKP agar sidik jari dan jejak bukti materiil tidak rusak atau terkontaminasi.',
+    "correctKey": "A",
+    "explanation": "Undo membatalkan tindakan terakhir yang dapat dibatalkan.",
+    "weight": 10
   },
   {
-    id: 510,
-    module: 'Tes Pengetahuan Kepolisian (TPK) — Kode Etik Profesi Polri',
-    stem: 'Regulasi internal kepolisian yang saat ini mengatur tentang Kode Etik Profesi dan Komisi Kode Etik Kepolisian Negara Republik Indonesia adalah...',
-    options: [
-      { key: 'A', text: 'Peraturan Kepolisian (Perpol) No. 7 Tahun 2022' },
-      { key: 'B', text: 'Peraturan Pemerintah No. 1 Tahun 2003' },
-      { key: 'C', text: 'Undang-Undang No. 8 Tahun 1981' },
-      { key: 'D', text: 'Peraturan Kapolri No. 14 Tahun 2011' },
-      { key: 'E', text: 'Instruksi Presiden No. 2 Tahun 2020' },
+    "id": 419,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Folder digunakan untuk…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mengelompokkan berkas"
+      },
+      {
+        "key": "B",
+        "text": "Mempercepat CPU"
+      },
+      {
+        "key": "C",
+        "text": "Mengganti OS"
+      },
+      {
+        "key": "D",
+        "text": "Menghapus virus"
+      }
     ],
-    correctKey: 'A',
-    explanation: 'Perpol No. 7 Tahun 2022 merupakan aturan pembaruan komprehensif yang mengatur Kode Etik Profesi Polri dan Komisi Kode Etik Polri.',
+    "correctKey": "A",
+    "explanation": "Folder membantu mengatur berkas agar mudah ditemukan.",
+    "weight": 10
   },
+  {
+    "id": 420,
+    "module": "Tes Kemampuan Komputer (TKK)",
+    "subtest": "TKK",
+    "stem": "[Kompetensi Komputer & TI Polri] Recycle Bin menampung…",
+    "options": [
+      {
+        "key": "A",
+        "text": "Berkas terhapus sementara"
+      },
+      {
+        "key": "B",
+        "text": "Kata sandi"
+      },
+      {
+        "key": "C",
+        "text": "Pembaruan BIOS"
+      },
+      {
+        "key": "D",
+        "text": "Driver"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Berkas yang dihapus secara biasa dapat dipulihkan dari Recycle Bin sebelum dikosongkan.",
+    "weight": 10
+  }
 ];
 
 /* -------------------------------------------------------------------------- */
-/* DEFINISI PAKET SIMULASI                                                    */
+/* 5. KUMPULAN SOAL TPK (21 Butir Pengetahuan Kepolisian)                */
+/* -------------------------------------------------------------------------- */
+const QUESTIONS_TPK: SimQuestion[] = [
+  {
+    "id": 501,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Pilih satu jawaban paling tepat: A, B, C, atau D.",
+    "options": [
+      {
+        "key": "D",
+        "text": ""
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Rumusan lima sila tercantum dalam Pembukaan UUD 1945 alinea keempat.",
+    "weight": 10
+  },
+  {
+    "id": 502,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Pancasila berkedudukan sebagai apa?\n A. Peraturan pemerintah",
+    "options": [
+      {
+        "key": "A",
+        "text": "Peraturan pemerintah"
+      },
+      {
+        "key": "B",
+        "text": "Dasar negara dan ideologi negara"
+      },
+      {
+        "key": "C",
+        "text": "Keputusan presiden"
+      },
+      {
+        "key": "D",
+        "text": "Hukum acara"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Pancasila menjadi dasar penyelenggaraan negara dan pandangan hidup bangsa.",
+    "weight": 10
+  },
+  {
+    "id": 503,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Rumusan Pancasila tercantum dalam bagian mana dari UUD 1945?\n A. Batang tubuh Pasal 1",
+    "options": [
+      {
+        "key": "A",
+        "text": "Batang tubuh Pasal 1"
+      },
+      {
+        "key": "B",
+        "text": "Pembukaan alinea keempat"
+      },
+      {
+        "key": "C",
+        "text": "Penjelasan UUD"
+      },
+      {
+        "key": "D",
+        "text": "Dekrit Presiden"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Rumusan lima sila tercantum dalam Pembukaan UUD 1945 alinea keempat.",
+    "weight": 10
+  },
+  {
+    "id": 504,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Sila ketiga Pancasila menekankan nilai apa?\n A. Persatuan Indonesia",
+    "options": [
+      {
+        "key": "A",
+        "text": "Persatuan Indonesia"
+      },
+      {
+        "key": "B",
+        "text": "Keadilan sosial"
+      },
+      {
+        "key": "C",
+        "text": "Ketuhanan"
+      },
+      {
+        "key": "D",
+        "text": "Musyawarah"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Sila ketiga berbunyi Persatuan Indonesia.",
+    "weight": 10
+  },
+  {
+    "id": 505,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Menurut UUD 1945, kedaulatan berada di tangan siapa?\n A. Presiden",
+    "options": [
+      {
+        "key": "A",
+        "text": "Presiden"
+      },
+      {
+        "key": "B",
+        "text": "MPR saja"
+      },
+      {
+        "key": "C",
+        "text": "Rakyat dan dilaksanakan menurut UUD"
+      },
+      {
+        "key": "D",
+        "text": "DPR saja"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Pasal 1 ayat (2) menegaskan kedaulatan berada di tangan rakyat dan dilaksanakan menurut UUD.",
+    "weight": 10
+  },
+  {
+    "id": 506,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Indonesia adalah negara apa menurut Pasal 1 ayat (3) UUD 1945?\n A. Negara kekuasaan",
+    "options": [
+      {
+        "key": "A",
+        "text": "Negara kekuasaan"
+      },
+      {
+        "key": "B",
+        "text": "Negara hukum"
+      },
+      {
+        "key": "C",
+        "text": "Monarki"
+      },
+      {
+        "key": "D",
+        "text": "Negara militer"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "UUD 1945 menegaskan Indonesia adalah negara hukum.",
+    "weight": 10
+  },
+  {
+    "id": 507,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Lembaga yang memegang kekuasaan membentuk undang-undang adalah?\n A. DPR",
+    "options": [
+      {
+        "key": "A",
+        "text": "DPR"
+      },
+      {
+        "key": "B",
+        "text": "MA"
+      },
+      {
+        "key": "C",
+        "text": "BPK"
+      },
+      {
+        "key": "D",
+        "text": "KY"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Pasal 20 UUD 1945 menyatakan DPR memegang kekuasaan membentuk undang-undang.",
+    "weight": 10
+  },
+  {
+    "id": 508,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Presiden menurut UUD 1945 memegang kekuasaan apa?\n A. Kehakiman",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kehakiman"
+      },
+      {
+        "key": "B",
+        "text": "Pemerintahan"
+      },
+      {
+        "key": "C",
+        "text": "Pemeriksaan keuangan"
+      },
+      {
+        "key": "D",
+        "text": "Legislasi tunggal"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Presiden memegang kekuasaan pemerintahan menurut UUD.",
+    "weight": 10
+  },
+  {
+    "id": 509,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Bentuk negara Indonesia adalah?\n A. Serikat",
+    "options": [
+      {
+        "key": "A",
+        "text": "Serikat"
+      },
+      {
+        "key": "B",
+        "text": "Kesatuan berbentuk republik"
+      },
+      {
+        "key": "C",
+        "text": "Monarki"
+      },
+      {
+        "key": "D",
+        "text": "Konfederasi\n\nSIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI\nHalaman 4"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Pasal 1 ayat (1) menyatakan Indonesia ialah Negara Kesatuan yang berbentuk Republik.",
+    "weight": 10
+  },
+  {
+    "id": 510,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Persamaan warga negara di hadapan hukum dikenal sebagai prinsip apa?\n A. Equality before the law",
+    "options": [
+      {
+        "key": "A",
+        "text": "Equality before the law"
+      },
+      {
+        "key": "B",
+        "text": "Kekebalan mutlak"
+      },
+      {
+        "key": "C",
+        "text": "Diskresi tanpa batas"
+      },
+      {
+        "key": "D",
+        "text": "Dominasi mayoritas"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Prinsip ini menghendaki hukum diterapkan tanpa diskriminasi.",
+    "weight": 10
+  },
+  {
+    "id": 511,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Pembatasan kekuasaan dalam negara hukum terutama bertujuan untuk apa?\n A. Mempercepat hukuman tanpa proses",
+    "options": [
+      {
+        "key": "A",
+        "text": "Mempercepat hukuman tanpa proses"
+      },
+      {
+        "key": "B",
+        "text": "Mencegah penyalahgunaan kekuasaan"
+      },
+      {
+        "key": "C",
+        "text": "Menghapus pengawasan"
+      },
+      {
+        "key": "D",
+        "text": "Mengutamakan pejabat"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Pembatasan dan pengawasan mencegah tindakan sewenang-wenang.",
+    "weight": 10
+  },
+  {
+    "id": 512,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Undang-undang pokok yang mengatur Polri adalah?\n A. UU 2 Tahun 2002",
+    "options": [
+      {
+        "key": "A",
+        "text": "UU 2 Tahun 2002"
+      },
+      {
+        "key": "B",
+        "text": "UU 8 Tahun 1981"
+      },
+      {
+        "key": "C",
+        "text": "UU 1 Tahun 1974"
+      },
+      {
+        "key": "D",
+        "text": "UU 5 Tahun 2014"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "UU 2/2002 adalah UU tentang Polri dan harus dibaca bersama perubahan yang berlaku.",
+    "weight": 10
+  },
+  {
+    "id": 513,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Tiga tugas pokok Polri meliputi apa?\n A. Membentuk UU, mengadili, memenjarakan",
+    "options": [
+      {
+        "key": "A",
+        "text": "Membentuk UU, mengadili, memenjarakan"
+      },
+      {
+        "key": "B",
+        "text": "Harkamtibmas, penegakan hukum, perlindungan/pengayoman/pelayanan"
+      },
+      {
+        "key": "C",
+        "text": "Kebijakan ekonomi"
+      },
+      {
+        "key": "D",
+        "text": "Pertahanan militer"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Pasal 13 UU 2/2002 merumuskan tiga tugas pokok tersebut.",
+    "weight": 10
+  },
+  {
+    "id": 514,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Polri berada di bawah siapa dalam struktur ketatanegaraan?\n A. DPR",
+    "options": [
+      {
+        "key": "A",
+        "text": "DPR"
+      },
+      {
+        "key": "B",
+        "text": "Presiden"
+      },
+      {
+        "key": "C",
+        "text": "Mahkamah Agung"
+      },
+      {
+        "key": "D",
+        "text": "Gubernur"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "UU Kepolisian mengatur Polri berada di bawah Presiden; perhatikan perubahan peraturan terbaru.",
+    "weight": 10
+  },
+  {
+    "id": 515,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Kapolri diangkat dan diberhentikan Presiden dengan persetujuan siapa?\n A. DPR",
+    "options": [
+      {
+        "key": "A",
+        "text": "DPR"
+      },
+      {
+        "key": "B",
+        "text": "DPD"
+      },
+      {
+        "key": "C",
+        "text": "MPR"
+      },
+      {
+        "key": "D",
+        "text": "Mahkamah Konstitusi"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "UU Kepolisian mengatur persetujuan DPR untuk pengangkatan dan pemberhentian Kapolri.",
+    "weight": 10
+  },
+  {
+    "id": 516,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Fungsi kepolisian merupakan fungsi pemerintahan di bidang apa?\n A. Moneter",
+    "options": [
+      {
+        "key": "A",
+        "text": "Moneter"
+      },
+      {
+        "key": "B",
+        "text": "Harkamtibmas, penegakan hukum, perlindungan, pengayoman, pelayanan"
+      },
+      {
+        "key": "C",
+        "text": "Diplomasi saja"
+      },
+      {
+        "key": "D",
+        "text": "Pendidikan tinggi"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Rumusan fungsi kepolisian terdapat dalam Pasal 2 UU 2/2002.",
+    "weight": 10
+  },
+  {
+    "id": 517,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Polri sebagai Kepolisian Nasional berarti apa?\n A. Setiap daerah berdiri terpisah",
+    "options": [
+      {
+        "key": "A",
+        "text": "Setiap daerah berdiri terpisah"
+      },
+      {
+        "key": "B",
+        "text": "Satu kesatuan dalam pelaksanaan peran kepolisian"
+      },
+      {
+        "key": "C",
+        "text": "Hanya bertugas di ibu kota"
+      },
+      {
+        "key": "D",
+        "text": "Di bawah pemda"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "UU 2/2002 menyatakan Polri merupakan Kepolisian Nasional yang satu kesatuan.",
+    "weight": 10
+  },
+  {
+    "id": 518,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Pelaksanaan tugas Polri harus menjunjung tinggi apa?\n A. Kepentingan pribadi",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kepentingan pribadi"
+      },
+      {
+        "key": "B",
+        "text": "Hak asasi manusia"
+      },
+      {
+        "key": "C",
+        "text": "Kekuasaan tanpa kontrol"
+      },
+      {
+        "key": "D",
+        "text": "Kepentingan kelompok\n\nSIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI\nHalaman 5"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Penghormatan HAM merupakan prinsip penting dalam pelaksanaan tugas.",
+    "weight": 10
+  },
+  {
+    "id": 519,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Contoh tugas preventif kepolisian adalah?\n A. Patroli pencegahan gangguan kamtibmas",
+    "options": [
+      {
+        "key": "A",
+        "text": "Patroli pencegahan gangguan kamtibmas"
+      },
+      {
+        "key": "B",
+        "text": "Menjatuhkan vonis"
+      },
+      {
+        "key": "C",
+        "text": "Menetapkan UU"
+      },
+      {
+        "key": "D",
+        "text": "Putusan perdata"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Patroli bertujuan mencegah gangguan keamanan dan ketertiban.",
+    "weight": 10
+  },
+  {
+    "id": 520,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Contoh tindakan represif dalam penegakan hukum adalah?\n A. Penyidikan tindak pidana sesuai hukum",
+    "options": [
+      {
+        "key": "A",
+        "text": "Penyidikan tindak pidana sesuai hukum"
+      },
+      {
+        "key": "B",
+        "text": "Penyuluhan keselamatan"
+      },
+      {
+        "key": "C",
+        "text": "Sambang warga"
+      },
+      {
+        "key": "D",
+        "text": "Kampanye tertib lalu lintas"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Penyidikan merupakan tindakan penegakan hukum atas dugaan tindak pidana.",
+    "weight": 10
+  },
+  {
+    "id": 521,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "[Pengetahuan Kepolisian & Regulasi] Pelayanan publik Polri seharusnya seperti apa?\n A. Hanya untuk kenalan",
+    "options": [
+      {
+        "key": "A",
+        "text": "Hanya untuk kenalan"
+      },
+      {
+        "key": "B",
+        "text": "Adil, sesuai standar, dan bertanggung jawab"
+      },
+      {
+        "key": "C",
+        "text": "Mengutamakan imbalan"
+      },
+      {
+        "key": "D",
+        "text": "Menolak kelompok rentan\n\nSIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI\nHalaman 6"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Pelayanan harus profesional, transparan, dan nondiskriminatif.",
+    "weight": 10
+  }
+];
+
+/* -------------------------------------------------------------------------- */
+/* DAFTAR PAKET PRETEST CAT POLRI                                             */
 /* -------------------------------------------------------------------------- */
 
 export const SIMULATION_PACKETS: SimPacket[] = [
@@ -1072,48 +6198,48 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     id: 'psikotes-all',
     category: 'PSIKOTES',
     subtest: 'ALL',
-    title: 'Tes Psikologi — Semua Subtes (Campuran)',
-    subtitle: 'Kecerdasan, Mental Kepribadian & Kecermatan',
-    description: 'Simulasi gabungan 3 subtes psikologi SIP Polri untuk menguji ketangkasan kognitif, kematangan emosi, dan ketelitian visual.',
-    badge: '12 Butir Soal • 12 Menit',
-    durationSeconds: 720,
-    questions: [
-      ...QUESTIONS_KECERDASAN.slice(0, 4),
-      ...QUESTIONS_KEPRIBADIAN.slice(0, 4),
-      ...QUESTIONS_KECERMATAN.slice(0, 4),
-    ],
+    title: 'Pretest CAT Psikotes — Semua Subtes (Campuran)',
+    subtitle: 'Kecerdasan (40%), Mental Kepribadian (30%), dan Kecermatan (30%)',
+    description:
+      'Latihan gabungan 3 pilar psikotes standar CAT Polri. Dilengkapi penilaian bobot komposit resmi, jeda antar-subtes, dan ulasan komprehensif.',
+    badge: 'Paket Utama Psikotes',
+    durationSeconds: 75 * 60,
+    questions: [...QUESTIONS_KECERDASAN, ...QUESTIONS_KEPRIBADIAN, ...QUESTIONS_KECERMATAN],
   },
   {
     id: 'psikotes-kecerdasan',
     category: 'PSIKOTES',
     subtest: 'KECERDASAN',
-    title: 'Tes Psikologi — Subtes Kecerdasan',
-    subtitle: 'Verbal, Numerik, Logika & Denah Lokasi SIP',
-    description: 'Fokus pada penalaran analogi, kelanjutan deret angka/huruf, logika silogisme, serta pemahaman denah spasial kepolisian.',
-    badge: '10 Butir Soal • 10 Menit',
-    durationSeconds: 600,
+    title: 'Pretest CAT Psikotes — Subtes Kecerdasan',
+    subtitle: 'Logika Spasial & Figural, Denah Wilayah, Aritmatika, dan Verbal',
+    description:
+      'Latihan fokus subtes kecerdasan mencakup soal bergambar pola figural, orientasi denah tata letak, aritmatika dasar, dan penalaran analitis.',
+    badge: 'Bobot 40%',
+    durationSeconds: 40 * 60,
     questions: QUESTIONS_KECERDASAN,
   },
   {
     id: 'psikotes-kepribadian',
     category: 'PSIKOTES',
     subtest: 'KEPRIBADIAN',
-    title: 'Tes Psikologi — Subtes Mental Kepribadian',
-    subtitle: 'Integritas, Pengendalian Emosi & Etika Profesi',
-    description: 'Mengukur kematangan sikap kepribadian, ketahanan stres, kepemimpinan, dan kepatuhan kode etik calon perwira Polri.',
-    badge: '10 Butir Soal • 10 Menit',
-    durationSeconds: 600,
+    title: 'Pretest CAT Psikotes — Subtes Mental Kepribadian',
+    subtitle: 'Studi Kasus Lingkungan Kepolisian (Integritas, Sikap Kerja & Kepemimpinan)',
+    description:
+      'Latihan respons situasional kedinasan formal dengan skenario nyata tugas kepolisian. Setiap jawaban dinilai dengan skala bobot etika profesi.',
+    badge: 'Bobot 30%',
+    durationSeconds: 30 * 60,
     questions: QUESTIONS_KEPRIBADIAN,
   },
   {
     id: 'psikotes-kecermatan',
     category: 'PSIKOTES',
     subtest: 'KECERMATAN',
-    title: 'Tes Psikologi — Subtes Kecermatan (Format CAT)',
-    subtitle: '3 Kolom Simbol/Huruf/Angka • 60 Detik per Kolom',
-    description: 'Format autentik CAT Polri: tabel 5 karakter patokan acuan di atas, 4 karakter soal, tombol pilihan A B C D E besar, dan perputaran kolom otomatis dengan reset timer per kolom.',
-    badge: '3 Kolom • 30 Butir (1 mnt/kolom)',
-    durationSeconds: 180,
+    title: 'Pretest CAT Psikotes — Subtes Kecermatan (Monokrom)',
+    subtitle: '5 Kolom: Angka Hilang, Huruf Hilang, Simbol Hilang, dan Campuran',
+    description:
+      'Latihan kecepatan dan ketelitian format hitam putih (kolom putih standar CAT Polri). Berpindah otomatis per kolom dengan evaluasi kecepatan, akurasi, dan kestabilan.',
+    badge: 'Bobot 30% • Monokrom',
+    durationSeconds: 5 * 60,
     isKecermatanOnly: true,
     columnDurationSeconds: 60,
     questions: QUESTIONS_KECERMATAN,
@@ -1121,48 +6247,41 @@ export const SIMULATION_PACKETS: SimPacket[] = [
   {
     id: 'tkk',
     category: 'TKK',
-    title: 'Tes Kemampuan Komputer (TKK)',
-    subtitle: 'Hardware, Jaringan, Keamanan Siber & Troubleshooting',
-    description: 'Menguji penguasaan teknologi informasi kedinasan, konsep jaringan, pencegahan insiden siber, serta etika digital.',
-    badge: '10 Butir Soal • 10 Menit',
-    durationSeconds: 600,
+    title: 'Pretest CAT — Tes Kemampuan Komputer (TKK)',
+    subtitle: 'Hardware, Software OS, Jaringan Komputer, dan Keamanan Siber',
+    description:
+      'Latihan penguasaan teknologi informasi dan komunikasi untuk seleksi Polri dengan pembahasan mendalam di setiap butir soal.',
+    badge: 'Uji Kompetensi TI',
+    durationSeconds: 30 * 60,
     questions: QUESTIONS_TKK,
   },
   {
     id: 'tpk',
     category: 'TPK',
-    title: 'Tes Pengetahuan Kepolisian (TPK)',
-    subtitle: 'UU No. 2/2002, Diskresi, KUHAP 184 & Tribrata',
-    description: 'Penguasaan regulasi tugas pokok, kewenangan diskresi kepolisian, hukum acara pidana, kepangkatan, dan etika profesi Polri.',
-    badge: '10 Butir Soal • 10 Menit',
-    durationSeconds: 600,
+    title: 'Pretest CAT — Tes Pengetahuan Kepolisian (TPK)',
+    subtitle: 'UU No. 2 Tahun 2002, Kode Etik Profesi, KUHAP & Wawasan Kebangsaan',
+    description:
+      'Uji pemahaman regulasi perundang-undangan kepolisian, etika dinas Polri, tupoksi, serta dasar wawasan kebangsaan RI.',
+    badge: 'Regulasi Kedinasan',
+    durationSeconds: 30 * 60,
     questions: QUESTIONS_TPK,
   },
   {
     id: 'cat-all',
     category: 'ALL',
-    title: 'Simulasi Lengkap CAT SIP (Semua Modul)',
+    subtest: 'ALL',
+    title: 'Pretest Komprehensif CAT Polri (Seluruh Modul)',
     subtitle: 'Psikotes (Kecerdasan, Kepribadian, Kecermatan) + TKK + TPK',
-    description: 'Paket simulasi komprehensif mencakup seluruh materi uji seleksi Sekolah Inspektur Polisi dengan penilaian multi-kompetensi.',
-    badge: '16 Butir Soal • 15 Menit',
-    durationSeconds: 900,
+    description:
+      'Try out komprehensif seluruh materi seleksi CAT Polri. Uji kesiapan menyeluruh sebelum menghadapi seleksi sesungguhnya.',
+    badge: 'Simulasi Lengkap',
+    durationSeconds: 120 * 60,
     questions: [
-      QUESTIONS_KECERDASAN[0],
-      QUESTIONS_KECERDASAN[1],
-      QUESTIONS_KECERDASAN[2],
-      QUESTIONS_KECERDASAN[3],
-      QUESTIONS_KEPRIBADIAN[0],
-      QUESTIONS_KEPRIBADIAN[1],
-      QUESTIONS_KEPRIBADIAN[2],
-      QUESTIONS_KECERMATAN[0],
-      QUESTIONS_KECERMATAN[1],
-      QUESTIONS_KECERMATAN[2],
-      QUESTIONS_TKK[0],
-      QUESTIONS_TKK[1],
-      QUESTIONS_TKK[2],
-      QUESTIONS_TPK[0],
-      QUESTIONS_TPK[1],
-      QUESTIONS_TPK[2],
+      ...QUESTIONS_KECERDASAN,
+      ...QUESTIONS_KEPRIBADIAN,
+      ...QUESTIONS_KECERMATAN,
+      ...QUESTIONS_TKK,
+      ...QUESTIONS_TPK,
     ],
   },
 ];

@@ -26,13 +26,13 @@
             label: 'Kembali ke panel',
             icon: 'dashboard' as const,
           },
-          { href: '/simulation', label: 'Simulasi CAT', icon: 'clock' as const, badge: 'Bebas' },
+          { href: '/simulation', label: 'Pretest CAT', icon: 'clock' as const, badge: 'Latihan' },
           { href: '/exam', label: 'TES CAT', icon: 'shield' as const, badge: 'Ujian' },
           { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
         ]
       : [
           { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' as const },
-          { href: '/simulation', label: 'Simulasi CAT', icon: 'clock' as const, badge: 'Bebas' },
+          { href: '/simulation', label: 'Pretest CAT', icon: 'clock' as const, badge: 'Latihan' },
           { href: '/exam', label: 'TES CAT', icon: 'shield' as const, badge: 'Ujian' },
           { href: '/history', label: 'Riwayat Ujian', icon: 'list' as const },
           { href: '/dashboard#riwayat', label: 'Riwayat & Nilai (MS/TMS)', icon: 'list' as const },

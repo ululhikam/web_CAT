@@ -39,40 +39,39 @@
 
   const tabData = {
     psi: {
-      title: 'Tes Psikologi (4 Subtes Terpisah)',
-      duration: 'Waktu per subtes • Total ~180 menit',
-      passingGrade: '61.00 (Ambang Batas Minimal)',
+      title: 'Tes Psikologi CAT Polri (3 Subtes Terpisah)',
+      duration: 'Timer per subtes terpisah • Total ~90 menit',
+      passingGrade: '61.00 (Ambang Batas Minimal MS)',
       subtests: [
-        { name: 'Kecerdasan Umum', count: '90 Soal', time: '45 Menit', rule: 'Timer terpisah' },
-        { name: 'Kepribadian & Karakteristik', count: '60 Soal', time: '35 Menit', rule: 'Konsistensi jawaban' },
-        { name: 'Tes Kecermatan (Angka/Huruf Hilang)', count: '10 Kolom', time: '10 Menit', rule: 'Ketahanan tempo' },
-        { name: 'Pass Hand & Stabilitas Emosi', count: '60 Soal', time: '30 Menit', rule: 'Penentu profil klinis' },
+        { name: 'Kecerdasan Umum (Figural, Denah, Aritmatika, Logika)', count: '40 Soal', time: '40 Menit', rule: 'Bobot 40% • Kognitif & Spasial' },
+        { name: 'Mental Kepribadian (Studi Kasus Lingkungan Polri)', count: '20 Soal', time: '30 Menit', rule: 'Bobot 30% • Gradasi Skor 1-5' },
+        { name: 'Tes Kecermatan (Monokrom: Angka, Huruf, Simbol, Campuran)', count: '5 Kolom', time: '5 Menit', rule: 'Bobot 30% • Format CAT Asli' },
       ],
-      desc: 'Setiap subtes psikologi memiliki pengatur waktu otomatis dari server. Kehabisan waktu pada satu subtes langsung mengunci berkas dan melanjutkan ke subtes berikutnya.',
+      desc: 'Standar evaluasi komposit resmi Polri: Nilai Akhir Psikotes = (Kecerdasan × 40%) + (Kepribadian × 30%) + (Kecermatan × 30%). Dilengkapi transisi jeda khusus antar-subtes dan evaluasi detail.',
     },
     tkk: {
       title: 'Tes Kemampuan Komputer (TKK)',
-      duration: '90 Menit • 100 Butir Soal',
+      duration: '30 Menit • 20 Butir Soal Kurasi',
       passingGrade: 'Sistem Ranking Komparatif',
       subtests: [
-        { name: 'Perangkat Keras (Hardware)', count: '25 Soal', time: 'Terpadu', rule: 'Komponen CPU, memori, dan periferal' },
-        { name: 'Perangkat Lunak & Sistem Operasi', count: '30 Soal', time: 'Terpadu', rule: 'Instalasi, konfigurasi, dan troubleshooting' },
-        { name: 'Jaringan Komputer', count: '25 Soal', time: 'Terpadu', rule: 'Topologi, alamat IP, dan protokol dasar' },
-        { name: 'Keamanan & Aplikasi Perkantoran', count: '20 Soal', time: 'Terpadu', rule: 'Malware, enkripsi, pengolah kata & angka' },
+        { name: 'Perangkat Keras (Hardware & Arsitektur PC)', count: '5 Soal', time: 'Terpadu', rule: 'Komponen CPU, memori, dan periferal' },
+        { name: 'Perangkat Lunak & Sistem Operasi', count: '5 Soal', time: 'Terpadu', rule: 'Windows, Linux, instalasi dan troubleshooting' },
+        { name: 'Jaringan Komputer & Protokol', count: '5 Soal', time: 'Terpadu', rule: 'Topologi LAN/WAN, IP Addressing, subnetting' },
+        { name: 'Keamanan Siber & Aplikasi Perkantoran', count: '5 Soal', time: 'Terpadu', rule: 'Cybersecurity, enkripsi data, Word & Excel' },
       ],
-      desc: 'Mengukur pemahaman dasar teknologi informasi: perangkat keras, perangkat lunak, jaringan komputer, keamanan siber, serta aplikasi perkantoran yang dipakai sehari-hari.',
+      desc: 'Mengukur pemahaman dasar hingga menengah seputar teknologi informasi, sistem komputasi, dan keamanan data untuk mendukung digitalisasi kepolisian presisi.',
     },
     tpk: {
       title: 'Tes Pengetahuan Kepolisian (TPK)',
-      duration: '60 Menit • 100 Butir Soal',
+      duration: '30 Menit • 21 Butir Soal Regulasi',
       passingGrade: 'Penentu Kelulusan Tahap Akhir',
       subtests: [
-        { name: 'UU No. 2 Tahun 2002 Kepolisian Negara RI', count: '35 Soal', time: 'Terpadu', rule: 'Tupoksi & wewenang Polri' },
-        { name: 'Etika Profesi & Hukum Acara Pidana', count: '25 Soal', time: 'Terpadu', rule: 'Perkap & tata laksana dinas' },
-        { name: 'Wawasan Kebangsaan & Pancasila', count: '20 Soal', time: 'Terpadu', rule: 'UUD 1945 & NKRI' },
-        { name: 'Pengetahuan Umum Kepolisian Terkini', count: '20 Soal', time: 'Terpadu', rule: 'Isu nasional & institusi' },
+        { name: 'UU No. 2 Tahun 2002 tentang Polri', count: '7 Soal', time: 'Terpadu', rule: 'Tupoksi, wewenang, dan kedudukan Polri' },
+        { name: 'Kode Etik Profesi & Hukum Acara Pidana (KUHAP)', count: '6 Soal', time: 'Terpadu', rule: 'Penyelidikan, penyidikan, dan diskresi' },
+        { name: 'Wawasan Kebangsaan & Ideologi Pancasila', count: '4 Soal', time: 'Terpadu', rule: 'UUD 1945, NKRI, dan Bhinneka Tunggal Ika' },
+        { name: 'Pengetahuan Umum Kedinasan Terkini', count: '4 Soal', time: 'Terpadu', rule: 'Isu nasional, Perkap, dan kebijakan dinas' },
       ],
-      desc: 'Pengujian substansi regulasi, struktur kedinasan, hukum pidana formil, dan integritas dasar kepolisian.',
+      desc: 'Pengujian substansi regulasi perundang-undangan kepolisian, etika kedinasan, hukum pidana formil, dan integritas dasar anggota kepolisian.',
     },
   };
 
@@ -144,7 +143,7 @@
       </h1>
 
       <p class="hero-lead">
-        Platform Computer Assisted Test (CAT) terstandarisasi khusus persiapan seleksi Sekolah Inspektur Polisi (SIP). Dilengkapi timer server real-time, Tes Psikologi, Kecermatan 10 Kolom, TKK Komputer, dan TPK.
+        Platform Computer Assisted Test (CAT) terstandarisasi khusus persiapan seleksi Polri & Sekolah Inspektur Polisi (SIP). Dilengkapi timer server real-time, Pretest CAT mandiri, evaluasi bobot Psikotes komposit 3 pilar, Kecermatan Monokrom, TKK Komputer, dan TPK.
       </p>
 
       <div class="hero-cta-group">

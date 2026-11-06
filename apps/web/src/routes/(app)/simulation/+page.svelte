@@ -294,12 +294,12 @@
 </script>
 
 <svelte:head>
-  <title>Simulasi CAT — Seleksi Sekolah Inspektur Polisi</title>
+  <title>Pretest CAT — Seleksi Sekolah Inspektur Polisi</title>
 </svelte:head>
 
 <div class="sim-page">
   {#if !isStarted}
-    <!-- LAYAR PILIH TES & SUBTES SIMULASI -->
+    <!-- LAYAR PILIH TES & SUBTES PRETEST CAT -->
     <header class="sim-header">
       <div class="sim-header__left">
         <button class="back-link" type="button" onclick={() => goto('/dashboard')}>
@@ -307,9 +307,9 @@
           <span>Kembali ke dashboard</span>
         </button>
         <div>
-          <h1>Simulasi CAT Bebas Latihan</h1>
+          <h1>Pretest CAT Bebas Latihan Mandiri</h1>
           <p>
-            Pilih jenis tes dan subtes yang ingin Anda uji coba. Latihan mandiri tanpa mengurangi limit tes harian, lengkap dengan timer resmi dan pembahasan jawaban.
+            Pilih materi Pretest CAT yang ingin Anda uji coba. Latihan mandiri standar CAT Polri dengan timer resmi, evaluasi bobot jawaban, format monokrom, dan pembahasan menyeluruh.
           </p>
         </div>
       </div>
@@ -592,17 +592,102 @@
 
     {#if finished}
       <!-- HASIL SIMULASI -->
-      <section class="result-card">
+      <!-- HASIL EVALUASI PRETEST CAT (HIGHLIGHT NILAI AKHIR & AKUMULASI KOMPOSIT) -->
+      <section class="result-card result-card--highlight">
         <div class="result-copy">
-          <span class="eyebrow">
-            {psikotesResult.isPsikotes
-              ? 'Hasil Penilaian Khusus Psikotes (Standar CAT Polri)'
-              : 'Hasil Simulasi CAT'}
-          </span>
-          <h2>{score >= 61 ? 'Memenuhi Syarat (MS)' : 'Perlu Pendalaman (TMS)'}</h2>
-          <p>
-            Skor akhir Anda <strong>{score}</strong> dari 100. Ambang batas kelulusan seleksi adalah <strong>61.00</strong>.
-          </p>
+          <div class="result-badge-row">
+            <span class="eyebrow">
+              {psikotesResult.isPsikotes
+                ? 'EVALUASI PRETEST PSIKOTES (STANDAR CAT POLRI)'
+                : 'EVALUASI HASIL PRETEST UJIAN CAT'}
+            </span>
+            <span class="status-verdict-badge" class:status-verdict-badge--ms={score >= 61} class:status-verdict-badge--tms={score < 61}>
+              {score >= 61 ? '✓ MEMENUHI SYARAT (MS)' : '✗ TIDAK MEMENUHI SYARAT (TMS)'}
+            </span>
+          </div>
+
+          <!-- HIGHLIGHT VISUAL NILAI AKHIR BESAR -->
+          <div class="score-hero">
+            <div class="score-hero__main">
+              <span class="score-hero__label">Akumulasi Nilai Akhir</span>
+              <div class="score-hero__number-wrap">
+                <span class="score-hero__number" class:text-success={score >= 61} class:text-danger={score < 61}>
+                  {score.toFixed(2)}
+                </span>
+                <span class="score-hero__max">/ 100</span>
+              </div>
+            </div>
+            <div class="score-hero__meta">
+              <div class="score-hero__threshold-tag">
+                Ambang Batas Kelulusan Polri: <strong>61.00</strong>
+              </div>
+              <div class="score-hero__gauge-track">
+                <div
+                  class="score-hero__gauge-bar"
+                  class:score-hero__gauge-bar--ms={score >= 61}
+                  class:score-hero__gauge-bar--tms={score < 61}
+                  style:width={`${Math.min(100, Math.max(0, score))}%`}
+                ></div>
+                <div class="score-hero__threshold-marker" title="Ambang Batas 61.00"></div>
+              </div>
+              <span class="score-hero__status-text">
+                {score >= 61
+                  ? '🎉 Selamat! Nilai akumulasi Anda melampaui batas standar kelulusan Polri (≥ 61.00).'
+                  : '⚠️ Perhatian: Nilai akumulasi berada di bawah ambang batas minimal 61.00. Perbanyak latihan pada materi yang belum optimal.'}
+              </span>
+            </div>
+          </div>
+
+          {#if psikotesResult.isPsikotes && psikotesResult.isMixed}
+            <!-- KARTU FORMULA PEMBOBOTAN AKUMULASI 3 PILAR PSIKOTES -->
+            <div class="composite-formula-card">
+              <div class="composite-formula-card__head">
+                <span class="composite-formula-card__title">📐 Rincian Akumulasi Pembobotan Nilai Psikotes CAT Polri</span>
+                <span class="composite-formula-card__badge">Standar Biro SDM Polri</span>
+              </div>
+              <div class="composite-formula-grid">
+                <div class="composite-formula-item">
+                  <div class="formula-item__top">
+                    <span class="formula-item__icon">🧠</span>
+                    <span class="formula-item__name">Kecerdasan</span>
+                  </div>
+                  <div class="formula-item__math">
+                    Skor {psikotesResult.kecerdasan?.score ?? 0} × 40%
+                  </div>
+                  <div class="formula-item__result">
+                    +{((psikotesResult.kecerdasan?.score ?? 0) * 0.4).toFixed(2)}
+                  </div>
+                </div>
+
+                <div class="composite-formula-item">
+                  <div class="formula-item__top">
+                    <span class="formula-item__icon">🛡️</span>
+                    <span class="formula-item__name">Kepribadian</span>
+                  </div>
+                  <div class="formula-item__math">
+                    Skor {psikotesResult.kepribadian?.score ?? 0} × 30%
+                  </div>
+                  <div class="formula-item__result">
+                    +{((psikotesResult.kepribadian?.score ?? 0) * 0.3).toFixed(2)}
+                  </div>
+                </div>
+
+                <div class="composite-formula-item">
+                  <div class="formula-item__top">
+                    <span class="formula-item__icon">⚡</span>
+                    <span class="formula-item__name">Kecermatan</span>
+                  </div>
+                  <div class="formula-item__math">
+                    Skor {psikotesResult.kecermatan?.score ?? 0} × 30%
+                  </div>
+                  <div class="formula-item__result">
+                    +{((psikotesResult.kecermatan?.score ?? 0) * 0.3).toFixed(2)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {/if}
+
           {#if psikotesResult.isPsikotes}
             <p class="psikotes-summary-note">{psikotesResult.summaryExplanation}</p>
           {/if}
@@ -670,7 +755,7 @@
           </div>
 
           <div class="result-actions">
-            <button class="button button--primary" type="button" onclick={restart}>Ulangi Simulasi Ini</button>
+            <button class="button button--primary" type="button" onclick={restart}>Ulangi Pretest Ini</button>
             <button class="button button--ghost" type="button" onclick={exitToSelection}>Pilih Materi Lain</button>
             <button class="button button--ghost" type="button" onclick={() => goto('/dashboard')}>
               Ke Dashboard
@@ -679,7 +764,7 @@
         </div>
 
         <div class="score-ring" class:score-ring--pass={passed}>
-          <strong>{score}</strong>
+          <strong>{score.toFixed(0)}</strong>
           <span>dari 100</span>
         </div>
       </section>
@@ -879,6 +964,11 @@
                     </div>
                   {:else}
                     <p class="review-stem">{question.stem}</p>
+                    {#if question.image}
+                      <div class="review-image-box">
+                        <img src={question.image} alt="Ilustrasi Soal CAT Polri" class="review-image" />
+                      </div>
+                    {/if}
                   {/if}
                 </div>
                 {#if isKepribadian}
@@ -929,6 +1019,26 @@
                 <div class="review-answer">
                   <span>Jawaban Anda: <strong class:text-danger={selected !== question.correctKey}>{selected ?? 'Kosong'}</strong></span>
                   <span>Kunci Resmi: <strong class="text-success">{question.correctKey}</strong></span>
+                </div>
+              {/if}
+
+              {#if !question.isKecermatan && question.options}
+                <div class="review-options-summary">
+                  {#each question.options as opt}
+                    <div
+                      class="review-option-pill"
+                      class:review-option-pill--correct={opt.key === question.correctKey}
+                      class:review-option-pill--chosen={selected === opt.key && opt.key !== question.correctKey}
+                    >
+                      <span class="review-opt-key">{opt.key}</span>
+                      <span class="review-opt-text">{opt.text}</span>
+                      {#if opt.key === question.correctKey}
+                        <span class="review-opt-tag review-opt-tag--correct">✓ Kunci</span>
+                      {:else if selected === opt.key}
+                        <span class="review-opt-tag review-opt-tag--chosen">✗ Dipilih</span>
+                      {/if}
+                    </div>
+                  {/each}
                 </div>
               {/if}
 
@@ -1033,6 +1143,12 @@
             </div>
 
             <h2 class="question-stem">{current.stem}</h2>
+
+            {#if current.image}
+              <div class="question-image-box">
+                <img src={current.image} alt="Ilustrasi Soal CAT Polri" class="question-image" />
+              </div>
+            {/if}
 
             <div class="options">
               {#each current.options as option (option.key)}
@@ -1727,25 +1843,30 @@
     align-items: center;
     gap: var(--space-4);
     width: 100%;
-    max-width: 600px;
+    max-width: 520px;
     margin: 0 auto;
+    gap: var(--space-3);
   }
 
   .kecermatan-timer-badge {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
     font-weight: 800;
-    color: #60a5fa;
+    color: #0f172a;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
     text-align: center;
     letter-spacing: 0.05em;
   }
 
   .kecermatan-timer-badge__label {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    color: #94a3b8;
+    font-size: 0.85rem;
+    color: #475569;
     font-weight: 600;
   }
 
@@ -1754,26 +1875,27 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Kotak Sampel Patokan Kolom */
+  /* Kotak Sampel Patokan Kolom: LATAR BELAKANG PUTIH (MONOKROM) */
   .kecermatan-sample-box {
     width: 100%;
-    background: #0b1329;
-    color: #ffffff;
-    border: 3px solid #3b82f6;
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
 
   .kecermatan-sample-header {
-    background: #1e3a8a;
-    color: #ffffff;
-    font-size: clamp(1.2rem, 2.8vw, 1.45rem);
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 0.95rem;
     font-weight: 800;
     text-align: center;
-    padding: var(--space-2) var(--space-4);
+    padding: 6px 12px;
     letter-spacing: 0.05em;
-    border-bottom: 2px solid #3b82f6;
+    text-transform: uppercase;
+    border-bottom: 2px solid #0f172a;
   }
 
   .kecermatan-sample-grid {
@@ -1787,20 +1909,20 @@
   }
 
   .kecermatan-sample-row--chars {
-    border-bottom: 2px solid #334155;
-    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid #cbd5e1;
+    background: #ffffff;
   }
 
   .kecermatan-sample-row--labels {
-    background: #1e293b;
+    background: #f8fafc;
   }
 
   .kecermatan-sample-cell {
     display: grid;
     place-items: center;
-    padding: var(--space-3) var(--space-1);
+    padding: 8px 4px;
     font-family: var(--font-mono, monospace);
-    border-right: 2px solid #334155;
+    border-right: 1px solid #cbd5e1;
   }
 
   .kecermatan-sample-cell:last-child {
@@ -1808,27 +1930,27 @@
   }
 
   .kecermatan-sample-cell--char {
-    font-size: clamp(2rem, 5.5vw, 2.8rem);
+    font-size: clamp(1.4rem, 3.2vw, 1.8rem);
     font-weight: 900;
-    color: #ffffff;
-    line-height: 1;
+    color: #0f172a;
+    line-height: 1.1;
   }
 
   .kecermatan-sample-cell--label {
-    font-size: clamp(1.2rem, 3.2vw, 1.55rem);
-    font-weight: 800;
-    color: #93c5fd;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+    font-weight: 700;
+    color: #475569;
     line-height: 1;
   }
 
-  /* Kotak Soal Aktif (4 Karakter) */
+  /* Kotak Soal Aktif (4 Karakter) - Padat & Proporsional */
   .kecermatan-question-card {
     width: 100%;
-    background: #0b1329;
-    border: 3px solid #3b82f6;
-    border-radius: var(--radius-lg);
+    background: #ffffff;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
   }
 
   .kecermatan-question-grid {
@@ -1839,12 +1961,12 @@
   .kecermatan-question-cell {
     display: grid;
     place-items: center;
-    padding: var(--space-4) var(--space-2);
+    padding: 12px 6px;
     font-family: var(--font-mono, monospace);
-    font-size: clamp(2.2rem, 6vw, 3rem);
+    font-size: clamp(1.6rem, 3.8vw, 2.1rem);
     font-weight: 900;
-    color: #ffffff;
-    border-right: 2px solid #334155;
+    color: #0f172a;
+    border-right: 1px solid #cbd5e1;
     line-height: 1;
   }
 
@@ -1852,56 +1974,51 @@
     border-right: none;
   }
 
-  /* Tombol Pilihan Jawaban A B C D E */
+  /* Tombol Pilihan Jawaban A B C D E - Monokrom Padat */
   .kecermatan-choices-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: var(--space-2);
+    gap: 8px;
     width: 100%;
   }
 
   .kecermatan-choice-key {
     display: grid;
     place-items: center;
-    height: clamp(56px, 10vw, 76px);
-    background: #1e293b;
-    color: #ffffff;
-    border: 2px solid #3b82f6;
-    border-radius: var(--radius-md);
+    height: 48px;
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
     font-family: var(--font-mono, monospace);
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-    font-weight: 900;
+    font-size: 1.25rem;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.12s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   }
 
   .kecermatan-choice-key:hover {
-    background: #2563eb;
+    background: #0f172a;
     color: #ffffff;
-    transform: translateY(-2px);
-    border-color: #60a5fa;
   }
 
   .kecermatan-choice-key:active,
   .kecermatan-choice-key--active {
-    background: #1d4ed8;
+    background: #0f172a;
     color: #ffffff;
-    transform: translateY(1px);
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.35);
   }
 
   .kecermatan-keyboard-hint {
-    margin: var(--space-1) 0 0;
-    font-size: 0.76rem;
-    color: #94a3b8;
+    margin: 4px 0 0;
+    font-size: 0.75rem;
+    color: #64748b;
     text-align: center;
     line-height: 1.4;
   }
 
   .kecermatan-keyboard-hint strong {
-    color: #60a5fa;
+    color: #0f172a;
   }
 
   /* Sidebar Kolom Kecermatan */
@@ -2304,11 +2421,6 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-primary);
-  }
-
-  .result-copy h2 {
-    margin: 0;
-    font-size: clamp(1.25rem, 3vw, 1.6rem);
   }
 
   .result-copy p {
@@ -2768,5 +2880,299 @@
     .result-actions .button {
       flex: 1;
     }
+  }
+
+  /* ========================================================================== */
+  /* NEW HIGHLIGHT SCORECARD & COMPOSITE FORMULA STYLES                         */
+  /* ========================================================================== */
+
+  .result-card--highlight {
+    background: linear-gradient(135deg, var(--color-surface) 0%, color-mix(in srgb, var(--color-primary) 4%, var(--color-surface)) 100%);
+    border: 2px solid color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+  }
+
+  .result-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .status-verdict-badge {
+    padding: 0.35rem 0.85rem;
+    font-size: var(--text-xs);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+  }
+
+  .status-verdict-badge--ms {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+  }
+
+  .status-verdict-badge--tms {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+  }
+
+  .score-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--color-surface-muted, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin: var(--space-3) 0;
+  }
+
+  .score-hero__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .score-hero__label {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .score-hero__number-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .score-hero__number {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1;
+    font-family: var(--font-mono, monospace);
+  }
+
+  .score-hero__max {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+
+  .score-hero__threshold-tag {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+  }
+
+  .score-hero__gauge-track {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .score-hero__gauge-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .score-hero__gauge-bar--ms {
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+
+  .score-hero__gauge-bar--tms {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+  }
+
+  .score-hero__threshold-marker {
+    position: absolute;
+    left: 61%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #0f172a;
+    z-index: 2;
+  }
+
+  .score-hero__status-text {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: 4px;
+    display: block;
+    line-height: 1.4;
+  }
+
+  /* Formula Komposit */
+  .composite-formula-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin: var(--space-2) 0;
+  }
+
+  .composite-formula-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  .composite-formula-card__badge {
+    padding: 2px 8px;
+    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+  }
+
+  .composite-formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-2);
+    margin-top: 4px;
+  }
+
+  .composite-formula-item {
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface-muted, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .formula-item__top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  .formula-item__math {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  .formula-item__result {
+    font-size: var(--text-sm);
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-top: 2px;
+    font-family: var(--font-mono, monospace);
+  }
+
+  /* Image Displays */
+  .question-image-box {
+    margin: var(--space-3) 0;
+    padding: var(--space-2);
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: center;
+  }
+
+  .question-image {
+    max-width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+  }
+
+  .review-image-box {
+    margin: var(--space-2) 0;
+    padding: 6px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+  }
+
+  .review-image {
+    max-width: 100%;
+    max-height: 260px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  /* Review Options Summary */
+  .review-options-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: var(--space-2) 0;
+  }
+
+  .review-option-pill {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    line-height: 1.4;
+  }
+
+  .review-option-pill--correct {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.08);
+  }
+
+  .review-option-pill--chosen {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+  }
+
+  .review-opt-key {
+    font-weight: 800;
+    font-family: var(--font-mono, monospace);
+    flex-shrink: 0;
+    width: 20px;
+  }
+
+  .review-opt-text {
+    flex: 1;
+  }
+
+  .review-opt-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .review-opt-tag--correct {
+    background: #10b981;
+    color: #ffffff;
+  }
+
+  .review-opt-tag--chosen {
+    background: #ef4444;
+    color: #ffffff;
   }
 </style>

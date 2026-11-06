@@ -18,4 +18,10 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
-.vercel
+# Source exam documents & raw material assets
+*.docx
+*.pdf
+WhatsApp*.jpeg
+ref.webp
+referens.webp
+referensdashboard.png
