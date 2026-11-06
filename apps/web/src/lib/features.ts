@@ -19,4 +19,4 @@
  * Ubah ke `true` lalu deploy ulang untuk mengaktifkan kembali tanpa perubahan
  * lain.
  */
-export const PRICING_ENABLED: boolean = false;
+export const PRICING_ENABLED: boolean = true;

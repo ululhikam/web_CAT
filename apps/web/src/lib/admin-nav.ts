@@ -122,7 +122,6 @@ const NAV_SEEDS: readonly NavSeed[] = [
     description: 'Atur tahap, subtes, dan ambang skor ujian CAT.',
     icon: 'shield',
     permission: 'exams.config',
-    adminOnly: true,
   },
   {
     group: 'Ujian',
@@ -140,7 +139,6 @@ const NAV_SEEDS: readonly NavSeed[] = [
     description: 'Pantau sesi berjalan, progres peserta, dan pelanggaran.',
     icon: 'clock',
     permission: 'exams.monitor',
-    adminOnly: true,
   },
   {
     group: 'Langganan',
@@ -148,6 +146,22 @@ const NAV_SEEDS: readonly NavSeed[] = [
     label: 'Paket & harga',
     description: 'Daftar paket yang dipakai untuk aktivasi manual.',
     icon: 'plans',
+    permission: 'billing.read',
+  },
+  {
+    group: 'Langganan',
+    path: '/subscriptions',
+    label: 'Kelola langganan',
+    description: 'Pantau masa aktif, perpanjang, cabut, atau berikan paket peserta.',
+    icon: 'plans',
+    permission: 'subscriptions.manage',
+  },
+  {
+    group: 'Langganan',
+    path: '/transactions',
+    label: 'Transaksi',
+    description: 'Riwayat pembayaran dan verifikasi transfer manual.',
+    icon: 'dashboard',
     permission: 'billing.read',
   },
   {

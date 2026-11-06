@@ -43,6 +43,9 @@ export class PermissionsGuard implements CanActivate {
       });
     }
 
+    // SUPER_ADMIN otomatis lolos untuk semua operasi CRUD dan administrasi
+    if (user.role === 'SUPER_ADMIN') return true;
+
     if (roles?.length && !roles.includes(user.role)) {
       throw new ForbiddenException({
         code: 'COMMON_FORBIDDEN',

@@ -6,6 +6,7 @@
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import { apiErrorMessage, apiRequest } from '$lib/api/client';
+  import { adminBase } from '$lib/panel-route';
   import { session } from '$lib/stores/session.svelte';
   import { formatDateTime } from '$lib/format';
   import type { AdminSessionDetail, SessionSubtestSummary } from '@webcat/contracts';
@@ -151,7 +152,7 @@
       <p class="muted mono">{sessionId}</p>
     </div>
     <div class="header-actions">
-      <Button variant="secondary" href="/admin/monitoring">Kembali</Button>
+      <Button variant="secondary" href={`${adminBase()}/monitoring`}>Kembali</Button>
       <Button variant="secondary" onclick={load}>Muat ulang</Button>
     </div>
   </header>

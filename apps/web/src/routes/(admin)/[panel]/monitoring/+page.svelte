@@ -5,6 +5,7 @@
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
   import { apiErrorMessage, apiRequest } from '$lib/api/client';
+  import { adminBase } from '$lib/panel-route';
   import { session } from '$lib/stores/session.svelte';
   import { formatDateTime } from '$lib/format';
   import type {
@@ -255,7 +256,7 @@
                     {/if}
                   </td>
                   <td>
-                    <Button size="sm" variant="secondary" href={`/admin/monitoring/${row.id}`}>
+                    <Button size="sm" variant="secondary" href={`${adminBase()}/monitoring/${row.id}`}>
                       Detail
                     </Button>
                   </td>

@@ -70,6 +70,7 @@ class SessionStore {
   }
 
   can(permission: string): boolean {
+    if (this.isSuperAdmin) return true;
     return this.user?.permissions?.includes(permission) ?? false;
   }
 
