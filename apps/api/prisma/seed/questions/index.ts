@@ -826,6 +826,15 @@ export async function seedQuestionBank(
   const toCreate = questions.filter((question) => !existingCodes.has(question.publicCode));
   const toUpdate = questions.filter((question) => existingCodes.has(question.publicCode));
 
+  // Bebaskan unique index (stage_code, subtest_code, dedupe_hash) sementara pada soal yang akan diperbarui
+  // agar pergeseran urutan/hash soal antar kode publik tidak saling bertabrakan
+  for (const batch of chunks(toUpdate.map((q) => q.publicCode), 100)) {
+    await prisma.question.updateMany({
+      where: { publicCode: { in: batch } },
+      data: { dedupeOverride: true },
+    });
+  }
+
   for (const batch of chunks(toCreate, CHUNK_SIZE)) {
     await prisma.question.createMany({
       data: batch.map((question) => ({

@@ -230,6 +230,18 @@ export async function seedExamStructure(prisma: PrismaClient): Promise<void> {
       });
     }
 
+    // Nonaktifkan subtes yang tidak termasuk dalam konfigurasi aktif stage ini
+    // (misalnya KEPRIBADIAN dan PASS_HAND yang sebelumnya dipisah pada stage PSIKOLOGI)
+    await prisma.subtest.updateMany({
+      where: {
+        stageId: stageRow.id,
+        code: { notIn: stage.subtests.map((s) => s.code) },
+      },
+      data: {
+        isActive: false,
+      },
+    });
+
     console.log(`  stage ${stage.code}: ${stage.subtests.length} subtes`);
   }
 
