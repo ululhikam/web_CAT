@@ -86,6 +86,11 @@
     if (subtest.passed === false) return 'warning';
     return 'neutral';
   }
+
+  function kecermatanPoints(series: number[] | null | undefined): string {
+    if (!series || series.length === 0) return '';
+    return series.map((val, colIdx) => `${55 + colIdx * 58},${170 - (val / 50) * 140}`).join(' ');
+  }
 </script>
 
 <svelte:head>
@@ -290,7 +295,103 @@
                         <span>Tren: <strong>{number(subtest.metrics.trend)}</strong></span>
                       </div>
 
-                      {#if subtest.metrics.columnSeries && subtest.metrics.columnSeries.length > 0}
+                      {#if subtest.subtestCode === 'KECERMATAN' && subtest.metrics?.columnSeries && subtest.metrics.columnSeries.length > 0}
+                        <div class="kecermatan-result-block">
+                          <div class="kecermatan-result-head">
+                            <div>
+                              <h4 class="kecermatan-result-title">Grafik Kecermatan (Kurva Kerja 10 Kolom)</h4>
+                              <p class="kecermatan-result-sub">
+                                Jumlah soal benar per kolom (kecepatan &amp; ketahanan ritme kerja)
+                              </p>
+                            </div>
+                            <Badge tone="brand" size="sm">10 Kolom × 50 Soal</Badge>
+                          </div>
+
+                          <div class="kecermatan-chart-svg-wrap">
+                            <svg class="kecermatan-chart-svg" viewBox="0 0 640 210" preserveAspectRatio="none">
+                              <!-- Garis horizontal 0, 10, 20, 30, 40, 50 -->
+                              {#each [0, 10, 20, 30, 40, 50] as yLevel}
+                                {@const yPos = 170 - (yLevel / 50) * 140}
+                                <line x1="32" y1={yPos} x2="630" y2={yPos} stroke="var(--color-border)" stroke-dasharray="3 3" stroke-width="1" />
+                                <text x="26" y={yPos + 4} font-size="10" text-anchor="end" fill="var(--color-text-muted)">{yLevel}</text>
+                              {/each}
+
+                              <!-- Batang Tiap Kolom -->
+                              {#each subtest.metrics.columnSeries as val, colIdx}
+                                {@const x = 55 + colIdx * 58}
+                                {@const barH = Math.max(0, Math.min(140, (val / 50) * 140))}
+                                {@const yTop = 170 - barH}
+                                <rect
+                                  x={x - 14}
+                                  y={yTop}
+                                  width="28"
+                                  height={barH}
+                                  rx="4"
+                                  fill="var(--color-primary)"
+                                  opacity="0.25"
+                                />
+                                <!-- Label Kolom X -->
+                                <text x={x} y="195" font-size="11" font-weight="600" text-anchor="middle" fill="var(--color-text-muted)">
+                                  K{colIdx + 1}
+                                </text>
+                                <!-- Nilai di atas titik -->
+                                <text x={x} y={Math.max(14, yTop - 8)} font-size="11" font-weight="700" text-anchor="middle" fill="var(--color-primary)">
+                                  {val}
+                                </text>
+                              {/each}
+
+                              <!-- Garis Kurva Poliline Penghubung Titik -->
+                              <polyline
+                                fill="none"
+                                stroke="var(--color-primary)"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                points={kecermatanPoints(subtest.metrics.columnSeries)}
+                              />
+
+                              <!-- Bulatan Titik di Puncak Kurva -->
+                              {#each subtest.metrics.columnSeries as val, colIdx}
+                                {@const cx = 55 + colIdx * 58}
+                                {@const cy = 170 - (val / 50) * 140}
+                                <circle cx={cx} cy={cy} r="4.5" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="2.5" />
+                              {/each}
+                            </svg>
+                          </div>
+
+                          <!-- 4 INDIKATOR HASIL KECERMATAN POLRI -->
+                          <div class="kecermatan-pillars-grid">
+                            <div class="pillar-card">
+                              <span class="pillar-card__label">Kecepatan (Throughput)</span>
+                              <span class="pillar-card__value">{number(subtest.metrics.throughput)} <small>soal/menit</small></span>
+                              <span class="pillar-card__desc">Rata-rata kecepatan penyelesaian soal per kolom</span>
+                            </div>
+                            <div class="pillar-card">
+                              <span class="pillar-card__label">Ketelitian (Akurasi)</span>
+                              <span class="pillar-card__value">{percent(subtest.metrics.accuracy ? subtest.metrics.accuracy * 100 : 0)}</span>
+                              <span class="pillar-card__desc">Persentase ketepatan jawaban benar</span>
+                            </div>
+                            <div class="pillar-card">
+                              <span class="pillar-card__label">Kestabilan (Konsistensi)</span>
+                              <span class="pillar-card__value">{percent(subtest.metrics.stability)}</span>
+                              <span class="pillar-card__desc">Konsistensi ritme antar kolom 1 s/d 10</span>
+                            </div>
+                            <div class="pillar-card">
+                              <span class="pillar-card__label">Ketahanan (Daya Tahan)</span>
+                              <span class="pillar-card__value">
+                                {#if (subtest.metrics.trend ?? 0) >= 0.2}
+                                  Meningkat ↗
+                                {:else if (subtest.metrics.trend ?? 0) <= -0.2}
+                                  Menurun ↘
+                                {:else}
+                                  Stabil ➔
+                                {/if}
+                              </span>
+                              <span class="pillar-card__desc">Tren ketahanan kerja dari kolom 1 ke 10</span>
+                            </div>
+                          </div>
+                        </div>
+                      {:else if subtest.metrics.columnSeries && subtest.metrics.columnSeries.length > 0}
                         <div class="chart" aria-label="Waktu per kolom Pass Hand">
                           {#each subtest.metrics.columnSeries as value, columnIndex (columnIndex)}
                             <span
@@ -586,6 +687,94 @@
 
   .mono {
     font-family: var(--font-mono);
+  }
+
+  /* ------------------------------------------- GRAFIK KECERMATAN HASIL */
+  .kecermatan-result-block {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .kecermatan-result-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .kecermatan-result-title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .kecermatan-result-sub {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: var(--space-1) 0 0 0;
+  }
+
+  .kecermatan-chart-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+  }
+
+  .kecermatan-chart-svg {
+    width: 100%;
+    min-width: 520px;
+    height: 190px;
+  }
+
+  .kecermatan-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .pillar-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-3);
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .pillar-card__label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .pillar-card__value {
+    font-size: var(--text-base);
+    font-weight: 800;
+    color: var(--color-primary);
+    margin: var(--space-1) 0;
+  }
+
+  .pillar-card__value small {
+    font-size: var(--text-xs);
+    font-weight: normal;
+    color: var(--color-text-muted);
+  }
+
+  .pillar-card__desc {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    line-height: 1.3;
   }
 
   @media (min-width: 900px) {

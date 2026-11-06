@@ -427,16 +427,24 @@ export const consistencyIndex: ScoringStrategyHandler = {
 export const correctMinusPenalty: ScoringStrategyHandler = {
   code: 'CORRECT_MINUS_PENALTY',
   evaluate(context: ScoringContext): ScoringOutput {
-    const penalty = num(context.config.penalty, 1);
+    const penalty = num(context.config.penalty, 0);
     let correct = 0;
     let wrong = 0;
     let blank = 0;
 
-    for (const item of context.answers) {
+    const columnCorrect = new Array(10).fill(0);
+    const columnAttempted = new Array(10).fill(0);
+
+    for (let index = 0; index < context.answers.length; index += 1) {
+      const item = context.answers[index]!;
+      const col = item.snapshot.columnIndex ?? Math.floor(index / 50);
+      const safeCol = Math.max(0, Math.min(9, col));
+
       if (isBlank(item.answer)) {
         blank += 1;
         continue;
       }
+      columnAttempted[safeCol] += 1;
       const picked = chosenLabels(item.snapshot, item.answer);
       const expected = correctLabels(item.snapshot);
       const answeredText = (item.answer?.text ?? '').trim().toUpperCase();
@@ -445,12 +453,16 @@ export const correctMinusPenalty: ScoringStrategyHandler = {
 
       if ((picked.length > 0 && sameSet(picked, expected)) || textMatch) {
         correct += 1;
+        columnCorrect[safeCol] += 1;
       } else {
         wrong += 1;
       }
     }
 
     const raw = Math.max(0, correct - penalty * wrong);
+    const totalAnswered = correct + wrong;
+    const elapsedMinutes = Math.max(1, context.durationMinutes);
+
     return {
       rawScore: round4(raw),
       maxScore: Math.max(1, context.questionCount),
@@ -458,7 +470,11 @@ export const correctMinusPenalty: ScoringStrategyHandler = {
       wrong,
       blank,
       metrics: {
-        accuracy: correct + wrong === 0 ? null : round4(correct / (correct + wrong)),
+        accuracy: totalAnswered === 0 ? null : round4(correct / totalAnswered),
+        throughput: round4(totalAnswered / elapsedMinutes),
+        stability: round4(stabilityOf(columnCorrect)),
+        trend: round4(slope(columnCorrect)),
+        columnSeries: columnCorrect,
       },
     };
   },

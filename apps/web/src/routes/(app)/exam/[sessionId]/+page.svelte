@@ -76,10 +76,31 @@
   const question = $derived(examRunner.questions[index] ?? null);
   const subtest = $derived(examRunner.currentSubtest);
   const isKecermatan = $derived(subtest?.subtestCode === 'KECERMATAN');
+
+  const subtestStartedMs = $derived(
+    subtest?.startedAt ? Date.parse(subtest.startedAt) : null,
+  );
+
+  const kecermatanElapsedMs = $derived(
+    isKecermatan && subtestStartedMs !== null && examRunner.remainingMs !== null
+      ? Math.max(0, (examRunner.nowMs + examRunner.serverOffsetMs) - subtestStartedMs)
+      : 0,
+  );
+
+  const kecermatanColumnIndex = $derived(
+    isKecermatan
+      ? Math.min(9, Math.floor(kecermatanElapsedMs / 60_000))
+      : (question?.columnIndex ?? Math.floor(index / 50)),
+  );
+
+  const kecermatanColumnRemainingSeconds = $derived(
+    isKecermatan
+      ? Math.max(0, 60 - (Math.floor(kecermatanElapsedMs / 1000) % 60))
+      : 60,
+  );
+
   const activeColumnIndex = $derived(
-    question?.columnIndex !== null && question?.columnIndex !== undefined
-      ? question.columnIndex
-      : (isKecermatan ? Math.floor(index / 50) : null)
+    isKecermatan ? kecermatanColumnIndex : (question?.columnIndex ?? null),
   );
   const activeQuestionInColumn = $derived(
     isKecermatan ? (index % 50) + 1 : null
@@ -87,23 +108,43 @@
 
   const benchmarkLetters = $derived(() => {
     if (!question) return [];
+    if (question.missingElement?.left) {
+      const leftStr = question.missingElement.left.replace(/\s+/g, '');
+      return leftStr.split('').map((char, i) => ({
+        label: optionLetters[i] ?? String.fromCharCode(65 + i),
+        char,
+      }));
+    }
     if (question.options && question.options.length === 5) {
       return question.options.map((opt, i) => ({
         label: optionLetters[i] ?? opt.label,
         char: opt.text || opt.label,
       }));
     }
-    const leftStr = (question.missingElement?.left ?? '').replace(/\s+/g, '');
-    return leftStr.split('').map((char, i) => ({
-      label: optionLetters[i] ?? String.fromCharCode(65 + i),
-      char,
-    }));
+    return [];
   });
 
   const questionLetters = $derived(() => {
     if (!question) return [];
-    const rightStr = (question.missingElement?.right ?? '').replace(/\s+/g, '');
-    return rightStr.split('');
+    if (question.missingElement?.right) {
+      const rightStr = question.missingElement.right.replace(/\s+/g, '');
+      const chars = rightStr.split('');
+      if (chars.length === 4) {
+        const h = (question.id || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+        const perms = [
+          [1, 3, 0, 2],
+          [2, 0, 3, 1],
+          [3, 1, 2, 0],
+          [1, 2, 3, 0],
+          [2, 3, 1, 0],
+          [3, 0, 1, 2],
+        ];
+        const perm = perms[h % perms.length]!;
+        return perm.map((i) => chars[i]!);
+      }
+      return chars;
+    }
+    return [];
   });
 
   const isSpeedTest = $derived(
@@ -219,6 +260,24 @@
     }
   });
 
+  let lastKecermatanCol = $state<number | null>(null);
+  $effect(() => {
+    if (!isKecermatan || subtest?.status !== 'ACTIVE') {
+      lastKecermatanCol = null;
+      return;
+    }
+    const currentCol = kecermatanColumnIndex;
+    if (lastKecermatanCol === null) {
+      lastKecermatanCol = currentCol;
+      if (index < currentCol * 50) {
+        index = currentCol * 50;
+      }
+    } else if (currentCol !== lastKecermatanCol) {
+      lastKecermatanCol = currentCol;
+      index = currentCol * 50;
+    }
+  });
+
   $effect(() => {
     if (examRunner.sessionStatus === 'COMPLETED' && sessionId && !isFinishing) {
       void goto(`/results/${sessionId}`);
@@ -299,6 +358,7 @@
   }
 
   function goBack(): void {
+    if (isKecermatan) return;
     if (index > 0) index -= 1;
   }
 
@@ -313,6 +373,15 @@
   function chooseOption(questionItem: ExamQuestion, option: ExamQuestionOption): void {
     if (examRunner.isLocked) return;
     examRunner.recordAnswer(questionItem.id, { optionIds: [option.id] }, elapsed());
+    if (isKecermatan) {
+      const maxColQuestionIndex = (kecermatanColumnIndex + 1) * 50 - 1;
+      if (index < maxColQuestionIndex) {
+        index += 1;
+      } else if (index < examRunner.questions.length - 1) {
+        index += 1;
+      }
+      return;
+    }
     if (
       questionItem.type === 'MISSING_ELEMENT' ||
       questionItem.type === 'LIKERT_STATEMENT' ||
@@ -832,11 +901,17 @@
 
             <div
               class="runner__timer"
-              class:runner__timer--critical={timerCritical}
+              class:runner__timer--critical={isKecermatan ? kecermatanColumnRemainingSeconds <= 10 : timerCritical}
               aria-live="polite"
             >
-              <span class="runner__timer-label">Sisa waktu</span>
-              <span class="runner__timer-value">{examRunner.remainingLabel}</span>
+              <span class="runner__timer-label">
+                {isKecermatan ? `Waktu Kolom ${kecermatanColumnIndex + 1}` : 'Sisa waktu'}
+              </span>
+              <span class="runner__timer-value">
+                {isKecermatan
+                  ? `00:${String(kecermatanColumnRemainingSeconds).padStart(2, '0')}`
+                  : examRunner.remainingLabel}
+              </span>
             </div>
           </header>
 
@@ -892,13 +967,12 @@
       {:else}
         <article class="question" aria-live="polite">
           <header class="question__header">
-            <Badge tone="brand">Soal {index + 1} / {examRunner.totalQuestions}</Badge>
             {#if isKecermatan}
-              <Badge tone="info">Kolom {(activeColumnIndex ?? 0) + 1} dari 10</Badge>
-              {#if activeQuestionInColumn}
-                <Badge tone="neutral">Soal {activeQuestionInColumn} / 50 di Kolom Ini</Badge>
-              {/if}
+              <Badge tone="brand">Kolom {kecermatanColumnIndex + 1} dari 10</Badge>
+              <Badge tone="info">Soal {(index % 50) + 1} / 50</Badge>
+              <Badge tone="neutral">Sisa: 00:{String(kecermatanColumnRemainingSeconds).padStart(2, '0')}</Badge>
             {:else}
+              <Badge tone="brand">Soal {index + 1} / {examRunner.totalQuestions}</Badge>
               <Badge tone="neutral">{question.type.replaceAll('_', ' ')}</Badge>
               {#if question.columnIndex !== null}
                 <Badge tone="info">Kolom {question.columnIndex + 1}</Badge>
@@ -906,10 +980,12 @@
             {/if}
           </header>
 
-          {#if question.stemFormat === 'HTML'}
-            <div class="question__stem">{@html question.stem}</div>
-          {:else}
-            <p class="question__stem">{question.stem}</p>
+          {#if !isKecermatan}
+            {#if question.stemFormat === 'HTML'}
+              <div class="question__stem">{@html question.stem}</div>
+            {:else}
+              <p class="question__stem">{question.stem}</p>
+            {/if}
           {/if}
 
           {#each questionView?.stemMedia ?? [] as media (media.url)}
@@ -1017,81 +1093,65 @@
             <div class="actions">
               <Button variant="secondary" onclick={advance}>Simpan &amp; lanjut</Button>
             </div>
-          {:else if question.type === 'MISSING_ELEMENT' && question.options.length > 0}
-            <div class="kecermatan-container">
-              <!-- TABEL RUJUKAN HURUF KOLOM -->
-              <div class="kecermatan-benchmark">
-                <div class="kecermatan-benchmark__header">
-                  <span class="kecermatan-benchmark__col-title">
-                    HURUF RUJUKAN KOLOM {(activeColumnIndex ?? 0) + 1}
-                  </span>
+          {:else if question.type === 'MISSING_ELEMENT'}
+            <div class="kecermatan-flow">
+              <!-- TIMER BESAR DI ATAS SESUAI CONTOH GAMBAR USER -->
+              <div class="kecermatan-timer-badge">
+                <span class="kecermatan-timer-badge__label">Durasi:</span>
+                <span class="kecermatan-timer-badge__value mono">
+                  00:00:{String(kecermatanColumnRemainingSeconds).padStart(2, '0')}
+                </span>
+              </div>
+
+              <!-- TABEL ACUAN / SAMPEL PATOKAN KOLOM -->
+              <div class="kecermatan-sample-box">
+                <div class="kecermatan-sample-header">
+                  Kolom {kecermatanColumnIndex + 1}
                 </div>
-                <div class="kecermatan-benchmark__grid">
-                  {#each benchmarkLetters() as item}
-                    <div class="kecermatan-benchmark__cell">
-                      <span class="kecermatan-benchmark__opt">{item.label}</span>
-                      <span class="kecermatan-benchmark__char">{item.char}</span>
+                <div class="kecermatan-sample-grid">
+                  <!-- Baris 1: 5 Huruf Patokan -->
+                  <div class="kecermatan-sample-row kecermatan-sample-row--chars">
+                    {#each benchmarkLetters() as item}
+                      <div class="kecermatan-sample-cell kecermatan-sample-cell--char">
+                        {item.char}
+                      </div>
+                    {/each}
+                  </div>
+                  <!-- Baris 2: Label Pilihan A B C D E -->
+                  <div class="kecermatan-sample-row kecermatan-sample-row--labels">
+                    {#each benchmarkLetters() as item}
+                      <div class="kecermatan-sample-cell kecermatan-sample-cell--label">
+                        {item.label}
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+              </div>
+
+              <!-- KOTAK SOAL AKTIF (4 HURUF DARI SAMPEL) -->
+              <div class="kecermatan-question-card">
+                <div class="kecermatan-question-grid">
+                  {#each questionLetters() as char}
+                    <div class="kecermatan-question-cell">
+                      {char}
                     </div>
                   {/each}
                 </div>
               </div>
 
-              <!-- SOAL: HURUF YANG HILANG -->
-              <div class="kecermatan-question-box">
-                <span class="kecermatan-question-label">Soal: Tentukan 1 Huruf yang Hilang</span>
-                <div class="kecermatan-question-row">
-                  {#each questionLetters() as char}
-                    <span class="kecermatan-char-tile">{char}</span>
-                  {/each}
-                  <span class="kecermatan-char-tile kecermatan-char-tile--missing">?</span>
-                </div>
-              </div>
-
-              <!-- PILIHAN JAWABAN (A, B, C, D, E) -->
-              <div
-                class="options options--compact kecermatan-options-grid"
-                role="group"
-                aria-label="Pilih karakter yang hilang"
-              >
+              <!-- PILIHAN JAWABAN (TOMBOL A B C D E) -->
+              <div class="kecermatan-choices-row" role="group" aria-label="Pilih huruf yang hilang">
                 {#each question.options as option, optionIndex (option.id)}
                   <button
                     type="button"
-                    class="option option--button kecermatan-opt-btn"
-                    class:option--active={isChosen(question, option.id)}
+                    class="kecermatan-choice-key"
+                    class:kecermatan-choice-key--active={isChosen(question, option.id)}
                     onclick={() => chooseOption(question, option)}
                   >
-                    <span class="option__key">{optionLetters[optionIndex] ?? option.label}</span>
-                    <span class="option__text mono kecermatan-opt-char">
-                      {optionText(option)}
-                    </span>
+                    <span>{option.label || optionLetters[optionIndex]}</span>
                   </button>
                 {/each}
               </div>
-            </div>
-          {:else if question.type === 'MISSING_ELEMENT'}
-            <div class="missing">
-              <p class="missing__arrays">
-                <span class="mono">{question.missingElement?.left}</span>
-                <span class="muted">menjadi</span>
-                <span class="mono">{question.missingElement?.right}?</span>
-              </p>
-              <form
-                class="missing__form"
-                onsubmit={(event) => {
-                  event.preventDefault();
-                  submitMissingText(question);
-                }}
-              >
-                <input
-                  class="input"
-                  bind:value={textAnswer}
-                  maxlength="4"
-                  autocomplete="off"
-                  aria-label="Karakter yang hilang"
-                  placeholder="Karakter"
-                />
-                <Button type="submit" disabled={!textAnswer.trim()}>Simpan &amp; lanjut</Button>
-              </form>
             </div>
           {:else}
             <div class="options" role="group" aria-label="Pilih jawaban">
@@ -1120,93 +1180,168 @@
           {/if}
         </article>
 
-          <footer class="runner__footer">
-            <div class="runner__nav runner__nav--start">
-              <Button variant="secondary" disabled={index === 0} onclick={goBack}>Sebelumnya</Button>
-            </div>
-            <div class="runner__nav runner__nav--center">
-              <Button
-                variant={question && flagged.has(question.id) ? 'success' : 'ghost'}
-                onclick={toggleFlag}
-                title="Tandai soal ini untuk ditinjau ulang"
-              >
-                {question && flagged.has(question.id) ? 'Ragu-ragu ✓' : 'Ragu-ragu'}
-              </Button>
-              <Button
-                variant="danger"
-                disabled={!hasAnswer}
-                onclick={clearCurrentAnswer}
-                title="Hapus jawaban yang dipilih pada nomor ini"
-              >
-                Hapus Jawaban
-              </Button>
-            </div>
-            <div class="runner__nav runner__nav--end">
-              {#if index < examRunner.questions.length - 1}
+          {#if isKecermatan}
+            <footer class="runner__footer runner__footer--kecermatan">
+              <div class="runner__nav runner__nav--start">
+                <Badge tone="info">Kolom {kecermatanColumnIndex + 1} dari 10</Badge>
+              </div>
+              <div class="runner__nav runner__nav--center">
+                <span class="kecermatan-footer-count">
+                  Soal <strong>{(index % 50) + 1}</strong> / 50
+                </span>
+              </div>
+              <div class="runner__nav runner__nav--end">
+                {#if (index % 50) < 49 && index < examRunner.questions.length - 1}
+                  <Button variant="secondary" size="sm" onclick={advance}>
+                    Lewati (Soal Berikutnya) →
+                  </Button>
+                {:else if kecermatanColumnIndex < 9}
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onclick={() => {
+                      index = (kecermatanColumnIndex + 1) * 50;
+                    }}
+                  >
+                    Lanjut Kolom {kecermatanColumnIndex + 2} →
+                  </Button>
+                {:else}
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onclick={() => (confirmFinish = true)}
+                  >
+                    Selesaikan Ujian
+                  </Button>
+                {/if}
+              </div>
+            </footer>
+          {:else}
+            <footer class="runner__footer">
+              <div class="runner__nav runner__nav--start">
+                <Button variant="secondary" disabled={index === 0} onclick={goBack}>Sebelumnya</Button>
+              </div>
+              <div class="runner__nav runner__nav--center">
                 <Button
-                  variant="secondary"
-                  onclick={advance}
+                  variant={question && flagged.has(question.id) ? 'success' : 'ghost'}
+                  onclick={toggleFlag}
+                  title="Tandai soal ini untuk ditinjau ulang"
                 >
-                  Selanjutnya
+                  {question && flagged.has(question.id) ? 'Ragu-ragu ✓' : 'Ragu-ragu'}
                 </Button>
-              {:else if examRunner.nextSubtest}
-                <Button
-                  variant="primary"
-                  onclick={() => (confirmFinish = true)}
-                >
-                  Lanjut ke {examRunner.nextSubtest.name} →
-                </Button>
-              {:else}
                 <Button
                   variant="danger"
-                  onclick={() => (confirmFinish = true)}
+                  disabled={!hasAnswer}
+                  onclick={clearCurrentAnswer}
+                  title="Hapus jawaban yang dipilih pada nomor ini"
                 >
-                  Selesaikan Ujian
+                  Hapus Jawaban
                 </Button>
-              {/if}
-            </div>
-          </footer>
+              </div>
+              <div class="runner__nav runner__nav--end">
+                {#if index < examRunner.questions.length - 1}
+                  <Button
+                    variant="secondary"
+                    onclick={advance}
+                  >
+                    Selanjutnya
+                  </Button>
+                {:else if examRunner.nextSubtest}
+                  <Button
+                    variant="primary"
+                    onclick={() => (confirmFinish = true)}
+                  >
+                    Lanjut ke {examRunner.nextSubtest.name} →
+                  </Button>
+                {:else}
+                  <Button
+                    variant="danger"
+                    onclick={() => (confirmFinish = true)}
+                  >
+                    Selesaikan Ujian
+                  </Button>
+                {/if}
+              </div>
+            </footer>
+          {/if}
         {/if}
         </main>
 
         <!-- KANAN: Daftar nomor soal + Akhiri sesi + Urutan tes -->
         <aside class="runner__side runner__side--right" aria-label="Daftar soal dan info ujian">
-          <div class="palette-card">
-            <header class="palette-card__head">
-              <div>
-                <h2 class="palette-card__title">Daftar Soal</h2>
-                <span class="palette-card__sub">Pilih nomor untuk membuka soal</span>
+          {#if isKecermatan}
+            <div class="palette-card">
+              <header class="palette-card__head">
+                <div>
+                  <h2 class="palette-card__title">Progres Kolom Kecermatan</h2>
+                  <span class="palette-card__sub">10 Kolom · 1 Menit per Kolom</span>
+                </div>
+              </header>
+              <div class="kecermatan-column-list">
+                {#each Array.from({ length: 10 }, (_, colIdx) => colIdx) as colIdx}
+                  {@const isCurrent = colIdx === kecermatanColumnIndex}
+                  {@const isPassed = colIdx < kecermatanColumnIndex}
+                  {@const colAnswered = examRunner.questions
+                    .slice(colIdx * 50, (colIdx + 1) * 50)
+                    .filter((q) => examRunner.answerOf(q.id) !== null).length}
+                  <div
+                    class="kecermatan-col-item"
+                    class:kecermatan-col-item--active={isCurrent}
+                    class:kecermatan-col-item--done={isPassed}
+                  >
+                    <div class="kecermatan-col-item__info">
+                      <span class="kecermatan-col-item__name">Kolom {colIdx + 1}</span>
+                      <span class="kecermatan-col-item__count">{colAnswered} / 50 terjawab</span>
+                    </div>
+                    {#if isCurrent}
+                      <Badge tone="brand" size="sm">Sedang Aktif</Badge>
+                    {:else if isPassed}
+                      <Badge tone="success" size="sm">Selesai</Badge>
+                    {:else}
+                      <Badge tone="neutral" size="sm">Menunggu</Badge>
+                    {/if}
+                  </div>
+                {/each}
               </div>
-              <span class="palette-card__count">
-                {examRunner.answeredCount}/{examRunner.totalQuestions}
-              </span>
-            </header>
-            <div class="palette">
-              {#each examRunner.questions as entry, entryIndex (entry.id)}
-                {@const isAns = examRunner.answerOf(entry.id) !== null}
-                {@const isCur = entryIndex === index}
-                {@const isFlg = flagged.has(entry.id)}
-                <button
-                  type="button"
-                  class="palette__item"
-                  class:palette__item--current={isCur}
-                  class:palette__item--answered={isAns}
-                  class:palette__item--flagged={isFlg}
-                  aria-current={isCur ? 'true' : undefined}
-                  onclick={() => (index = entryIndex)}
-                  title={`Soal nomor ${entryIndex + 1}${isAns ? ' (Sudah dijawab)' : ''}${isFlg ? ' (Ragu-ragu)' : ''}`}
-                >
-                  {entryIndex + 1}
-                </button>
-              {/each}
             </div>
-            <ul class="legend">
-              <li><span class="dot dot--current"></span>Dikerjakan sekarang</li>
-              <li><span class="dot dot--answered"></span>Sudah dijawab</li>
-              <li><span class="dot dot--flagged"></span>Ragu-ragu</li>
-              <li><span class="dot dot--unanswered"></span>Belum dijawab</li>
-            </ul>
-          </div>
+          {:else}
+            <div class="palette-card">
+              <header class="palette-card__head">
+                <div>
+                  <h2 class="palette-card__title">Daftar Soal</h2>
+                  <span class="palette-card__sub">Pilih nomor untuk membuka soal</span>
+                </div>
+                <span class="palette-card__count">
+                  {examRunner.answeredCount}/{examRunner.totalQuestions}
+                </span>
+              </header>
+              <div class="palette">
+                {#each examRunner.questions as entry, entryIndex (entry.id)}
+                  {@const isAns = examRunner.answerOf(entry.id) !== null}
+                  {@const isCur = entryIndex === index}
+                  {@const isFlg = flagged.has(entry.id)}
+                  <button
+                    type="button"
+                    class="palette__item"
+                    class:palette__item--current={isCur}
+                    class:palette__item--answered={isAns}
+                    class:palette__item--flagged={isFlg}
+                    aria-current={isCur ? 'true' : undefined}
+                    onclick={() => (index = entryIndex)}
+                    title={`Soal nomor ${entryIndex + 1}${isAns ? ' (Sudah dijawab)' : ''}${isFlg ? ' (Ragu-ragu)' : ''}`}
+                  >
+                    {entryIndex + 1}
+                  </button>
+                {/each}
+              </div>
+              <ul class="legend">
+                <li><span class="dot dot--current"></span>Dikerjakan sekarang</li>
+                <li><span class="dot dot--answered"></span>Sudah dijawab</li>
+                <li><span class="dot dot--flagged"></span>Ragu-ragu</li>
+                <li><span class="dot dot--unanswered"></span>Belum dijawab</li>
+              </ul>
+            </div>
+          {/if}
 
           {#if examRunner.nextSubtest}
             <Button variant="primary" fullWidth onclick={() => (confirmFinish = true)}>
@@ -1816,10 +1951,6 @@
     gap: var(--space-2);
   }
 
-  .options--compact {
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-  }
-
   .option {
     display: flex;
     align-items: center;
@@ -1928,22 +2059,6 @@
     font-size: 0.68rem;
     line-height: 1.2;
     text-align: center;
-  }
-
-  .missing__arrays {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-    font-size: var(--text-2xl);
-    letter-spacing: 0.18em;
-    margin-bottom: var(--space-4);
-  }
-
-  .missing__form {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
   }
 
   .passhand__hint {
@@ -2086,22 +2201,6 @@
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-4);
-  }
-
-  .input {
-    width: 100%;
-    padding: 0.6rem 0.75rem;
-    background: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
-  }
-
-  .input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-ring);
   }
 
   .modal {
@@ -2333,136 +2432,231 @@
   }
 
   /* -------------------------------------------------------- KECERMATAN RUNNER */
-  .kecermatan-container {
+  .kecermatan-flow {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--space-5);
     width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: var(--space-3) 0;
   }
 
-  .kecermatan-benchmark {
-    background: var(--color-surface-muted);
-    border: 2px solid var(--color-border-strong);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-  }
-
-  .kecermatan-benchmark__header {
-    margin-bottom: var(--space-3);
-    text-align: center;
-  }
-
-  .kecermatan-benchmark__col-title {
-    font-size: var(--text-sm);
-    font-weight: 700;
+  .kecermatan-timer-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 800;
     color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    text-align: center;
+    letter-spacing: 0.05em;
   }
 
-  .kecermatan-benchmark__grid {
+  .kecermatan-sample-box {
+    width: 100%;
+    background: #0b1329;
+    color: #ffffff;
+    border: 3px solid #3b82f6;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+  }
+
+  :global(.theme-light) .kecermatan-sample-box {
+    background: #1e293b;
+    border-color: #2563eb;
+  }
+
+  .kecermatan-sample-header {
+    background: #1e3a8a;
+    color: #ffffff;
+    font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+    font-weight: 800;
+    text-align: center;
+    padding: var(--space-2) var(--space-4);
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #3b82f6;
+  }
+
+  .kecermatan-sample-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kecermatan-sample-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .kecermatan-sample-row--chars {
+    border-bottom: 2px solid #334155;
+    background: rgba(15, 23, 42, 0.95);
+  }
+
+  .kecermatan-sample-row--labels {
+    background: #1e293b;
+  }
+
+  .kecermatan-sample-cell {
+    display: grid;
+    place-items: center;
+    padding: var(--space-3) var(--space-1);
+    font-family: var(--font-mono);
+    border-right: 2px solid #334155;
+  }
+
+  .kecermatan-sample-cell:last-child {
+    border-right: none;
+  }
+
+  .kecermatan-sample-cell--char {
+    font-size: clamp(2rem, 5.5vw, 2.8rem);
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  .kecermatan-sample-cell--label {
+    font-size: clamp(1.3rem, 3.2vw, 1.6rem);
+    font-weight: 800;
+    color: #93c5fd;
+    line-height: 1;
+  }
+
+  /* KOTAK SOAL AKTIF (4 HURUF) */
+  .kecermatan-question-card {
+    width: 100%;
+    background: #0b1329;
+    border: 3px solid #3b82f6;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.25);
+  }
+
+  :global(.theme-light) .kecermatan-question-card {
+    background: #1e293b;
+    border-color: #2563eb;
+  }
+
+  .kecermatan-question-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .kecermatan-question-cell {
+    display: grid;
+    place-items: center;
+    padding: var(--space-4) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: clamp(2.2rem, 6vw, 3rem);
+    font-weight: 900;
+    color: #ffffff;
+    border-right: 2px solid #334155;
+    line-height: 1;
+  }
+
+  .kecermatan-question-cell:last-child {
+    border-right: none;
+  }
+
+  /* TOMBOL PILIHAN JAWABAN (A B C D E) */
+  .kecermatan-choices-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: var(--space-2);
+    width: 100%;
   }
 
-  .kecermatan-benchmark__cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--space-2) var(--space-1);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .kecermatan-benchmark__opt {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    color: var(--color-text-muted);
-    background: var(--color-surface-muted);
-    border-radius: var(--radius-sm);
-    padding: 1px 6px;
-    margin-bottom: 2px;
-  }
-
-  .kecermatan-benchmark__char {
-    font-family: var(--font-mono);
-    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
-    font-weight: 800;
-    color: var(--color-text);
-    line-height: 1.1;
-  }
-
-  .kecermatan-question-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-5);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-  }
-
-  .kecermatan-question-label {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-3);
-  }
-
-  .kecermatan-question-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-  }
-
-  .kecermatan-char-tile {
+  .kecermatan-choice-key {
     display: grid;
     place-items: center;
-    width: clamp(52px, 8vw, 68px);
-    height: clamp(52px, 8vw, 68px);
-    background: var(--color-surface-muted);
-    border: 2px solid var(--color-border-strong);
+    height: clamp(56px, 10vw, 76px);
+    background: #1e293b;
+    color: #ffffff;
+    border: 2px solid #3b82f6;
     border-radius: var(--radius-md);
     font-family: var(--font-mono);
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 800;
-    color: var(--color-text);
-    box-shadow: var(--shadow-sm);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  .kecermatan-char-tile--missing {
-    border-style: dashed;
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: var(--color-primary-soft);
+  .kecermatan-choice-key:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateY(-2px);
+    border-color: #60a5fa;
   }
 
-  .kecermatan-options-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr) !important;
-    gap: var(--space-2);
+  .kecermatan-choice-key:active,
+  .kecermatan-choice-key--active {
+    background: #1d4ed8;
+    color: #ffffff;
+    transform: translateY(1px);
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
   }
 
-  .kecermatan-opt-btn {
+  /* SIDEBAR KOLOM KECERMATAN */
+  .kecermatan-column-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-3) var(--space-1);
-    min-height: 72px;
+    gap: var(--space-2);
+    padding: var(--space-3);
   }
 
-  .kecermatan-opt-char {
-    font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
-    font-weight: 800;
-    margin-top: 2px;
+  .kecermatan-col-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    transition: all 0.15s ease;
+  }
+
+  .kecermatan-col-item--active {
+    border-color: var(--color-primary);
+    background: var(--color-surface-hover);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+
+  .kecermatan-col-item--done {
+    opacity: 0.75;
+  }
+
+  .kecermatan-col-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .kecermatan-col-item__name {
+    font-weight: 700;
+    font-size: var(--text-sm);
+  }
+
+  .kecermatan-col-item__count {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .kecermatan-footer-count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .kecermatan-footer-count strong {
+    color: var(--color-text);
+  }
+
+  .runner__footer--kecermatan {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-3);
   }
 </style>

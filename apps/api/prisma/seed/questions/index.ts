@@ -288,12 +288,19 @@ function buildKepribadian(): SeedQuestion[] {
 
 function buildKecermatan(): SeedQuestion[] {
   return KECERMATAN_QUESTIONS.map((row, index) => {
-    // Urutan opsi diacak deterministik agar kunci tidak selalu pada label A.
-    const built = buildOptions(
-      createRng(`kecermatan-options:${row.code}`),
-      row.answer,
-      row.distractors,
-    );
+    // 5 huruf patokan kolom terpetakan langsung ke opsi A, B, C, D, E
+    const leftChars = row.left.split('');
+    const labels = ['A', 'B', 'C', 'D', 'E'];
+    const options = leftChars.map((char, charIdx) => {
+      const isCorrect = char === row.answer;
+      return {
+        label: labels[charIdx]!,
+        contentText: char,
+        isCorrect,
+        scoreValue: isCorrect ? 1 : 0,
+        dimensionMap: null,
+      };
+    });
 
     return {
       publicCode: row.code,
@@ -310,18 +317,12 @@ function buildKecermatan(): SeedQuestion[] {
       columnIndex: row.columnIndex ?? Math.floor(index / 50),
       dedupeHash: hashOf(
         row.stem,
-        built.options.map((option) => ({ contentText: option.contentText })),
+        options.map((option) => ({ contentText: option.contentText })),
       ),
       // Stem sama untuk seluruh soal varian; keunikan dijaga oleh publicCode,
       // sehingga unique index dedupe sengaja dilewati.
       dedupeOverride: true,
-      options: built.options.map((option) => ({
-        label: option.label,
-        contentText: option.contentText,
-        isCorrect: option.isCorrect,
-        scoreValue: option.isCorrect ? 1 : 0,
-        dimensionMap: null,
-      })),
+      options,
       media: [],
       tags: [...row.tags],
     };
