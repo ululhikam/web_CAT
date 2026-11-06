@@ -35,7 +35,7 @@
     durationMinutes: 30,
     weight: 10,
     passingScore: 60,
-    eliminationEnabled: true,
+    eliminationEnabled: false,
     scoringStrategy: 'KEYED_CORRECT' as ScoringStrategy,
     isActive: true,
   });

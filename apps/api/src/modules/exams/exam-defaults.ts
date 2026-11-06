@@ -79,7 +79,7 @@ export const DEFAULT_STAGES: StageConfigSnapshot[] = [
     orderIndex: 1,
     weight: 50,
     passingScore: 60,
-    eliminationEnabled: true,
+    eliminationEnabled: false,
     subtests: [
       {
         subtestId: 'default-kecerdasan',
@@ -90,7 +90,7 @@ export const DEFAULT_STAGES: StageConfigSnapshot[] = [
         durationMinutes: 120,
         weight: 50,
         passingScore: 60,
-        eliminationEnabled: true,
+        eliminationEnabled: false,
         scoringStrategy: 'KEYED_CORRECT',
         scoringConfig: null,
       },
@@ -103,7 +103,7 @@ export const DEFAULT_STAGES: StageConfigSnapshot[] = [
         durationMinutes: 10,
         weight: 50,
         passingScore: 55,
-        eliminationEnabled: true,
+        eliminationEnabled: false,
         scoringStrategy: 'CORRECT_MINUS_PENALTY',
         scoringConfig: { penalty: 0 },
       },
@@ -117,7 +117,7 @@ export const DEFAULT_STAGES: StageConfigSnapshot[] = [
     orderIndex: 2,
     weight: 30,
     passingScore: 60,
-    eliminationEnabled: true,
+    eliminationEnabled: false,
     subtests: [
       {
         subtestId: 'default-tkk-subtest',
@@ -128,7 +128,7 @@ export const DEFAULT_STAGES: StageConfigSnapshot[] = [
         durationMinutes: 60,
         weight: 100,
         passingScore: 60,
-        eliminationEnabled: true,
+        eliminationEnabled: false,
         scoringStrategy: 'KEYED_CORRECT',
         scoringConfig: null,
       },

@@ -244,8 +244,9 @@
               selesai. Timer subtes baru mulai penuh saat Anda membukanya.
             </li>
             <li>
-              <strong>Sistem gugur.</strong> Nilai subtes di bawah ambang gugur dapat mengakhiri sesi.
-              Data subtes yang sudah dikerjakan tetap tersimpan.
+              <strong>Evaluasi Nilai Lengkap.</strong> Peserta mengerjakan seluruh tahapan subtes
+              hingga tuntas. Rekapitulasi nilai dan status kelulusan (MS/TMS) ditampilkan lengkap di
+              akhir ujian tanpa sistem gugur di tengah tes.
             </li>
             <li>
               <strong>Anti-kecurangan.</strong> Perpindahan tab, salin-tempel, keluar layar penuh, dan

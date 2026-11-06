@@ -45,7 +45,7 @@ const STAGES: StageSeed[] = [
     orderIndex: 1,
     weight: 50,
     passingScore: 60,
-    eliminationEnabled: true,
+    eliminationEnabled: false,
     subtests: [
       {
         code: 'KECERDASAN',
@@ -56,7 +56,7 @@ const STAGES: StageSeed[] = [
         weight: 50,
         passingScore: 60,
         scoringStrategy: 'KEYED_CORRECT',
-        eliminationEnabled: true,
+        eliminationEnabled: false,
       },
       {
         code: 'KECERMATAN',
@@ -68,7 +68,7 @@ const STAGES: StageSeed[] = [
         passingScore: 55,
         scoringStrategy: 'CORRECT_MINUS_PENALTY',
         scoringConfig: { penalty: 0 },
-        eliminationEnabled: true,
+        eliminationEnabled: false,
       },
     ],
   },
@@ -79,7 +79,7 @@ const STAGES: StageSeed[] = [
     orderIndex: 2,
     weight: 30,
     passingScore: 60,
-    eliminationEnabled: true,
+    eliminationEnabled: false,
     subtests: [
       {
         code: 'TKK',
@@ -90,7 +90,7 @@ const STAGES: StageSeed[] = [
         weight: 100,
         passingScore: 60,
         scoringStrategy: 'KEYED_CORRECT',
-        eliminationEnabled: true,
+        eliminationEnabled: false,
       },
     ],
   },

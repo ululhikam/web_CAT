@@ -243,7 +243,7 @@ export function parseSubtestConfig(value: unknown): SubtestConfigSnapshot | null
     durationMinutes: Math.max(1, asNumber(raw.durationMinutes, 1)),
     weight: Math.max(0, asNumber(raw.weight, 0)),
     passingScore: Math.max(0, asNumber(raw.passingScore, 60)),
-    eliminationEnabled: asBoolean(raw.eliminationEnabled, true),
+    eliminationEnabled: asBoolean(raw.eliminationEnabled, false),
     scoringStrategy: asString(raw.scoringStrategy, 'KEYED_CORRECT'),
     scoringConfig: Object.keys(scoringConfig).length > 0 ? scoringConfig : null,
   };
@@ -261,7 +261,7 @@ export function parseStageConfig(value: unknown): StageConfigSnapshot | null {
     orderIndex: asNumber(raw.orderIndex, 1),
     weight: Math.max(0, asNumber(raw.weight, 0)),
     passingScore: Math.max(0, asNumber(raw.passingScore, 60)),
-    eliminationEnabled: asBoolean(raw.eliminationEnabled, true),
+    eliminationEnabled: asBoolean(raw.eliminationEnabled, false),
     subtests: asArray(raw.subtests)
       .map(parseSubtestConfig)
       .filter((entry): entry is SubtestConfigSnapshot => entry !== null),

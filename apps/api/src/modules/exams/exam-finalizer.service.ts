@@ -230,7 +230,7 @@ export class ExamFinalizerService {
           return { sessionId: subtest.sessionId, subtestId: subtest.id, alreadyFinal: false };
         }
 
-        if (!stageComplete || stagePassed !== false) {
+        if (!stageComplete || stagePassed !== false || !stageConfig?.eliminationEnabled) {
           await this.prepareNextSubtest(tx, subtest.sessionId, subtest, sessionConfig, now);
         }
 

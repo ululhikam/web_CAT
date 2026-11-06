@@ -470,7 +470,7 @@ export const createSubtestSchema = z.object({
   durationMinutes: z.number().int().min(1).max(240),
   weight: z.number().min(0).max(100),
   passingScore: z.number().min(0).max(100),
-  eliminationEnabled: z.boolean().default(true),
+  eliminationEnabled: z.boolean().default(false),
   scoringStrategy: z.enum(SCORING_STRATEGIES).default('KEYED_CORRECT'),
   scoringConfig: z.record(z.unknown()).nullable().optional(),
   isActive: z.boolean().default(true),
