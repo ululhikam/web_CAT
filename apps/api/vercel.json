@@ -3,6 +3,7 @@
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
   "buildCommand": "cd ../.. && pnpm --filter @webcat/api prisma:generate && pnpm turbo run build --filter=@webcat/api",
   "outputDirectory": "public",
+  "regions": ["sin1"],
   "functions": {
     "api/index.js": {
       "maxDuration": 60,

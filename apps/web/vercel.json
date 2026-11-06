@@ -3,6 +3,7 @@
   "framework": "sveltekit",
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
   "buildCommand": "cd ../.. && pnpm turbo run build --filter=@webcat/web",
+  "regions": ["sin1"],
   "rewrites": [
     {
       "source": "/api/:path*",

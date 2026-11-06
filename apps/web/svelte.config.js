@@ -50,7 +50,14 @@ const config = {
   preprocess: vitePreprocess(),
   kit: {
     adapter: onVercel
-      ? vercel({ runtime: 'nodejs22.x', regions: ['sin1'] })
+      ? vercel({
+          runtime: 'nodejs22.x',
+          // Database Supabase ada di `ap-southeast-1` (Singapura), jadi fungsi
+          // wajib jalan di region Vercel yang setara (`sin1`) agar query tidak
+          // menyeberangi benua. Harus sama dengan `apps/api/vercel.json` dan
+          // default region kedua project di dashboard.
+          regions: ['sin1'],
+        })
       : node({ out: 'build' }),
     csp: {
       // Hash (bukan nonce) agar header aman di-cache bersama HTML-nya.

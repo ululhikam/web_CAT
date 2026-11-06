@@ -59,6 +59,48 @@ Invoke-RestMethod -Method Patch -Headers $h -ContentType 'application/json' `
   -Body (@{ rootDirectory = 'apps/api' } | ConvertTo-Json)
 ```
 
+### Region: samakan dengan database
+
+Database Supabase berada di **`ap-southeast-1` (Singapura)** — lihat host pooler
+`aws-0-ap-southeast-1.pooler.supabase.com` di `.env`. Region Vercel yang
+setara adalah **`sin1`**, jadi semua fungsi harus jalan di sana agar setiap
+query tidak menyeberangi benua.
+
+Region diset di empat lapis supaya tidak mudah melenceng:
+
+| Lapis | Berkas / tempat | Nilai |
+| --- | --- | --- |
+| Adapter web | `apps/web/svelte.config.js` → `vercel({ regions })` | `['sin1']` |
+| Config web | `apps/web/vercel.json` → `regions` | `["sin1"]` |
+| Config API | `apps/api/vercel.json` → `regions` + `functions['api/index.js'].regions` | `["sin1"]` |
+| Default project | Vercel → Settings → Functions → Region | `sin1` |
+
+Paket Hobby hanya boleh **satu** region. Menyetel dua (mis. `["iad1","sin1"]`)
+membuat deploy gagal di tahap `Deploying outputs...` dengan
+`errorCode: upgrade_required`, tanpa pesan yang jelas di log build.
+
+Default project diset lewat API karena tidak ada flag CLI-nya (ulangi untuk
+`tes-cat-api`):
+
+```powershell
+Invoke-RestMethod -Method Patch -Headers $h -ContentType 'application/json' `
+  -Uri "https://api.vercel.com/v9/projects/tes-cat?teamId=$team" `
+  -Body (@{ serverlessFunctionRegion = 'sin1' } | ConvertTo-Json)
+```
+
+Cek hasilnya: header `x-vercel-id` harus berawalan `sin1::`, dan
+`GET /api/v1/health/ready` melaporkan `latencyMs` satu digit (round-trip
+dalam region yang sama, bukan ratusan milidetik).
+
+> Kalau database dipindah region, ubah keempat lapis di atas **dan** variabel
+> `DATABASE_URL`/`DIRECT_URL` sekaligus. Fungsi yang tertinggal di region lain
+> tetap berjalan, hanya jauh lebih lambat.
+
+Catatan: baris `Running build in Washington, D.C., USA (East) – iad1` di log
+build adalah **region build**, bukan region fungsi. Region build tidak bisa
+dipilih (selalu `iad1`), dan itu tidak memengaruhi latensi aplikasi — yang
+penting adalah region tempat fungsi dan database berjalan.
+
 ## 3. Environment variables
 
 Hanya project **API** yang butuh secret. Web tidak membaca env apa pun saat
