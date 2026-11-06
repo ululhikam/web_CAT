@@ -124,6 +124,10 @@
     <Button href="mailto:support@webcat.id" size="sm">Perpanjang</Button>
   </header>
 
+  <Alert tone="warning" title="Fitur Paket Langganan Dibekukan">
+    Fitur paket langganan saat ini sedang dibekukan / dalam pemeliharaan berkala. Seluruh peserta dapat langsung mengakses latihan Pretest CAT & TES CAT secara bebas tanpa pembatasan.
+  </Alert>
+
   {#if statusMessage === 'success'}
     <Alert tone="success" title="Pembayaran berhasil">
       Masa aktif sudah ditambahkan. Terima kasih!
@@ -205,6 +209,10 @@
               </div>
               <span class="history__source">{sourceLabels[row.source]}</span>
             </header>
+
+  <Alert tone="warning" title="Fitur Paket Langganan Dibekukan">
+    Fitur paket langganan saat ini sedang dibekukan / dalam pemeliharaan berkala. Seluruh peserta dapat langsung mengakses latihan Pretest CAT & TES CAT secara bebas tanpa pembatasan.
+  </Alert>
 
             {#if row.revokeReason}
               <p class="history__reason">Alasan pencabutan: {row.revokeReason}</p>

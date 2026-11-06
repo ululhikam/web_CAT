@@ -60,6 +60,10 @@
     return value === null || value === undefined ? '-' : `${value.toFixed(2)}%`;
   }
 
+  function formatScore(value: number | null | undefined): string {
+    return value === null || value === undefined ? '-' : value.toFixed(2);
+  }
+
   /**
    * Sesi yang gugur/kedaluwarsa tidak punya nilai total. Menampilkan `-` sebagai
    * angka besar terlihat seperti data rusak, jadi pakai label status yang jelas.
@@ -109,34 +113,85 @@
   {:else}
     <header class="page__header">
       <div>
-        <p class="eyebrow">Hasil ujian</p>
+        <p class="eyebrow">Hasil Ujian Sesi</p>
         <h1 class="page__title">{formatDateTime(result.startedAt)}</h1>
-        <p class="muted">Sesi {result.sessionId}</p>
+        <p class="muted">Sesi Ujian: {result.sessionId}</p>
       </div>
-      <div class="score">
-        <Badge tone={statusTone} size="md">{statusLabel(result.status)}</Badge>
-        <p class="score__value" class:score__value--label={result.totalScore === null}>
-          {#if result.totalScore === null}
-            {scoreHeadline(result.status)}
-          {:else}
-            {percent(result.totalScore)}
-          {/if}
-        </p>
-        <p class="score__caption">
-          {#if result.status === 'ELIMINATED'}
-            Nilai total tidak dihitung{result.eliminatedSubtestCode
-              ? `, gugur pada subtes ${result.eliminatedSubtestCode}`
-              : ''}
-          {:else if result.passed === true}
-            Lulus
-          {:else if result.passed === false}
-            Belum lulus
-          {:else}
-            Menunggu penilaian
-          {/if}
-        </p>
+      <div class="actions">
+        <Button variant="secondary" href="/history">Riwayat Ujian</Button>
+        <Button href="/exam">Ujian Baru</Button>
       </div>
     </header>
+
+    <!-- HIGHLIGHT UTAMA AKUMULASI NILAI AKHIR (TANPA PERSENTASE) -->
+    <section
+      class="score-highlight-card"
+      class:score-highlight-card--pass={result.passed}
+      class:score-highlight-card--fail={result.passed === false || result.status === 'ELIMINATED'}
+    >
+      <div class="score-highlight-card__head">
+        <div class="score-highlight-tag">
+          <span class="badge-dot"></span>
+          <span>AKUMULASI NILAI AKHIR TES CAT POLRI</span>
+        </div>
+        <Badge tone={statusTone} size="md">
+          {result.passed === true
+            ? '✓ MEMENUHI SYARAT (MS)'
+            : result.status === 'ELIMINATED'
+              ? '✗ GUGUR / TMS'
+              : result.passed === false
+                ? '✗ TIDAK MEMENUHI SYARAT (TMS)'
+                : statusLabel(result.status)}
+        </Badge>
+      </div>
+
+      <div class="score-highlight-card__main">
+        <div class="score-highlight-val-block">
+          <span class="score-highlight-val__number" class:text-success={result.passed} class:text-danger={result.passed === false || result.status === 'ELIMINATED'}>
+            {#if result.totalScore === null}
+              {scoreHeadline(result.status)}
+            {:else}
+              {formatScore(result.totalScore)}
+            {/if}
+          </span>
+          {#if result.totalScore !== null}
+            <span class="score-highlight-val__scale">/ 100</span>
+          {/if}
+        </div>
+
+        <div class="score-highlight-meta-block">
+          <div class="score-highlight-threshold">
+            Ambang Batas Kelulusan Minimal: <strong>{formatScore(result.totalPassingScore ?? 61)}</strong>
+          </div>
+          {#if result.totalScore !== null}
+            <div class="score-highlight-gauge">
+              <div
+                class="score-highlight-gauge-fill"
+                class:score-highlight-gauge-fill--pass={result.passed}
+                class:score-highlight-gauge-fill--fail={!result.passed}
+                style:width={`${Math.min(100, Math.max(0, result.totalScore))}%`}
+              ></div>
+              <div
+                class="score-highlight-gauge-marker"
+                style:left={`${result.totalPassingScore ?? 61}%`}
+                title="Batas Minimal 61.00"
+              ></div>
+            </div>
+          {/if}
+          <p class="score-highlight-caption">
+            {#if result.status === 'ELIMINATED'}
+              Sesi dinyatakan gugur{result.eliminatedSubtestCode ? ` pada subtes ${result.eliminatedSubtestCode}` : ''}.
+            {:else if result.passed === true}
+              🎉 Selamat! Akumulasi skor memenuhi syarat kelulusan seleksi Polri (di atas ambang batas kelulusan minimal tanpa persentase).
+            {:else if result.passed === false}
+              ⚠️ Perhatian: Akumulasi skor berada di bawah ambang batas minimal kelulusan. Tingkatkan latihan Anda.
+            {:else}
+              Hasil evaluasi akhir tersimpan resmi di basis data sistem CAT.
+            {/if}
+          </p>
+        </div>
+      </div>
+    </section>
 
     {#if result.status === 'ELIMINATED'}
       <Alert tone="danger" title="Sesi dinyatakan gugur">
@@ -166,7 +221,7 @@
           </div>
           <div>
             <dt>Ambang total</dt>
-            <dd>{percent(result.totalPassingScore)}</dd>
+            <dd>{formatScore(result.totalPassingScore)}</dd>
           </div>
           <div>
             <dt>Versi penilaian</dt>
@@ -465,30 +520,142 @@
     font-size: var(--text-2xl);
   }
 
-  .score {
+  /* ========================================================================== */
+  /* HIGHLIGHT BESAR AKUMULASI NILAI AKHIR (TANPA PERSENTASE)                   */
+  /* ========================================================================== */
+
+  .score-highlight-card {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-1);
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
   }
 
-  .score__value {
-    font-size: var(--text-3xl);
-    font-weight: 750;
+  .score-highlight-card--pass {
+    border-color: rgba(16, 185, 129, 0.45);
+    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.05) 100%);
+  }
+
+  .score-highlight-card--fail {
+    border-color: rgba(239, 68, 68, 0.45);
+    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(239, 68, 68, 0.05) 100%);
+  }
+
+  .score-highlight-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .score-highlight-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-xs);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--color-text-subtle);
+  }
+
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-primary);
+  }
+
+  .score-highlight-card__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+
+  .score-highlight-val-block {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .score-highlight-val__number {
+    font-size: clamp(3.2rem, 7vw, 4.8rem);
+    font-weight: 900;
     line-height: 1;
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono, monospace);
+    letter-spacing: -0.03em;
   }
 
-  /* Label status (GUGUR/KEDALUWARSA) lebih panjang dari angka, jadi dikecilkan
-     agar tidak meluber di layar sempit. */
-  .score__value--label {
-    font-size: var(--text-xl);
-    letter-spacing: 0.02em;
+  .score-highlight-val__scale {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    font-weight: 700;
   }
 
-  .score__caption {
+  .score-highlight-meta-block {
+    flex: 1;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .score-highlight-threshold {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
+  }
+
+  .score-highlight-gauge {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .score-highlight-gauge-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .score-highlight-gauge-fill--pass {
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+
+  .score-highlight-gauge-fill--fail {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+  }
+
+  .score-highlight-gauge-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #0f172a;
+    z-index: 2;
+  }
+
+  .score-highlight-caption {
+    margin: 0;
+    font-size: var(--text-xs);
+    line-height: 1.45;
+    color: var(--color-text-muted);
+  }
+
+  .text-success {
+    color: #10b981 !important;
+  }
+
+  .text-danger {
+    color: #ef4444 !important;
   }
 
   .summary-grid {
@@ -778,7 +945,145 @@
   }
 
   @media (min-width: 900px) {
-    .summary-grid {
+    /* ========================================================================== */
+  /* HIGHLIGHT BESAR AKUMULASI NILAI AKHIR (TANPA PERSENTASE)                   */
+  /* ========================================================================== */
+
+  .score-highlight-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  }
+
+  .score-highlight-card--pass {
+    border-color: rgba(16, 185, 129, 0.45);
+    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.05) 100%);
+  }
+
+  .score-highlight-card--fail {
+    border-color: rgba(239, 68, 68, 0.45);
+    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(239, 68, 68, 0.05) 100%);
+  }
+
+  .score-highlight-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .score-highlight-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-xs);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--color-text-subtle);
+  }
+
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-primary);
+  }
+
+  .score-highlight-card__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+
+  .score-highlight-val-block {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .score-highlight-val__number {
+    font-size: clamp(3.2rem, 7vw, 4.8rem);
+    font-weight: 900;
+    line-height: 1;
+    font-family: var(--font-mono, monospace);
+    letter-spacing: -0.03em;
+  }
+
+  .score-highlight-val__scale {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    font-weight: 700;
+  }
+
+  .score-highlight-meta-block {
+    flex: 1;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .score-highlight-threshold {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .score-highlight-gauge {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .score-highlight-gauge-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .score-highlight-gauge-fill--pass {
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+
+  .score-highlight-gauge-fill--fail {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+  }
+
+  .score-highlight-gauge-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #0f172a;
+    z-index: 2;
+  }
+
+  .score-highlight-caption {
+    margin: 0;
+    font-size: var(--text-xs);
+    line-height: 1.45;
+    color: var(--color-text-muted);
+  }
+
+  .text-success {
+    color: #10b981 !important;
+  }
+
+  .text-danger {
+    color: #ef4444 !important;
+  }
+
+  .summary-grid {
       grid-template-columns: 1.1fr 1fr;
     }
   }

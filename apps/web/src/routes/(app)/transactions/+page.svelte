@@ -100,6 +100,10 @@
     {/if}
   </header>
 
+  <Alert tone="warning" title="Fitur Riwayat Transaksi Dibekukan">
+    Fitur transaksi dan riwayat pembayaran saat ini sedang dibekukan / dalam pemeliharaan berkala. Akun peserta dapat langsung mengakses fitur ujian CAT tanpa perlu melakukan transaksi.
+  </Alert>
+
   <div class="filters">
     <label class="filters__label" for="status">Status</label>
     <select

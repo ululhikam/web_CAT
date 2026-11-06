@@ -1,4 +1,4 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { untrack } from 'svelte';
   import { goto } from '$app/navigation';
   import Badge from '@webcat/ui/components/Badge.svelte';
@@ -232,7 +232,7 @@
   <section class="banner-tryout" id="tryout" aria-label="Akses Cepat Tryout">
     <div class="banner-tryout__content">
       <span class="banner-tag">TES CAT MANDIRI &amp; TRYOUT AKBAR</span>
-      <h2 class="banner-title">Uji Kesiapan Seleksi Anda dengan Sistem CAT Asli</h2>
+      <h2 class="banner-title">Uji Kesiapan Seleksi Anda dengan Sistem CAT Lulus SIP (Sekolah Inspektur Polisi)</h2>
       <p class="banner-desc">
         Dilengkapi pengatur waktu terpisah per subtes, bobot penilaian resmi, serta pendeteksi ambang batas kelulusan Memenuhi Syarat (MS) sesuai pengaturan ujian.
       </p>

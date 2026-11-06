@@ -238,21 +238,20 @@
           <div class="nav-heading">PAKET &amp; AKSES</div>
         {/if}
         {#each navBilling as item (item.href)}
-          <a
-            class="nav-link"
-            class:nav-link--active={currentPath === item.href}
-            href={item.href}
-            onclick={() => (mobileDrawerOpen = false)}
-            title={sidebarCollapsed ? item.label : undefined}
+          <button
+            type="button"
+            class="nav-link nav-link--frozen"
+            disabled
+            title="Fitur {item.label} sedang dibekukan / dalam pemeliharaan"
           >
             <div class="nav-link__icon">
               <AdminIcon name={item.icon} size={17} />
             </div>
             {#if !sidebarCollapsed}
               <span class="nav-link__label">{item.label}</span>
-              <span class="nav-link__arrow">›</span>
+              <span class="frozen-badge">Segera</span>
             {/if}
-          </a>
+          </button>
         {/each}
 
         {#if !sidebarCollapsed && navAccount.length > 0}
@@ -457,10 +456,10 @@
                     <AdminIcon name="profile" size={15} />
                     <span>Profil Peserta</span>
                   </a>
-                  <a href="/subscription" class="user-nav-link" onclick={() => (userMenuOpen = false)}>
+                  <button type="button" class="user-nav-link user-nav-link--frozen" disabled title="Fitur paket langganan sedang dibekukan / dalam pemeliharaan">
                     <AdminIcon name="card" size={15} />
-                    <span>Paket Langganan</span>
-                  </a>
+                    <span>Paket Langganan (Segera)</span>
+                  </button>
                   <a href="/devices" class="user-nav-link" onclick={() => (userMenuOpen = false)}>
                     <AdminIcon name="devices" size={15} />
                     <span>Perangkat Aktif</span>
@@ -699,6 +698,43 @@
     font-weight: 750;
     border-left: 3px solid #4e73df;
     border-radius: 0 8px 8px 0;
+  }
+
+  .nav-link--frozen {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    pointer-events: none;
+  }
+
+  .frozen-badge {
+    margin-left: auto;
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    color: #64748b;
+    font-weight: 700;
+  }
+
+  .user-nav-link--frozen {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    color: #6e707e;
+    pointer-events: none;
   }
 
   .nav-link__icon {
