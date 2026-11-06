@@ -32,6 +32,35 @@
   let questionShownAt = Date.now();
   let advanceTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // Jeda istirahat antar subtes (5 - 10 Menit)
+  let breakMinutes = $state(10);
+  let breakRemainingSeconds = $state(10 * 60);
+  let breakTimerId: ReturnType<typeof setInterval> | null = null;
+  let breakTimerStarted = $state(false);
+
+  function startBreakTimer(minutes: number): void {
+    breakMinutes = minutes;
+    breakRemainingSeconds = minutes * 60;
+    breakTimerStarted = true;
+    if (breakTimerId) clearInterval(breakTimerId);
+    breakTimerId = setInterval(() => {
+      if (breakRemainingSeconds > 0) {
+        breakRemainingSeconds -= 1;
+      } else {
+        if (breakTimerId) {
+          clearInterval(breakTimerId);
+          breakTimerId = null;
+        }
+      }
+    }, 1000);
+  }
+
+  function formatTime(totalSeconds: number): string {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+
   /** F5-12 — gambar yang sedang diperbesar; `null` berarti viewer tertutup. */
   let viewerSrc = $state<string | null>(null);
   let viewerAlt = $state('Gambar soal');
@@ -46,6 +75,37 @@
 
   const question = $derived(examRunner.questions[index] ?? null);
   const subtest = $derived(examRunner.currentSubtest);
+  const isKecermatan = $derived(subtest?.subtestCode === 'KECERMATAN');
+  const activeColumnIndex = $derived(
+    question?.columnIndex !== null && question?.columnIndex !== undefined
+      ? question.columnIndex
+      : (isKecermatan ? Math.floor(index / 50) : null)
+  );
+  const activeQuestionInColumn = $derived(
+    isKecermatan ? (index % 50) + 1 : null
+  );
+
+  const benchmarkLetters = $derived(() => {
+    if (!question) return [];
+    if (question.options && question.options.length === 5) {
+      return question.options.map((opt, i) => ({
+        label: optionLetters[i] ?? opt.label,
+        char: opt.text || opt.label,
+      }));
+    }
+    const leftStr = (question.missingElement?.left ?? '').replace(/\s+/g, '');
+    return leftStr.split('').map((char, i) => ({
+      label: optionLetters[i] ?? String.fromCharCode(65 + i),
+      char,
+    }));
+  });
+
+  const questionLetters = $derived(() => {
+    if (!question) return [];
+    const rightStr = (question.missingElement?.right ?? '').replace(/\s+/g, '');
+    return rightStr.split('');
+  });
+
   const isSpeedTest = $derived(
     subtest?.subtestCode === 'KECERMATAN' || subtest?.subtestCode === 'PASS_HAND',
   );
@@ -149,8 +209,25 @@
     mediaPrefetcher.prefetch(planMediaPreload(examRunner.questions, index));
   });
 
+  $effect(() => {
+    if (
+      subtest?.status === 'READY' &&
+      (subtest.subtestCode === 'KECERMATAN' || subtest.orderIndex > 1) &&
+      !breakTimerStarted
+    ) {
+      startBreakTimer(10);
+    }
+  });
+
+  $effect(() => {
+    if (examRunner.sessionStatus === 'COMPLETED' && sessionId && !isFinishing) {
+      void goto(`/results/${sessionId}`);
+    }
+  });
+
   onDestroy(() => {
     if (advanceTimer) clearTimeout(advanceTimer);
+    if (breakTimerId) clearInterval(breakTimerId);
     mediaPrefetcher.reset();
   });
 
@@ -199,6 +276,11 @@
   }
 
   async function openSubtest(): Promise<void> {
+    if (breakTimerId) {
+      clearInterval(breakTimerId);
+      breakTimerId = null;
+    }
+    breakTimerStarted = false;
     // Anti-kecurangan: layar penuh diminta langsung dari gestur klik peserta,
     // satu-satunya saat browser mengizinkannya.
     await enterFullscreen();
@@ -590,36 +672,118 @@
         </div>
       </Card>
     {:else if subtest.status === 'READY'}
-      <Card
-        title={`Siap memulai: ${subtest.name}`}
-        description="Timer belum berjalan sampai Anda membuka subtes."
-        elevated
-      >
-        <dl class="facts">
-          <div>
-            <dt>Jumlah soal</dt>
-            <dd>{subtest.questionCount}</dd>
+      {#if isKecermatan || subtest.orderIndex > 1}
+        <div class="jeda-card">
+          <div class="jeda-card__badge">
+            <span class="jeda-badge-pulse"></span>
+            WAKTU JEDA ISTIRAHAT
           </div>
-          <div>
-            <dt>Strategi penilaian</dt>
-            <dd class="mono">{subtest.scoringStrategy}</dd>
+          <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit)</h2>
+          <p class="jeda-card__subtitle">
+            Subtes 1 telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai subtes kecepatan tinggi berikutnya.
+          </p>
+
+          <div class="jeda-timer-box">
+            <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
+            <div
+              class="jeda-timer-display"
+              class:jeda-timer-display--ended={breakRemainingSeconds === 0}
+            >
+              {formatTime(breakRemainingSeconds)}
+            </div>
+            <div class="jeda-timer-options">
+              <span class="jeda-timer-opt-title">Pilihan Durasi Jeda:</span>
+              <button
+                type="button"
+                class="jeda-opt-btn"
+                class:jeda-opt-btn--active={breakMinutes === 5}
+                onclick={() => startBreakTimer(5)}
+              >
+                5 Menit
+              </button>
+              <button
+                type="button"
+                class="jeda-opt-btn"
+                class:jeda-opt-btn--active={breakMinutes === 10}
+                onclick={() => startBreakTimer(10)}
+              >
+                10 Menit
+              </button>
+            </div>
           </div>
-          <div>
-            <dt>Subtes ke</dt>
-            <dd>{subtest.orderIndex}</dd>
+
+          <div class="jeda-briefing">
+            <h3 class="jeda-briefing__title">
+              📋 Petunjuk Subtes Berikutnya: {subtest.name}
+            </h3>
+            <div class="jeda-briefing__grid">
+              <div class="jeda-briefing__item">
+                <span class="jeda-briefing__lbl">Total Soal</span>
+                <span class="jeda-briefing__val">500 Soal (10 Kolom × 50 Soal)</span>
+              </div>
+              <div class="jeda-briefing__item">
+                <span class="jeda-briefing__lbl">Alokasi Waktu</span>
+                <span class="jeda-briefing__val">10 Menit (1 Menit per Kolom)</span>
+              </div>
+              <div class="jeda-briefing__item">
+                <span class="jeda-briefing__lbl">Karakter</span>
+                <span class="jeda-briefing__val">Huruf Kapital (A - Z)</span>
+              </div>
+              <div class="jeda-briefing__item">
+                <span class="jeda-briefing__lbl">Format Tes</span>
+                <span class="jeda-briefing__val">Kecermatan Huruf Hilang</span>
+              </div>
+            </div>
+            <ul class="jeda-briefing__list">
+              <li>Terdapat <strong>10 kolom</strong>, masing-masing berdurasi <strong>1 menit</strong> dengan <strong>50 soal</strong> per kolom.</li>
+              <li>Setiap kolom memiliki <strong>5 huruf rujukan (A, B, C, D, E)</strong>.</li>
+              <li>Perhatikan 4 huruf pada setiap soal, lalu pilih <strong>1 huruf yang hilang</strong> dari kelompok rujukan secepat mungkin.</li>
+              <li>Anda dapat menggunakan tombol mouse atau tombol keyboard <strong>A, B, C, D, E</strong> (atau angka <strong>1 - 5</strong>) untuk menjawab cepat.</li>
+              <li>Setelah subtes kecermatan ini selesai, hasil akhir ujian akan langsung ditampilkan.</li>
+            </ul>
           </div>
-        </dl>
-        <p class="muted">
-          Setelah dibuka, timer berjalan di server dan tidak dapat dijeda. Pastikan koneksi stabil
-          dan Anda siap mengerjakan seluruh subtes ini.
-        </p>
-        <div class="actions">
-          <Button loading={examRunner.loading} onclick={openSubtest}
-            >Buka subtes &amp; mulai timer</Button
-          >
-          <Button variant="secondary" onclick={enterFullscreen}>Masuk layar penuh</Button>
+
+          <div class="jeda-actions">
+            <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
+              🚀 Mulai Subtes Kecermatan Sekarang
+            </Button>
+            <Button variant="secondary" onclick={enterFullscreen}>
+              {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
+            </Button>
+          </div>
         </div>
-      </Card>
+      {:else}
+        <Card
+          title={`Siap memulai: ${subtest.name}`}
+          description="Timer belum berjalan sampai Anda membuka subtes."
+          elevated
+        >
+          <dl class="facts">
+            <div>
+              <dt>Jumlah soal</dt>
+              <dd>{subtest.questionCount}</dd>
+            </div>
+            <div>
+              <dt>Strategi penilaian</dt>
+              <dd class="mono">{subtest.scoringStrategy}</dd>
+            </div>
+            <div>
+              <dt>Subtes ke</dt>
+              <dd>{subtest.orderIndex}</dd>
+            </div>
+          </dl>
+          <p class="muted">
+            Setelah dibuka, timer berjalan di server dan tidak dapat dijeda. Pastikan koneksi stabil
+            dan Anda siap mengerjakan seluruh subtes ini.
+          </p>
+          <div class="actions">
+            <Button loading={examRunner.loading} onclick={openSubtest}
+              >Buka subtes &amp; mulai timer</Button
+            >
+            <Button variant="secondary" onclick={enterFullscreen}>Masuk layar penuh</Button>
+          </div>
+        </Card>
+      {/if}
     {:else if examRunner.isLocked || examRunner.isExpired}
       <Card
         title={LOCK_LABELS[examRunner.lockedReason ?? 'TIME_EXPIRED'] ?? 'Subtes terkunci'}
@@ -728,10 +892,17 @@
       {:else}
         <article class="question" aria-live="polite">
           <header class="question__header">
-            <Badge tone="brand">Soal {index + 1}</Badge>
-            <Badge tone="neutral">{question.type.replaceAll('_', ' ')}</Badge>
-            {#if question.columnIndex !== null}
-              <Badge tone="info">Kolom {question.columnIndex + 1}</Badge>
+            <Badge tone="brand">Soal {index + 1} / {examRunner.totalQuestions}</Badge>
+            {#if isKecermatan}
+              <Badge tone="info">Kolom {(activeColumnIndex ?? 0) + 1} dari 10</Badge>
+              {#if activeQuestionInColumn}
+                <Badge tone="neutral">Soal {activeQuestionInColumn} / 50 di Kolom Ini</Badge>
+              {/if}
+            {:else}
+              <Badge tone="neutral">{question.type.replaceAll('_', ' ')}</Badge>
+              {#if question.columnIndex !== null}
+                <Badge tone="info">Kolom {question.columnIndex + 1}</Badge>
+              {/if}
             {/if}
           </header>
 
@@ -847,35 +1018,51 @@
               <Button variant="secondary" onclick={advance}>Simpan &amp; lanjut</Button>
             </div>
           {:else if question.type === 'MISSING_ELEMENT' && question.options.length > 0}
-            <div class="missing">
-              <p class="missing__arrays">
-                <span class="mono">{question.missingElement?.left}</span>
-                <span class="muted">menjadi</span>
-                <span class="mono">{question.missingElement?.right}?</span>
-              </p>
+            <div class="kecermatan-container">
+              <!-- TABEL RUJUKAN HURUF KOLOM -->
+              <div class="kecermatan-benchmark">
+                <div class="kecermatan-benchmark__header">
+                  <span class="kecermatan-benchmark__col-title">
+                    HURUF RUJUKAN KOLOM {(activeColumnIndex ?? 0) + 1}
+                  </span>
+                </div>
+                <div class="kecermatan-benchmark__grid">
+                  {#each benchmarkLetters() as item}
+                    <div class="kecermatan-benchmark__cell">
+                      <span class="kecermatan-benchmark__opt">{item.label}</span>
+                      <span class="kecermatan-benchmark__char">{item.char}</span>
+                    </div>
+                  {/each}
+                </div>
+              </div>
+
+              <!-- SOAL: HURUF YANG HILANG -->
+              <div class="kecermatan-question-box">
+                <span class="kecermatan-question-label">Soal: Tentukan 1 Huruf yang Hilang</span>
+                <div class="kecermatan-question-row">
+                  {#each questionLetters() as char}
+                    <span class="kecermatan-char-tile">{char}</span>
+                  {/each}
+                  <span class="kecermatan-char-tile kecermatan-char-tile--missing">?</span>
+                </div>
+              </div>
+
+              <!-- PILIHAN JAWABAN (A, B, C, D, E) -->
               <div
-                class="options options--compact"
+                class="options options--compact kecermatan-options-grid"
                 role="group"
                 aria-label="Pilih karakter yang hilang"
               >
                 {#each question.options as option, optionIndex (option.id)}
                   <button
                     type="button"
-                    class="option option--button"
+                    class="option option--button kecermatan-opt-btn"
                     class:option--active={isChosen(question, option.id)}
                     onclick={() => chooseOption(question, option)}
                   >
                     <span class="option__key">{optionLetters[optionIndex] ?? option.label}</span>
-                    <span class="option__text mono">
+                    <span class="option__text mono kecermatan-opt-char">
                       {optionText(option)}
-                      {#each option.media as media (media.url)}
-                        <img
-                          class="option__media"
-                          src={media.url}
-                          alt={media.alt ?? `Gambar opsi ${option.label}`}
-                          loading="lazy"
-                        />
-                      {/each}
                     </span>
                   </button>
                 {/each}
@@ -1928,5 +2115,326 @@
     .runner__timer {
       align-items: flex-start;
     }
+  }
+
+  /* ------------------------------------------------------------- JEDA CARD */
+  .jeda-card {
+    max-width: 800px;
+    margin: var(--space-6) auto;
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border: 2px solid var(--color-brand, #3b82f6);
+    border-radius: var(--radius-xl, 16px);
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 8px 10px -6px rgba(59, 130, 246, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .jeda-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 6px 14px;
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--color-primary);
+    border-radius: 9999px;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-3);
+  }
+
+  .jeda-badge-pulse {
+    width: 8px;
+    height: 8px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: jedaPulse 1.5s infinite;
+  }
+
+  @keyframes jedaPulse {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+  }
+
+  .jeda-card__title {
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+
+  .jeda-card__subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    max-width: 620px;
+    line-height: 1.5;
+    margin: 0 0 var(--space-6);
+  }
+
+  .jeda-timer-box {
+    width: 100%;
+    max-width: 480px;
+    padding: var(--space-5);
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+  }
+
+  .jeda-timer-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-2);
+  }
+
+  .jeda-timer-display {
+    font-family: var(--font-mono);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: var(--space-4);
+  }
+
+  .jeda-timer-display--ended {
+    color: var(--color-danger, #ef4444);
+  }
+
+  .jeda-timer-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  .jeda-timer-opt-title {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .jeda-opt-btn {
+    padding: 4px 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .jeda-opt-btn:hover {
+    background: var(--color-surface-hover, rgba(0, 0, 0, 0.05));
+  }
+
+  .jeda-opt-btn--active {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+  }
+
+  .jeda-briefing {
+    width: 100%;
+    text-align: left;
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+
+  .jeda-briefing__title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-4);
+  }
+
+  .jeda-briefing__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .jeda-briefing__item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+
+  .jeda-briefing__lbl {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .jeda-briefing__val {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .jeda-briefing__list {
+    margin: 0;
+    padding-left: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .jeda-briefing__list li + li {
+    margin-top: var(--space-2);
+  }
+
+  .jeda-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  /* -------------------------------------------------------- KECERMATAN RUNNER */
+  .kecermatan-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    width: 100%;
+  }
+
+  .kecermatan-benchmark {
+    background: var(--color-surface-muted);
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+  }
+
+  .kecermatan-benchmark__header {
+    margin-bottom: var(--space-3);
+    text-align: center;
+  }
+
+  .kecermatan-benchmark__col-title {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .kecermatan-benchmark__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-2);
+  }
+
+  .kecermatan-benchmark__cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-1);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .kecermatan-benchmark__opt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-text-muted);
+    background: var(--color-surface-muted);
+    border-radius: var(--radius-sm);
+    padding: 1px 6px;
+    margin-bottom: 2px;
+  }
+
+  .kecermatan-benchmark__char {
+    font-family: var(--font-mono);
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+    font-weight: 800;
+    color: var(--color-text);
+    line-height: 1.1;
+  }
+
+  .kecermatan-question-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .kecermatan-question-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+  }
+
+  .kecermatan-question-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .kecermatan-char-tile {
+    display: grid;
+    place-items: center;
+    width: clamp(52px, 8vw, 68px);
+    height: clamp(52px, 8vw, 68px);
+    background: var(--color-surface-muted);
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    color: var(--color-text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .kecermatan-char-tile--missing {
+    border-style: dashed;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+
+  .kecermatan-options-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: var(--space-2);
+  }
+
+  .kecermatan-opt-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-1);
+    min-height: 72px;
+  }
+
+  .kecermatan-opt-char {
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem) !important;
+    font-weight: 800;
+    margin-top: 2px;
   }
 </style>

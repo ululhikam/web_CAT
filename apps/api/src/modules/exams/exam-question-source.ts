@@ -134,11 +134,11 @@ const LIKERT_STATEMENTS = [
 ] as const;
 
 const KECERDASAN_TOPICS = [
-  'Deret angka',
-  'Analogi verbal',
-  'Silogisme',
-  'Aritmetika',
-  'Klasifikasi',
+  'Numerik & Aritmetika',
+  'Verbal & Analogi',
+  'Figural & Pola Visual',
+  'Peta & Denah Lokasi',
+  'Kepribadian & Sikap Kerja',
 ] as const;
 
 const TKK_TOPICS = [
@@ -155,7 +155,7 @@ const TPK_TOPICS = [
   'Tugas pokok Polri',
 ] as const;
 
-const KECERMATAN_CHARS = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'.split('');
+const KECERMATAN_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'.split('');
 
 function optionId(seed: string, index: number): string {
   return deterministicUuid(`${seed}:option:${index}`);
@@ -242,23 +242,21 @@ function buildLikert(rng: () => number, sourceId: string, position: number): Que
   };
 }
 
-function buildMissingElement(rng: () => number, sourceId: string): QuestionSnapshot {
-  const length = intBetween(rng, 4, 7);
-  const left = Array.from(
-    { length },
-    () => KECERMATAN_CHARS[intBetween(rng, 0, KECERMATAN_CHARS.length - 1)]!,
-  ).join('');
-  const missingIndex = intBetween(rng, 0, length - 1);
-  const answer = left[missingIndex]!;
-  const right = left.slice(0, missingIndex) + left.slice(missingIndex + 1);
+function buildMissingElement(
+  rng: () => number,
+  sourceId: string,
+  columnIndex: number | null = null,
+): QuestionSnapshot {
+  const col = columnIndex ?? 0;
+  const colRng = createRng(hashSeed(`kecermatan-col:${col}`));
+  const pool = shuffle(colRng, [...KECERMATAN_CHARS]).slice(0, 5);
+  const missingIndex = intBetween(rng, 0, 4);
+  const answer = pool[missingIndex]!;
+  const right = shuffle(rng, pool.filter((_, i) => i !== missingIndex)).join('');
+  const left = pool.join('');
 
-  const candidates = new Set<string>([answer]);
-  while (candidates.size < 5) {
-    candidates.add(KECERMATAN_CHARS[intBetween(rng, 0, KECERMATAN_CHARS.length - 1)]!);
-  }
-  const values = shuffle(rng, [...candidates]);
   const labels = ['A', 'B', 'C', 'D', 'E'];
-  const options: SnapshotOption[] = values.map((value, index) => ({
+  const options: SnapshotOption[] = pool.map((value, index) => ({
     id: optionId(sourceId, index),
     label: labels[index]!,
     text: value,
@@ -271,14 +269,14 @@ function buildMissingElement(rng: () => number, sourceId: string): QuestionSnaps
   return {
     sourceId,
     type: 'MISSING_ELEMENT',
-    stem: 'Lengkapi larik kedua dengan karakter yang hilang.',
+    stem: `Kolom ${col + 1}: Tentukan huruf yang hilang dari kelompok huruf rujukan.`,
     stemFormat: 'MARKDOWN',
     difficulty: 'MEDIUM',
     weight: 1,
     scale: null,
     isReverse: false,
     pairGroup: null,
-    columnIndex: null,
+    columnIndex,
     columnNumbers: null,
     missingElement: { left, right, answer },
     options,
@@ -328,7 +326,7 @@ function buildFixture(
     if (code === 'KEPRIBADIAN') {
       snapshot = buildLikert(rng, externalId, position);
     } else if (code === 'KECERMATAN') {
-      snapshot = buildMissingElement(rng, externalId);
+      snapshot = buildMissingElement(rng, externalId, Math.floor(index / 50));
     } else if (code === 'PASS_HAND') {
       snapshot = buildPassHand(rng, externalId, index);
     } else {

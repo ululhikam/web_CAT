@@ -52,7 +52,7 @@ interface CategorySeed {
 
 export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
   { path: 'psikologi', name: 'Psikologi', sortOrder: 1 },
-  { path: 'psikologi/kecerdasan', name: 'Kecerdasan', parentPath: 'psikologi', sortOrder: 1 },
+  { path: 'psikologi/kecerdasan', name: 'Kecerdasan & Kepribadian', parentPath: 'psikologi', sortOrder: 1 },
   {
     path: 'psikologi/kecerdasan/verbal',
     name: 'Verbal',
@@ -66,28 +66,40 @@ export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
     sortOrder: 2,
   },
   {
-    path: 'psikologi/kecerdasan/logis',
-    name: 'Logika',
+    path: 'psikologi/kecerdasan/figural',
+    name: 'Figural',
     parentPath: 'psikologi/kecerdasan',
     sortOrder: 3,
   },
   {
-    path: 'psikologi/kecerdasan/figural',
-    name: 'Figural',
+    path: 'psikologi/kecerdasan/petadenah',
+    name: 'Peta & Denah',
     parentPath: 'psikologi/kecerdasan',
     sortOrder: 4,
+  },
+  {
+    path: 'psikologi/kecerdasan/kepribadian',
+    name: 'Kepribadian & Sikap Kerja',
+    parentPath: 'psikologi/kecerdasan',
+    sortOrder: 5,
+  },
+  {
+    path: 'psikologi/kecerdasan/logis',
+    name: 'Logika',
+    parentPath: 'psikologi/kecerdasan',
+    sortOrder: 6,
   },
   { path: 'psikologi/kepribadian', name: 'Kepribadian', parentPath: 'psikologi', sortOrder: 2 },
   { path: 'psikologi/kecermatan', name: 'Kecermatan', parentPath: 'psikologi', sortOrder: 3 },
   {
-    path: 'psikologi/kecermatan/angka',
-    name: 'Angka',
+    path: 'psikologi/kecermatan/huruf',
+    name: 'Huruf',
     parentPath: 'psikologi/kecermatan',
     sortOrder: 1,
   },
   {
-    path: 'psikologi/kecermatan/huruf',
-    name: 'Huruf',
+    path: 'psikologi/kecermatan/angka',
+    name: 'Angka',
     parentPath: 'psikologi/kecermatan',
     sortOrder: 2,
   },
@@ -275,7 +287,7 @@ function buildKepribadian(): SeedQuestion[] {
 }
 
 function buildKecermatan(): SeedQuestion[] {
-  return KECERMATAN_QUESTIONS.map((row) => {
+  return KECERMATAN_QUESTIONS.map((row, index) => {
     // Urutan opsi diacak deterministik agar kunci tidak selalu pada label A.
     const built = buildOptions(
       createRng(`kecermatan-options:${row.code}`),
@@ -295,7 +307,7 @@ function buildKecermatan(): SeedQuestion[] {
       scoringStrategy: 'CORRECT_MINUS_PENALTY',
       scoringConfig: { missingElement: { left: row.left, right: row.right, answer: row.answer } },
       pairGroup: null,
-      columnIndex: null,
+      columnIndex: row.columnIndex ?? Math.floor(index / 50),
       dedupeHash: hashOf(
         row.stem,
         built.options.map((option) => ({ contentText: option.contentText })),

@@ -143,6 +143,7 @@ export interface MissingElementSeed {
   answer: string;
   /** Empat pengecoh; tidak boleh memuat `answer`. */
   distractors: readonly string[];
+  columnIndex?: number;
   tags: readonly string[];
 }
 
