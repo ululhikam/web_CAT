@@ -16,7 +16,9 @@ import type {
   SubtestCode,
   SubtestMetrics,
   SubtestResultView,
+  SubtestReviewItem,
 } from '@webcat/contracts';
+import { answerPayloadSchema } from '@webcat/contracts';
 import { AppError } from '../../core/http/app-error';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
@@ -28,9 +30,11 @@ import {
   asSessionStatus,
   asSubtestStatus,
   decimalToNumber,
+  parseQuestionSnapshot,
   parseSessionConfig,
   parseSubtestConfig,
 } from '../exams/exam-snapshot';
+import { buildMediaUrl } from '../media/media-signature';
 
 const TERMINAL_SESSION: readonly SessionStatus[] = [
   'COMPLETED',
@@ -48,7 +52,22 @@ export interface AdminActor {
 
 type ResultSessionRow = Prisma.ExamSessionGetPayload<{
   include: {
-    stages: { include: { subtests: { include: { lock: true } } } };
+    stages: {
+      include: {
+        subtests: {
+          include: {
+            lock: true;
+            questions: {
+              include: {
+                question: {
+                  select: { explanation: true };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
     violations: true;
   };
 }>;
@@ -86,7 +105,17 @@ export class ResultsService {
           include: {
             subtests: {
               orderBy: { orderIndex: 'asc' },
-              include: { lock: true },
+              include: {
+                lock: true,
+                questions: {
+                  orderBy: { position: 'asc' },
+                  include: {
+                    question: {
+                      select: { explanation: true },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -154,6 +183,9 @@ export class ResultsService {
                 ? ((subtest.lock.reason as LockReason | undefined) ?? null)
                 : null,
             metrics: (subtest.resultProfile as unknown as SubtestMetrics | null) ?? null,
+            reviewItems: this.buildSubtestReviewItems(
+              (subtest as { questions?: ResultSessionRow['stages'][number]['subtests'][number]['questions'] }).questions ?? [],
+            ),
           };
         }),
       };
@@ -178,6 +210,123 @@ export class ResultsService {
         lastAt: violation.lastAt?.toISOString() ?? null,
       })),
     };
+  }
+
+  private buildSubtestReviewItems(
+    questions: ResultSessionRow['stages'][number]['subtests'][number]['questions'],
+  ): SubtestReviewItem[] {
+    if (!Array.isArray(questions) || questions.length === 0) return [];
+    const secret = process.env.JWT_ACCESS_SECRET ?? '';
+    const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const likertLetters = [
+      { key: 'A', value: 5, text: 'Sangat Setuju' },
+      { key: 'B', value: 4, text: 'Setuju' },
+      { key: 'C', value: 3, text: 'Ragu-Ragu' },
+      { key: 'D', value: 2, text: 'Tidak Setuju' },
+      { key: 'E', value: 1, text: 'Sangat Tidak Setuju' },
+    ];
+
+    return questions.map((row) => {
+      const snapshot = parseQuestionSnapshot(row.snapshot);
+      const parsedAns = answerPayloadSchema.safeParse(row.answerPayload ?? null);
+      const answer = parsedAns.success && !parsedAns.data.cleared ? parsedAns.data : null;
+
+      const stemMedia = snapshot.media.find((m) => m.role === 'STEM');
+      const stemImage = stemMedia
+        ? stemMedia.assetId
+          ? buildMediaUrl(stemMedia.assetId, secret, 7200)
+          : stemMedia.path
+        : null;
+
+      if (snapshot.type === 'LIKERT_STATEMENT') {
+        const isReverse = Boolean(snapshot.isReverse);
+        const userVal = typeof answer?.value === 'number' ? answer.value : null;
+        const userKey =
+          userVal !== null
+            ? (likertLetters.find((item) => item.value === userVal)?.key ?? null)
+            : null;
+        const correctKey = isReverse ? 'E' : 'A';
+        const earnedWeight =
+          userVal !== null ? (isReverse ? Math.max(1, 6 - userVal) : userVal) : null;
+
+        return {
+          id: row.id,
+          position: row.position,
+          type: snapshot.type,
+          stem: snapshot.stem,
+          image: stemImage,
+          options: likertLetters.map((item) => {
+            const weight = isReverse ? 6 - item.value : item.value;
+            return {
+              key: item.key,
+              text: `${item.text} (Bobot ${weight} Poin)`,
+              image: null,
+              isCorrect: item.key === correctKey,
+              scoreValue: weight,
+            };
+          }),
+          userKey,
+          correctKey,
+          isCorrect: earnedWeight === 5,
+          earnedWeight,
+          explanation:
+            row.question?.explanation ??
+            `Pernyataan ini mengukur profil mental kepribadian (${isReverse ? 'item berarah terbalik — respons paling ideal adalah E: Sangat Tidak Setuju' : 'item berarah positif — respons paling ideal adalah A: Sangat Setuju'}).`,
+        };
+      }
+
+      const options = snapshot.options.map((opt, idx) => {
+        const key = optionLetters[idx] ?? opt.label;
+        const optMedia = opt.media[0];
+        const optImage = optMedia
+          ? optMedia.assetId
+            ? buildMediaUrl(optMedia.assetId, secret, 7200)
+            : optMedia.path
+          : null;
+        return {
+          id: opt.id,
+          key,
+          text: opt.text ?? (optImage ? `Pilihan Gambar ${key}` : key),
+          image: optImage,
+          isCorrect: opt.isCorrect,
+          scoreValue: opt.scoreValue,
+        };
+      });
+
+      const chosenKeys =
+        answer?.optionIds && answer.optionIds.length > 0
+          ? answer.optionIds
+              .map((optId) => options.find((o) => o.id === optId)?.key ?? null)
+              .filter((k): k is string => Boolean(k))
+          : [];
+      const userKey = chosenKeys.length > 0 ? chosenKeys.join(',') : null;
+      const correctKeys = options.filter((o) => o.isCorrect).map((o) => o.key);
+      const correctKey = correctKeys.length > 0 ? correctKeys.join(',') : null;
+      const isCorrect = userKey !== null && userKey === correctKey;
+
+      let stemText = snapshot.stem;
+      if (snapshot.type === 'MISSING_ELEMENT' && snapshot.missingElement) {
+        stemText = `${snapshot.stem}\nPatokan (A–E): [ ${snapshot.missingElement.left.split('').join('  ')} ]  •  Soal: [ ${snapshot.missingElement.right.split('').join('  ')} ]`;
+      }
+
+      return {
+        id: row.id,
+        position: row.position,
+        type: snapshot.type,
+        stem: stemText,
+        image: stemImage,
+        options: options.map(({ id: _id, ...rest }) => rest),
+        userKey,
+        correctKey,
+        isCorrect,
+        earnedWeight: isCorrect ? 1 : 0,
+        explanation:
+          row.question?.explanation ??
+          (snapshot.type === 'MISSING_ELEMENT' && snapshot.missingElement
+            ? `Karakter yang hilang dari patokan [${snapshot.missingElement.left}] pada soal [${snapshot.missingElement.right}] adalah "${snapshot.missingElement.answer}" (Opsi ${correctKey ?? '-'}).`
+            : `Jawaban yang tepat adalah opsi ${correctKey ?? '-'}.`),
+      };
+    });
   }
 
   async history(

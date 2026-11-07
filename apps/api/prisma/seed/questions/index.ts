@@ -110,6 +110,12 @@ export const QUESTION_CATEGORIES: readonly CategorySeed[] = [
     parentPath: 'psikologi/kecermatan',
     sortOrder: 3,
   },
+  {
+    path: 'psikologi/kecermatan/campuran',
+    name: 'Campuran (Huruf, Angka & Simbol)',
+    parentPath: 'psikologi/kecermatan',
+    sortOrder: 4,
+  },
   { path: 'psikologi/pass-hand', name: 'Pass Hand', parentPath: 'psikologi', sortOrder: 4 },
   { path: 'tpk', name: 'TPK', sortOrder: 3 },
   { path: 'tpk/pancasila', name: 'Pancasila & UUD 1945', parentPath: 'tpk', sortOrder: 1 },

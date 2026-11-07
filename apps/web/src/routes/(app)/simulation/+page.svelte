@@ -45,38 +45,38 @@
   }> = [
     {
       packetId: 'psikotes-kecerdasan',
-      categoryLabel: 'PSIKOTES POLRI',
+      categoryLabel: 'PSIKOTES POLRI • 100 POIN (60 MENIT)',
       icon: 'brain',
       accent: 'indigo',
       highlights: [
-        `Diacak dari ${SIMULATION_POOL_STATS.KECERDASAN} Bank Soal`,
-        'Narasi Analitis & Silogisme',
-        'Denah Peta & Navigasi Taktis',
-        'Deret Angka & Aritmatika',
+        'Verbal (30 Soal • 30 Poin): Sinonim, antonim, analogi kata, pengelompokan kata',
+        'Praktis / Numerik / Aritmatika Dasar (35 Soal • 35 Poin): Deret angka, hitung cepat, persentase, jarak-kecepatan-waktu, soal cerita & analisis peta/denah',
+        'Logis (35 Soal • 35 Poin): Penarikan kesimpulan, penalaran gambar & pola gambar/bentuk hitam-putih',
+        `Diacak proporsional dari ${SIMULATION_POOL_STATS.KECERDASAN} Bank Soal`,
       ],
     },
     {
       packetId: 'psikotes-kepribadian',
-      categoryLabel: 'PSIKOTES POLRI',
+      categoryLabel: 'PSIKOTES POLRI • 45 MENIT',
       icon: 'shield',
       accent: 'emerald',
       highlights: [
         `Diacak dari ${SIMULATION_POOL_STATS.KEPRIBADIAN} Bank Soal`,
         'Narasi Studi Kasus Kedinasan',
-        'Skala Sikap Likert 5 Opsi',
+        'Opsi Huruf A–E (Sangat Setuju s.d. Sangat Tidak Setuju)',
         'Evaluasi Bobot Poin 1–5',
       ],
     },
     {
       packetId: 'psikotes-kecermatan',
-      categoryLabel: 'PSIKOTES POLRI',
+      categoryLabel: 'PSIKOTES POLRI • 10 MENIT',
       icon: 'zap',
       accent: 'amber',
       highlights: [
-        '10 Kolom @ 50 Soal (500 Soal)',
-        'Durasi 60 Detik per Kolom',
-        'Format Monokrom Identik TES CAT',
-        'Evaluasi Kecepatan & Kestabilan',
+        'Kolom 1–3: Kecermatan Huruf (150 Soal)',
+        'Kolom 4–6: Kecermatan Angka (150 Soal)',
+        'Kolom 7–9: Kecermatan Simbol (150 Soal)',
+        'Kolom 10: Campuran Angka, Simbol & Huruf (50 Soal)',
       ],
     },
     {
@@ -695,19 +695,34 @@
               </div>
 
               <!-- Opsi Pilihan Jawaban (A - E) Tanpa Kunci & Tanpa Pembahasan -->
-              <div class="options-list" role="radiogroup" aria-label="Pilihan Jawaban">
+              <div
+                class="options-list"
+                class:options-list--images={currentQuestion.options.some((o) => Boolean(o.image))}
+                role="radiogroup"
+                aria-label="Pilihan Jawaban"
+              >
                 {#each currentQuestion.options as option (option.key)}
                   {@const isSelected = answers[currentIndex] === option.key}
                   <button
                     type="button"
                     class="option-btn"
                     class:option-btn--selected={isSelected}
+                    class:option-btn--image={Boolean(option.image)}
                     onclick={() => selectOption(option.key)}
                     role="radio"
                     aria-checked={isSelected}
                   >
                     <span class="option-btn__key">{option.key}</span>
-                    <span class="option-btn__label">{option.text}</span>
+                    {#if option.image}
+                      <img
+                        src={option.image}
+                        alt={option.text}
+                        class="option-btn__img"
+                        loading="lazy"
+                      />
+                    {:else}
+                      <span class="option-btn__label">{option.text}</span>
+                    {/if}
                     {#if isSelected}
                       <span class="option-btn__check">
                         <AdminIcon name="check" size={15} />
@@ -1081,6 +1096,18 @@
 
             <p class="review-item__stem">{item.question.stem}</p>
 
+            {#if item.question.image}
+              <div class="question-stem__figure" style="margin-bottom: 0.85rem;">
+                <img
+                  src={item.question.image}
+                  alt="Ilustrasi Soal #{item.index + 1}"
+                  class="question-stem__img"
+                  style="max-height: 210px;"
+                  loading="lazy"
+                />
+              </div>
+            {/if}
+
             <div class="review-item__options">
               {#each item.question.options as opt (opt.key)}
                 {@const isUserChoice = item.userKey === opt.key}
@@ -1091,6 +1118,14 @@
                   class:review-opt--user-wrong={isUserChoice && !isKey}
                 >
                   <span class="review-opt__key">{opt.key}</span>
+                  {#if opt.image}
+                    <img
+                      src={opt.image}
+                      alt={opt.text}
+                      style="width: 72px; height: 72px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff;"
+                      loading="lazy"
+                    />
+                  {/if}
                   <span class="review-opt__text">{opt.text}</span>
                   {#if isKey}
                     <span class="review-opt__badge review-opt__badge--key">Kunci Utama</span>
@@ -1849,6 +1884,12 @@
     gap: 0.65rem;
   }
 
+  .options-list--images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.85rem;
+  }
+
   .option-btn {
     display: flex;
     align-items: center;
@@ -1862,6 +1903,21 @@
     text-align: left;
     cursor: pointer;
     transition: all 0.14s ease;
+  }
+
+  .option-btn--image {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .option-btn__img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #ffffff;
   }
 
   .option-btn:hover {

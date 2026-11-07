@@ -399,13 +399,22 @@ describe('kecermatan', () => {
     expect(variantChars.size).toBeGreaterThan(20);
   });
 
-  it('memakai varian karakter huruf', () => {
-    const paths = new Set(only('KECERMATAN').map((question) => question.categoryPath));
+  it('memakai varian karakter huruf, angka, simbol, dan campuran sesuai pembagian 10 kolom', () => {
+    const kecermatan = only('KECERMATAN');
+    const paths = new Set(kecermatan.map((question) => question.categoryPath));
     expect(paths).toEqual(
       new Set([
         'psikologi/kecermatan/huruf',
+        'psikologi/kecermatan/angka',
+        'psikologi/kecermatan/simbol',
+        'psikologi/kecermatan/campuran',
       ]),
     );
+    // Kolom 0..2 = huruf (150 soal), 3..5 = angka (150 soal), 6..8 = simbol (150 soal), 9 = campuran (50 soal)
+    expect(kecermatan.filter((q) => q.categoryPath === 'psikologi/kecermatan/huruf')).toHaveLength(150);
+    expect(kecermatan.filter((q) => q.categoryPath === 'psikologi/kecermatan/angka')).toHaveLength(150);
+    expect(kecermatan.filter((q) => q.categoryPath === 'psikologi/kecermatan/simbol')).toHaveLength(150);
+    expect(kecermatan.filter((q) => q.categoryPath === 'psikologi/kecermatan/campuran')).toHaveLength(50);
   });
 });
 

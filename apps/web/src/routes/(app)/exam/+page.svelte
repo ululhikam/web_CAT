@@ -205,14 +205,41 @@
                 {#if stage.description}
                   <p class="test-card__desc">{stage.description}</p>
                 {/if}
+                {#if stage.code === 'PSIKOLOGI'}
+                  <div class="test-card__breakdown">
+                    <div class="test-card__breakdown-head">
+                      <strong>Pembagian &amp; Poin Subtes 1 — Tes Kecerdasan (60 Menit • 100 Poin):</strong>
+                    </div>
+                    <ul class="test-card__breakdown-list">
+                      <li>
+                        <strong>Verbal (30 Soal • 30 Poin):</strong> Sinonim, antonim, analogi kata, pengelompokan kata
+                      </li>
+                      <li>
+                        <strong>Praktis / Numerik / Aritmatika Dasar (35 Soal • 35 Poin):</strong> Deret angka, hitung cepat, persentase, jarak, kecepatan dan waktu, soal cerita serta analisis peta/denah
+                      </li>
+                      <li>
+                        <strong>Logis (35 Soal • 35 Poin):</strong> Penarikan kesimpulan, penalaran gambar, pola gambar/bentuk (Hitam-Putih)
+                      </li>
+                    </ul>
+                    <div class="test-card__schedule">
+                      <span>Kecerdasan <strong>60m</strong></span>
+                      <span>→ Jeda <strong>10m</strong> →</span>
+                      <span>Mental Kepribadian <strong>45m</strong> (Opsi A–E)</span>
+                      <span>→ Jeda <strong>10m</strong> →</span>
+                      <span>Kecermatan <strong>10m</strong> (3 Huruf, 3 Angka, 3 Simbol, 1 Campuran)</span>
+                    </div>
+                  </div>
+                {/if}
                 <dl class="test-card__meta">
                   <div>
                     <dt>Jumlah soal</dt>
                     <dd>{stage.questionCount}</dd>
                   </div>
                   <div>
-                    <dt>Durasi</dt>
-                    <dd>{stage.durationMinutes} menit</dd>
+                    <dt>Durasi pengerjaan</dt>
+                    <dd>
+                      {stage.code === 'PSIKOLOGI' ? '115 menit (di luar jeda)' : `${stage.durationMinutes} menit`}
+                    </dd>
                   </div>
                 </dl>
                 {#if !stage.available}
@@ -401,6 +428,51 @@
     margin: 0;
     color: var(--color-text-muted);
     font-size: var(--text-sm);
+  }
+
+  .test-card__breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+  }
+
+  .test-card__breakdown-head {
+    color: var(--color-text);
+    font-size: 0.78rem;
+  }
+
+  .test-card__breakdown-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .test-card__breakdown-list strong {
+    color: var(--color-text);
+  }
+
+  .test-card__schedule {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    padding-top: 0.4rem;
+    border-top: 1px dashed var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 0.74rem;
+  }
+
+  .test-card__schedule strong {
+    color: var(--color-primary);
   }
 
   .test-card__meta {

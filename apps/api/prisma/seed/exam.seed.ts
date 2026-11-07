@@ -41,7 +41,8 @@ const STAGES: StageSeed[] = [
   {
     code: 'PSIKOLOGI',
     name: 'Tes Psikologi',
-    description: 'Subtes 1: Kecerdasan (100 soal, 120 menit). Subtes 2: Mental Kepribadian (100 soal, 120 menit). Subtes 3: Kecermatan Huruf (10 kolom x 50 soal, 10 menit).',
+    description:
+      'Total durasi pengerjaan 115 menit (tidak termasuk jeda): Subtes 1 Kecerdasan (100 soal, 60 menit) → Jeda 10 menit → Subtes 2 Mental Kepribadian (140 soal, 45 menit) → Jeda 10 menit → Subtes 3 Kecermatan (10 kolom × 50 soal, 10 menit).',
     orderIndex: 1,
     weight: 50,
     passingScore: 60,
@@ -52,7 +53,7 @@ const STAGES: StageSeed[] = [
         name: 'Tes Kecerdasan',
         orderIndex: 1,
         questionCount: 100,
-        durationMinutes: 120,
+        durationMinutes: 60,
         weight: 40,
         passingScore: 60,
         scoringStrategy: 'KEYED_CORRECT',
@@ -83,7 +84,7 @@ const STAGES: StageSeed[] = [
       },
       {
         code: 'KECERMATAN',
-        name: 'Tes Kecermatan (Huruf)',
+        name: 'Tes Kecermatan (Huruf, Angka, Simbol & Campuran)',
         orderIndex: 3,
         questionCount: 500,
         durationMinutes: 10,

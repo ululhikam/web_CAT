@@ -29,6 +29,28 @@ export interface SubtestMetrics {
   reviewFlagged: boolean | null;
 }
 
+export interface SubtestReviewOption {
+  key: string;
+  text: string;
+  image?: string | null;
+  isCorrect: boolean;
+  scoreValue: number;
+}
+
+export interface SubtestReviewItem {
+  id: string;
+  position: number;
+  type: string;
+  stem: string;
+  image?: string | null;
+  options: SubtestReviewOption[];
+  userKey: string | null;
+  correctKey: string | null;
+  isCorrect: boolean;
+  earnedWeight: number | null;
+  explanation: string | null;
+}
+
 export interface SubtestResultView {
   id: string;
   subtestCode: SubtestCode;
@@ -47,6 +69,7 @@ export interface SubtestResultView {
   scoredAt: string | null;
   lockReason: LockReason | null;
   metrics: SubtestMetrics | null;
+  reviewItems?: SubtestReviewItem[];
 }
 
 export interface StageResultView {

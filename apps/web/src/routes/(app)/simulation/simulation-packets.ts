@@ -3,9 +3,9 @@
  *
  * Seluruh butir soal bersumber langsung dari Seed Bank Soal Utama (`apps/api/prisma/seed/questions/*`)
  * tanpa hardcode statis di komponen UI:
- * - Pool Kecerdasan   : 214 soal narasi panjang -> disajikan 100 soal acak per sesi
+ * - Pool Kecerdasan   : 439 soal (Verbal, Praktis/Numerik/Denah, Logis & Figural Hitam-Putih) -> disajikan 100 soal proporsional per sesi
  * - Pool Kepribadian  : 240 soal studi kasus kedinasan -> disajikan 100 soal acak per sesi
- * - Pool Kecermatan   : 500 soal (10 Kolom @ 50 Soal, 60 detik/kolom) -> diacak per kolom setiap sesi
+ * - Pool Kecermatan   : 500 soal (10 Kolom @ 50 Soal: 3 Huruf, 3 Angka, 3 Simbol, 1 Campuran) -> diacak per kolom setiap sesi
  * - Pool TKK          : 206 soal narasi teknis komputer -> disajikan 100 soal acak per sesi
  * - Pool TPK          : 200 soal narasi regulasi & hukum kepolisian -> disajikan 100 soal acak per sesi
  *
@@ -13,17 +13,27 @@
  * sehingga tidak mungkin ada soal lintas kategori yang nyasar ke subtes lain.
  */
 
+import { renderFigure, STEM_VARIANT, type FigureSpec } from '../../../../../api/prisma/seed/media/figural';
 import { buildChoices } from '../../../../../api/prisma/seed/questions/builder';
 import { DENAH_LOKASI_QUESTIONS } from '../../../../../api/prisma/seed/questions/denah';
+import {
+  countDistractors,
+  directionDistractors,
+  FIGURAL_KECERDASAN,
+  figuralTextAnswer,
+  layoutFor,
+} from '../../../../../api/prisma/seed/questions/figural';
 import { KECERDASAN_QUESTIONS } from '../../../../../api/prisma/seed/questions/kecerdasan';
 import { KECERMATAN_QUESTIONS } from '../../../../../api/prisma/seed/questions/kecermatan';
 import { KEPRIBADIAN_QUESTIONS } from '../../../../../api/prisma/seed/questions/kepribadian';
+import { buildOptions, createRng } from '../../../../../api/prisma/seed/questions/rng';
 import { TKK_QUESTIONS } from '../../../../../api/prisma/seed/questions/tkk';
 import { TPK_QUESTIONS } from '../../../../../api/prisma/seed/questions/tpk';
 
 export interface SimOption {
   key: string;
   text: string;
+  image?: string;
   weight?: number;
 }
 
@@ -37,6 +47,7 @@ export interface SimQuestion {
   module: string;
   subtest?: 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'TKK' | 'TPK';
   subCategory?: string;
+  kecerdasanGroup?: 'VERBAL' | 'PRAKTIS' | 'LOGIS';
   difficulty?: string;
   stem: string;
   image?: string;
@@ -69,13 +80,17 @@ export interface SimPacket {
 
 const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E'] as const;
 
+function svgToDataUrl(svg: string): string {
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
 const KECERDASAN_SUBCATEGORY_LABEL: Record<string, string> = {
-  verbal: 'Kemampuan Verbal & Analogi',
-  numerik: 'Aritmatika & Deret Angka',
-  logis: 'Penalaran Logis & Silogisme',
-  figural: 'Penalaran Figural & Spasial',
-  petadenah: 'Denah, Peta & Navigasi Taktis',
-  kepribadian: 'Analisis Situasional Kedinasan',
+  verbal: 'Verbal (Sinonim, Antonim, Analogi & Pengelompokan Kata)',
+  numerik: 'Praktis / Numerik / Aritmatika Dasar',
+  logis: 'Logis (Penarikan Kesimpulan & Silogisme)',
+  figural: 'Logis (Penalaran Gambar & Pola Bentuk Hitam-Putih)',
+  petadenah: 'Praktis / Numerik (Analisis Peta & Denah)',
+  kepribadian: 'Logis (Analisis Situasional & Kesimpulan)',
 };
 
 const KEPRIBADIAN_DIMENSION_LABEL: Record<string, string> = {
@@ -113,14 +128,75 @@ const TPK_TOPIC_LABEL: Record<string, string> = {
 /* KONSTRUKSI POOL SOAL DARI SEED FILE (TERISOLASI KETAT PER SUBTES)          */
 /* -------------------------------------------------------------------------- */
 
+const POOL_FIGURAL_KECERDASAN: SimQuestion[] = FIGURAL_KECERDASAN.map((row, idx): SimQuestion => {
+  const spec: FigureSpec = { family: row.family, seed: row.seed };
+  const stemImage = svgToDataUrl(renderFigure(spec, STEM_VARIANT));
+
+  if (row.type === 'IMAGE_CHOICE') {
+    const { variantByLabel, correctIndex } = layoutFor(row);
+    const labels4 = ['A', 'B', 'C', 'D'] as const;
+    return {
+      id: 1700 + idx + 1,
+      module: 'Tes Psikologi — Kecerdasan (Penalaran Gambar Hitam-Putih)',
+      subtest: 'KECERDASAN',
+      subCategory: 'Logis (Penalaran Gambar & Pola Bentuk Hitam-Putih)',
+      kecerdasanGroup: 'LOGIS',
+      difficulty: row.difficulty,
+      stem: row.stem,
+      image: stemImage,
+      options: variantByLabel.map((variant, optIdx) => ({
+        key: labels4[optIdx]!,
+        text: `Pilihan Gambar ${labels4[optIdx]!}`,
+        image: svgToDataUrl(renderFigure(spec, variant)),
+      })),
+      correctKey: labels4[correctIndex]!,
+      explanation: row.explanation,
+      weight: 1,
+    };
+  }
+
+  const answer = figuralTextAnswer(row);
+  const distractors =
+    row.family === 'count'
+      ? countDistractors(Number(answer))
+      : directionDistractors(answer as Parameters<typeof directionDistractors>[0]);
+  const built = buildOptions(createRng(`figural-text:${row.code}`), answer, distractors);
+  const correctOpt = built.options.find((o) => o.isCorrect) ?? built.options[0]!;
+
+  return {
+    id: 1700 + idx + 1,
+    module: 'Tes Psikologi — Kecerdasan (Penalaran Gambar Hitam-Putih)',
+    subtest: 'KECERDASAN',
+    subCategory: 'Logis (Penalaran Gambar & Pola Bentuk Hitam-Putih)',
+    kecerdasanGroup: 'LOGIS',
+    difficulty: row.difficulty,
+    stem: row.stem,
+    image: stemImage,
+    options: built.options.map((o) => ({
+      key: o.label,
+      text: o.contentText ?? o.label,
+    })),
+    correctKey: correctOpt.label,
+    explanation: row.explanation,
+    weight: 1,
+  };
+});
+
 const POOL_KECERDASAN: SimQuestion[] = [
   ...KECERDASAN_QUESTIONS.map((row, idx): SimQuestion => {
     const leaf = row.categoryPath.split('/').pop() ?? 'logis';
+    const kecerdasanGroup: 'VERBAL' | 'PRAKTIS' | 'LOGIS' =
+      leaf === 'verbal'
+        ? 'VERBAL'
+        : leaf === 'numerik' || leaf === 'petadenah'
+          ? 'PRAKTIS'
+          : 'LOGIS';
     return {
       id: 1000 + idx + 1,
       module: 'Tes Psikologi — Kecerdasan (SIP Polri)',
       subtest: 'KECERDASAN',
-      subCategory: KECERDASAN_SUBCATEGORY_LABEL[leaf] ?? 'Penalaran Logis & Analitis',
+      subCategory: KECERDASAN_SUBCATEGORY_LABEL[leaf] ?? 'Logis (Penarikan Kesimpulan)',
+      kecerdasanGroup,
       difficulty: row.difficulty,
       stem: row.stem,
       options: row.options.map((text, optIdx) => ({
@@ -136,7 +212,8 @@ const POOL_KECERDASAN: SimQuestion[] = [
     id: 1500 + idx + 1,
     module: 'Tes Psikologi — Kecerdasan (SIP Polri)',
     subtest: 'KECERDASAN',
-    subCategory: 'Denah, Peta & Navigasi Taktis',
+    subCategory: 'Praktis / Numerik (Analisis Peta & Denah)',
+    kecerdasanGroup: 'PRAKTIS',
     difficulty: 'MEDIUM',
     stem: row.stem,
     image: '/images/questions/denah_lokasi_sip.png',
@@ -148,6 +225,7 @@ const POOL_KECERDASAN: SimQuestion[] = [
     explanation: row.explanation,
     weight: 1,
   })),
+  ...POOL_FIGURAL_KECERDASAN,
 ];
 
 const POOL_KEPRIBADIAN: SimQuestion[] = KEPRIBADIAN_QUESTIONS.map((row, idx): SimQuestion => {
@@ -180,8 +258,16 @@ const POOL_KEPRIBADIAN: SimQuestion[] = KEPRIBADIAN_QUESTIONS.map((row, idx): Si
   };
 });
 
+function kecermatanColumnTypeLabel(colNumber: number): string {
+  if (colNumber <= 3) return 'Huruf';
+  if (colNumber <= 6) return 'Angka';
+  if (colNumber <= 9) return 'Simbol';
+  return 'Campuran (Angka, Simbol & Huruf)';
+}
+
 const POOL_KECERMATAN: SimQuestion[] = KECERMATAN_QUESTIONS.map((row, idx): SimQuestion => {
   const colNumber = (row.columnIndex ?? Math.floor(idx / 50)) + 1;
+  const colType = kecermatanColumnTypeLabel(colNumber);
   const leftChars = row.left.split('');
   const rightChars = row.right.split('');
   const benchmark: SimBenchmarkItem[] = leftChars.map((char, cIdx) => ({
@@ -193,9 +279,9 @@ const POOL_KECERMATAN: SimQuestion[] = KECERMATAN_QUESTIONS.map((row, idx): SimQ
 
   return {
     id: 3000 + idx + 1,
-    module: `Tes Psikologi — Kecermatan (Kolom ${colNumber})`,
+    module: `Tes Psikologi — Kecermatan (Kolom ${colNumber} • ${colType})`,
     subtest: 'KECERMATAN',
-    subCategory: `Kolom ${colNumber}`,
+    subCategory: `Kolom ${colNumber} (${colType})`,
     difficulty: row.difficulty,
     stem: row.stem,
     options: benchmark.map((b) => ({
@@ -203,7 +289,7 @@ const POOL_KECERMATAN: SimQuestion[] = KECERMATAN_QUESTIONS.map((row, idx): SimQ
       text: b.label,
     })),
     correctKey,
-    explanation: `Pada Kolom ${colNumber}, patokan adalah [${leftChars.join(' ')}] (A–E) dan soal menampilkan [${rightChars.join(' ')}]. Karakter yang hilang adalah "${row.answer}" yang berada pada label ${correctKey}.`,
+    explanation: `Pada Kolom ${colNumber} (${colType}), patokan adalah [${leftChars.join(' ')}] (A–E) dan soal menampilkan [${rightChars.join(' ')}]. Karakter yang hilang adalah "${row.answer}" yang berada pada label ${correctKey}.`,
     weight: 1,
     isKecermatan: true,
     columnNumber: colNumber,
@@ -290,12 +376,14 @@ function shuffleSingleChoiceOptions(question: SimQuestion): SimQuestion {
   let newCorrectKey = 'A';
   const relabeled: SimOption[] = shuffledOpts.map((opt, idx) => {
     const key = OPTION_KEYS[idx]!;
-    if (opt.text === correctOpt.text) {
+    const isThisCorrect = opt.image ? opt.image === correctOpt.image : opt.text === correctOpt.text;
+    if (isThisCorrect) {
       newCorrectKey = key;
     }
     return {
       ...opt,
       key,
+      text: opt.image ? `Pilihan Gambar ${key}` : opt.text,
     };
   });
 
@@ -308,14 +396,16 @@ function shuffleSingleChoiceOptions(question: SimQuestion): SimQuestion {
 
 /**
  * Mengambil dan mengacak soal secara ketat hanya dari pool subtes yang diminta.
- * Menjamin 0% kebocoran soal lintas subtes.
+ * Untuk KECERDASAN, pembagian proporsional sesuai ketentuan:
+ *   - 30% Verbal (Sinonim, Antonim, Analogi Kata, Pengelompokan Kata)
+ *   - 35% Praktis / Numerik / Aritmatika Dasar (Deret, Hitung Cepat, Persentase, Jarak-Kecepatan-Waktu, Soal Cerita, Analisis Peta/Denah)
+ *   - 35% Logis (Penarikan Kesimpulan / Silogisme + Penalaran Gambar / Pola Gambar Hitam-Putih)
  */
 export function sampleSubtestQuestions(
   subtest: 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'TKK' | 'TPK',
   count: number,
 ): SimQuestion[] {
   if (subtest === 'KECERMATAN') {
-    // 10 kolom × 50 soal per kolom = 500 soal; acak urutan soal di dalam masing-masing kolom
     const result: SimQuestion[] = [];
     for (let col = 1; col <= 10; col++) {
       const colQuestions = POOL_KECERMATAN.filter(
@@ -330,16 +420,47 @@ export function sampleSubtestQuestions(
     return result.slice(0, count);
   }
 
-  const sourcePool =
-    subtest === 'KECERDASAN'
-      ? POOL_KECERDASAN
-      : subtest === 'KEPRIBADIAN'
-        ? POOL_KEPRIBADIAN
-        : subtest === 'TKK'
-          ? POOL_TKK
-          : POOL_TPK;
+  if (subtest === 'KECERDASAN') {
+    const verbalQuota = Math.round(count * 0.3); // 30 soal
+    const praktisQuota = Math.round(count * 0.35); // 35 soal
+    const logisQuota = Math.max(0, count - verbalQuota - praktisQuota); // 35 soal (15 silogisme + 20 figural hitam-putih)
+    const figuralQuota = Math.min(20, Math.round(logisQuota * 0.57));
+    const verbalLogisQuota = Math.max(0, logisQuota - figuralQuota);
 
-  // Filter defensif untuk memastikan hanya subtest yang tepat yang diambil
+    const verbalPool = shuffleArray(
+      POOL_KECERDASAN.filter((q) => q.subtest === 'KECERDASAN' && q.kecerdasanGroup === 'VERBAL'),
+    );
+    const praktisPool = shuffleArray(
+      POOL_KECERDASAN.filter((q) => q.subtest === 'KECERDASAN' && q.kecerdasanGroup === 'PRAKTIS'),
+    );
+    const figuralPool = shuffleArray(
+      POOL_KECERDASAN.filter(
+        (q) => q.subtest === 'KECERDASAN' && q.kecerdasanGroup === 'LOGIS' && Boolean(q.image),
+      ),
+    );
+    const silogismePool = shuffleArray(
+      POOL_KECERDASAN.filter(
+        (q) => q.subtest === 'KECERDASAN' && q.kecerdasanGroup === 'LOGIS' && !q.image,
+      ),
+    );
+
+    const combined = shuffleArray([
+      ...verbalPool.slice(0, verbalQuota),
+      ...praktisPool.slice(0, praktisQuota),
+      ...silogismePool.slice(0, verbalLogisQuota),
+      ...figuralPool.slice(0, figuralQuota),
+    ]);
+
+    return combined.slice(0, count).map((q) => shuffleSingleChoiceOptions(q));
+  }
+
+  const sourcePool =
+    subtest === 'KEPRIBADIAN'
+      ? POOL_KEPRIBADIAN
+      : subtest === 'TKK'
+        ? POOL_TKK
+        : POOL_TPK;
+
   const isolatedPool = sourcePool.filter((q) => q.subtest === subtest);
   const picked = shuffleArray(isolatedPool).slice(0, count);
   return picked.map((q) => shuffleSingleChoiceOptions(q));
@@ -416,11 +537,11 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     category: 'PSIKOTES',
     subtest: 'ALL',
     title: 'Pretest CAT Psikotes — Semua Subtes (Campuran)',
-    subtitle: `Kecerdasan (100 dari ${POOL_KECERDASAN.length} Soal), Kepribadian (100 dari ${POOL_KEPRIBADIAN.length} Soal) & Kecermatan (500 Soal / 10 Kolom)`,
+    subtitle: `Kecerdasan (100 Soal, 60m), Kepribadian (100 Soal, 45m) & Kecermatan (500 Soal / 10 Kolom, 10m)`,
     description:
-      'Latihan komprehensif 3 pilar psikotes standar CAT Polri yang diacak per subtes dari bank soal utama (100 Kecerdasan, 100 Kepribadian, dan 500 Kecermatan 10 Kolom @ 60 detik).',
+      'Latihan komprehensif 3 pilar psikotes standar CAT Polri (total waktu acuan 115 menit di luar jeda): Kecerdasan (Verbal, Praktis/Numerik, Logis & Gambar Hitam-Putih), Mental Kepribadian (Opsi A–E), dan Kecermatan 10 Kolom (3 Huruf, 3 Angka, 3 Simbol, 1 Campuran).',
     badge: `700 Soal Aktif • Bank ${POOL_KECERDASAN.length + POOL_KEPRIBADIAN.length + POOL_KECERMATAN.length} Soal`,
-    durationSeconds: (90 + 60 + 10) * 60,
+    durationSeconds: (60 + 45 + 10) * 60,
     columnDurationSeconds: 60,
     poolSize: POOL_KECERDASAN.length + POOL_KEPRIBADIAN.length + POOL_KECERMATAN.length,
     questions: [
@@ -434,11 +555,11 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     category: 'PSIKOTES',
     subtest: 'KECERDASAN',
     title: 'Pretest CAT Psikotes — Subtes Kecerdasan',
-    subtitle: `100 Soal Acak (Bank ${POOL_KECERDASAN.length} Soal) • Narasi Analitis, Denah Peta, Deret & Silogisme`,
+    subtitle: `100 Soal Acak Proporsional (Bank ${POOL_KECERDASAN.length} Soal) • Verbal (30 Poin), Praktis/Numerik (35 Poin) & Logis/Figural (35 Poin)`,
     description:
-      `Menyajikan 100 soal yang diacak otomatis dari total ${POOL_KECERDASAN.length} bank soal Kecerdasan berbasis narasi studi kasus kepolisian, penalaran logis, deret numerik, dan orientasi denah wilayah.`,
-    badge: `100 Soal • Bank ${POOL_KECERDASAN.length} Soal`,
-    durationSeconds: 90 * 60,
+      `Menyajikan 100 soal (total 100 poin) yang diacak proporsional dari ${POOL_KECERDASAN.length} bank soal Kecerdasan: Verbal (30 poin), Praktis / Numerik / Aritmatika Dasar & Peta Denah (35 poin), serta Logis & Penalaran Gambar Hitam-Putih (35 poin).`,
+    badge: `100 Soal (100 Poin) • Bank ${POOL_KECERDASAN.length} Soal`,
+    durationSeconds: 60 * 60,
     poolSize: POOL_KECERDASAN.length,
     questions: POOL_KECERDASAN.slice(0, 100),
   },
@@ -447,11 +568,11 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     category: 'PSIKOTES',
     subtest: 'KEPRIBADIAN',
     title: 'Pretest CAT Psikotes — Subtes Mental Kepribadian',
-    subtitle: `100 Soal Acak (Bank ${POOL_KEPRIBADIAN.length} Soal) • Studi Kasus Dilema Kedinasan Polri (Skala 1–5)`,
+    subtitle: `100 Soal Acak (Bank ${POOL_KEPRIBADIAN.length} Soal) • Studi Kasus Dilema Kedinasan Polri (Opsi A–E)`,
     description:
-      `Menyajikan 100 soal yang diacak otomatis dari total ${POOL_KEPRIBADIAN.length} bank soal Mental Kepribadian berbasis narasi dilema integritas, disiplin, kepemimpinan, dan pelayanan publik Polri.`,
+      `Menyajikan 100 soal yang diacak otomatis dari total ${POOL_KEPRIBADIAN.length} bank soal Mental Kepribadian berbasis narasi dilema integritas, disiplin, kepemimpinan, dan pelayanan publik Polri dengan opsi huruf A sampai E.`,
     badge: `100 Soal • Bank ${POOL_KEPRIBADIAN.length} Soal`,
-    durationSeconds: 60 * 60,
+    durationSeconds: 45 * 60,
     poolSize: POOL_KEPRIBADIAN.length,
     questions: POOL_KEPRIBADIAN.slice(0, 100),
   },
@@ -460,9 +581,9 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     category: 'PSIKOTES',
     subtest: 'KECERMATAN',
     title: 'Pretest CAT Psikotes — Subtes Kecermatan (Standar TES CAT)',
-    subtitle: '500 Soal • 10 Kolom @ 50 Soal • Durasi 60 Detik / Kolom (Otomatis Pindah Kolom)',
+    subtitle: '500 Soal • 10 Kolom (3 Huruf, 3 Angka, 3 Simbol, 1 Campuran) • 60 Detik / Kolom',
     description:
-      'Simulasi kecepatan dan ketelitian visual identik dengan TES CAT Polri sesungguhnya: 10 kolom, masing-masing 50 soal dengan batas waktu 60 detik per kolom dan perpindahan kolom otomatis.',
+      'Simulasi kecepatan dan ketelitian visual identik dengan TES CAT Polri (durasi 10 menit): Kolom 1–3 Huruf, Kolom 4–6 Angka, Kolom 7–9 Simbol, dan Kolom 10 Campuran Angka, Simbol & Huruf.',
     badge: '500 Soal • 10 Kolom × 60 Detik',
     durationSeconds: 10 * 60,
     isKecermatanOnly: true,
@@ -503,7 +624,7 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     description:
       `Simulasi gabungan seluruh subtes seleksi CAT Polri yang diacak ketat per kategori subtes dari total ${SIMULATION_POOL_STATS.TOTAL} bank soal terpusat.`,
     badge: `900 Soal Aktif • Bank ${SIMULATION_POOL_STATS.TOTAL} Soal`,
-    durationSeconds: (90 + 60 + 10 + 60 + 60) * 60,
+    durationSeconds: (60 + 45 + 10 + 60 + 60) * 60,
     columnDurationSeconds: 60,
     poolSize: SIMULATION_POOL_STATS.TOTAL,
     questions: [

@@ -220,6 +220,40 @@
   );
   const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
 
+  const LIKERT_LETTER_OPTIONS = [
+    { letter: 'A', value: 5, text: 'Sangat Setuju' },
+    { letter: 'B', value: 4, text: 'Setuju' },
+    { letter: 'C', value: 3, text: 'Ragu-Ragu' },
+    { letter: 'D', value: 2, text: 'Tidak Setuju' },
+    { letter: 'E', value: 1, text: 'Sangat Tidak Setuju' },
+  ] as const;
+
+  function answeredLetterOf(entry: ExamQuestion): string | null {
+    const ans = examRunner.answerOf(entry.id);
+    if (!ans) return null;
+    if (entry.type === 'LIKERT_STATEMENT' && typeof ans.value === 'number') {
+      return LIKERT_LETTER_OPTIONS.find((item) => item.value === ans.value)?.letter ?? null;
+    }
+    if (ans.optionIds && ans.optionIds.length > 0) {
+      const letters = ans.optionIds
+        .map((optId) => {
+          const idx = entry.options.findIndex((o) => o.id === optId);
+          if (idx < 0) return null;
+          return optionLetters[idx] ?? entry.options[idx]?.label ?? null;
+        })
+        .filter((l): l is string => Boolean(l));
+      return letters.length > 0 ? letters.join(',') : null;
+    }
+    return null;
+  }
+
+  function kecermatanColCategory(colIdx: number): string {
+    if (colIdx < 3) return 'Huruf';
+    if (colIdx < 6) return 'Angka';
+    if (colIdx < 9) return 'Simbol';
+    return 'Campuran';
+  }
+
   const currentAnswer = $derived(question ? examRunner.answerOf(question.id) : null);
   const hasAnswer = $derived(
     currentAnswer !== null &&
@@ -670,10 +704,20 @@
       }
       if (!question || examRunner.isLocked) return;
 
-      if (question.type === 'LIKERT_STATEMENT' && /^[1-5]$/.test(event.key)) {
-        event.preventDefault();
-        chooseLikert(question, Number(event.key));
-        return;
+      if (question.type === 'LIKERT_STATEMENT') {
+        const upperKey = event.key.toUpperCase();
+        const byLetter = LIKERT_LETTER_OPTIONS.find((item) => item.letter === upperKey);
+        if (byLetter) {
+          event.preventDefault();
+          chooseLikert(question, byLetter.value);
+          return;
+        }
+        if (/^[1-5]$/.test(event.key)) {
+          event.preventDefault();
+          const byIdx = LIKERT_LETTER_OPTIONS[Number(event.key) - 1];
+          if (byIdx) chooseLikert(question, byIdx.value);
+          return;
+        }
       }
 
       if (
@@ -848,13 +892,13 @@
             <!-- ============================================================= -->
             <!-- JEDA PERALIHAN KHUSUS MENUJU TES MENTAL KEPRIBADIAN (SUBTES 2) -->
             <!-- ============================================================= -->
-            <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit): Menuju Mental Kepribadian</h2>
+            <h2 class="jeda-card__title">Waktu Jeda 10 Menit: Menuju Mental Kepribadian (45 Menit)</h2>
             <p class="jeda-card__subtitle">
-              Subtes 1 (Tes Kecerdasan) telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan pikiran sejenak sebelum memulai <strong>Subtes 2 (Tes Mental Kepribadian)</strong>. Anda dapat memilih waktu jeda 5–10 menit atau langsung menekan tombol <strong>Mulai Subtes Mental Kepribadian</strong> bila sudah siap.
+              Subtes 1 (Tes Kecerdasan — 60 Menit) telah selesai. Gunakan waktu jeda <strong>10 menit</strong> ini untuk mengistirahatkan pikiran sejenak sebelum memulai <strong>Subtes 2 (Tes Mental Kepribadian — 45 Menit)</strong>, atau langsung tekan tombol <strong>Mulai Subtes Mental Kepribadian</strong> bila sudah siap.
             </p>
 
             <div class="jeda-timer-box">
-              <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
+              <div class="jeda-timer-label">Sisa Waktu Istirahat (Jeda 10 Menit)</div>
               <div
                 class="jeda-timer-display"
                 class:jeda-timer-display--ended={breakRemainingSeconds === 0}
@@ -877,7 +921,7 @@
                   class:jeda-opt-btn--active={breakMinutes === 10}
                   onclick={() => startBreakTimer(10)}
                 >
-                  10 Menit
+                  10 Menit (Standar)
                 </button>
               </div>
             </div>
@@ -894,11 +938,11 @@
                 </div>
                 <div class="jeda-briefing__item">
                   <span class="jeda-briefing__lbl">Alokasi Waktu</span>
-                  <span class="jeda-briefing__val">120 Menit (2 Jam)</span>
+                  <span class="jeda-briefing__val">45 Menit</span>
                 </div>
                 <div class="jeda-briefing__item">
                   <span class="jeda-briefing__lbl">Format Jawaban</span>
-                  <span class="jeda-briefing__val">Skala Sikap 5 Opsi (Setuju s.d. Tidak Setuju)</span>
+                  <span class="jeda-briefing__val">Opsi Huruf A–E (Sangat Setuju s.d. Sangat Tidak Setuju)</span>
                 </div>
                 <div class="jeda-briefing__item">
                   <span class="jeda-briefing__lbl">Model Penilaian</span>
@@ -907,10 +951,10 @@
               </div>
               <ul class="jeda-briefing__list">
                 <li>Mengukur dimensi mental kepribadian: <strong>Integritas, Pengendalian Emosi, Tanggung Jawab, Kerjasama, Kepemimpinan, dan Disiplin</strong>.</li>
-                <li><strong>Setiap pilihan jawaban dinilai berdasarkan bobot (1 hingga 5 poin)</strong>; pilihlah jawaban yang paling mencerminkan prinsip dan integritas dinas Anda.</li>
+                <li>Gunakan opsi huruf <strong>A (Sangat Setuju), B (Setuju), C (Ragu-Ragu), D (Tidak Setuju), E (Sangat Tidak Setuju)</strong>.</li>
                 <li>Pilihlah jawaban secara jujur, objektif, dan konsisten sesuai dengan jati diri dan kode etik profesi Polri.</li>
-                <li>Tidak ada pengurangan nilai (tanpa minus). Pastikan seluruh <strong>{subtest.questionCount} soal</strong> dijawab sebelum batas waktu berakhir.</li>
-                <li>Setelah subtes Mental Kepribadian ini selesai, Anda akan memasuki sesi jeda berikutnya sebelum memulai Subtes Kecermatan.</li>
+                <li>Tidak ada pengurangan nilai (tanpa minus). Pastikan seluruh <strong>{subtest.questionCount} soal</strong> dijawab sebelum batas waktu 45 menit berakhir.</li>
+                <li>Setelah subtes Mental Kepribadian ini selesai, Anda akan memasuki jeda 10 menit berikutnya sebelum memulai Subtes Kecermatan (10 menit).</li>
               </ul>
             </div>
 
@@ -927,13 +971,13 @@
             <!-- ============================================================= -->
             <!-- JEDA PERALIHAN KHUSUS MENUJU TES KECERMATAN (SUBTES 3)       -->
             <!-- ============================================================= -->
-            <h2 class="jeda-card__title">Istirahat Antar Subtes (5 - 10 Menit): Menuju Tes Kecermatan</h2>
+            <h2 class="jeda-card__title">Waktu Jeda 10 Menit: Menuju Tes Kecermatan (10 Menit)</h2>
             <p class="jeda-card__subtitle">
-              Subtes 2 (Tes Mental Kepribadian) telah selesai. Gunakan waktu jeda ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai <strong>Subtes 3 (Tes Kecermatan)</strong>. Anda dapat memilih waktu jeda 5–10 menit atau langsung menekan tombol <strong>Mulai Subtes Kecermatan</strong> bila sudah siap.
+              Subtes 2 (Tes Mental Kepribadian — 45 Menit) telah selesai. Gunakan waktu jeda <strong>10 menit</strong> ini untuk mengistirahatkan mata dan melemaskan otot tangan sebelum memulai <strong>Subtes 3 (Tes Kecermatan — 10 Menit)</strong>, atau langsung tekan tombol <strong>Mulai Subtes Kecermatan</strong> bila sudah siap.
             </p>
 
             <div class="jeda-timer-box">
-              <div class="jeda-timer-label">Sisa Waktu Istirahat</div>
+              <div class="jeda-timer-label">Sisa Waktu Istirahat (Jeda 10 Menit)</div>
               <div
                 class="jeda-timer-display"
                 class:jeda-timer-display--ended={breakRemainingSeconds === 0}
@@ -956,7 +1000,7 @@
                   class:jeda-opt-btn--active={breakMinutes === 10}
                   onclick={() => startBreakTimer(10)}
                 >
-                  10 Menit
+                  10 Menit (Standar)
                 </button>
               </div>
             </div>
@@ -976,8 +1020,8 @@
                   <span class="jeda-briefing__val">10 Menit (1 Menit per Kolom)</span>
                 </div>
                 <div class="jeda-briefing__item">
-                  <span class="jeda-briefing__lbl">Karakter Patokan</span>
-                  <span class="jeda-briefing__val">Huruf / Angka / Simbol Rujukan</span>
+                  <span class="jeda-briefing__lbl">Pembagian 10 Kolom</span>
+                  <span class="jeda-briefing__val">3 Huruf • 3 Angka • 3 Simbol • 1 Campuran</span>
                 </div>
                 <div class="jeda-briefing__item">
                   <span class="jeda-briefing__lbl">Format Tes</span>
@@ -985,11 +1029,11 @@
                 </div>
               </div>
               <ul class="jeda-briefing__list">
-                <li>Terdapat <strong>10 kolom</strong>, masing-masing berdurasi <strong>1 menit</strong> dengan <strong>50 soal</strong> per kolom.</li>
-                <li>Setiap kolom memiliki <strong>5 huruf rujukan (A, B, C, D, E)</strong> di bagian atas.</li>
-                <li>Perhatikan 4 huruf pada setiap soal, lalu pilih <strong>1 huruf yang hilang</strong> dari kelompok rujukan secepat mungkin.</li>
-                <li>Gunakan tombol mouse atau tombol keyboard <strong>A, B, C, D, E</strong> (atau angka <strong>1 - 5</strong>) untuk menjawab cepat.</li>
-                <li>Timer kolom tereset otomatis setiap kolom berganti. Setelah subtes kecermatan ini selesai, hasil akhir ujian akan langsung ditampilkan.</li>
+                <li>Terdapat <strong>10 kolom</strong> (masing-masing berdurasi <strong>1 menit</strong> dengan <strong>50 soal</strong>): <strong>Kolom 1–3 Huruf</strong>, <strong>Kolom 4–6 Angka</strong>, <strong>Kolom 7–9 Simbol</strong>, dan <strong>Kolom 10 Campuran Angka, Simbol &amp; Huruf</strong>.</li>
+                <li>Setiap kolom memiliki <strong>5 karakter rujukan berlabel A, B, C, D, E</strong> di bagian atas.</li>
+                <li>Perhatikan 4 karakter pada kotak soal, lalu pilih <strong>1 karakter yang hilang</strong> dari kelompok rujukan secepat mungkin.</li>
+                <li>Gunakan tombol mouse atau tombol keyboard <strong>A, B, C, D, E</strong> untuk menjawab cepat.</li>
+                <li>Timer kolom tereset otomatis setiap kolom berganti. Setelah subtes kecermatan ini selesai, hasil akhir ujian beserta review jawaban akan langsung ditampilkan.</li>
               </ul>
             </div>
 
@@ -1295,27 +1339,17 @@
               </div>
             </div>
           {:else if question.type === 'LIKERT_STATEMENT'}
-            <div class="likert" role="group" aria-label="Skala jawaban">
-              {#each question.options as option (option.id)}
+            <div class="options" role="group" aria-label="Pilih jawaban sikap (A sampai E)">
+              {#each LIKERT_LETTER_OPTIONS as item (item.letter)}
+                {@const isActive = examRunner.answerOf(question.id)?.value === item.value}
                 <button
                   type="button"
-                  class="likert__option"
-                  class:likert__option--active={examRunner.answerOf(question.id)?.value ===
-                    Number(option.label)}
-                  onclick={() => chooseLikert(question, Number(option.label))}
+                  class="option option--button"
+                  class:option--active={isActive}
+                  onclick={() => chooseLikert(question, item.value)}
                 >
-                  <span class="likert__value">{option.label}</span>
-                  <span class="likert__label">
-                    {option.label === '1'
-                      ? 'Sangat tidak setuju'
-                      : option.label === '2'
-                        ? 'Tidak setuju'
-                        : option.label === '3'
-                          ? 'Netral'
-                          : option.label === '4'
-                            ? 'Setuju'
-                            : 'Sangat setuju'}
-                  </span>
+                  <span class="option__key">{item.letter}</span>
+                  <span class="option__text">{item.text}</span>
                 </button>
               {/each}
             </div>
@@ -1543,7 +1577,7 @@
                     class:kecermatan-col-item--done={isPassed}
                   >
                     <div class="kecermatan-col-item__info">
-                      <span class="kecermatan-col-item__name">Kolom {colIdx + 1}</span>
+                      <span class="kecermatan-col-item__name">Kolom {colIdx + 1} ({kecermatanColCategory(colIdx)})</span>
                       <span class="kecermatan-col-item__count">{colAnswered} / 50 terjawab</span>
                     </div>
                     {#if isCurrent}
@@ -1571,6 +1605,7 @@
               <div class="palette">
                 {#each examRunner.questions as entry, entryIndex (entry.id)}
                   {@const isAns = examRunner.answerOf(entry.id) !== null}
+                  {@const ansLetter = answeredLetterOf(entry)}
                   {@const isCur = entryIndex === index}
                   {@const isFlg = flagged.has(entry.id)}
                   <button
@@ -1581,9 +1616,12 @@
                     class:palette__item--flagged={isFlg}
                     aria-current={isCur ? 'true' : undefined}
                     onclick={() => (index = entryIndex)}
-                    title={`Soal nomor ${entryIndex + 1}${isAns ? ' (Sudah dijawab)' : ''}${isFlg ? ' (Ragu-ragu)' : ''}`}
+                    title={`Soal nomor ${entryIndex + 1}${ansLetter ? ` (Jawaban: ${ansLetter})` : ''}${isFlg ? ' (Ragu-ragu)' : ''}`}
                   >
-                    {entryIndex + 1}
+                    <span class="palette__item-num">{entryIndex + 1}</span>
+                    {#if ansLetter}
+                      <span class="palette__item-ans">{ansLetter}</span>
+                    {/if}
                   </button>
                 {/each}
               </div>
@@ -2273,47 +2311,6 @@
 
   /* Soal figural: grid tile gambar (IMAGE_CHOICE) — lihat ImageChoiceTiles.svelte. */
 
-  .likert {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: var(--space-2);
-  }
-
-  .likert__option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-3) var(--space-1);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    cursor: pointer;
-    color: var(--color-text);
-  }
-
-  .likert__option:hover {
-    background: var(--color-surface-muted);
-  }
-
-  .likert__option--active {
-    border-color: var(--color-primary);
-    background: var(--color-primary-soft);
-    color: var(--color-primary);
-  }
-
-  .likert__value {
-    font-family: var(--font-mono);
-    font-size: var(--text-xl);
-    font-weight: 700;
-  }
-
-  .likert__label {
-    font-size: 0.68rem;
-    line-height: 1.2;
-    text-align: center;
-  }
-
   .passhand__hint {
     color: var(--color-text-muted);
     font-size: var(--text-sm);
@@ -2381,20 +2378,49 @@
 
   .palette__item {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
+    gap: 1px;
+    min-height: 46px;
     min-width: 44px;
-    padding: 4px;
+    padding: 3px 4px;
     border: 1.5px solid #cbd5e1;
     border-radius: var(--radius-md);
     background: #ffffff;
     color: #1e293b;
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s ease-out;
+    line-height: 1.1;
+  }
+
+  .palette__item-num {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .palette__item-ans {
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .palette__item--current .palette__item-ans {
+    background: rgba(37, 99, 235, 0.15);
+    color: #1d4ed8;
+  }
+
+  .palette__item--current.palette__item--answered .palette__item-ans,
+  .palette__item--current.palette__item--flagged .palette__item-ans {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
   }
 
   .palette__item:hover {
@@ -2484,14 +2510,6 @@
   }
 
   @media (max-width: 640px) {
-    .likert {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .likert__label {
-      display: none;
-    }
-
     .runner__timer {
       align-items: flex-start;
     }

@@ -614,6 +614,60 @@ export const FIGURAL_KECERDASAN: readonly FiguralSeed[] = [
   ...withType(KEC_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
   ...withType(TKK_IMAGE, 'IMAGE_CHOICE'),
   ...withType(TKK_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
+  ...Array.from({ length: 15 }, (_, idx): FiguralSeed => {
+    const num = 60 + idx;
+    const submode = idx % 4;
+    const stems = [
+      `Pada analisis sekuens kisi visual hitam-putih (Varian #${idx + 1}), setiap kotak memuat petak jendela dengan sel hitam pekat dan sel arsiran yang bergeser secara sistematis dari langkah 1, langkah 2, hingga langkah 3. Amati pola perpindahan posisi petak hitam tersebut, lalu tentukan gambar ke-4 yang tepat untuk mengisi kotak bertanda tanya (?).`,
+      `Dalam pengujian persepsi rotasi baling-baling hitam-putih (Varian #${idx + 1}), empat kelopak mengelilingi poros tengah di mana tepat satu kelopak berwarna hitam pekat dan satu penanda sudut ikut berpindah searah putaran. Perhatikan perubahan orientasi dari kotak 1 ke kotak 3, kemudian pilih gambar yang melanjutkan pola pada kotak ke-4 (?).`,
+      `Dalam evaluasi deret matriks titik hitam-putih (Varian #${idx + 1}), jumlah noktah bulat hitam di dalam kotak berubah secara aritmetis teratur pada setiap tahap pengamatan. Hitung perubahan jumlah dan susunan titik dari kotak pertama hingga ketiga, lalu tentukan konfigurasi titik yang benar untuk kotak keempat (?).`,
+      `Pada analisis pergeseran simbol mikro sudut dan bangun pusat hitam-putih (Varian #${idx + 1}), bangun geometri di tengah mengalami pergantian teratur sementara empat simbol kecil di sudut kotak bergeser mengelilingi tepi. Tentukan gambar yang tepat untuk melengkapi urutan keempat (?).`,
+    ];
+    const explanations = [
+      'Sel hitam dan sel arsiran pada kisi jendela bergeser maju secara konstan setiap langkah; gambar yang tepat adalah kelanjutan posisi langkah ke-4.',
+      'Kelopak hitam pekat dan penanda sudut berputar 90 derajat searah jarum jam setiap langkah sehingga pada langkah ke-4 berada pada posisi berikutnya.',
+      'Jumlah titik hitam berubah secara konsisten dengan selisih 2 titik per langkah (mis. 9 → 7 → 5 → 3 atau 2 → 4 → 6 → 8).',
+      'Bangun pusat berganti mengikuti siklus bentuk geometri dan keempat simbol sudut bergeser satu sudut searah jarum jam.',
+    ];
+    return {
+      code: `PSI-KEC-FIG-${String(num).padStart(3, '0')}`,
+      family: 'gridseries',
+      seed: idx,
+      type: 'IMAGE_CHOICE',
+      difficulty: idx % 3 === 0 ? 'EASY' : idx % 3 === 1 ? 'MEDIUM' : 'HARD',
+      stem: stems[submode]!,
+      explanation: explanations[submode]!,
+      tags: ['figural', 'pola', 'deret-gambar', 'hitam-putih'],
+    };
+  }),
+  ...Array.from({ length: 15 }, (_, idx): FiguralSeed => {
+    const num = 75 + idx;
+    return {
+      code: `PSI-KEC-FIG-${String(num).padStart(3, '0')}`,
+      family: 'matrixline',
+      seed: idx,
+      type: 'IMAGE_CHOICE',
+      difficulty: idx % 3 === 0 ? 'MEDIUM' : 'HARD',
+      stem: `Perhatikan matriks penalaran figural 3×3 hitam-putih berikut (Kasus Matriks Garis & Titik #${idx + 1}). Setiap baris mempertahankan bentuk bingkai luar yang konsisten, sedangkan elemen garis palang (+), garis diagonal (×), serta empat titik sudut pada kolom ketiga merupakan hasil operasi penggabungan atau relasi logis dari kolom pertama dan kolom kedua. Pilih gambar yang tepat untuk mengisi sel kanan bawah bertanda tanya (?).`,
+      explanation:
+        'Bentuk bingkai luar mengikuti baris ketiga, sedangkan elemen garis bagian dalam (+ dan ×) serta keempat titik sudut mengikuti kaidah superposisi/kombinasi kolom pertama dan kolom kedua.',
+      tags: ['figural', 'matriks', 'superposisi-garis', 'hitam-putih'],
+    };
+  }),
+  ...Array.from({ length: 15 }, (_, idx): FiguralSeed => {
+    const num = 90 + idx;
+    return {
+      code: `PSI-KEC-FIG-${String(num).padStart(3, '0')}`,
+      family: 'matrixshape',
+      seed: idx,
+      type: 'IMAGE_CHOICE',
+      difficulty: idx % 2 === 0 ? 'MEDIUM' : 'HARD',
+      stem: `Amati matriks transformasi bangun bersarang 3×3 hitam-putih di atas (Kasus Matriks Bangun Bersarang #${idx + 1}). Pada matriks ini, bangun luar ditentukan oleh pola baris, bangun dalam ditentukan oleh pola kolom, dan warna blok hitam-putih berganti secara selang-seling. Tentukan gambar yang paling tepat untuk melengkapi sel sudut kanan bawah yang bertanda tanya (?).`,
+      explanation:
+        'Bangun luar sel kanan bawah harus sama dengan bangun luar baris ke-3, bangun dalamnya harus sama dengan bangun dalam kolom ke-3, dengan kontras warna hitam-putih yang konsisten terhadap pola selang-seling matriks.',
+      tags: ['figural', 'matriks', 'bangun-bersarang', 'hitam-putih'],
+    };
+  }),
 ];
 
 /**

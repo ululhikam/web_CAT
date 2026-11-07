@@ -5,16 +5,57 @@
   import Badge from '@webcat/ui/components/Badge.svelte';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
+  import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
   import { apiErrorMessage, apiRequest } from '$lib/api/client';
   import { session } from '$lib/stores/session.svelte';
   import { formatDateTime } from '$lib/format';
-  import type { ExamResultView, SubtestResultView } from '@webcat/contracts';
+  import type { ExamResultView, SubtestResultView, SubtestReviewItem } from '@webcat/contracts';
 
   const sessionId = page.params.sessionId ?? '';
 
   let result = $state<ExamResultView | null>(null);
   let loading = $state(true);
   let error = $state<string | null>(null);
+  let selectedReviewSubtestId = $state<string | null>(null);
+  let reviewFilter = $state<'ALL' | 'CORRECT' | 'WRONG'>('ALL');
+  let reviewColFilter = $state<number | 'ALL'>('ALL');
+
+  const allSubtests = $derived<SubtestResultView[]>(
+    result ? result.stages.flatMap((s) => s.subtests) : [],
+  );
+
+  const activeReviewSubtest = $derived<SubtestResultView | null>(
+    allSubtests.find((s) => s.id === selectedReviewSubtestId) ??
+      allSubtests.find((s) => (s.reviewItems?.length ?? 0) > 0) ??
+      allSubtests[0] ??
+      null,
+  );
+
+  const activeReviewItems = $derived<SubtestReviewItem[]>(
+    activeReviewSubtest?.reviewItems ?? [],
+  );
+
+  const filteredReviewItems = $derived<SubtestReviewItem[]>(
+    activeReviewItems.filter((item) => {
+      if (reviewFilter === 'CORRECT' && !item.isCorrect) return false;
+      if (reviewFilter === 'WRONG' && item.isCorrect) return false;
+      const colIndex = Math.floor((item.position - 1) / 50);
+      if (
+        activeReviewSubtest?.subtestCode === 'KECERMATAN' &&
+        reviewColFilter !== 'ALL' &&
+        colIndex !== reviewColFilter
+      ) {
+        return false;
+      }
+      return true;
+    }),
+  );
+
+  function selectReviewSubtest(subtestId: string) {
+    selectedReviewSubtestId = subtestId;
+    reviewFilter = 'ALL';
+    reviewColFilter = 'ALL';
+  }
 
   $effect(() => {
     if (!session.user || !session.accessToken || !sessionId) return;
@@ -435,11 +476,11 @@
                               <span class="pillar-card__label">Ketahanan (Daya Tahan)</span>
                               <span class="pillar-card__value">
                                 {#if (subtest.metrics.trend ?? 0) >= 0.2}
-                                  Meningkat ↗
+                                  Meningkat
                                 {:else if (subtest.metrics.trend ?? 0) <= -0.2}
-                                  Menurun ↘
+                                  Menurun
                                 {:else}
-                                  Stabil ➔
+                                  Stabil
                                 {/if}
                               </span>
                               <span class="pillar-card__desc">Tren ketahanan kerja dari kolom 1 ke 10</span>
@@ -483,6 +524,192 @@
         </div>
       </Card>
     {/each}
+
+    <!-- ================================================================ -->
+    <!-- RINCIAN JAWABAN & EVALUASI SOAL (REVIEW JAWABAN TES CAT)         -->
+    <!-- ================================================================ -->
+    {#if allSubtests.some((s) => (s.reviewItems?.length ?? 0) > 0)}
+      <section class="review-section">
+        <div class="review-section__header">
+          <div>
+            <span class="eyebrow">EVALUASI BUTIR SOAL TES CAT</span>
+            <h2 class="review-section__title">Review Jawaban &amp; Pembahasan per Subtes</h2>
+            <p class="muted">
+              Tinjau kembali setiap soal yang telah dikerjakan, jawaban pilihan Anda, kunci jawaban/bobot ideal, serta pembahasan resminya.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tabs Subtes -->
+        <div class="review-subtest-tabs" role="tablist" aria-label="Pilih Subtes">
+          {#each allSubtests as subtest (subtest.id)}
+            {@const count = subtest.reviewItems?.length ?? 0}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeReviewSubtest?.id === subtest.id}
+              class="review-subtest-tab"
+              class:review-subtest-tab--active={activeReviewSubtest?.id === subtest.id}
+              onclick={() => selectReviewSubtest(subtest.id)}
+            >
+              <span class="review-subtest-tab__name">{subtest.name}</span>
+              <span class="review-subtest-tab__meta">{count} Soal · {percent(subtest.percentage)}</span>
+            </button>
+          {/each}
+        </div>
+
+        {#if activeReviewSubtest}
+          <div class="review-toolbar">
+            <div class="review-filters">
+              <button
+                type="button"
+                class="review-filter-pill"
+                class:review-filter-pill--active={reviewFilter === 'ALL'}
+                onclick={() => (reviewFilter = 'ALL')}
+              >
+                Semua ({activeReviewItems.length})
+              </button>
+              <button
+                type="button"
+                class="review-filter-pill review-filter-pill--ok"
+                class:review-filter-pill--active={reviewFilter === 'CORRECT'}
+                onclick={() => (reviewFilter = 'CORRECT')}
+              >
+                {activeReviewSubtest.subtestCode === 'KEPRIBADIAN' ? 'Skor Ideal (4-5)' : 'Jawaban Tepat'}
+                ({activeReviewItems.filter((i) => i.isCorrect).length})
+              </button>
+              <button
+                type="button"
+                class="review-filter-pill review-filter-pill--bad"
+                class:review-filter-pill--active={reviewFilter === 'WRONG'}
+                onclick={() => (reviewFilter = 'WRONG')}
+              >
+                {activeReviewSubtest.subtestCode === 'KEPRIBADIAN' ? 'Perlu Evaluasi (1-3 / Kosong)' : 'Salah / Kosong'}
+                ({activeReviewItems.filter((i) => !i.isCorrect).length})
+              </button>
+            </div>
+
+            {#if activeReviewSubtest.subtestCode === 'KECERMATAN'}
+              <div class="review-col-filters">
+                <button
+                  type="button"
+                  class="review-col-btn"
+                  class:review-col-btn--active={reviewColFilter === 'ALL'}
+                  onclick={() => (reviewColFilter = 'ALL')}
+                >
+                  Semua Kolom
+                </button>
+                {#each Array.from({ length: 10 }, (_, idx) => idx) as colIdx}
+                  <button
+                    type="button"
+                    class="review-col-btn"
+                    class:review-col-btn--active={reviewColFilter === colIdx}
+                    onclick={() => (reviewColFilter = colIdx)}
+                  >
+                    Kolom {colIdx + 1}
+                    <small>
+                      ({colIdx < 3 ? 'Huruf' : colIdx < 6 ? 'Angka' : colIdx < 9 ? 'Simbol' : 'Campuran'})
+                    </small>
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </div>
+
+          {#if filteredReviewItems.length === 0}
+            <div class="review-empty">
+              Tidak ada butir soal pada filter ini.
+            </div>
+          {:else}
+            <div class="review-list">
+              {#each filteredReviewItems as item (item.position)}
+                {@const colIndex = Math.floor((item.position - 1) / 50)}
+                {@const rowIndex = ((item.position - 1) % 50) + 1}
+                <article
+                  class="review-card"
+                  class:review-card--correct={item.isCorrect}
+                  class:review-card--wrong={!item.isCorrect}
+                >
+                  <div class="review-card__top">
+                    <div class="review-card__left">
+                      <span class="review-qnum">Soal #{item.position}</span>
+                      <span class="review-qcode mono">{item.id}</span>
+                      {#if activeReviewSubtest.subtestCode === 'KECERMATAN'}
+                        <Badge tone="neutral" size="sm">
+                          Kolom {colIndex + 1} ({colIndex < 3 ? 'Huruf' : colIndex < 6 ? 'Angka' : colIndex < 9 ? 'Simbol' : 'Campuran'}) · Baris {rowIndex}
+                        </Badge>
+                      {/if}
+                    </div>
+                    <div class="review-card__right">
+                      {#if activeReviewSubtest.subtestCode === 'KEPRIBADIAN'}
+                        <Badge tone={item.isCorrect ? 'success' : 'warning'} size="sm">
+                          {item.userKey ? `Pilihan ${item.userKey} (Bobot +${item.earnedWeight ?? 0}/5)` : 'Tidak Dijawab (0)'}
+                        </Badge>
+                      {:else if !item.userKey}
+                        <Badge tone="neutral" size="sm">Tidak Dijawab (Kosong)</Badge>
+                      {:else if item.isCorrect}
+                        <Badge tone="success" size="sm">Jawaban Tepat (+1)</Badge>
+                      {:else}
+                        <Badge tone="danger" size="sm">Jawaban Salah (0)</Badge>
+                      {/if}
+                    </div>
+                  </div>
+
+                  <p class="review-stem">{item.stem}</p>
+
+                  {#if item.image}
+                    <div class="review-stem-img-box">
+                      <img src={item.image} alt={`Ilustrasi soal ${item.position}`} class="review-stem-img" loading="lazy" />
+                    </div>
+                  {/if}
+
+                  <div class="review-options-grid">
+                    {#each item.options as opt (opt.key)}
+                      {@const isUserChoice = item.userKey === opt.key}
+                      {@const isCorrectKey = item.correctKey === opt.key}
+                      <div
+                        class="review-opt"
+                        class:review-opt--correct={isCorrectKey}
+                        class:review-opt--wrong={isUserChoice && !isCorrectKey && !item.isCorrect}
+                        class:review-opt--user={isUserChoice}
+                      >
+                        <span class="review-opt__key">{opt.key}</span>
+                        <div class="review-opt__body">
+                          {#if opt.image}
+                            <img src={opt.image} alt={`Opsi ${opt.key}`} class="review-opt__img" loading="lazy" />
+                          {/if}
+                          {#if opt.text}
+                            <span class="review-opt__text">{opt.text}</span>
+                          {/if}
+                        </div>
+                        <div class="review-opt__tags">
+                          {#if isUserChoice}
+                            <span class="review-opt__tag review-opt__tag--user">Jawaban Anda</span>
+                          {/if}
+                          {#if isCorrectKey}
+                            <span class="review-opt__tag review-opt__tag--key">
+                              {activeReviewSubtest.subtestCode === 'KEPRIBADIAN' ? 'Skor Tertinggi (5)' : 'Kunci Jawaban'}
+                            </span>
+                          {/if}
+                        </div>
+                      </div>
+                    {/each}
+                  </div>
+
+                  <div class="review-explanation">
+                    <div class="review-explanation__head">
+                      <AdminIcon name="sparkles" size={15} />
+                      <span>Pembahasan &amp; Evaluasi</span>
+                    </div>
+                    <p class="review-explanation__body">{item.explanation ?? 'Pembahasan tersedia sesuai pedoman penilaian resmi.'}</p>
+                  </div>
+                </article>
+              {/each}
+            </div>
+          {/if}
+        {/if}
+      </section>
+    {/if}
 
     <div class="actions">
       <Button href="/history">Riwayat ujian</Button>
@@ -944,146 +1171,351 @@
     line-height: 1.3;
   }
 
-  @media (min-width: 900px) {
-    /* ========================================================================== */
-  /* HIGHLIGHT BESAR AKUMULASI NILAI AKHIR (TANPA PERSENTASE)                   */
-  /* ========================================================================== */
-
-  .score-highlight-card {
+  /* ------------------------------------------- REVIEW JAWABAN TES CAT */
+  .review-section {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
     padding: var(--space-5);
     border-radius: var(--radius-lg);
-    border: 2px solid var(--color-border);
+    border: 1px solid var(--color-border);
     background: var(--color-surface);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
   }
 
-  .score-highlight-card--pass {
-    border-color: rgba(16, 185, 129, 0.45);
-    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(16, 185, 129, 0.05) 100%);
-  }
-
-  .score-highlight-card--fail {
-    border-color: rgba(239, 68, 68, 0.45);
-    background: linear-gradient(135deg, var(--color-surface) 0%, rgba(239, 68, 68, 0.05) 100%);
-  }
-
-  .score-highlight-card__head {
+  .review-section__header {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
-  .score-highlight-tag {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--text-xs);
+  .review-section__title {
+    font-size: var(--text-xl);
     font-weight: 800;
-    letter-spacing: 0.08em;
-    color: var(--color-text-subtle);
+    margin: 4px 0;
   }
 
-  .badge-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-primary);
-  }
-
-  .score-highlight-card__main {
+  .review-subtest-tabs {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-5);
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-3);
   }
 
-  .score-highlight-val-block {
+  .review-subtest-tab {
     display: flex;
-    align-items: baseline;
-    gap: 6px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 0.55rem 0.95rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.15s ease;
   }
 
-  .score-highlight-val__number {
-    font-size: clamp(3.2rem, 7vw, 4.8rem);
-    font-weight: 900;
-    line-height: 1;
-    font-family: var(--font-mono, monospace);
-    letter-spacing: -0.03em;
+  .review-subtest-tab:hover {
+    border-color: var(--color-primary);
   }
 
-  .score-highlight-val__scale {
-    font-size: var(--text-base);
-    color: var(--color-text-muted);
+  .review-subtest-tab--active {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+  }
+
+  .review-subtest-tab__name {
+    font-size: var(--text-sm);
     font-weight: 700;
   }
 
-  .score-highlight-meta-block {
-    flex: 1;
-    min-width: 260px;
+  .review-subtest-tab__meta {
+    font-size: var(--text-xs);
+    opacity: 0.85;
+  }
+
+  .review-toolbar {
     display: flex;
     flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .review-filters {
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--space-2);
   }
 
-  .score-highlight-threshold {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-  }
-
-  .score-highlight-gauge {
-    position: relative;
-    width: 100%;
-    height: 12px;
-    background: #e2e8f0;
+  .review-filter-pill {
+    padding: 0.4rem 0.85rem;
     border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .score-highlight-gauge-fill {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .score-highlight-gauge-fill--pass {
-    background: linear-gradient(90deg, #10b981, #059669);
-  }
-
-  .score-highlight-gauge-fill--fail {
-    background: linear-gradient(90deg, #ef4444, #dc2626);
-  }
-
-  .score-highlight-gauge-marker {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #0f172a;
-    z-index: 2;
-  }
-
-  .score-highlight-caption {
-    margin: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-muted);
     font-size: var(--text-xs);
-    line-height: 1.45;
+    font-weight: 700;
     color: var(--color-text-muted);
+    cursor: pointer;
   }
 
-  .text-success {
-    color: #10b981 !important;
+  .review-filter-pill--active {
+    background: #1e293b;
+    color: #ffffff;
+    border-color: #1e293b;
   }
 
-  .text-danger {
-    color: #ef4444 !important;
+  .review-filter-pill--ok.review-filter-pill--active {
+    background: #059669;
+    border-color: #059669;
   }
 
-  .summary-grid {
+  .review-filter-pill--bad.review-filter-pill--active {
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+
+  .review-col-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .review-col-btn {
+    padding: 0.32rem 0.65rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+
+  .review-col-btn--active {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+  }
+
+  .review-empty {
+    padding: var(--space-6);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    background: var(--color-surface-muted);
+    border-radius: var(--radius-md);
+  }
+
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-height: 760px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .review-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .review-card--correct {
+    border-left-color: #10b981;
+  }
+
+  .review-card--wrong {
+    border-left-color: #ef4444;
+  }
+
+  .review-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .review-card__left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .review-qnum {
+    font-size: var(--text-sm);
+    font-weight: 800;
+    color: var(--color-text);
+  }
+
+  .review-qcode {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: var(--color-surface-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .review-stem {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: var(--color-text);
+    white-space: pre-line;
+  }
+
+  .review-stem-img-box {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-3);
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .review-stem-img {
+    max-width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+  }
+
+  .review-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-2);
+  }
+
+  .review-opt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-muted);
+    font-size: var(--text-xs);
+  }
+
+  .review-opt--correct {
+    border-color: rgba(16, 185, 129, 0.55);
+    background: rgba(16, 185, 129, 0.08);
+  }
+
+  .review-opt--wrong {
+    border-color: rgba(239, 68, 68, 0.55);
+    background: rgba(239, 68, 68, 0.08);
+  }
+
+  .review-opt__key {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .review-opt--correct .review-opt__key {
+    background: #10b981;
+    color: #ffffff;
+    border-color: #10b981;
+  }
+
+  .review-opt--wrong .review-opt__key {
+    background: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+  }
+
+  .review-opt__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .review-opt__img {
+    max-width: 110px;
+    max-height: 85px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .review-opt__text {
+    font-weight: 600;
+    color: var(--color-text);
+    word-break: break-word;
+  }
+
+  .review-opt__tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .review-opt__tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .review-opt__tag--user {
+    background: #1e293b;
+    color: #ffffff;
+  }
+
+  .review-opt__tag--key {
+    background: #10b981;
+    color: #ffffff;
+  }
+
+  .review-explanation {
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-sm);
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    font-size: var(--text-xs);
+  }
+
+  .review-explanation__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+  }
+
+  .review-explanation__body {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.55;
+  }
+
+  @media (min-width: 900px) {
+    .summary-grid {
       grid-template-columns: 1.1fr 1fr;
     }
   }
