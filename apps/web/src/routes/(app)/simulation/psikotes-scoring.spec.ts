@@ -7,7 +7,12 @@ import {
   getOptionWeight,
   getWeightGradeLabel,
 } from './psikotes-scoring';
-import type { SimPacket, SimQuestion } from './simulation-packets';
+import {
+  SIMULATION_POOL_STATS,
+  buildRandomizedPacket,
+  type SimPacket,
+  type SimQuestion,
+} from './simulation-packets';
 
 describe('psikotes-scoring', () => {
   const dummyKecerdasanQuestions: SimQuestion[] = [
@@ -269,6 +274,41 @@ describe('psikotes-scoring', () => {
       expect(result.finalScore).toBe(100);
       expect(result.passed).toBe(true);
       expect(result.statusText).toBe('Memenuhi Syarat (MS)');
+    });
+  });
+
+  describe('seed pool & strict per-subtest randomization', () => {
+    it('memiliki surplus bank soal di atas kuota ujian pada setiap subtes', () => {
+      expect(SIMULATION_POOL_STATS.KECERDASAN).toBeGreaterThanOrEqual(200);
+      expect(SIMULATION_POOL_STATS.KEPRIBADIAN).toBeGreaterThanOrEqual(200);
+      expect(SIMULATION_POOL_STATS.KECERMATAN).toBe(500);
+      expect(SIMULATION_POOL_STATS.TKK).toBeGreaterThanOrEqual(200);
+      expect(SIMULATION_POOL_STATS.TPK).toBeGreaterThanOrEqual(200);
+    });
+
+    it('mengacak soal ketat per subtes tanpa kebocoran kategori & seluruh narasi panjang', () => {
+      const kec = buildRandomizedPacket('psikotes-kecerdasan');
+      expect(kec.questions).toHaveLength(100);
+      expect(kec.questions.every((q) => q.subtest === 'KECERDASAN' && q.stem.length >= 180)).toBe(true);
+
+      const kep = buildRandomizedPacket('psikotes-kepribadian');
+      expect(kep.questions).toHaveLength(100);
+      expect(kep.questions.every((q) => q.subtest === 'KEPRIBADIAN' && q.stem.length >= 180)).toBe(true);
+
+      const kecm = buildRandomizedPacket('psikotes-kecermatan');
+      expect(kecm.questions).toHaveLength(500);
+      expect(kecm.questions.every((q) => q.subtest === 'KECERMATAN' && q.isKecermatan)).toBe(true);
+      for (let col = 1; col <= 10; col++) {
+        expect(kecm.questions.filter((q) => q.columnNumber === col)).toHaveLength(50);
+      }
+
+      const tkk = buildRandomizedPacket('tkk');
+      expect(tkk.questions).toHaveLength(100);
+      expect(tkk.questions.every((q) => q.subtest === 'TKK' && q.stem.length >= 180)).toBe(true);
+
+      const tpk = buildRandomizedPacket('tpk');
+      expect(tpk.questions).toHaveLength(100);
+      expect(tpk.questions.every((q) => q.subtest === 'TPK' && q.stem.length >= 180)).toBe(true);
     });
   });
 });

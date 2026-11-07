@@ -832,9 +832,14 @@ export async function seedQuestionBank(
   // penggantinya, sehingga tanpa hapus-lunak `createMany` akan melewatinya
   // (`skipDuplicates`) dan penulisan opsi/media gagal dengan pelanggaran
   // foreign key.
+  const activePublicCodes = questions.map((question) => question.publicCode);
   const retired = await prisma.question.updateMany({
     where: {
-      OR: [{ publicCode: { startsWith: 'DEMO-' } }, { publicCode: { startsWith: 'TPA-' } }],
+      OR: [
+        { publicCode: { startsWith: 'DEMO-' } },
+        { publicCode: { startsWith: 'TPA-' } },
+        { publicCode: { notIn: activePublicCodes } },
+      ],
       deletedAt: null,
     },
     data: { status: 'ARCHIVED', deletedAt: new Date() },

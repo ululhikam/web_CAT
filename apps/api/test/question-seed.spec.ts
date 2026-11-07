@@ -76,7 +76,7 @@ describe('komposisi bank soal', () => {
     expect(only('KEPRIBADIAN').length).toBeGreaterThanOrEqual(100);
     expect(only('KECERMATAN')).toHaveLength(500);
     expect(only('PASS_HAND')).toHaveLength(150);
-    expect(only('TPK')).toHaveLength(100);
+    expect(only('TPK').length).toBeGreaterThanOrEqual(100);
     // F4-03/F4-04: TKK kini punya bank soal penuh, bukan hanya soal figural.
     expect(only('TKK').length).toBeGreaterThanOrEqual(100);
   });
@@ -134,13 +134,13 @@ describe('komposisi bank soal', () => {
     expect(missing).toEqual([]);
   });
 
-  it('TPK terbagi 10 soal untuk setiap 10 kelompok materi', () => {
+  it('TPK terbagi merata untuk setiap 10 kelompok materi', () => {
     const perTopic = new Map<string, number>();
     for (const question of only('TPK')) {
       perTopic.set(question.categoryPath, (perTopic.get(question.categoryPath) ?? 0) + 1);
     }
     expect(perTopic.size).toBe(10);
-    expect([...perTopic.values()]).toEqual(new Array(10).fill(10));
+    expect([...perTopic.values()]).toEqual(new Array(10).fill(20));
   });
 
   it('kecerdasan memuat verbal, numerik, logika, dan figural', () => {

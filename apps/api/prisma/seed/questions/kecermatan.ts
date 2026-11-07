@@ -38,7 +38,7 @@ export const KECERMATAN_QUESTIONS: MissingElementSeed[] = Array.from({ length: 5
     code,
     categoryPath: 'psikologi/kecermatan/huruf',
     difficulty,
-    stem: `Kolom ${columnIndex + 1}: Tentukan huruf yang hilang dari kelompok huruf patokan.`,
+    stem: `Kolom ${columnIndex + 1} — Uji Kecepatan dan Ketelitian Visual: Amati 5 karakter patokan beserta label huruf A sampai E pada tabel di atas, kemudian identifikasi secara cepat dan tepat 1 karakter yang hilang dari 4 karakter soal di bawah ini.`,
     left: leftChars.join(''),
     right: rightChars.join(''),
     answer,

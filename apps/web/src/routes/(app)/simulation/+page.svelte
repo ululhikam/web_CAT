@@ -4,6 +4,8 @@
   import { examPreferences } from '$lib/stores/examPreferences.svelte';
   import {
     SIMULATION_PACKETS,
+    SIMULATION_POOL_STATS,
+    buildRandomizedPacket,
     type SimPacket,
     type SimQuestion,
     type SimBenchmarkItem,
@@ -19,6 +21,7 @@
 
   let viewState = $state<ViewState>('selection');
   let activePacketId = $state<string>('psikotes-kecerdasan');
+  let activePacket = $state<SimPacket>(buildRandomizedPacket('psikotes-kecerdasan'));
 
   // State Pengerjaan Soal
   let currentIndex = $state<number>(0);
@@ -27,6 +30,10 @@
   let confirmFinishModal = $state<boolean>(false);
   let reviewFilter = $state<'ALL' | 'CORRECT' | 'WRONG'>('ALL');
   let advanceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // Timer per Kolom Kecermatan (60 detik/kolom, identik dengan TES CAT)
+  let kecermatanColRemaining = $state<number>(60);
+  let kecermatanInterval: ReturnType<typeof setInterval> | null = null;
 
   // Urutan Card Tes yang Ditampilkan di Halaman Utama Pretest CAT
   const TEST_CARDS: Array<{
@@ -42,10 +49,10 @@
       icon: 'brain',
       accent: 'indigo',
       highlights: [
-        'Figural & Pola Visual',
-        'Denah Peta & Arah',
+        `Diacak dari ${SIMULATION_POOL_STATS.KECERDASAN} Bank Soal`,
+        'Narasi Analitis & Silogisme',
+        'Denah Peta & Navigasi Taktis',
         'Deret Angka & Aritmatika',
-        'Verbal & Silogisme Logis',
       ],
     },
     {
@@ -54,7 +61,7 @@
       icon: 'shield',
       accent: 'emerald',
       highlights: [
-        '10 Aspek Sikap Kepolisian',
+        `Diacak dari ${SIMULATION_POOL_STATS.KEPRIBADIAN} Bank Soal`,
         'Narasi Studi Kasus Kedinasan',
         'Skala Sikap Likert 5 Opsi',
         'Evaluasi Bobot Poin 1–5',
@@ -66,10 +73,10 @@
       icon: 'zap',
       accent: 'amber',
       highlights: [
-        '5 Kolom Format Monokrom CAT',
-        'Pola Angka, Huruf & Simbol',
-        'Deteksi Karakter Hilang',
-        'Evaluasi Kecepatan & Akurasi',
+        '10 Kolom @ 50 Soal (500 Soal)',
+        'Durasi 60 Detik per Kolom',
+        'Format Monokrom Identik TES CAT',
+        'Evaluasi Kecepatan & Kestabilan',
       ],
     },
     {
@@ -78,7 +85,7 @@
       icon: 'devices',
       accent: 'sky',
       highlights: [
-        'Pengetahuan Dasar Komputer',
+        `Diacak dari ${SIMULATION_POOL_STATS.TKK} Bank Soal`,
         'Microsoft Office & Shortcut',
         'Jaringan & Internet Polri',
         'Informatika & Keamanan Siber',
@@ -90,10 +97,10 @@
       icon: 'book',
       accent: 'blue',
       highlights: [
-        'Tugas & Fungsi Kepolisian',
+        `Diacak dari ${SIMULATION_POOL_STATS.TPK} Bank Soal`,
         'Dasar Hukum UU No. 2/2002',
-        'Pedoman Pelaksanaan Tugas',
-        'KUHAP, Tribrata & Catur Prasetya',
+        'KUHP, KUHAP & Wewenang Polri',
+        'Kode Etik Profesi & HAM',
       ],
     },
     {
@@ -102,9 +109,9 @@
       icon: 'questions',
       accent: 'indigo',
       highlights: [
-        '100 Soal Kecerdasan',
-        '100 Soal Mental Kepribadian',
-        '100 Soal Kecermatan',
+        '100 Soal Kecerdasan Acak',
+        '100 Soal Kepribadian Acak',
+        '500 Soal Kecermatan (10 Kolom)',
         'Skor Komposit Psikotes Polri',
       ],
     },
@@ -114,22 +121,32 @@
       icon: 'globe',
       accent: 'slate',
       highlights: [
-        'Total 500 Butir Soal Lengkap',
-        'Seluruh Subtes Psikotes (300)',
+        `Diacak dari ${SIMULATION_POOL_STATS.TOTAL} Bank Soal`,
+        'Seluruh Subtes Psikotes (700)',
         'Kemampuan Komputer TKK (100)',
         'Pengetahuan Kepolisian TPK (100)',
       ],
     },
   ];
 
-  const currentPacket = $derived<SimPacket>(
-    SIMULATION_PACKETS.find((p) => p.id === activePacketId) ?? SIMULATION_PACKETS[1],
-  );
+  const currentPacket = $derived<SimPacket>(activePacket);
 
   const questions = $derived<SimQuestion[]>(currentPacket.questions);
   const currentQuestion = $derived<SimQuestion | undefined>(questions[currentIndex]);
   const isKecermatan = $derived<boolean>(Boolean(currentQuestion?.isKecermatan));
   const isKepribadian = $derived<boolean>(currentQuestion?.subtest === 'KEPRIBADIAN');
+
+  const kecermatanFirstIndex = $derived<number>(
+    questions.findIndex((q) => Boolean(q.isKecermatan)),
+  );
+  const kecermatanColumnIndex = $derived<number>(
+    isKecermatan ? Math.max(0, (currentQuestion?.columnNumber ?? 1) - 1) : 0,
+  );
+  const kecermatanInColIndex = $derived<number>(
+    isKecermatan && kecermatanFirstIndex >= 0
+      ? (currentIndex - kecermatanFirstIndex) % 50
+      : 0,
+  );
 
   const currentBenchmark = $derived<SimBenchmarkItem[]>(
     currentQuestion?.benchmark ?? [
@@ -198,6 +215,45 @@
       });
   });
 
+  function stopKecermatanTimer() {
+    if (kecermatanInterval) {
+      clearInterval(kecermatanInterval);
+      kecermatanInterval = null;
+    }
+  }
+
+  function startKecermatanTimer() {
+    stopKecermatanTimer();
+    kecermatanColRemaining = 60;
+    kecermatanInterval = setInterval(() => {
+      if (viewState !== 'working' || !isKecermatan) return;
+      if (kecermatanColRemaining > 1) {
+        kecermatanColRemaining -= 1;
+      } else {
+        advanceKecermatanColumn();
+      }
+    }, 1000);
+  }
+
+  function advanceKecermatanColumn() {
+    if (kecermatanFirstIndex < 0) return;
+    kecermatanColRemaining = 60;
+    if (kecermatanColumnIndex < 9) {
+      const nextColFirstIdx = kecermatanFirstIndex + (kecermatanColumnIndex + 1) * 50;
+      if (nextColFirstIdx < questions.length) {
+        currentIndex = nextColFirstIdx;
+        return;
+      }
+    }
+    // Kolom ke-10 selesai: cek apakah masih ada subtes berikutnya (mis. TKK/TPK di cat-all)
+    const afterKecermatanIdx = kecermatanFirstIndex + 500;
+    if (afterKecermatanIdx < questions.length) {
+      currentIndex = afterKecermatanIdx;
+      return;
+    }
+    confirmFinishExam();
+  }
+
   // Navigasi & Aksi
   function startTest(packetId: string) {
     if (advanceTimer) {
@@ -205,12 +261,14 @@
       advanceTimer = null;
     }
     activePacketId = packetId;
+    activePacket = buildRandomizedPacket(packetId);
     currentIndex = 0;
     answers = {};
     doubts = {};
     confirmFinishModal = false;
     reviewFilter = 'ALL';
     viewState = 'working';
+    startKecermatanTimer();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -219,6 +277,7 @@
       clearTimeout(advanceTimer);
       advanceTimer = null;
     }
+    stopKecermatanTimer();
     confirmFinishModal = false;
     viewState = 'selection';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -228,42 +287,72 @@
     if (viewState !== 'working') return;
     answers[currentIndex] = key;
 
-    if (isKecermatan || examPreferences.mode === 'auto') {
+    if (isKecermatan) {
+      if (kecermatanInColIndex < 49 && currentIndex < questions.length - 1) {
+        currentIndex += 1;
+      } else {
+        advanceKecermatanColumn();
+      }
+      return;
+    }
+
+    if (examPreferences.mode === 'auto') {
       if (advanceTimer) clearTimeout(advanceTimer);
-      const delay = isKecermatan ? 110 : 200;
       advanceTimer = setTimeout(() => {
         advanceTimer = null;
         if (currentIndex < questions.length - 1) {
+          const nextQ = questions[currentIndex + 1];
+          if (nextQ?.isKecermatan && !isKecermatan) {
+            kecermatanColRemaining = 60;
+          }
           currentIndex += 1;
         }
-      }, delay);
+      }, 200);
     }
   }
 
   function toggleDoubt() {
-    if (viewState !== 'working') return;
+    if (viewState !== 'working' || isKecermatan) return;
     doubts[currentIndex] = !doubts[currentIndex];
   }
 
   function clearCurrentAnswer() {
-    if (viewState !== 'working') return;
+    if (viewState !== 'working' || isKecermatan) return;
     delete answers[currentIndex];
   }
 
   function goPrev() {
+    if (isKecermatan) return;
     if (currentIndex > 0) {
       currentIndex -= 1;
     }
   }
 
   function goNext() {
+    if (isKecermatan) {
+      if (kecermatanInColIndex < 49 && currentIndex < questions.length - 1) {
+        currentIndex += 1;
+      } else {
+        advanceKecermatanColumn();
+      }
+      return;
+    }
     if (currentIndex < questions.length - 1) {
+      const nextQ = questions[currentIndex + 1];
+      if (nextQ?.isKecermatan && !isKecermatan) {
+        kecermatanColRemaining = 60;
+      }
       currentIndex += 1;
     }
   }
 
   function goToQuestion(idx: number) {
+    if (isKecermatan) return;
     if (idx >= 0 && idx < questions.length) {
+      const targetQ = questions[idx];
+      if (targetQ?.isKecermatan && !isKecermatan) {
+        kecermatanColRemaining = 60;
+      }
       currentIndex = idx;
     }
   }
@@ -277,6 +366,7 @@
       clearTimeout(advanceTimer);
       advanceTimer = null;
     }
+    stopKecermatanTimer();
     confirmFinishModal = false;
     viewState = 'result';
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -319,6 +409,7 @@
     return () => {
       window.removeEventListener('keydown', handleKeydown);
       if (advanceTimer) clearTimeout(advanceTimer);
+      stopKecermatanTimer();
     };
   });
 </script>
@@ -339,7 +430,7 @@
       </div>
       <h1 class="selection-header__title">Daftar Paket Pretest CAT</h1>
       <p class="selection-header__subtitle">
-        Pilih salah satu paket tes di bawah ini dan klik tombol <strong>Kerjakan Pretest</strong> untuk memulai pengerjaan soal. Hasil evaluasi dan rekapan nilai akan ditampilkan setelah Anda menyelesaikan sesi pengerjaan.
+        Pilih salah satu paket tes di bawah ini dan klik tombol <strong>Kerjakan Pretest</strong> untuk memulai pengerjaan soal yang diacak per subtes dari bank soal terpusat. Hasil evaluasi dan rekapan nilai akan ditampilkan setelah Anda menyelesaikan sesi pengerjaan.
       </p>
     </header>
 
@@ -354,7 +445,7 @@
               </div>
               <div class="test-card__badges">
                 <span class="test-card__cat-tag">{card.categoryLabel}</span>
-                <span class="test-card__count-tag">{packet.questions.length} Soal</span>
+                <span class="test-card__count-tag">{packet.badge}</span>
               </div>
             </div>
 
@@ -411,18 +502,20 @@
       </div>
 
       <div class="exam-topbar__right">
-        <button
-          type="button"
-          class="mode-switch-btn"
-          onclick={() =>
-            examPreferences.setMode(
-              examPreferences.mode === 'auto' ? 'manual' : 'auto',
-            )}
-          title="Ubah mode perpindahan soal setelah memilih opsi"
-        >
-          <span class="mode-dot" class:mode-dot--active={examPreferences.mode === 'auto'}></span>
-          <span>{examPreferences.mode === 'auto' ? 'Auto Next: Aktif' : 'Mode Manual'}</span>
-        </button>
+        {#if !isKecermatan}
+          <button
+            type="button"
+            class="mode-switch-btn"
+            onclick={() =>
+              examPreferences.setMode(
+                examPreferences.mode === 'auto' ? 'manual' : 'auto',
+              )}
+            title="Ubah mode perpindahan soal setelah memilih opsi"
+          >
+            <span class="mode-dot" class:mode-dot--active={examPreferences.mode === 'auto'}></span>
+            <span>{examPreferences.mode === 'auto' ? 'Auto Next: Aktif' : 'Mode Manual'}</span>
+          </button>
+        {/if}
 
         <button
           type="button"
@@ -443,214 +536,342 @@
             <!-- Baris Informasi Nomor Soal -->
             <div class="question-card__head">
               <div class="question-card__badges">
-                <span class="q-num-pill">
-                  Soal No. {currentIndex + 1} / {questions.length}
-                </span>
-                {#if currentQuestion.subCategory}
-                  <span class="q-subcat-pill">{currentQuestion.subCategory}</span>
+                {#if isKecermatan}
+                  <span class="q-num-pill">
+                    Kolom {kecermatanColumnIndex + 1} dari 10
+                  </span>
+                  <span class="q-subcat-pill">
+                    Soal {kecermatanInColIndex + 1} / 50
+                  </span>
+                {:else}
+                  <span class="q-num-pill">
+                    Soal No. {currentIndex + 1} / {questions.length}
+                  </span>
+                  {#if currentQuestion.subCategory}
+                    <span class="q-subcat-pill">{currentQuestion.subCategory}</span>
+                  {/if}
                 {/if}
               </div>
 
-              <div class="question-card__actions">
-                {#if answers[currentIndex] !== undefined}
+              {#if !isKecermatan}
+                <div class="question-card__actions">
+                  {#if answers[currentIndex] !== undefined}
+                    <button
+                      type="button"
+                      class="btn-action-subtle"
+                      onclick={clearCurrentAnswer}
+                    >
+                      <AdminIcon name="close" size={14} />
+                      <span>Batal Jawab</span>
+                    </button>
+                  {/if}
                   <button
                     type="button"
-                    class="btn-action-subtle"
-                    onclick={clearCurrentAnswer}
+                    class="btn-doubt"
+                    class:btn-doubt--active={Boolean(doubts[currentIndex])}
+                    onclick={toggleDoubt}
                   >
-                    <AdminIcon name="close" size={14} />
-                    <span>Batal Jawab</span>
+                    <AdminIcon name="flag" size={14} />
+                    <span>{doubts[currentIndex] ? 'Ditandai Ragu-ragu' : 'Ragu-ragu'}</span>
                   </button>
-                {/if}
-                <button
-                  type="button"
-                  class="btn-doubt"
-                  class:btn-doubt--active={Boolean(doubts[currentIndex])}
-                  onclick={toggleDoubt}
-                >
-                  <AdminIcon name="flag" size={14} />
-                  <span>{doubts[currentIndex] ? 'Ditandai Ragu-ragu' : 'Ragu-ragu'}</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Bila Subtes Kecermatan: Tabel Acuan Monokrom -->
-            {#if isKecermatan}
-              <div class="kecermatan-panel">
-                <div class="kecermatan-panel__top">
-                  <span class="kecermatan-panel__tag">
-                    KOLOM {currentQuestion.columnNumber ?? 1}
-                  </span>
-                  <span class="kecermatan-panel__instruction">
-                    Tentukan 1 karakter acuan yang TIDAK ADA pada deret soal di bawah
-                  </span>
-                </div>
-
-                <div class="kecermatan-table">
-                  {#each currentBenchmark as item}
-                    <div class="kecermatan-cell">
-                      <span class="kecermatan-cell__char">{item.char}</span>
-                      <span class="kecermatan-cell__label">{item.label}</span>
-                    </div>
-                  {/each}
-                </div>
-
-                <div class="kecermatan-probe">
-                  <span class="kecermatan-probe__label">SOAL:</span>
-                  <div class="kecermatan-probe__boxes">
-                    {#each currentQuestionChars as ch}
-                      <span class="kecermatan-probe__char">{ch}</span>
-                    {/each}
-                  </div>
-                </div>
-              </div>
-            {/if}
-
-            <!-- Narasi Pertanyaan & Gambar Ilustrasi -->
-            <div class="question-stem">
-              <p class="question-stem__text">{currentQuestion.stem}</p>
-
-              {#if currentQuestion.image}
-                <div class="question-stem__figure">
-                  <img
-                    src={currentQuestion.image}
-                    alt="Ilustrasi Soal {currentIndex + 1}"
-                    class="question-stem__img"
-                    loading="lazy"
-                  />
                 </div>
               {/if}
             </div>
 
-            <!-- Opsi Pilihan Jawaban (A - E) Tanpa Kunci & Tanpa Pembahasan -->
-            <div class="options-list" role="radiogroup" aria-label="Pilihan Jawaban">
-              {#each currentQuestion.options as option (option.key)}
-                {@const isSelected = answers[currentIndex] === option.key}
+            {#if isKecermatan}
+              <!-- TAMPILAN KECERMATAN MONOKROM IDENTIK DENGAN TES CAT -->
+              <div class="kecermatan-flow">
+                <div class="kecermatan-timer-badge" class:kecermatan-timer-badge--critical={kecermatanColRemaining <= 10}>
+                  <span class="kecermatan-timer-badge__label">Durasi:</span>
+                  <span class="kecermatan-timer-badge__value">
+                    00:00:{String(kecermatanColRemaining).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <!-- TABEL ACUAN / SAMPEL PATOKAN KOLOM -->
+                <div class="kecermatan-sample-box">
+                  <div class="kecermatan-sample-header">
+                    Kolom {kecermatanColumnIndex + 1}
+                  </div>
+                  <div class="kecermatan-sample-grid">
+                    <div class="kecermatan-sample-row kecermatan-sample-row--chars">
+                      {#each currentBenchmark as item}
+                        <div class="kecermatan-sample-cell kecermatan-sample-cell--char">
+                          {item.char}
+                        </div>
+                      {/each}
+                    </div>
+                    <div class="kecermatan-sample-row kecermatan-sample-row--labels">
+                      {#each currentBenchmark as item}
+                        <div class="kecermatan-sample-cell kecermatan-sample-cell--label">
+                          {item.label}
+                        </div>
+                      {/each}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- KOTAK SOAL AKTIF (4 KARAKTER DARI SAMPEL) -->
+                <div class="kecermatan-question-card">
+                  <div class="kecermatan-question-grid">
+                    {#each currentQuestionChars as ch}
+                      <div class="kecermatan-question-cell">
+                        {ch}
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+
+                <!-- PILIHAN JAWABAN (TOMBOL A B C D E) -->
+                <div class="kecermatan-choices-row" role="group" aria-label="Pilih huruf yang hilang">
+                  {#each currentQuestion.options as option (option.key)}
+                    {@const isSelected = answers[currentIndex] === option.key}
+                    <button
+                      type="button"
+                      class="kecermatan-choice-key"
+                      class:kecermatan-choice-key--active={isSelected}
+                      onclick={() => selectOption(option.key)}
+                    >
+                      <span>{option.key}</span>
+                    </button>
+                  {/each}
+                </div>
+              </div>
+
+              <!-- Footer Khusus Kecermatan (Identik TES CAT) -->
+              <footer class="question-card__footer">
+                <span class="q-subcat-pill">
+                  Kolom {kecermatanColumnIndex + 1} dari 10
+                </span>
+
+                <span class="keyboard-hint">
+                  Soal <strong>{kecermatanInColIndex + 1}</strong> / 50 • Pintasan Tombol <strong>A–E</strong>
+                </span>
+
+                {#if kecermatanInColIndex < 49 && currentIndex < questions.length - 1}
+                  <button
+                    type="button"
+                    class="btn-nav btn-nav--next"
+                    onclick={goNext}
+                  >
+                    <span>Lewati (Soal Berikutnya)</span>
+                    <AdminIcon name="arrow-right" size={16} />
+                  </button>
+                {:else if kecermatanColumnIndex < 9}
+                  <button
+                    type="button"
+                    class="btn-nav btn-nav--next"
+                    onclick={advanceKecermatanColumn}
+                  >
+                    <span>Lanjut Kolom {kecermatanColumnIndex + 2}</span>
+                    <AdminIcon name="arrow-right" size={16} />
+                  </button>
+                {:else}
+                  <button
+                    type="button"
+                    class="btn-nav btn-nav--finish"
+                    onclick={requestFinish}
+                  >
+                    <AdminIcon name="check" size={16} />
+                    <span>Selesaikan Ujian</span>
+                  </button>
+                {/if}
+              </footer>
+            {:else}
+              <!-- Narasi Pertanyaan & Gambar Ilustrasi -->
+              <div class="question-stem">
+                <p class="question-stem__text">{currentQuestion.stem}</p>
+
+                {#if currentQuestion.image}
+                  <div class="question-stem__figure">
+                    <img
+                      src={currentQuestion.image}
+                      alt="Ilustrasi Soal {currentIndex + 1}"
+                      class="question-stem__img"
+                      loading="lazy"
+                    />
+                  </div>
+                {/if}
+              </div>
+
+              <!-- Opsi Pilihan Jawaban (A - E) Tanpa Kunci & Tanpa Pembahasan -->
+              <div class="options-list" role="radiogroup" aria-label="Pilihan Jawaban">
+                {#each currentQuestion.options as option (option.key)}
+                  {@const isSelected = answers[currentIndex] === option.key}
+                  <button
+                    type="button"
+                    class="option-btn"
+                    class:option-btn--selected={isSelected}
+                    onclick={() => selectOption(option.key)}
+                    role="radio"
+                    aria-checked={isSelected}
+                  >
+                    <span class="option-btn__key">{option.key}</span>
+                    <span class="option-btn__label">{option.text}</span>
+                    {#if isSelected}
+                      <span class="option-btn__check">
+                        <AdminIcon name="check" size={15} />
+                      </span>
+                    {/if}
+                  </button>
+                {/each}
+              </div>
+
+              <!-- Baris Navigasi Bawah: Sebelumnya & Selanjutnya -->
+              <footer class="question-card__footer">
                 <button
                   type="button"
-                  class="option-btn"
-                  class:option-btn--selected={isSelected}
-                  onclick={() => selectOption(option.key)}
-                  role="radio"
-                  aria-checked={isSelected}
+                  class="btn-nav btn-nav--prev"
+                  disabled={currentIndex === 0}
+                  onclick={goPrev}
                 >
-                  <span class="option-btn__key">{option.key}</span>
-                  <span class="option-btn__label">{option.text}</span>
-                  {#if isSelected}
-                    <span class="option-btn__check">
-                      <AdminIcon name="check" size={15} />
-                    </span>
+                  <AdminIcon name="arrow-left" size={16} />
+                  <span>Sebelumnya</span>
+                </button>
+
+                <span class="keyboard-hint">
+                  Pintasan: Tombol <strong>A–E</strong> untuk memilih • Panah <strong>← / →</strong> untuk navigasi
+                </span>
+
+                {#if currentIndex < questions.length - 1}
+                  <button
+                    type="button"
+                    class="btn-nav btn-nav--next"
+                    onclick={goNext}
+                  >
+                    <span>Selanjutnya</span>
+                    <AdminIcon name="arrow-right" size={16} />
+                  </button>
+                {:else}
+                  <button
+                    type="button"
+                    class="btn-nav btn-nav--finish"
+                    onclick={requestFinish}
+                  >
+                    <AdminIcon name="check" size={16} />
+                    <span>Selesaikan Ujian</span>
+                  </button>
+                {/if}
+              </footer>
+            {/if}
+          </article>
+        {/if}
+      </main>
+
+      <!-- AREA KANAN: DAFTAR NOMOR SOAL ATAU PROGRES KOLOM KECERMATAN -->
+      <aside class="palette-pane">
+        {#if isKecermatan}
+          <div class="palette-card">
+            <div class="palette-card__header">
+              <div>
+                <h2 class="palette-card__title">Progres Kolom Kecermatan</h2>
+                <span class="palette-stat__lbl">10 Kolom · 1 Menit per Kolom</span>
+              </div>
+            </div>
+
+            <div class="kecermatan-column-list">
+              {#each Array.from({ length: 10 }, (_, colIdx) => colIdx) as colIdx}
+                {@const isCurrent = colIdx === kecermatanColumnIndex}
+                {@const isDone = colIdx < kecermatanColumnIndex}
+                {@const colStart = (kecermatanFirstIndex >= 0 ? kecermatanFirstIndex : 0) + colIdx * 50}
+                {@const colAnswered = Array.from({ length: 50 }, (_, k) => colStart + k).filter(
+                  (qIdx) => answers[qIdx] !== undefined,
+                ).length}
+                <div
+                  class="kecermatan-col-item"
+                  class:kecermatan-col-item--active={isCurrent}
+                  class:kecermatan-col-item--done={isDone}
+                >
+                  <div class="kecermatan-col-item__info">
+                    <span class="kecermatan-col-item__name">Kolom {colIdx + 1}</span>
+                    <span class="kecermatan-col-item__count">{colAnswered} / 50 terjawab</span>
+                  </div>
+                  {#if isCurrent}
+                    <span class="col-status-badge col-status-badge--active">Sedang Aktif</span>
+                  {:else if isDone}
+                    <span class="col-status-badge col-status-badge--done">Selesai</span>
+                  {:else}
+                    <span class="col-status-badge col-status-badge--wait">Menunggu</span>
+                  {/if}
+                </div>
+              {/each}
+            </div>
+
+            <button
+              type="button"
+              class="btn-submit-all"
+              onclick={requestFinish}
+            >
+              <AdminIcon name="check" size={16} />
+              <span>Selesaikan &amp; Lihat Hasil</span>
+            </button>
+          </div>
+        {:else}
+          <div class="palette-card">
+            <div class="palette-card__header">
+              <h2 class="palette-card__title">Daftar Nomor Soal</h2>
+              <span class="palette-card__badge">{answeredCount}/{questions.length}</span>
+            </div>
+
+            <!-- Ringkasan Status Pengerjaan -->
+            <div class="palette-stats">
+              <div class="palette-stat palette-stat--answered">
+                <span class="palette-stat__val">{answeredCount}</span>
+                <span class="palette-stat__lbl">Dijawab</span>
+              </div>
+              <div class="palette-stat palette-stat--doubt">
+                <span class="palette-stat__val">{doubtCount}</span>
+                <span class="palette-stat__lbl">Ragu</span>
+              </div>
+              <div class="palette-stat palette-stat--empty">
+                <span class="palette-stat__val">{unansweredCount}</span>
+                <span class="palette-stat__lbl">Kosong</span>
+              </div>
+            </div>
+
+            <div class="palette-progress">
+              <div class="palette-progress__bar" style="width: {progressPercent}%"></div>
+            </div>
+
+            <!-- Grid Nomor Soal -->
+            <div class="palette-numbers">
+              {#each questions as q, idx (q.id)}
+                {@const isCurrent = idx === currentIndex}
+                {@const isAnswered = answers[idx] !== undefined}
+                {@const isDoubt = Boolean(doubts[idx])}
+                <button
+                  type="button"
+                  class="num-btn"
+                  class:num-btn--current={isCurrent}
+                  class:num-btn--answered={isAnswered && !isDoubt}
+                  class:num-btn--doubt={isDoubt}
+                  onclick={() => goToQuestion(idx)}
+                  title="Soal Nomor {idx + 1}{answers[idx] ? ` (Dijawab: ${answers[idx]})` : ''}"
+                >
+                  <span class="num-btn__idx">{idx + 1}</span>
+                  {#if answers[idx]}
+                    <span class="num-btn__ans">{answers[idx]}</span>
                   {/if}
                 </button>
               {/each}
             </div>
 
-            <!-- Baris Navigasi Bawah: Sebelumnya & Selanjutnya -->
-            <footer class="question-card__footer">
-              <button
-                type="button"
-                class="btn-nav btn-nav--prev"
-                disabled={currentIndex === 0}
-                onclick={goPrev}
-              >
-                <AdminIcon name="arrow-left" size={16} />
-                <span>Sebelumnya</span>
-              </button>
+            <div class="palette-legend">
+              <span class="legend-chip"><i class="dot dot--answered"></i> Terjawab</span>
+              <span class="legend-chip"><i class="dot dot--doubt"></i> Ragu-ragu</span>
+              <span class="legend-chip"><i class="dot dot--empty"></i> Belum</span>
+            </div>
 
-              <span class="keyboard-hint">
-                Pintasan: Tombol <strong>A–E</strong> untuk memilih • Panah <strong>← / →</strong> untuk navigasi
-              </span>
-
-              {#if currentIndex < questions.length - 1}
-                <button
-                  type="button"
-                  class="btn-nav btn-nav--next"
-                  onclick={goNext}
-                >
-                  <span>Selanjutnya</span>
-                  <AdminIcon name="arrow-right" size={16} />
-                </button>
-              {:else}
-                <button
-                  type="button"
-                  class="btn-nav btn-nav--finish"
-                  onclick={requestFinish}
-                >
-                  <AdminIcon name="check" size={16} />
-                  <span>Selesaikan Ujian</span>
-                </button>
-              {/if}
-            </footer>
-          </article>
+            <button
+              type="button"
+              class="btn-submit-all"
+              onclick={requestFinish}
+            >
+              <AdminIcon name="check" size={16} />
+              <span>Selesaikan &amp; Lihat Hasil</span>
+            </button>
+          </div>
         {/if}
-      </main>
-
-      <!-- AREA KANAN: DAFTAR NOMOR SOAL (PALET NAVIGASI) -->
-      <aside class="palette-pane">
-        <div class="palette-card">
-          <div class="palette-card__header">
-            <h2 class="palette-card__title">Daftar Nomor Soal</h2>
-            <span class="palette-card__badge">{answeredCount}/{questions.length}</span>
-          </div>
-
-          <!-- Ringkasan Status Pengerjaan -->
-          <div class="palette-stats">
-            <div class="palette-stat palette-stat--answered">
-              <span class="palette-stat__val">{answeredCount}</span>
-              <span class="palette-stat__lbl">Dijawab</span>
-            </div>
-            <div class="palette-stat palette-stat--doubt">
-              <span class="palette-stat__val">{doubtCount}</span>
-              <span class="palette-stat__lbl">Ragu</span>
-            </div>
-            <div class="palette-stat palette-stat--empty">
-              <span class="palette-stat__val">{unansweredCount}</span>
-              <span class="palette-stat__lbl">Kosong</span>
-            </div>
-          </div>
-
-          <div class="palette-progress">
-            <div class="palette-progress__bar" style="width: {progressPercent}%"></div>
-          </div>
-
-          <!-- Grid Nomor Soal -->
-          <div class="palette-numbers">
-            {#each questions as q, idx (q.id)}
-              {@const isCurrent = idx === currentIndex}
-              {@const isAnswered = answers[idx] !== undefined}
-              {@const isDoubt = Boolean(doubts[idx])}
-              <button
-                type="button"
-                class="num-btn"
-                class:num-btn--current={isCurrent}
-                class:num-btn--answered={isAnswered && !isDoubt}
-                class:num-btn--doubt={isDoubt}
-                onclick={() => goToQuestion(idx)}
-                title="Soal Nomor {idx + 1}{answers[idx] ? ` (Dijawab: ${answers[idx]})` : ''}"
-              >
-                <span class="num-btn__idx">{idx + 1}</span>
-                {#if answers[idx]}
-                  <span class="num-btn__ans">{answers[idx]}</span>
-                {/if}
-              </button>
-            {/each}
-          </div>
-
-          <div class="palette-legend">
-            <span class="legend-chip"><i class="dot dot--answered"></i> Terjawab</span>
-            <span class="legend-chip"><i class="dot dot--doubt"></i> Ragu-ragu</span>
-            <span class="legend-chip"><i class="dot dot--empty"></i> Belum</span>
-          </div>
-
-          <button
-            type="button"
-            class="btn-submit-all"
-            onclick={requestFinish}
-          >
-            <AdminIcon name="check" size={16} />
-            <span>Selesaikan &amp; Lihat Hasil</span>
-          </button>
-        </div>
       </aside>
     </div>
 
@@ -1357,106 +1578,236 @@
     color: #b45309;
   }
 
-  /* Kecermatan Panel */
-  .kecermatan-panel {
+  /* Kecermatan Flow (Monokrom CAT Polri - Identik dengan TES CAT) */
+  .kecermatan-flow {
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
-    padding: 1.15rem;
-    background: #ffffff;
-    color: #000000;
-    border: 2px solid #0f172a;
-    border-radius: 12px;
-  }
-
-  .kecermatan-panel__top {
-    display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    gap: 0.9rem;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0.5rem 0;
+  }
+
+  .kecermatan-timer-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-  }
-
-  .kecermatan-panel__tag {
-    padding: 0.2rem 0.6rem;
-    background: #0f172a;
-    color: #ffffff;
-    font-size: 0.75rem;
+    font-size: clamp(1.2rem, 3vw, 1.45rem);
     font-weight: 800;
-    border-radius: 4px;
+    color: #0f172a;
+    background: #f1f5f9;
+    border: 1.5px solid #cbd5e1;
+    padding: 6px 18px;
+    border-radius: 999px;
+    text-align: center;
+    letter-spacing: 0.05em;
+    font-family: monospace;
   }
 
-  .kecermatan-panel__instruction {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #334155;
+  .kecermatan-timer-badge--critical {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #dc2626;
   }
 
-  .kecermatan-table {
+  .kecermatan-sample-box {
+    width: 100%;
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .kecermatan-sample-header {
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-align: center;
+    padding: 6px 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 2px solid #0f172a;
+  }
+
+  .kecermatan-sample-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kecermatan-sample-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    border: 2px solid #000000;
-    text-align: center;
   }
 
-  .kecermatan-cell {
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #000000;
+  .kecermatan-sample-row--chars {
+    border-bottom: 1px solid #cbd5e1;
+    background: #ffffff;
   }
 
-  .kecermatan-cell:last-child {
+  .kecermatan-sample-row--labels {
+    background: #f8fafc;
+  }
+
+  .kecermatan-sample-cell {
+    display: grid;
+    place-items: center;
+    padding: 8px 4px;
+    font-family: monospace;
+    border-right: 1px solid #cbd5e1;
+  }
+
+  .kecermatan-sample-cell:last-child {
     border-right: none;
   }
 
-  .kecermatan-cell__char {
-    padding: 0.55rem 0.25rem;
-    font-size: 1.4rem;
-    font-weight: 800;
-    font-family: monospace;
-    background: #f8fafc;
-    border-bottom: 1px solid #000000;
+  .kecermatan-sample-cell--char {
+    font-size: clamp(1.4rem, 3.2vw, 1.8rem);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.1;
   }
 
-  .kecermatan-cell__label {
-    padding: 0.35rem 0.25rem;
-    font-size: 0.9rem;
+  .kecermatan-sample-cell--label {
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+    font-weight: 700;
+    color: #475569;
+    line-height: 1;
+  }
+
+  .kecermatan-question-card {
+    width: 100%;
+    background: #ffffff;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .kecermatan-question-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .kecermatan-question-cell {
+    display: grid;
+    place-items: center;
+    padding: 12px 6px;
+    font-family: monospace;
+    font-size: clamp(1.6rem, 3.8vw, 2.1rem);
+    font-weight: 900;
+    color: #0f172a;
+    border-right: 1px solid #cbd5e1;
+    line-height: 1;
+  }
+
+  .kecermatan-question-cell:last-child {
+    border-right: none;
+  }
+
+  .kecermatan-choices-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  .kecermatan-choice-key {
+    display: grid;
+    place-items: center;
+    height: 48px;
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 1.25rem;
     font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+
+  .kecermatan-choice-key:hover {
     background: #0f172a;
     color: #ffffff;
   }
 
-  .kecermatan-probe {
+  .kecermatan-choice-key:active,
+  .kecermatan-choice-key--active {
+    background: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.35);
+  }
+
+  .kecermatan-column-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .kecermatan-col-item {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
-    padding: 0.75rem 1rem;
-    background: #f1f5f9;
-    border-radius: 8px;
+    justify-content: space-between;
+    padding: 0.55rem 0.75rem;
+    border-radius: 10px;
+    border: 1px solid var(--color-border, #e2e8f0);
+    background: var(--color-bg, #f8fafc);
+    transition: all 0.15s ease;
   }
 
-  .kecermatan-probe__label {
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: #0f172a;
+  .kecermatan-col-item--active {
+    border-color: #0284c7;
+    background: rgba(2, 132, 199, 0.08);
+    box-shadow: 0 0 0 1px #0284c7;
   }
 
-  .kecermatan-probe__boxes {
+  .kecermatan-col-item--done {
+    opacity: 0.8;
+  }
+
+  .kecermatan-col-item__info {
     display: flex;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 2px;
   }
 
-  .kecermatan-probe__char {
-    display: grid;
-    place-items: center;
-    width: 38px;
-    height: 38px;
-    background: #ffffff;
-    border: 2px solid #0f172a;
+  .kecermatan-col-item__name {
+    font-weight: 700;
+    font-size: 0.825rem;
+    color: var(--color-text, #0f172a);
+  }
+
+  .kecermatan-col-item__count {
+    font-size: 0.72rem;
+    color: var(--color-text-muted, #64748b);
+  }
+
+  .col-status-badge {
+    padding: 0.2rem 0.55rem;
     border-radius: 6px;
-    font-size: 1.25rem;
-    font-weight: 800;
-    font-family: monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .col-status-badge--active {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  .col-status-badge--done {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+  }
+
+  .col-status-badge--wait {
+    background: var(--color-border, #e2e8f0);
+    color: var(--color-text-muted, #64748b);
   }
 
   /* Narasi Soal */
