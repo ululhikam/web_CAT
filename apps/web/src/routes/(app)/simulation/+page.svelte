@@ -1989,10 +1989,11 @@
   }
 
   .question-card--kecermatan {
-    background: #0f172a;
-    border-color: #1e3a8a;
-    color: #ffffff;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    color: #0f172a;
     padding: clamp(1.2rem, 3vw, 2rem);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   /* ============================================================== */

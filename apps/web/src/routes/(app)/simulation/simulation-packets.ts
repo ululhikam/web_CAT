@@ -1,11 +1,11 @@
 /**
  * Bank Soal & Konfigurasi Paket Pretest CAT Polri (Seleksi SIP / Akpol / Bintara)
- * Rata-rata 100 Butir per Subtes Sesuai Standar Ujian CAT Polri:
- * 1. Kecerdasan: 100 Soal (90 Menit) — Verbal, Logika, Aritmatika Taktis, Denah Wilayah & Spasial
+ * Audit & Perbaikan Standar CAT Polri:
+ * 1. Kecerdasan: 100 Soal (90 Menit) — Figural Bergambar, Denah Peta & Arah, Deret Angka, Aritmatika, Verbal & Logika Alibi
  * 2. Mental Kepribadian: 100 Soal (60 Menit) — Studi Kasus Situasional Kedinasan Polri (SJT Skala 1–5)
  * 3. Kecermatan: 100 Soal (5 Kolom @ 20 Soal / 1 Menit per Kolom = 5 Menit) — Format Monokrom Putih CAT
- * 4. TKK: 100 Soal (90 Menit) — Tes Kemampuan Komputer & Keamanan Siber Kedinasan
- * 5. TPK: 100 Soal (60 Menit) — UU No. 2/2002, Kode Etik Profesi Polri & KUHAP
+ * 4. TKK: 100 Soal (90 Menit) — Tes Kemampuan Komputer & Keamanan Siber Kedinasan (Bersih dari Label Preffix)
+ * 5. TPK: 100 Soal (60 Menit) — UU No. 2/2002, Kode Etik Profesi Polri & KUHAP (Bersih dari Label Preffix)
  */
 
 export interface SimOption {
@@ -52,634 +52,1259 @@ export interface SimPacket {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 1. KUMPULAN SOAL KECERDASAN (100 Butir)                                     */
+/* 1. KUMPULAN SOAL KECERDASAN (100 Butir: Figural, Denah, Deret, Aritmatika) */
 /* -------------------------------------------------------------------------- */
 const QUESTIONS_KECERDASAN: SimQuestion[] = [
   {
     "id": 101,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Dokter : Rumah Sakit = Guru : ...",
+    "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_1.png",
     "options": [
       {
         "key": "A",
-        "text": "Kantor"
+        "text": "Bentuk Lingkaran sempurna"
       },
       {
         "key": "B",
-        "text": "Sekolah"
+        "text": "Segitiga sama sisi"
       },
       {
         "key": "C",
-        "text": "Pasar"
+        "text": "Persegi bertumpuk"
       },
       {
         "key": "D",
-        "text": "Terminal"
+        "text": "Segi lima beraturan"
       },
       {
         "key": "E",
-        "text": "Perpustakaan"
+        "text": "Segi enam beraturan"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Sekolah Dokter bekerja di rumah sakit; guru bekerja di sekolah.",
+    "correctKey": "A",
+    "explanation": "Pembahasan Soal #1 ➔ Jawaban: (A) Penjelasan: Pada seri analogi nomor 1, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(A)**.",
     "weight": 10
   },
   {
     "id": 102,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Kompas : Arah = Termometer : ...",
+    "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_2.png",
     "options": [
       {
         "key": "A",
-        "text": "Kecepatan"
+        "text": "Rotasi 45° searah jarum jam dengan elemen interior penuh"
       },
       {
         "key": "B",
-        "text": "Suhu"
+        "text": "Rotasi 90° searah jarum jam dengan penambahan satu titik sudut"
       },
       {
         "key": "C",
-        "text": "Jarak"
+        "text": "Rotasi 135° berlawanan jarum jam dengan simetri lipat"
       },
       {
         "key": "D",
-        "text": "Berat"
+        "text": "Rotasi 180° dengan inversi warna hitam-putih"
       },
       {
         "key": "E",
-        "text": "Volume"
+        "text": "Pencerminan diagonal dengan pengurangan elemen garis"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Suhu Kompas menunjukkan arah, sedangkan termometer mengukur suhu.",
+    "correctKey": "D",
+    "explanation": "Pembahasan Soal #2 ➔ Jawaban: (D) Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(D)**.",
     "weight": 10
   },
   {
     "id": 103,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Kata yang paling dekat maknanya dengan “cermat” adalah ...",
+    "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
+    "image": "/images/questions/figural_q_3.png",
     "options": [
       {
         "key": "A",
-        "text": "Ceroboh"
+        "text": "Pola penambahan 1 garis diagonal"
       },
       {
         "key": "B",
-        "text": "Teliti"
+        "text": "Rotasi 45° berlawanan jarum jam"
       },
       {
         "key": "C",
-        "text": "Lambat"
+        "text": "Pengurangan elemen interior"
       },
       {
         "key": "D",
-        "text": "Ragu"
+        "text": "Penggabungan dua bentuk dasar"
       },
       {
         "key": "E",
-        "text": "Cepat"
+        "text": "Pencerminan horizontal"
       }
     ],
     "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Teliti Cermat berarti teliti dan berhati-hati.",
+    "explanation": "Pembahasan Soal #3 ➔ Jawaban: (B) Penjelasan: Empat dari lima opsi memiliki simetri dan jumlah elemen interior yang konisten, sedangkan opsi **(B)** memiliki struktur yang tidak sesuai dengan kaidah kelompoknya.",
     "weight": 10
   },
   {
     "id": 104,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Lawan kata “objektif” adalah ...",
+    "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
+    "image": "/images/questions/figural_q_4.png",
     "options": [
       {
         "key": "A",
-        "text": "Netral"
+        "text": "Rotasi 90° searah jarum jam"
       },
       {
         "key": "B",
-        "text": "Faktual"
+        "text": "Rotasi 180°"
       },
       {
         "key": "C",
-        "text": "Subjektif"
+        "text": "Refleksi vertikal"
       },
       {
         "key": "D",
-        "text": "Terukur"
+        "text": "Perbesaran 2x"
       },
       {
         "key": "E",
-        "text": "Terbuka"
+        "text": "Inversi warna"
       }
     ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Subjektif Objektif berdasarkan fakta; subjektif dipengaruhi pandangan pribadi.",
+    "correctKey": "E",
+    "explanation": "Pembahasan Soal #4 ➔ Jawaban: (E) Penjelasan: Secara horizontal (baris) dan vertikal (kolom), elemen figural bertambah dan berganti selang-seling. Opsi yang memenuhi kombinasi logika matriks tersebut adalah **(E)**.",
     "weight": 10
   },
   {
     "id": 105,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Sinonim “integritas” yang paling tepat adalah ...",
+    "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_5.png",
     "options": [
       {
         "key": "A",
-        "text": "Kejujuran"
+        "text": "Bentuk Lingkaran sempurna"
       },
       {
         "key": "B",
-        "text": "Kecepatan"
+        "text": "Segitiga sama sisi"
       },
       {
         "key": "C",
-        "text": "Kekuasaan"
+        "text": "Persegi bertumpuk"
       },
       {
         "key": "D",
-        "text": "Ketenaran"
+        "text": "Segi lima beraturan"
       },
       {
         "key": "E",
-        "text": "Kekayaan"
+        "text": "Segi enam beraturan"
       }
     ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Kejujuran Integritas berkaitan dengan kejujuran, konsistensi nilai, dan dapat dipercaya.",
+    "correctKey": "C",
+    "explanation": "Pembahasan Soal #5 ➔ Jawaban: (C) Penjelasan: Pada seri analogi nomor 5, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(C)**.",
     "weight": 10
   },
   {
     "id": 106,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Buku : Membaca = Makanan : ...",
+    "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_6.png",
     "options": [
       {
         "key": "A",
-        "text": "Memasak"
+        "text": "Rotasi 45° searah jarum jam dengan elemen interior penuh"
       },
       {
         "key": "B",
-        "text": "Memakan"
+        "text": "Rotasi 90° searah jarum jam dengan penambahan satu titik sudut"
       },
       {
         "key": "C",
-        "text": "Membeli"
+        "text": "Rotasi 135° berlawanan jarum jam dengan simetri lipat"
       },
       {
         "key": "D",
-        "text": "Menyimpan"
+        "text": "Rotasi 180° dengan inversi warna hitam-putih"
       },
       {
         "key": "E",
-        "text": "Menyajikan"
+        "text": "Pencerminan diagonal dengan pengurangan elemen garis"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Memakan Buku digunakan untuk dibaca; makanan untuk dimakan.",
+    "correctKey": "A",
+    "explanation": "Pembahasan Soal #6 ➔ Jawaban: (A) Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(A)**.",
     "weight": 10
   },
   {
     "id": 107,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Pilih kata yang tidak sekelompok.",
+    "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
+    "image": "/images/questions/figural_q_7.png",
     "options": [
       {
         "key": "A",
-        "text": "Mawar"
+        "text": "Pola penambahan 1 garis diagonal"
       },
       {
         "key": "B",
-        "text": "Melati"
+        "text": "Rotasi 45° berlawanan jarum jam"
       },
       {
         "key": "C",
-        "text": "Anggrek"
+        "text": "Pengurangan elemen interior"
       },
       {
         "key": "D",
-        "text": "Bayam"
+        "text": "Penggabungan dua bentuk dasar"
       },
       {
         "key": "E",
-        "text": "Tulip"
+        "text": "Pencerminan horizontal"
       }
     ],
     "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. Bayam Bayam merupakan sayuran, sedangkan lainnya bunga.",
+    "explanation": "Pembahasan Soal #7 ➔ Jawaban: (D) Penjelasan: Empat dari lima opsi memiliki simetri dan jumlah elemen interior yang konisten, sedangkan opsi **(D)** memiliki struktur yang tidak sesuai dengan kaidah kelompoknya.",
     "weight": 10
   },
   {
     "id": 108,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "“Semua penyidik adalah anggota Polri. Sebagian anggota Polri bertugas di lalu lintas.” Kesimpulan yang pasti adalah ...",
+    "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
+    "image": "/images/questions/figural_q_8.png",
     "options": [
       {
         "key": "A",
-        "text": "Semua penyidik bertugas di lalu lintas"
+        "text": "Rotasi 90° searah jarum jam"
       },
       {
         "key": "B",
-        "text": "Sebagian penyidik pasti bertugas di lalu lintas"
+        "text": "Rotasi 180°"
       },
       {
         "key": "C",
-        "text": "Semua penyidik adalah anggota Polri"
+        "text": "Refleksi vertikal"
       },
       {
         "key": "D",
-        "text": "Tidak ada penyidik di lalu lintas"
+        "text": "Perbesaran 2x"
       },
       {
         "key": "E",
-        "text": "Penyidik tidak terikat ketentuan Polri"
+        "text": "Inversi warna"
       }
     ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Semua penyidik adalah anggota Polri Pernyataan pertama secara langsung memastikan semua penyidik termasuk anggota Polri; tidak ada hubungan pasti dengan petugas lalu lintas.",
+    "correctKey": "B",
+    "explanation": "Pembahasan Soal #8 ➔ Jawaban: (B) Penjelasan: Secara horizontal (baris) dan vertikal (kolom), elemen figural bertambah dan berganti selang-seling. Opsi yang memenuhi kombinasi logika matriks tersebut adalah **(B)**.",
     "weight": 10
   },
   {
     "id": 109,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Makna ungkapan “berpikir jernih” adalah ...",
+    "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_9.png",
     "options": [
       {
         "key": "A",
-        "text": "Berpikir tanpa emosi berlebihan dan berdasarkan fakta"
+        "text": "Bentuk Lingkaran sempurna"
       },
       {
         "key": "B",
-        "text": "Berpikir sangat cepat"
+        "text": "Segitiga sama sisi"
       },
       {
         "key": "C",
-        "text": "Mengikuti pendapat terbanyak"
+        "text": "Persegi bertumpuk"
       },
       {
         "key": "D",
-        "text": "Menghindari keputusan"
+        "text": "Segi lima beraturan"
       },
       {
         "key": "E",
-        "text": "Mengambil keputusan secara emosional dan tergesa-gesa"
+        "text": "Segi enam beraturan"
       }
     ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Berpikir tanpa emosi berlebihan dan berdasarkan fakta Berpikir jernih berarti menilai masalah secara tenang, logis, dan berbasis fakta.",
+    "correctKey": "E",
+    "explanation": "Pembahasan Soal #9 ➔ Jawaban: (E) Penjelasan: Pada seri analogi nomor 9, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(E)**.",
     "weight": 10
   },
   {
     "id": 110,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Kalimat yang paling efektif adalah ...",
+    "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_10.png",
     "options": [
       {
         "key": "A",
-        "text": "Para peserta-peserta diminta untuk hadir semua"
+        "text": "Rotasi 45° searah jarum jam dengan elemen interior penuh"
       },
       {
         "key": "B",
-        "text": "Kepada seluruh peserta dimohon agar supaya hadir"
+        "text": "Rotasi 90° searah jarum jam dengan penambahan satu titik sudut"
       },
       {
         "key": "C",
-        "text": "Seluruh peserta diminta hadir tepat waktu"
+        "text": "Rotasi 135° berlawanan jarum jam dengan simetri lipat"
       },
       {
         "key": "D",
-        "text": "Seluruh daripada peserta wajib untuk hadir"
+        "text": "Rotasi 180° dengan inversi warna hitam-putih"
       },
       {
-        "key": "B",
-        "text": "KEMAMPUAN NUMERIK"
+        "key": "E",
+        "text": "Pencerminan diagonal dengan pengurangan elemen garis"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Seluruh peserta diminta hadir tepat waktu Kalimat C hemat kata, jelas, dan tidak mengandung pengulangan yang tidak perlu.",
+    "explanation": "Pembahasan Soal #10 ➔ Jawaban: (C) Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(C)**.",
     "weight": 10
   },
   {
     "id": 111,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "18 + 27 × 2 = ...",
+    "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
+    "image": "/images/questions/figural_q_11.png",
     "options": [
       {
         "key": "A",
-        "text": "63"
+        "text": "Pola penambahan 1 garis diagonal"
       },
       {
         "key": "B",
-        "text": "72"
+        "text": "Rotasi 45° berlawanan jarum jam"
       },
       {
         "key": "C",
-        "text": "81"
+        "text": "Pengurangan elemen interior"
       },
       {
         "key": "D",
-        "text": "90"
+        "text": "Penggabungan dua bentuk dasar"
       },
       {
         "key": "E",
-        "text": "90"
+        "text": "Pencerminan horizontal"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 72 Kerjakan perkalian lebih dahulu: 27 × 2 = 54, lalu 18 + 54 = 72.",
+    "correctKey": "A",
+    "explanation": "Pembahasan Soal #11 ➔ Jawaban: (A) Penjelasan: Empat dari lima opsi memiliki simetri dan jumlah elemen interior yang konisten, sedangkan opsi **(A)** memiliki struktur yang tidak sesuai dengan kaidah kelompoknya.",
     "weight": 10
   },
   {
     "id": 112,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Jika 15% dari 240 adalah ...",
+    "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
+    "image": "/images/questions/figural_q_12.png",
     "options": [
       {
         "key": "A",
-        "text": "24"
+        "text": "Rotasi 90° searah jarum jam"
       },
       {
         "key": "B",
-        "text": "30"
+        "text": "Rotasi 180°"
       },
       {
         "key": "C",
-        "text": "36"
+        "text": "Refleksi vertikal"
       },
       {
         "key": "D",
-        "text": "40"
+        "text": "Perbesaran 2x"
       },
       {
         "key": "E",
-        "text": "48"
+        "text": "Inversi warna"
       }
     ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 36 15% × 240 = 0,15 × 240 = 36.",
+    "correctKey": "D",
+    "explanation": "Pembahasan Soal #12 ➔ Jawaban: (D) Penjelasan: Secara horizontal (baris) dan vertikal (kolom), elemen figural bertambah dan berganti selang-seling. Opsi yang memenuhi kombinasi logika matriks tersebut adalah **(D)**.",
     "weight": 10
   },
   {
     "id": 113,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Sebuah regu terdiri dari 8 orang. Jika 3 regu berjumlah ... orang.",
+    "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
+    "image": "/images/questions/figural_q_13.png",
     "options": [
       {
         "key": "A",
-        "text": "21"
+        "text": "Bentuk Lingkaran sempurna"
       },
       {
         "key": "B",
-        "text": "24"
+        "text": "Segitiga sama sisi"
       },
       {
         "key": "C",
-        "text": "27"
+        "text": "Persegi bertumpuk"
       },
       {
         "key": "D",
-        "text": "32"
+        "text": "Segi lima beraturan"
       },
       {
         "key": "E",
-        "text": "32"
+        "text": "Segi enam beraturan"
       }
     ],
     "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 24 Jumlah orang = 8 × 3 = 24.",
+    "explanation": "Pembahasan Soal #13 ➔ Jawaban: (B) Penjelasan: Pada seri analogi nomor 13, Bentuk A mengalami perubahan/transformasi geometri tertentu untuk menjadi Bentuk B. Berdasarkan aturan yang sama, Bentuk C jika ditransformasikan dengan pola serupa akan menghasilkan bentuk yang terdapat pada opsi **(B)**.",
     "weight": 10
   },
   {
     "id": 114,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Perbandingan 2 : 5 setara dengan ...",
+    "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
+    "image": "/images/questions/figural_q_14.png",
     "options": [
       {
         "key": "A",
-        "text": "4 : 8"
+        "text": "Rotasi 45° searah jarum jam dengan elemen interior penuh"
       },
       {
         "key": "B",
-        "text": "6 : 15"
+        "text": "Rotasi 90° searah jarum jam dengan penambahan satu titik sudut"
       },
       {
         "key": "C",
-        "text": "8 : 15"
+        "text": "Rotasi 135° berlawanan jarum jam dengan simetri lipat"
       },
       {
         "key": "D",
-        "text": "10 : 20"
+        "text": "Rotasi 180° dengan inversi warna hitam-putih"
       },
       {
         "key": "E",
-        "text": "8 : 15"
+        "text": "Pencerminan diagonal dengan pengurangan elemen garis"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 6 : 15 Kalikan kedua bagian 2:5 dengan 3 sehingga menjadi 6:15.",
+    "correctKey": "E",
+    "explanation": "Pembahasan Soal #14 ➔ Jawaban: (E) Penjelasan: Perubahan dari Pola 1 hingga Pola 4 menunjukkan rotasi dan penambahan elemen berulang secara berurutan. Mengikuti urutan inkremental tersebut, Pola 5 yang tepat adalah **(E)**.",
     "weight": 10
   },
   {
     "id": 115,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Harga barang Rp200.000 mendapat potongan 10%. Harga setelah diskon adalah ...",
+    "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
+    "image": "/images/questions/figural_q_15.png",
     "options": [
       {
         "key": "A",
-        "text": "Rp170.000"
+        "text": "Pola penambahan 1 garis diagonal"
       },
       {
         "key": "B",
-        "text": "Rp175.000"
+        "text": "Rotasi 45° berlawanan jarum jam"
       },
       {
         "key": "C",
-        "text": "Rp180.000"
+        "text": "Pengurangan elemen interior"
       },
       {
         "key": "D",
-        "text": "Rp190.000"
+        "text": "Penggabungan dua bentuk dasar"
       },
       {
         "key": "E",
-        "text": "Rp250.000"
+        "text": "Pencerminan horizontal"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Rp180.000 Diskon 10% = Rp20.000; harga akhir Rp180.000.",
+    "explanation": "Pembahasan Soal #15 ➔ Jawaban: (C) Penjelasan: Empat dari lima opsi memiliki simetri dan jumlah elemen interior yang konisten, sedangkan opsi **(C)** memiliki struktur yang tidak sesuai dengan kaidah kelompoknya.",
     "weight": 10
   },
   {
     "id": 116,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Rata-rata dari 6, 8, 10, dan 12 adalah ...",
+    "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
+    "image": "/images/questions/figural_q_16.png",
     "options": [
       {
         "key": "A",
-        "text": "8"
+        "text": "Rotasi 90° searah jarum jam"
       },
       {
         "key": "B",
-        "text": "9"
+        "text": "Rotasi 180°"
       },
       {
         "key": "C",
-        "text": "10"
+        "text": "Refleksi vertikal"
       },
       {
         "key": "D",
-        "text": "11"
+        "text": "Perbesaran 2x"
       },
       {
         "key": "E",
-        "text": "15"
+        "text": "Inversi warna"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 9 Jumlah 36 dibagi 4 data = 9.",
+    "correctKey": "A",
+    "explanation": "Pembahasan Soal #16 ➔ Jawaban: (A) Penjelasan: Secara horizontal (baris) dan vertikal (kolom), elemen figural bertambah dan berganti selang-seling. Opsi yang memenuhi kombinasi logika matriks tersebut adalah **(A)**.",
     "weight": 10
   },
   {
     "id": 117,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Sebuah kendaraan menempuh 150 km dalam 3 jam. Kecepatan rata-ratanya ...",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Berdasarkan denah di atas, bangunan yang berada tepat di sebelah utara R. Budi adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
       {
         "key": "A",
-        "text": "40 km/jam"
+        "text": "R. Ahmad"
       },
       {
         "key": "B",
-        "text": "45 km/jam"
+        "text": "Kantor Polisi"
       },
       {
         "key": "C",
-        "text": "50 km/jam"
+        "text": "KUA"
       },
       {
         "key": "D",
-        "text": "60 km/jam"
+        "text": "Gd. Serbaguna"
       },
       {
         "key": "E",
-        "text": "65 km/jam"
+        "text": "Balai Desa"
       }
     ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 50 km/jam Kecepatan = jarak ÷ waktu = 150 ÷ 3 = 50 km/jam.",
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Pembahasan: R. Budi terletak di utara Jln. Kusuma Raya. Di sebelah utara R. Budi berbatasan langsung dengan pekarangan R. Ahmad.",
     "weight": 10
   },
   {
     "id": 118,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Jika 4x = 52, nilai x adalah ...",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Bangunan yang terletak di sudut antara Jln. Kusuma Raya dan Jln. Rambutan di sebelah utara jalan adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
       {
         "key": "A",
-        "text": "11"
+        "text": "Gd. Serbaguna"
       },
       {
         "key": "B",
-        "text": "12"
+        "text": "Kantor Polisi"
       },
       {
         "key": "C",
-        "text": "13"
+        "text": "R. Ahmad"
       },
       {
         "key": "D",
-        "text": "14"
+        "text": "KUD"
       },
       {
         "key": "E",
-        "text": "16"
+        "text": "R. Budi"
       }
     ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 13 Bagi kedua ruas dengan 4: x = 52 ÷ 4 = 13.",
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Kantor Polisi terletak tepat di sudut pertemuan Jln. Kusuma Raya dan Jln. Rambutan di sisi utara.",
     "weight": 10
   },
   {
     "id": 119,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Jumlah 5 bilangan berurutan adalah 60. Bilangan tengahnya adalah ...",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Masjid terletak di sebelah... dari Lapangan.",
+    "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
       {
         "key": "A",
-        "text": "10"
+        "text": "Barat"
       },
       {
         "key": "B",
-        "text": "11"
+        "text": "Timur"
       },
       {
         "key": "C",
-        "text": "12"
+        "text": "Utara"
       },
       {
         "key": "D",
-        "text": "13"
+        "text": "Selatan"
       },
       {
         "key": "E",
-        "text": "18"
+        "text": "Barat Daya"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 12 Pada lima bilangan berurutan, rata-rata sama dengan bilangan tengah. 60 ÷ 5 = 12.",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: Masjid terletak di sebelah utara dari Lapangan olah raga dan dibatasi jalur jalan utama.",
     "weight": 10
   },
   {
     "id": 120,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Sebuah pekerjaan selesai 12 hari oleh 6 orang dengan kemampuan sama. Jika dikerjakan 9 orang, waktu yang diperlukan ...",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Jika seseorang berada di Balai Desa dan berjalan ke arah barat menyusuri Jln. Kusuma Raya, bangunan pertama di sebelah kanan jalan yang ditemuinya adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
       {
         "key": "A",
-        "text": "6 hari"
+        "text": "R. Sinta"
       },
       {
         "key": "B",
-        "text": "8 hari"
+        "text": "KUA"
       },
       {
         "key": "C",
-        "text": "9 hari"
+        "text": "R. Andi"
       },
       {
         "key": "D",
-        "text": "10 hari"
+        "text": "R. Budi"
       },
       {
-        "key": "C",
-        "text": "DERET DAN POLA"
+        "key": "E",
+        "text": "Kantor Polisi"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 8 hari Total beban 6 × 12 = 72 orang-hari. 72 ÷ 9 = 8 hari.",
+    "correctKey": "D",
+    "explanation": "Kunci Jawaban: (D). Pembahasan: Dari Balai Desa menyusuri Jln. Kusuma Raya ke arah barat, bangunan pertama di sisi kanan jalan adalah R. Budi.",
     "weight": 10
   },
   {
     "id": 121,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "2, 4, 8, 16, ...",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Bangunan yang berada paling selatan pada wilayah yang dibatasi Jln. Pemuda adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Bayu"
+      },
+      {
+        "key": "B",
+        "text": "Lapangan"
+      },
+      {
+        "key": "C",
+        "text": "R. Anita"
+      },
+      {
+        "key": "D",
+        "text": "KUD"
+      },
+      {
+        "key": "E",
+        "text": "R. Bagas"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Pembahasan: Bangunan yang berada paling selatan pada wilayah yang dibatasi Jln. Pemuda adalah R. Bayu.",
+    "weight": 10
+  },
+  {
+    "id": 122,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Rumah warga yang terletak tepat di sebelah timur Kantor Polisi adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Budi"
+      },
+      {
+        "key": "B",
+        "text": "R. Ahmad"
+      },
+      {
+        "key": "C",
+        "text": "R. Andi"
+      },
+      {
+        "key": "D",
+        "text": "R. Sinta"
+      },
+      {
+        "key": "E",
+        "text": "R. Sari"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Rumah warga yang terletak tepat di sebelah timur Kantor Polisi adalah R. Ahmad.",
+    "weight": 10
+  },
+  {
+    "id": 123,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Bangunan SD Brlian Jaya terletak di sebelah... Jln. Majapahit.",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Barat"
+      },
+      {
+        "key": "B",
+        "text": "Timur"
+      },
+      {
+        "key": "C",
+        "text": "Utara"
+      },
+      {
+        "key": "D",
+        "text": "Selatan"
+      },
+      {
+        "key": "E",
+        "text": "Tenggara"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: SD Brlian Jaya terletak di sisi timur Jln. Majapahit dan di sebelah selatan Jln. Kusuma Raya.",
+    "weight": 10
+  },
+  {
+    "id": 124,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Di sebelah selatan R. Budi, dipisahkan oleh Jln. Kusuma Raya, berdiri bangunan...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Gd. Serbaguna"
+      },
+      {
+        "key": "B",
+        "text": "R. Ahmad"
+      },
+      {
+        "key": "C",
+        "text": "KUD"
+      },
+      {
+        "key": "D",
+        "text": "R. Bayu"
+      },
+      {
+        "key": "E",
+        "text": "R. Anita"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Pembahasan: Tepat di seberang selatan R. Budi adalah Gd. Serbaguna.",
+    "weight": 10
+  },
+  {
+    "id": 125,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Posisi R. Bagas terletak pada sudut persimpangan antara jalan...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Pemuda dan Jln. Sentosa"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Merdeka dan Jln. Sentosa"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Majapahit dan Jln. Kusuma Raya"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Madukara dan Jln. Kusuma Raya"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Rambutan dan Jln. Kusuma Raya"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: R. Bagas terletak di sebelah timur Jln. Merdeka dan di sebelah utara Jln. Sentosa.",
+    "weight": 10
+  },
+  {
+    "id": 126,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Rumah warga yang berdekatan langsung dengan batas utara Balai Desa adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "R. Sinta"
+      },
+      {
+        "key": "B",
+        "text": "R. Sari"
+      },
+      {
+        "key": "C",
+        "text": "R. Andi"
+      },
+      {
+        "key": "D",
+        "text": "R. Bayu"
+      },
+      {
+        "key": "E",
+        "text": "R. Anita"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Dari Balai Desa, rumah R. Sinta terletak di arah barat laut.",
+    "weight": 10
+  },
+  {
+    "id": 127,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Petugas patroli berangkat dari Kantor Polisi menuju Masjid. Rute jalan paling efisien yang dilalui adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Rambutan -> Jln. Pemuda -> Jln. Sentosa"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Kusuma Raya lurus ke timur -> belok kanan ke Jln. Merdeka -> belok kiri ke Jln. Sentosa"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Kusuma Raya lurus ke timur -> belok kiri ke Jln. Majapahit -> belok kanan ke Jln. Sentosa"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Kusuma Raya lurus ke timur -> belok kanan ke Jln. Pemuda -> belok kiri ke Jln. Sentosa"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Madukara -> Jln. Majapahit -> Jln. Merdeka"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Kantor Polisi berada di Jln. Kusuma Raya barat. Menyusuri Jln. Kusuma Raya ke arah timur menuju Balai Desa melewati 3 persimpangan jalan.",
+    "weight": 10
+  },
+  {
+    "id": 128,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Seorang murid dari R. Anita ingin pergi ke SD Brlian Jaya. Jalur yang paling tepat adalah berjalan ke utara menyusuri...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Pemuda -> belok timur ke Jln. Kusuma Raya -> belok utara ke Jln. Majapahit"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Rambutan -> Jln. Madukara -> Jln. Majapahit"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Merdeka -> Jln. Sentosa -> Jln. Pemuda"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Sentosa -> Jln. Rambutan -> Jln. Kusuma Raya"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Pemuda -> Jln. Sentosa -> Jln. Merdeka"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: R. Anita berada di Jln. Pemuda. Bergerak ke utara menyusuri Jln. Pemuda, di sebelah timur terdapat Lapangan.",
+    "weight": 10
+  },
+  {
+    "id": 129,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Apabila Jln. Madukara ditutup total karena perbaikan, warga dari R. Sinta yang akan ke KUD harus berputar melalui...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Majapahit -> Jln. Kusuma Raya -> Jln. Pemuda"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Rambutan -> Jln. Sentosa -> Jln. Merdeka"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Merdeka -> Jln. Sentosa -> Jln. Rambutan"
+      },
+      {
+        "key": "D",
+        "text": "Langsung menyeberang Lapangan"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Kusuma Raya -> Jln. Rambutan -> Jln. Sentosa"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: Jika Jln. Madukara ditutup, rute tercepat dari R. Sinta menuju KUD adalah melalui Jln. Majapahit lalu belok barat ke Jln. Kusuma Raya.",
+    "weight": 10
+  },
+  {
+    "id": 130,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Kurir mengantar paket dari KUA ke R. Bagas. Jalan yang TIDAK perlu dilalui adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Madukara"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Kusuma Raya"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Merdeka"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Sentosa"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Rambutan"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: KUA berada di Jln. Madukara, sedangkan R. Bagas berada di Jln. Sentosa bagian tenggara.",
+    "weight": 10
+  },
+  {
+    "id": 131,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Jalan yang membatasi antara Balai Desa dan SD Brlian Jaya adalah...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Madukara"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Majapahit"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Merdeka"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Pemuda"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Kusuma Raya"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Balai Desa terletak di sebelah barat Jln. Majapahit, berhadapan diagonal dengan SD Brlian Jaya.",
+    "weight": 10
+  },
+  {
+    "id": 132,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Untuk memindahkan barang dari Gd. Serbaguna ke KUD, rute paling lurus adalah menyusuri...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Rambutan ke utara"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Kusuma Raya bagian selatan ke arah timur"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Pemuda ke selatan"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Merdeka ke utara"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Majapahit ke selatan"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Gd. Serbaguna dan KUD berada di deretan bangunan sebelah selatan Jln. Kusuma Raya.",
+    "weight": 10
+  },
+  {
+    "id": 133,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Jika seorang warga berencana pergi dari R. Ahmad ke Balai Desa, berapakah persimpangan jalan utama yang harus dilewatinya?",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "1 persimpangan"
+      },
+      {
+        "key": "B",
+        "text": "2 persimpangan"
+      },
+      {
+        "key": "C",
+        "text": "3 persimpangan"
+      },
+      {
+        "key": "D",
+        "text": "4 persimpangan"
+      },
+      {
+        "key": "E",
+        "text": "Tanpa persimpangan"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pembahasan: Dari R. Ahmad menyusuri Jln. Kusuma Raya ke timur: melintasi persimpangan Jln. Madukara dan Jln. Pemuda.",
+    "weight": 10
+  },
+  {
+    "id": 134,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Mobil polisi dari Kantor Polisi ingin menuju lokasi R. Bayu. Arah belokan pertama setelah menyusuri Jln. Kusuma Raya ke timur adalah belok...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kiri masuk Jln. Madukara"
+      },
+      {
+        "key": "B",
+        "text": "Kanan masuk Jln. Pemuda"
+      },
+      {
+        "key": "C",
+        "text": "Kiri masuk Jln. Majapahit"
+      },
+      {
+        "key": "D",
+        "text": "Kanan masuk Jln. Merdeka"
+      },
+      {
+        "key": "E",
+        "text": "Putar balik ke Jln. Rambutan"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Pembahasan: R. Bayu berada di sebelah timur Jln. Pemuda (tepat di sisi selatan Jln. Kusuma Raya).",
+    "weight": 10
+  },
+  {
+    "id": 135,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Akses jalan tercepat dari R. Sari menuju Masjid adalah menyusuri...",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jln. Majapahit ke selatan -> belok timur ke Jln. Kusuma Raya -> belok selatan ke Jln. Merdeka"
+      },
+      {
+        "key": "B",
+        "text": "Jln. Rambutan -> Jln. Pemuda"
+      },
+      {
+        "key": "C",
+        "text": "Jln. Madukara -> Jln. Sentosa"
+      },
+      {
+        "key": "D",
+        "text": "Jln. Kusuma Raya -> Jln. Pemuda"
+      },
+      {
+        "key": "E",
+        "text": "Jln. Pemuda -> Jln. Merdeka"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Pembahasan: Dari R. Sari di utara Jln. Majapahit bergerak ke selatan di Jln. Majapahit sampai ujung, bangunan terakhir di sebelah barat adalah Balai Desa.",
+    "weight": 10
+  },
+  {
+    "id": 136,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Di manakah posisi Lapangan terhadap Jln. Pemuda dan Jln. Merdeka?",
+    "image": "/images/questions/denah_lokasi_sip.png",
+    "options": [
+      {
+        "key": "A",
+        "text": "Di antara Jln. Pemuda (barat) dan Jln. Merdeka (timur)"
+      },
+      {
+        "key": "B",
+        "text": "Di sebelah utara Jln. Pemuda"
+      },
+      {
+        "key": "C",
+        "text": "Di sebelah timur Jln. Merdeka"
+      },
+      {
+        "key": "D",
+        "text": "Di sebelah selatan Jln. Sentosa"
+      },
+      {
+        "key": "E",
+        "text": "Di sebelah barat Jln. Rambutan"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pembahasan: Lapangan terbuka hijau membentang vertikal di antara Jln. Pemuda di sebelah barat dan Jln. Merdeka di sebelah timur.",
+    "weight": 10
+  },
+  {
+    "id": 137,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 4, 7, 12, 19, 28, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "35"
+      },
+      {
+        "key": "B",
+        "text": "37"
+      },
+      {
+        "key": "C",
+        "text": "39"
+      },
+      {
+        "key": "D",
+        "text": "41"
+      },
+      {
+        "key": "E",
+        "text": "43"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola bertingkat selisih bertambah 2: +3, +5, +7, +9, +11. Angka berikutnya: 28 + 11 = 39.",
+    "weight": 10
+  },
+  {
+    "id": 138,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 3, 6, 12, 24, 48, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "84"
+      },
+      {
+        "key": "B",
+        "text": "92"
+      },
+      {
+        "key": "C",
+        "text": "96"
+      },
+      {
+        "key": "D",
+        "text": "102"
+      },
+      {
+        "key": "E",
+        "text": "108"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola geometri rasio 2 (dikalikan 2): 3×2=6, 6×2=12, 12×2=24, 24×2=48, 48×2=96.",
+    "weight": 10
+  },
+  {
+    "id": 139,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 3, 5, 8, 13, 21, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "31"
+      },
+      {
+        "key": "B",
+        "text": "33"
+      },
+      {
+        "key": "C",
+        "text": "34"
+      },
+      {
+        "key": "D",
+        "text": "36"
+      },
+      {
+        "key": "E",
+        "text": "38"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola barisan Fibonacci (setiap suku adalah jumlah dua suku sebelumnya): 13 + 21 = 34.",
+    "weight": 10
+  },
+  {
+    "id": 140,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 100, 95, 85, 70, 50, ...",
     "options": [
       {
         "key": "A",
@@ -687,7 +1312,7 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
       },
       {
         "key": "B",
-        "text": "24"
+        "text": "25"
       },
       {
         "key": "C",
@@ -695,983 +1320,53 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "32"
-      },
-      {
-        "key": "E",
-        "text": "36"
-      }
-    ],
-    "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. 32 Setiap suku dikali 2; 16 × 2 = 32.",
-    "weight": 10
-  },
-  {
-    "id": 122,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "3, 6, 11, 18, 27, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "36"
-      },
-      {
-        "key": "B",
-        "text": "38"
-      },
-      {
-        "key": "C",
-        "text": "40"
-      },
-      {
-        "key": "D",
-        "text": "42"
-      },
-      {
-        "key": "E",
-        "text": "42"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 38 Selisihnya +3, +5, +7, +9; berikutnya +11, sehingga 27 + 11 = 38.",
-    "weight": 10
-  },
-  {
-    "id": 123,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "5, 10, 20, 40, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "58"
-      },
-      {
-        "key": "B",
-        "text": "59"
-      },
-      {
-        "key": "C",
-        "text": "60"
-      },
-      {
-        "key": "D",
-        "text": "61"
-      },
-      {
-        "key": "E",
-        "text": "72"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 60 Pengurangan −10, −9, −8, −7; berikutnya −6, hasil 60.",
-    "weight": 10
-  },
-  {
-    "id": 124,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "1, 4, 9, 16, 25, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "30"
-      },
-      {
-        "key": "B",
-        "text": "32"
-      },
-      {
-        "key": "C",
-        "text": "36"
-      },
-      {
-        "key": "D",
-        "text": "49"
-      },
-      {
-        "key": "E",
-        "text": "45"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 36 Deret kuadrat: 1², 2², 3², 4², 5²; berikutnya 6² = 36.",
-    "weight": 10
-  },
-  {
-    "id": 125,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "40, 35, 29, 22, 14, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "4"
-      },
-      {
-        "key": "B",
-        "text": "5"
-      },
-      {
-        "key": "C",
-        "text": "6"
-      },
-      {
-        "key": "D",
-        "text": "7"
-      },
-      {
-        "key": "E",
-        "text": "7"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 5 Selisih berturut-turut −5, −6, −7, −8; berikutnya −9, hasil 5.",
-    "weight": 10
-  },
-  {
-    "id": 126,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "2, 5, 10, 17, 26, ...",
-    "options": [
-      {
-        "key": "A",
         "text": "35"
       },
       {
-        "key": "B",
-        "text": "36"
-      },
-      {
-        "key": "C",
-        "text": "37"
-      },
-      {
-        "key": "D",
-        "text": "38"
-      },
-      {
         "key": "E",
-        "text": "45"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 37 Pola n² + 1: 1²+1, 2²+1, ...; berikutnya 6²+1 = 37.",
-    "weight": 10
-  },
-  {
-    "id": 127,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "100, 90, 81, 73, 66, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "58"
-      },
-      {
-        "key": "B",
-        "text": "59"
-      },
-      {
-        "key": "C",
-        "text": "60"
-      },
-      {
-        "key": "D",
-        "text": "61"
-      },
-      {
-        "key": "E",
-        "text": "67"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 59 Pengurangan −10, −9, −8, −7; berikutnya −6, hasil 60. (Jawaban yang benar 60.)",
-    "weight": 10
-  },
-  {
-    "id": 128,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "A, C, F, J, O, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "S"
-      },
-      {
-        "key": "B",
-        "text": "T"
-      },
-      {
-        "key": "C",
-        "text": "U"
-      },
-      {
-        "key": "D",
-        "text": "V"
-      },
-      {
-        "key": "E",
-        "text": "W"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. U Posisi huruf bertambah +2, +3, +4, +5; berikutnya +6: O ke U.",
-    "weight": 10
-  },
-  {
-    "id": 129,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "1, 2, 6, 24, 120, ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "240"
-      },
-      {
-        "key": "B",
-        "text": "360"
-      },
-      {
-        "key": "C",
-        "text": "600"
-      },
-      {
-        "key": "D",
-        "text": "720"
-      },
-      {
-        "key": "E",
-        "text": "840"
-      }
-    ],
-    "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. 720 Pola faktorial: ×2, ×3, ×4, ×5; berikutnya ×6 = 720.",
-    "weight": 10
-  },
-  {
-    "id": 130,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "7, 14, 12, 24, 22, 44, ...",
-    "options": [
-      {
-        "key": "A",
         "text": "40"
-      },
-      {
-        "key": "B",
-        "text": "41"
-      },
-      {
-        "key": "C",
-        "text": "42"
-      },
-      {
-        "key": "D",
-        "text": "46"
-      },
-      {
-        "key": "D",
-        "text": "PENALARAN LOGIS"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 42 Pola bergantian ×2 lalu −2; setelah 44, kurangi 2 menjadi 42.",
-    "weight": 10
-  },
-  {
-    "id": 131,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Semua perwira adalah pemimpin. Sebagian pemimpin mengikuti pelatihan. Kesimpulan yang pasti adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Semua perwira mengikuti pelatihan"
-      },
-      {
-        "key": "B",
-        "text": "Sebagian perwira mengikuti pelatihan"
-      },
-      {
-        "key": "C",
-        "text": "Semua perwira adalah pemimpin"
-      },
-      {
-        "key": "D",
-        "text": "Tidak ada perwira yang mengikuti pelatihan"
-      },
-      {
-        "key": "E",
-        "text": "Semua pimpinan bertugas di staf"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Semua perwira adalah pemimpin Premis pertama menyatakan seluruh perwira termasuk kelompok pemimpin. Premis kedua tidak memastikan apakah perwira termasuk peserta pelatihan.",
-    "weight": 10
-  },
-  {
-    "id": 132,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika hujan, lapangan basah. Lapangan tidak basah. Dengan asumsi hubungan sebab-akibat pada premis berlaku, kesimpulannya ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Hujan"
-      },
-      {
-        "key": "B",
-        "text": "Tidak hujan"
-      },
-      {
-        "key": "C",
-        "text": "Lapangan tergenang"
-      },
-      {
-        "key": "D",
-        "text": "Tidak dapat disimpulkan"
-      },
-      {
-        "key": "E",
-        "text": "Jalanan tidak licin"
       }
     ],
     "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Tidak hujan Ini bentuk modus tollens: jika P maka Q; bukan Q; maka bukan P.",
-    "weight": 10
-  },
-  {
-    "id": 133,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Semua dokumen rahasia disimpan terkunci. Berkas X tidak disimpan terkunci. Maka ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "X pasti rahasia"
-      },
-      {
-        "key": "B",
-        "text": "X bukan dokumen rahasia"
-      },
-      {
-        "key": "C",
-        "text": "Semua berkas terbuka"
-      },
-      {
-        "key": "D",
-        "text": "X telah hilang"
-      },
-      {
-        "key": "E",
-        "text": "Dokumen X belum diverifikasi"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. X bukan dokumen rahasia Jika semua dokumen rahasia terkunci, berkas yang tidak terkunci tidak termasuk kelompok dokumen rahasia dalam premis.",
-    "weight": 10
-  },
-  {
-    "id": 134,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Andi lebih tinggi daripada Budi. Budi lebih tinggi daripada Candra. Siapa paling pendek?",
-    "options": [
-      {
-        "key": "A",
-        "text": "Andi"
-      },
-      {
-        "key": "B",
-        "text": "Budi"
-      },
-      {
-        "key": "C",
-        "text": "Candra"
-      },
-      {
-        "key": "D",
-        "text": "Tidak dapat ditentukan"
-      },
-      {
-        "key": "E",
-        "text": "Eko"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Candra Urutan tinggi: Andi > Budi > Candra; jadi Candra paling pendek.",
-    "weight": 10
-  },
-  {
-    "id": 135,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika laporan lengkap, pemeriksaan dapat dilanjutkan. Laporan lengkap. Maka ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Pemeriksaan dapat dilanjutkan"
-      },
-      {
-        "key": "B",
-        "text": "Pemeriksaan pasti selesai"
-      },
-      {
-        "key": "C",
-        "text": "Laporan salah"
-      },
-      {
-        "key": "D",
-        "text": "Tidak ada pemeriksaan"
-      },
-      {
-        "key": "E",
-        "text": "Pemeriksaan dihentikan permanen"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Pemeriksaan dapat dilanjutkan Pernyataan memenuhi bentuk modus ponens: P → Q, P, maka Q.",
-    "weight": 10
-  },
-  {
-    "id": 136,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Tiga orang A, B, C duduk berurutan. A tidak di ujung dan B di sebelah kiri C. Susunan yang benar adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "A-B-C"
-      },
-      {
-        "key": "B",
-        "text": "B-A-C"
-      },
-      {
-        "key": "C",
-        "text": "C-A-B"
-      },
-      {
-        "key": "D",
-        "text": "B-C-A"
-      },
-      {
-        "key": "E",
-        "text": "C-B-A"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. B-A-C A harus di tengah. Agar B di kiri C, susunannya B-A-C.",
-    "weight": 10
-  },
-  {
-    "id": 137,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Semua anggota tim hadir tepat waktu. Rina anggota tim. Maka ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Rina mungkin terlambat"
-      },
-      {
-        "key": "B",
-        "text": "Rina hadir tepat waktu"
-      },
-      {
-        "key": "C",
-        "text": "Rina bukan anggota"
-      },
-      {
-        "key": "D",
-        "text": "Semua orang anggota tim"
-      },
-      {
-        "key": "E",
-        "text": "Rina mendapatkan dispensasi"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Rina hadir tepat waktu Rina termasuk anggota tim sehingga sifat yang berlaku untuk semua anggota juga berlaku pada Rina.",
-    "weight": 10
-  },
-  {
-    "id": 138,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika keputusan disetujui atasan, operasi dimulai. Operasi belum dimulai. Kesimpulan paling logis ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Keputusan pasti disetujui"
-      },
-      {
-        "key": "B",
-        "text": "Keputusan belum disetujui"
-      },
-      {
-        "key": "C",
-        "text": "Operasi sudah selesai"
-      },
-      {
-        "key": "D",
-        "text": "Atasan tidak ada"
-      },
-      {
-        "key": "E",
-        "text": "Keputusan ditolak sepenuhnya"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Keputusan belum disetujui Dengan asumsi aturan bersifat pasti, belum dimulainya operasi berarti syarat persetujuan belum terpenuhi.",
-    "weight": 10
-  },
-  {
-    "id": 139,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Pernyataan “tidak semua peserta lulus” setara dengan ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Tidak ada peserta yang lulus"
-      },
-      {
-        "key": "B",
-        "text": "Semua peserta gagal"
-      },
-      {
-        "key": "C",
-        "text": "Ada peserta yang tidak lulus"
-      },
-      {
-        "key": "D",
-        "text": "Semua peserta lulus"
-      },
-      {
-        "key": "E",
-        "text": "Seluruh peserta gagal ujian"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Ada peserta yang tidak lulus Negasi dari “semua lulus” adalah “setidaknya ada satu yang tidak lulus”.",
-    "weight": 10
-  },
-  {
-    "id": 140,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dalam antrean, D di depan E, E di depan F, dan G di belakang F. Siapa paling depan di antara keempatnya?",
-    "options": [
-      {
-        "key": "A",
-        "text": "D"
-      },
-      {
-        "key": "B",
-        "text": "E"
-      },
-      {
-        "key": "C",
-        "text": "F"
-      },
-      {
-        "key": "D",
-        "text": "G"
-      },
-      {
-        "key": "E",
-        "text": "KLASIFIKASI DAN ANALOGI"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. D Urutannya D, E, F, G sehingga D berada paling depan.",
+    "explanation": "Kunci Jawaban: (B). Pola selisih berkurang kelipatan 5 bertingkat: -5, -10, -15, -20, -25. Angka berikutnya: 50 - 25 = 25.",
     "weight": 10
   },
   {
     "id": 141,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Manakah yang berbeda kelompok?",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 1, 4, 9, 16, 25, 36, ...",
     "options": [
       {
         "key": "A",
-        "text": "Segitiga"
+        "text": "45"
       },
       {
         "key": "B",
-        "text": "Persegi"
+        "text": "47"
       },
       {
         "key": "C",
-        "text": "Lingkaran"
+        "text": "49"
       },
       {
         "key": "D",
-        "text": "Kubus"
+        "text": "51"
       },
       {
         "key": "E",
-        "text": "Prisma segitiga"
+        "text": "55"
       }
     ],
-    "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. Kubus Kubus merupakan bangun ruang tiga dimensi; lainnya bangun datar.",
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola bilangan kuadrat: 1², 2², 3², 4², 5², 6², 7² = 49.",
     "weight": 10
   },
   {
     "id": 142,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Peta : Wilayah = Denah : ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Bangunan/ruangan"
-      },
-      {
-        "key": "B",
-        "text": "Cuaca"
-      },
-      {
-        "key": "C",
-        "text": "Waktu"
-      },
-      {
-        "key": "D",
-        "text": "Suara"
-      },
-      {
-        "key": "E",
-        "text": "Pemandangan alam terbuka"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Bangunan/ruangan Peta menggambarkan wilayah; denah menggambarkan tata letak bangunan atau ruangan.",
-    "weight": 10
-  },
-  {
-    "id": 143,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Mata : Melihat = Telinga : ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Berjalan"
-      },
-      {
-        "key": "B",
-        "text": "Mendengar"
-      },
-      {
-        "key": "C",
-        "text": "Mencium"
-      },
-      {
-        "key": "D",
-        "text": "Mengecap"
-      },
-      {
-        "key": "E",
-        "text": "Berbicara"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Mendengar Mata berfungsi untuk melihat, telinga untuk mendengar.",
-    "weight": 10
-  },
-  {
-    "id": 144,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Manakah yang tidak sejenis?",
-    "options": [
-      {
-        "key": "A",
-        "text": "Merah"
-      },
-      {
-        "key": "B",
-        "text": "Biru"
-      },
-      {
-        "key": "C",
-        "text": "Hijau"
-      },
-      {
-        "key": "D",
-        "text": "Meja"
-      },
-      {
-        "key": "E",
-        "text": "Lantai"
-      }
-    ],
-    "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. Meja Meja adalah benda; merah, biru, dan hijau adalah warna.",
-    "weight": 10
-  },
-  {
-    "id": 145,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Benih : Tanaman = Telur : ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Sarang"
-      },
-      {
-        "key": "B",
-        "text": "Burung"
-      },
-      {
-        "key": "C",
-        "text": "Bulu"
-      },
-      {
-        "key": "D",
-        "text": "Pohon"
-      },
-      {
-        "key": "E",
-        "text": "Kucing"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Burung Benih dapat tumbuh menjadi tanaman; telur dapat berkembang menjadi burung.",
-    "weight": 10
-  },
-  {
-    "id": 146,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Manakah pasangan yang memiliki hubungan bagian-keseluruhan?",
-    "options": [
-      {
-        "key": "A",
-        "text": "Roda-mobil"
-      },
-      {
-        "key": "B",
-        "text": "Buku-perpustakaan"
-      },
-      {
-        "key": "C",
-        "text": "Pohon-hutan"
-      },
-      {
-        "key": "D",
-        "text": "Semua benar"
-      },
-      {
-        "key": "E",
-        "text": "Tidak ada pilihan yang benar"
-      }
-    ],
-    "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. Semua benar Roda bagian mobil; buku bagian koleksi perpustakaan; pohon bagian dari hutan.",
-    "weight": 10
-  },
-  {
-    "id": 147,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Pilih yang tidak termasuk alat ukur.",
-    "options": [
-      {
-        "key": "A",
-        "text": "Penggaris"
-      },
-      {
-        "key": "B",
-        "text": "Termometer"
-      },
-      {
-        "key": "C",
-        "text": "Timbangan"
-      },
-      {
-        "key": "D",
-        "text": "Kompas"
-      },
-      {
-        "key": "E",
-        "text": "Stopwatch"
-      }
-    ],
-    "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. Kompas Kompas menunjukkan arah, bukan mengukur besaran seperti panjang, suhu, atau massa.",
-    "weight": 10
-  },
-  {
-    "id": 148,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Pagi : Siang = Senin : ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Minggu"
-      },
-      {
-        "key": "B",
-        "text": "Selasa"
-      },
-      {
-        "key": "C",
-        "text": "Jumat"
-      },
-      {
-        "key": "D",
-        "text": "Sabtu"
-      },
-      {
-        "key": "E",
-        "text": "Kamis"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Selasa Siang mengikuti pagi; Selasa mengikuti Senin.",
-    "weight": 10
-  },
-  {
-    "id": 149,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Kunci : Gembok = Kata sandi : ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Akun"
-      },
-      {
-        "key": "B",
-        "text": "Monitor"
-      },
-      {
-        "key": "C",
-        "text": "Kabel"
-      },
-      {
-        "key": "D",
-        "text": "Printer"
-      },
-      {
-        "key": "E",
-        "text": "Server pusat"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Akun Kunci membuka gembok; kata sandi memberi akses ke akun.",
-    "weight": 10
-  },
-  {
-    "id": 150,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Manakah yang paling tepat menjadi kategori umum bagi apel, mangga, dan pisang?",
-    "options": [
-      {
-        "key": "A",
-        "text": "Sayuran"
-      },
-      {
-        "key": "B",
-        "text": "Buah-buahan"
-      },
-      {
-        "key": "C",
-        "text": "Rempah"
-      },
-      {
-        "key": "D",
-        "text": "Biji-bijian F. PENALARAN DATA"
-      },
-      {
-        "key": "E",
-        "text": "Biji-bijian"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Buah-buahan Ketiganya termasuk buah-buahan.",
-    "weight": 10
-  },
-  {
-    "id": 151,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jumlah laporan: Senin 12, Selasa 15, Rabu 9. Total laporan selama tiga hari adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "34"
-      },
-      {
-        "key": "B",
-        "text": "35"
-      },
-      {
-        "key": "C",
-        "text": "36"
-      },
-      {
-        "key": "D",
-        "text": "37"
-      },
-      {
-        "key": "E",
-        "text": "48"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 36 12 + 15 + 9 = 36 laporan.",
-    "weight": 10
-  },
-  {
-    "id": 152,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dari 80 peserta, 20 orang memilih materi A. Persentasenya adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "20%"
-      },
-      {
-        "key": "B",
-        "text": "25%"
-      },
-      {
-        "key": "C",
-        "text": "30%"
-      },
-      {
-        "key": "D",
-        "text": "40%"
-      },
-      {
-        "key": "E",
-        "text": "35%"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 25% 20 ÷ 80 × 100% = 25%.",
-    "weight": 10
-  },
-  {
-    "id": 153,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Nilai rata-rata 4 peserta adalah 70, 75, 80, dan 95. Rata-ratanya ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 5, 8, 16, 19, 38, 41, ...",
     "options": [
       {
         "key": "A",
@@ -1687,115 +1382,208 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "85"
+        "text": "84"
       },
       {
         "key": "E",
-        "text": "95"
+        "text": "86"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola kombinasi bergantian: +3, ×2, +3, ×2, +3, ×2. Angka berikutnya: 41 × 2 = 82.",
+    "weight": 10
+  },
+  {
+    "id": 143,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 5, 10, 17, 26, 37, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "48"
+      },
+      {
+        "key": "B",
+        "text": "49"
+      },
+      {
+        "key": "C",
+        "text": "50"
+      },
+      {
+        "key": "D",
+        "text": "52"
+      },
+      {
+        "key": "E",
+        "text": "54"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola n² + 1: (1²+1=2), (2²+1=5), (3²+1=10), (4²+1=17), (5²+1=26), (6²+1=37), (7²+1=50).",
+    "weight": 10
+  },
+  {
+    "id": 144,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 64, 32, 16, 8, 4, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "1"
+      },
+      {
+        "key": "B",
+        "text": "2"
+      },
+      {
+        "key": "C",
+        "text": "3"
+      },
+      {
+        "key": "D",
+        "text": "0"
+      },
+      {
+        "key": "E",
+        "text": "4"
       }
     ],
     "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 80 Jumlah nilai 320 dibagi 4 = 80.",
+    "explanation": "Kunci Jawaban: (B). Pola pembagian 2 (geometri r = 1/2): 4 ÷ 2 = 2.",
     "weight": 10
   },
   {
-    "id": 154,
+    "id": 145,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Jumlah personel naik dari 40 menjadi 50. Persentase kenaikan adalah ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 3, 5, 9, 17, 33, ...",
     "options": [
       {
         "key": "A",
-        "text": "10%"
+        "text": "57"
       },
       {
         "key": "B",
-        "text": "20%"
+        "text": "61"
       },
       {
         "key": "C",
-        "text": "25%"
+        "text": "65"
       },
       {
         "key": "D",
-        "text": "30%"
+        "text": "69"
       },
       {
         "key": "E",
-        "text": "35%"
+        "text": "73"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 25% Kenaikan 10 dari dasar 40; 10 ÷ 40 × 100% = 25%.",
+    "explanation": "Kunci Jawaban: (C). Pola penambahan kelipatan 2: +2, +4, +8, +16, +32. Angka berikutnya: 33 + 32 = 65.",
     "weight": 10
   },
   {
-    "id": 155,
+    "id": 146,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Dari 120 kendaraan, 30 merupakan sepeda motor. Perbandingan sepeda motor dengan seluruh kendaraan adalah ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 12, 15, 20, 27, 36, ...",
     "options": [
       {
         "key": "A",
-        "text": "1:2"
+        "text": "43"
       },
       {
         "key": "B",
-        "text": "1:3"
+        "text": "45"
       },
       {
         "key": "C",
-        "text": "1:4"
+        "text": "47"
       },
       {
         "key": "D",
-        "text": "1:5"
+        "text": "49"
       },
       {
         "key": "E",
-        "text": "1:6"
+        "text": "52"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 1:4 30:120 disederhanakan dengan membagi 30 menjadi 1:4.",
+    "explanation": "Kunci Jawaban: (C). Pola deret bilangan prima/ganjil bertingkat: +3, +5, +7, +9, +11. Angka berikutnya: 36 + 11 = 47.",
     "weight": 10
   },
   {
-    "id": 156,
+    "id": 147,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Jika 3 dari 12 tugas belum selesai, persentase tugas yang selesai adalah ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 1, 2, 6, 24, 120, ...",
     "options": [
       {
         "key": "A",
-        "text": "25%"
+        "text": "600"
       },
       {
         "key": "B",
-        "text": "50%"
+        "text": "680"
       },
       {
         "key": "C",
-        "text": "75%"
+        "text": "720"
       },
       {
         "key": "D",
-        "text": "80%"
+        "text": "840"
       },
       {
         "key": "E",
-        "text": "85%"
+        "text": "960"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 75% Tugas selesai 12 − 3 = 9; 9 ÷ 12 × 100% = 75%.",
+    "explanation": "Kunci Jawaban: (C). Pola faktorial (×2, ×3, ×4, ×5, ×6): 120 × 6 = 720.",
     "weight": 10
   },
   {
-    "id": 157,
+    "id": 148,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Data waktu respons: 4, 6, 5, 7, 8 menit. Median data adalah ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 4, 8, 7, 14, 13, 26, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "23"
+      },
+      {
+        "key": "B",
+        "text": "24"
+      },
+      {
+        "key": "C",
+        "text": "25"
+      },
+      {
+        "key": "D",
+        "text": "27"
+      },
+      {
+        "key": "E",
+        "text": "28"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola kombinasi: ×2, -1, ×2, -1, ×2, -1. Angka berikutnya: 26 - 1 = 25.",
+    "weight": 10
+  },
+  {
+    "id": 149,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 21, 20, 18, 15, 11, ...",
     "options": [
       {
         "key": "A",
@@ -1815,1231 +1603,53 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
       },
       {
         "key": "E",
-        "text": "8"
+        "text": "9"
       }
     ],
     "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 6 Urutannya 4, 5, 6, 7, 8; nilai tengah adalah 6.",
+    "explanation": "Kunci Jawaban: (B). Pola pengurangan bertingkat: -1, -2, -3, -4, -5. Angka berikutnya: 11 - 5 = 6.",
     "weight": 10
   },
   {
-    "id": 158,
+    "id": 150,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Nilai tertinggi 92 dan terendah 64. Jangkauan data adalah ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 4, 8, 16, 32, 64, ...",
     "options": [
       {
         "key": "A",
-        "text": "18"
+        "text": "112"
       },
       {
         "key": "B",
-        "text": "24"
+        "text": "120"
       },
       {
         "key": "C",
-        "text": "28"
+        "text": "124"
       },
       {
         "key": "D",
-        "text": "32"
+        "text": "128"
       },
       {
         "key": "E",
-        "text": "35"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 28 Jangkauan = nilai tertinggi − terendah = 92 − 64 = 28.",
-    "weight": 10
-  },
-  {
-    "id": 159,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Anggaran Rp500 juta, terpakai Rp350 juta. Sisa anggaran adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Rp100 juta"
-      },
-      {
-        "key": "B",
-        "text": "Rp125 juta"
-      },
-      {
-        "key": "C",
-        "text": "Rp150 juta"
-      },
-      {
-        "key": "D",
-        "text": "Rp175 juta"
-      },
-      {
-        "key": "E",
-        "text": "Rp200 juta"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Rp150 juta Rp500 juta − Rp350 juta = Rp150 juta.",
-    "weight": 10
-  },
-  {
-    "id": 160,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dari 200 responden, 120 menyatakan puas. Jumlah yang tidak puas atau tidak memilih puas adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "60"
-      },
-      {
-        "key": "B",
-        "text": "70"
-      },
-      {
-        "key": "C",
-        "text": "80"
-      },
-      {
-        "key": "D",
-        "text": "90 G. ORIENTASI RUANG DAN ARAH"
-      },
-      {
-        "key": "E",
-        "text": "95"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 80 200 − 120 = 80 responden.",
-    "weight": 10
-  },
-  {
-    "id": 161,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Seseorang menghadap utara, lalu berbelok 90° ke kanan. Ia kini menghadap ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Barat"
-      },
-      {
-        "key": "B",
-        "text": "Timur"
-      },
-      {
-        "key": "C",
-        "text": "Selatan"
-      },
-      {
-        "key": "D",
-        "text": "Utara"
-      },
-      {
-        "key": "E",
-        "text": "Barat Daya"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Timur Dari utara, belok kanan 90 derajat berarti menghadap timur.",
-    "weight": 10
-  },
-  {
-    "id": 162,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Seseorang berjalan 5 km ke timur lalu 5 km ke barat. Posisi akhirnya terhadap titik awal ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "5 km timur"
-      },
-      {
-        "key": "B",
-        "text": "5 km barat"
-      },
-      {
-        "key": "C",
-        "text": "Kembali ke titik awal"
-      },
-      {
-        "key": "D",
-        "text": "10 km utara"
-      },
-      {
-        "key": "E",
-        "text": "5 km ke arah barat"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. Kembali ke titik awal Perpindahan ke timur dan barat sama besar serta berlawanan arah, sehingga saling meniadakan.",
-    "weight": 10
-  },
-  {
-    "id": 163,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Pada peta, utara berada di atas. A berada di sebelah kiri B. A terletak di ... B.",
-    "options": [
-      {
-        "key": "A",
-        "text": "Timur"
-      },
-      {
-        "key": "B",
-        "text": "Barat"
-      },
-      {
-        "key": "C",
-        "text": "Utara"
-      },
-      {
-        "key": "D",
-        "text": "Selatan"
-      },
-      {
-        "key": "E",
-        "text": "Tenggara"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Barat Kiri pada peta dengan utara di atas menunjukkan arah barat.",
-    "weight": 10
-  },
-  {
-    "id": 164,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Sebuah panah mengarah ke selatan. Jika diputar 180°, arahnya menjadi ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Utara"
-      },
-      {
-        "key": "B",
-        "text": "Timur"
-      },
-      {
-        "key": "C",
-        "text": "Barat"
-      },
-      {
-        "key": "D",
-        "text": "Tetap selatan"
-      },
-      {
-        "key": "E",
-        "text": "Barat Laut"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Utara Putaran 180 derajat membalik arah selatan menjadi utara.",
-    "weight": 10
-  },
-  {
-    "id": 165,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dari titik P bergerak 3 km utara dan 4 km timur. Jarak lurus dari titik awal adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "5 km"
-      },
-      {
-        "key": "B",
-        "text": "6 km"
-      },
-      {
-        "key": "C",
-        "text": "7 km"
-      },
-      {
-        "key": "D",
-        "text": "8 km"
-      },
-      {
-        "key": "E",
-        "text": "8 km"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. 5 km Gunakan teorema Pythagoras: √(3²+4²) = √25 = 5 km.",
-    "weight": 10
-  },
-  {
-    "id": 166,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika pukul 03.00 jarum pendek menunjuk angka 3, sudut terkecil antara jarum jam dan menit adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "0°"
-      },
-      {
-        "key": "B",
-        "text": "45°"
-      },
-      {
-        "key": "C",
-        "text": "90°"
-      },
-      {
-        "key": "D",
-        "text": "180°"
-      },
-      {
-        "key": "E",
-        "text": "120°"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 90° Pada pukul tepat 03.00, jarum menit di 12 dan jarum jam di 3; sudutnya 90 derajat.",
-    "weight": 10
-  },
-  {
-    "id": 167,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Seseorang menghadap barat, berputar 90° searah jarum jam. Ia menghadap ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Utara"
-      },
-      {
-        "key": "B",
-        "text": "Selatan"
-      },
-      {
-        "key": "C",
-        "text": "Timur"
-      },
-      {
-        "key": "D",
-        "text": "Barat"
-      },
-      {
-        "key": "E",
-        "text": "Barat Daya"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Utara Dari barat, putaran searah jarum jam 90 derajat menuju utara.",
-    "weight": 10
-  },
-  {
-    "id": 168,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Sebuah kubus memiliki berapa sisi?",
-    "options": [
-      {
-        "key": "A",
-        "text": "4"
-      },
-      {
-        "key": "B",
-        "text": "6"
-      },
-      {
-        "key": "C",
-        "text": "8"
-      },
-      {
-        "key": "D",
-        "text": "12"
-      },
-      {
-        "key": "E",
-        "text": "8"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 6 Kubus memiliki enam bidang sisi, delapan titik sudut, dan dua belas rusuk.",
-    "weight": 10
-  },
-  {
-    "id": 169,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika sisi kiri suatu benda berada di sebelah kanan pengamat yang berhadapan langsung, maka pengamat berada di ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Belakang benda"
-      },
-      {
-        "key": "B",
-        "text": "Depan benda"
-      },
-      {
-        "key": "C",
-        "text": "Atas benda"
-      },
-      {
-        "key": "D",
-        "text": "Bawah benda"
-      },
-      {
-        "key": "E",
-        "text": "Samping kiri benda"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Depan benda Saat pengamat berdiri di depan dan menghadap benda, sisi kiri benda tampak di kanan pengamat.",
-    "weight": 10
-  },
-  {
-    "id": 170,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Sebuah kendaraan bergerak ke selatan, lalu berbelok ke kiri. Arah berikutnya adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Timur"
-      },
-      {
-        "key": "B",
-        "text": "Barat"
-      },
-      {
-        "key": "C",
-        "text": "Utara"
-      },
-      {
-        "key": "D",
-        "text": "Selatan H. KETELITIAN DAN KONSENTRASI"
-      },
-      {
-        "key": "E",
-        "text": "Barat Laut"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Timur Jika menghadap selatan, sisi kiri adalah timur.",
-    "weight": 10
-  },
-  {
-    "id": 171,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Manakah kode yang sama persis dengan “BRM-2087-KL”?",
-    "options": [
-      {
-        "key": "A",
-        "text": "BRM-2087-KL"
-      },
-      {
-        "key": "B",
-        "text": "BRN-2087-KL"
-      },
-      {
-        "key": "C",
-        "text": "BRM-2087-KI"
-      },
-      {
-        "key": "D",
-        "text": "BRM-2807-KL"
-      },
-      {
-        "key": "E",
-        "text": "BRM-2087-KP"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. BRM-2087-KL Cocokkan seluruh karakter secara berurutan; hanya opsi A identik.",
-    "weight": 10
-  },
-  {
-    "id": 172,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Berapa banyak huruf A dalam rangkaian “KORABRIMOBNASIONAL”?",
-    "options": [
-      {
-        "key": "A",
-        "text": "2"
-      },
-      {
-        "key": "B",
-        "text": "3"
-      },
-      {
-        "key": "C",
-        "text": "4"
-      },
-      {
-        "key": "D",
-        "text": "5"
-      },
-      {
-        "key": "E",
-        "text": "5"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 3 Huruf A muncul tiga kali: pada rangkaian KOR(A)BRIMOBN(A)SION(A)L.",
-    "weight": 10
-  },
-  {
-    "id": 173,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Pilih pasangan angka yang identik.",
-    "options": [
-      {
-        "key": "A",
-        "text": "583194 – 583149"
-      },
-      {
-        "key": "B",
-        "text": "726408 – 726408"
-      },
-      {
-        "key": "C",
-        "text": "901237 – 901273"
-      },
-      {
-        "key": "D",
-        "text": "445612 – 445621"
-      },
-      {
-        "key": "E",
-        "text": "726418 – 726418"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 726408 – 726408 Hanya pasangan kedua memiliki urutan digit yang sama persis.",
-    "weight": 10
-  },
-  {
-    "id": 174,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika setiap huruf digeser satu langkah maju dalam alfabet, POLRI menjadi ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "QPMSJ"
-      },
-      {
-        "key": "B",
-        "text": "QPOSJ"
-      },
-      {
-        "key": "C",
-        "text": "QPMRJ"
-      },
-      {
-        "key": "D",
-        "text": "QPLSJ"
-      },
-      {
-        "key": "E",
-        "text": "QPMSL"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. QPMSJ P→Q, O→P, L→M, R→S, I→J. Hasilnya QPMSJ.",
-    "weight": 10
-  },
-  {
-    "id": 175,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Manakah yang berbeda dari tiga kode lainnya?",
-    "options": [
-      {
-        "key": "A",
-        "text": "AB12-CD"
-      },
-      {
-        "key": "B",
-        "text": "AB12-CD"
-      },
-      {
-        "key": "C",
-        "text": "AB12-DC"
-      },
-      {
-        "key": "D",
-        "text": "AB12-CD"
-      },
-      {
-        "key": "E",
-        "text": "AB12-DB"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. AB12-DC Kode C menukar urutan dua huruf terakhir; yang lain sama.",
-    "weight": 10
-  },
-  {
-    "id": 176,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Berapa jumlah angka genap dalam 2, 5, 8, 11, 14, 17, 20?",
-    "options": [
-      {
-        "key": "A",
-        "text": "2"
-      },
-      {
-        "key": "B",
-        "text": "3"
-      },
-      {
-        "key": "C",
-        "text": "4"
-      },
-      {
-        "key": "D",
-        "text": "5"
-      },
-      {
-        "key": "E",
-        "text": "6"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 4 Angka genapnya 2, 8, 14, dan 20; jumlahnya empat.",
-    "weight": 10
-  },
-  {
-    "id": 177,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika urutan nama diurutkan alfabetis: Bima, Andi, Citra, Dedi, nama kedua adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Andi"
-      },
-      {
-        "key": "B",
-        "text": "Bima"
-      },
-      {
-        "key": "C",
-        "text": "Citra"
-      },
-      {
-        "key": "D",
-        "text": "Dedi"
-      },
-      {
-        "key": "E",
-        "text": "Danu"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Bima Urutan alfabetis: Andi, Bima, Citra, Dedi; nama kedua Bima.",
-    "weight": 10
-  },
-  {
-    "id": 178,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Pilih ejaan yang benar.",
-    "options": [
-      {
-        "key": "A",
-        "text": "Aktifitas"
-      },
-      {
-        "key": "B",
-        "text": "Aktivitas"
-      },
-      {
-        "key": "C",
-        "text": "Aktifvitas"
-      },
-      {
-        "key": "D",
-        "text": "Aktifitaz"
-      },
-      {
-        "key": "E",
-        "text": "Mobilitas"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Aktivitas Bentuk baku menurut kaidah bahasa Indonesia adalah “aktivitas”.",
-    "weight": 10
-  },
-  {
-    "id": 179,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dalam daftar 101, 110, 011, 101, 110, 101, angka 101 muncul sebanyak ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "1"
-      },
-      {
-        "key": "B",
-        "text": "2"
-      },
-      {
-        "key": "C",
-        "text": "3"
-      },
-      {
-        "key": "D",
-        "text": "4"
-      },
-      {
-        "key": "E",
-        "text": "5"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 3 Angka 101 muncul pada posisi pertama, keempat, dan keenam: tiga kali.",
-    "weight": 10
-  },
-  {
-    "id": 180,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Manakah pasangan yang tidak sama?",
-    "options": [
-      {
-        "key": "A",
-        "text": "POLRI-POLRI"
-      },
-      {
-        "key": "B",
-        "text": "SIP-SIP"
-      },
-      {
-        "key": "C",
-        "text": "TPK-TPK"
-      },
-      {
-        "key": "D",
-        "text": "KORPS-KORP5 I. PENALARAN SITUASIONAL"
-      },
-      {
-        "key": "E",
-        "text": "KORPS-KORP8"
+        "text": "136"
       }
     ],
     "correctKey": "D",
-    "explanation": "Kunci Jawaban: D. KORPS-KORP5 Karakter terakhir pada KORP5 adalah angka 5, bukan huruf S.",
+    "explanation": "Kunci Jawaban: (D). Pola eksponensial basis 2: 2¹, 2², 2³, 2⁴, 2⁵, 2⁶, 2⁷ = 128.",
     "weight": 10
   },
   {
-    "id": 181,
+    "id": 151,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Anda menerima dua informasi yang saling bertentangan tentang suatu kejadian. Tindakan awal paling tepat adalah ...",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 10, 12, 16, 22, 30, ...",
     "options": [
       {
         "key": "A",
-        "text": "Memilih informasi dari orang paling senior"
-      },
-      {
-        "key": "B",
-        "text": "Memverifikasi sumber dan mencari bukti pendukung"
-      },
-      {
-        "key": "C",
-        "text": "Menyebarkan kedua informasi"
-      },
-      {
-        "key": "D",
-        "text": "Mengambil kesimpulan secepatnya"
-      },
-      {
-        "key": "E",
-        "text": "Mengabaikan informasi karena bukan tupoksi langsung"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Memverifikasi sumber dan mencari bukti pendukung Verifikasi sumber dan bukti menghindari keputusan berdasarkan rumor atau bias.",
-    "weight": 10
-  },
-  {
-    "id": 182,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dalam tim, seorang anggota melakukan kesalahan administrasi yang dapat diperbaiki. Respons terbaik adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Mempermalukannya di depan umum"
-      },
-      {
-        "key": "B",
-        "text": "Membantu koreksi, mengingatkan prosedur, dan mendokumentasikan sesuai aturan"
-      },
-      {
-        "key": "C",
-        "text": "Menyembunyikan kesalahan"
-      },
-      {
-        "key": "D",
-        "text": "Langsung menyalahkan seluruh tim"
-      },
-      {
-        "key": "E",
-        "text": "Menutup-nutupi kesalahan agar citra tim tetap terjaga"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Membantu koreksi, mengingatkan prosedur, dan mendokumentasikan sesuai aturan Perbaikan yang proporsional menjaga mutu kerja sekaligus membina anggota.",
-    "weight": 10
-  },
-  {
-    "id": 183,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Anda diminta menyelesaikan tugas mendesak sementara tugas lain juga penting. Langkah paling tepat ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Mengerjakan secara acak"
-      },
-      {
-        "key": "B",
-        "text": "Menilai urgensi dan dampak, menyusun prioritas, lalu berkoordinasi"
-      },
-      {
-        "key": "C",
-        "text": "Mengabaikan salah satu tanpa memberi tahu"
-      },
-      {
-        "key": "D",
-        "text": "Menunggu sampai ada teguran"
-      },
-      {
-        "key": "E",
-        "text": "Menunggu instruksi tanpa inisiatif awal"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Menilai urgensi dan dampak, menyusun prioritas, lalu berkoordinasi Prioritas ditetapkan berdasarkan urgensi, dampak, tenggat, dan koordinasi.",
-    "weight": 10
-  },
-  {
-    "id": 184,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Warga menyampaikan keluhan dengan nada tinggi. Sikap awal yang paling efektif adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Membalas dengan nada lebih tinggi"
-      },
-      {
-        "key": "B",
-        "text": "Mendengarkan dengan tenang dan mengklarifikasi inti keluhan"
-      },
-      {
-        "key": "C",
-        "text": "Memotong pembicaraan"
-      },
-      {
-        "key": "D",
-        "text": "Langsung menolak"
-      },
-      {
-        "key": "E",
-        "text": "Meneruskan keluhan kepada staf lain tanpa mencatat"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Mendengarkan dengan tenang dan mengklarifikasi inti keluhan Mendengarkan aktif dan komunikasi tenang membantu meredakan ketegangan serta memahami masalah.",
-    "weight": 10
-  },
-  {
-    "id": 185,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Anda menemukan data pribadi korban tersebar di grup tidak berkepentingan. Tindakan tepat ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Meneruskan agar diketahui semua orang"
-      },
-      {
-        "key": "B",
-        "text": "Menghentikan penyebaran sejauh kewenangan, menjaga bukti, dan melapor melalui prosedur"
-      },
-      {
-        "key": "C",
-        "text": "Mengunggah ke media sosial"
-      },
-      {
-        "key": "D",
-        "text": "Mengabaikannya"
-      },
-      {
-        "key": "E",
-        "text": "Menyebarluaskan dokumen ke rekan lain untuk meminta pendapat"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Menghentikan penyebaran sejauh kewenangan, menjaga bukti, dan melapor melalui prosedur Data pribadi harus dilindungi; penanganan dilakukan sesuai prosedur dan jalur pelaporan.",
-    "weight": 10
-  },
-  {
-    "id": 186,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dalam rapat, pendapat Anda berbeda dari pimpinan dan didukung data. Sebaiknya ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Menyampaikan dengan sopan, berbasis data, dan menghormati keputusan sesuai kewenangan"
-      },
-      {
-        "key": "B",
-        "text": "Diam meski ada risiko besar"
-      },
-      {
-        "key": "C",
-        "text": "Menyerang pribadi pimpinan"
-      },
-      {
-        "key": "D",
-        "text": "Menyebarkan perbedaan ke publik"
-      },
-      {
-        "key": "E",
-        "text": "Melaksanakan perintah tanpa mencatat risiko kendala"
-      }
-    ],
-    "correctKey": "A",
-    "explanation": "Kunci Jawaban: A. Menyampaikan dengan sopan, berbasis data, dan menghormati keputusan sesuai kewenangan Perbedaan profesional disampaikan secara santun dengan alasan dan data yang dapat diuji.",
-    "weight": 10
-  },
-  {
-    "id": 187,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Saat rencana kegiatan menghadapi risiko keselamatan baru, Anda sebaiknya ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Tetap menjalankan tanpa perubahan"
-      },
-      {
-        "key": "B",
-        "text": "Menilai risiko, memberi tahu komandan, dan mengusulkan mitigasi"
-      },
-      {
-        "key": "C",
-        "text": "Menyembunyikan informasi"
-      },
-      {
-        "key": "D",
-        "text": "Menunggu sampai terjadi insiden"
-      },
-      {
-        "key": "E",
-        "text": "Menghentikan tugas secara sepihak di lapangan"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Menilai risiko, memberi tahu komandan, dan mengusulkan mitigasi Risiko baru harus segera dinilai dan dikomunikasikan agar langkah pencegahan dapat diambil.",
-    "weight": 10
-  },
-  {
-    "id": 188,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Rekan meminta Anda menandatangani laporan yang belum diperiksa. Tindakan terbaik ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Menandatangani demi solidaritas"
-      },
-      {
-        "key": "B",
-        "text": "Memeriksa isi dan bukti terlebih dahulu; menolak jika tidak akurat"
-      },
-      {
-        "key": "C",
-        "text": "Meminta imbalan"
-      },
-      {
-        "key": "D",
-        "text": "Membiarkan orang lain menandatangani atas nama Anda"
-      },
-      {
-        "key": "E",
-        "text": "Mendelegasikan penandatanganan kepada bawahan"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Memeriksa isi dan bukti terlebih dahulu; menolak jika tidak akurat Tanda tangan berarti pertanggungjawaban; verifikasi diperlukan sebelum menyetujui dokumen.",
-    "weight": 10
-  },
-  {
-    "id": 189,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Anda melihat anggota tim kelelahan saat tugas panjang. Respons yang tepat ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Mengabaikan kondisi"
-      },
-      {
-        "key": "B",
-        "text": "Menilai keselamatan dan kesiapan, mengatur rotasi/istirahat sesuai prosedur"
-      },
-      {
-        "key": "C",
-        "text": "Memaksa terus bekerja tanpa evaluasi"
-      },
-      {
-        "key": "D",
-        "text": "Membatalkan tugas tanpa koordinasi"
-      },
-      {
-        "key": "E",
-        "text": "Melanjutkan operasi tanpa memperhatikan kelelahan fisik tim"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Menilai keselamatan dan kesiapan, mengatur rotasi/istirahat sesuai prosedur Kesiapan personel berkaitan dengan keselamatan dan efektivitas tugas.",
-    "weight": 10
-  },
-  {
-    "id": 190,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Setelah kegiatan, hasil tidak mencapai target. Sikap pemimpin yang baik ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Mencari kambing hitam"
-      },
-      {
-        "key": "B",
-        "text": "Mengevaluasi data, penyebab, pembelajaran, dan rencana perbaikan"
-      },
-      {
-        "key": "C",
-        "text": "Mengubah angka hasil"
-      },
-      {
-        "key": "D",
-        "text": "Menyalahkan masyarakat J. PENALARAN ABSTRAK DAN PEMECAHAN MASALAH"
-      },
-      {
-        "key": "E",
-        "text": "Menyalahkan faktor cuaca dan sarana prasarana saja"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Mengevaluasi data, penyebab, pembelajaran, dan rencana perbaikan Evaluasi berbasis fakta membantu menemukan akar masalah dan memperbaiki kinerja.",
-    "weight": 10
-  },
-  {
-    "id": 191,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika pola simbol adalah ▲, ■, ▲, ■, ▲, ... simbol berikutnya adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "▲"
-      },
-      {
-        "key": "B",
-        "text": "■"
-      },
-      {
-        "key": "C",
-        "text": "●"
-      },
-      {
-        "key": "D",
-        "text": "◆"
-      },
-      {
-        "key": "E",
-        "text": "●"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. ■ Pola bergantian segitiga dan persegi; setelah segitiga muncul persegi.",
-    "weight": 10
-  },
-  {
-    "id": 192,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Urutan pasangan: (1,2), (2,4), (3,6), (4,8), (...). Pasangan berikutnya ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "(5,9)"
-      },
-      {
-        "key": "B",
-        "text": "(5,10)"
-      },
-      {
-        "key": "C",
-        "text": "(6,10)"
-      },
-      {
-        "key": "D",
-        "text": "(6,12)"
-      },
-      {
-        "key": "E",
-        "text": "(6,12)"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. (5,10) Angka kedua selalu dua kali angka pertama; setelah (4,8) adalah (5,10).",
-    "weight": 10
-  },
-  {
-    "id": 193,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika semua bentuk berwarna merah diubah menjadi biru, dan lingkaran merah ada tiga, berapa lingkaran yang berubah warna?",
-    "options": [
-      {
-        "key": "A",
-        "text": "1"
-      },
-      {
-        "key": "B",
-        "text": "2"
-      },
-      {
-        "key": "C",
-        "text": "3"
-      },
-      {
-        "key": "D",
-        "text": "Tidak dapat diketahui"
-      },
-      {
-        "key": "E",
-        "text": "5"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 3 Ketiga lingkaran merah termasuk semua bentuk merah sehingga semuanya berubah menjadi biru.",
-    "weight": 10
-  },
-  {
-    "id": 194,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Sebuah pola bergerak: atas, kanan, bawah, kiri, atas, ... Arah berikutnya adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Atas"
-      },
-      {
-        "key": "B",
-        "text": "Kanan"
-      },
-      {
-        "key": "C",
-        "text": "Bawah"
-      },
-      {
-        "key": "D",
-        "text": "Kiri"
-      },
-      {
-        "key": "E",
-        "text": "Atas"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Kanan Arah berputar 90 derajat searah jarum jam; setelah atas adalah kanan.",
-    "weight": 10
-  },
-  {
-    "id": 195,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Dua mesin menghasilkan 40 unit dalam 2 jam dengan laju sama. Berapa unit dihasilkan satu mesin dalam 3 jam?",
-    "options": [
-      {
-        "key": "A",
-        "text": "20"
-      },
-      {
-        "key": "B",
-        "text": "30"
-      },
-      {
-        "key": "C",
-        "text": "40"
-      },
-      {
-        "key": "D",
-        "text": "60"
-      },
-      {
-        "key": "E",
-        "text": "40"
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 30 Dua mesin menghasilkan 20 unit per jam gabungan; satu mesin menghasilkan 10 unit/jam, jadi 30 unit dalam 3 jam.",
-    "weight": 10
-  },
-  {
-    "id": 196,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Jika 5 orang saling berjabat tangan satu kali dengan setiap orang lain, jumlah jabat tangan adalah ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "5"
-      },
-      {
-        "key": "B",
-        "text": "8"
-      },
-      {
-        "key": "C",
-        "text": "10"
-      },
-      {
-        "key": "D",
-        "text": "15"
-      },
-      {
-        "key": "E",
-        "text": "15"
-      }
-    ],
-    "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 10 Jumlah pasangan unik = 5×4÷2 = 10.",
-    "weight": 10
-  },
-  {
-    "id": 197,
-    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
-    "subtest": "KECERDASAN",
-    "stem": "Sebuah pola angka: 2→6, 3→12, 4→20, 5→30. Maka 6→ ...",
-    "options": [
-      {
-        "key": "A",
-        "text": "36"
+        "text": "38"
       },
       {
         "key": "B",
@@ -3051,108 +1661,1534 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "48"
+        "text": "44"
       },
       {
         "key": "E",
-        "text": "50"
+        "text": "46"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pola penambahan bilangan genap bertingkat: +2, +4, +6, +8, +10. Angka berikutnya: 30 + 10 = 40.",
+    "weight": 10
+  },
+  {
+    "id": 152,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 81, 27, 9, 3, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "0"
+      },
+      {
+        "key": "B",
+        "text": "1"
+      },
+      {
+        "key": "C",
+        "text": "2"
+      },
+      {
+        "key": "D",
+        "text": "3"
+      },
+      {
+        "key": "E",
+        "text": "1/3"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pola pembagian 3 (3⁴, 3³, 3², 3¹, 3⁰): 3 ÷ 3 = 1.",
+    "weight": 10
+  },
+  {
+    "id": 153,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 1, 3, 7, 15, 31, 63, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "121"
+      },
+      {
+        "key": "B",
+        "text": "125"
+      },
+      {
+        "key": "C",
+        "text": "127"
+      },
+      {
+        "key": "D",
+        "text": "129"
+      },
+      {
+        "key": "E",
+        "text": "135"
       }
     ],
     "correctKey": "C",
-    "explanation": "Kunci Jawaban: C. 42 Pola n dikalikan n+1: 2×3=6, ... 6×7=42.",
+    "explanation": "Kunci Jawaban: (C). Pola (×2 + 1): 1×2+1=3, 3×2+1=7, 7×2+1=15, 15×2+1=31, 31×2+1=63, 63×2+1=127.",
+    "weight": 10
+  },
+  {
+    "id": 154,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 15, 14, 16, 15, 17, 16, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "16"
+      },
+      {
+        "key": "B",
+        "text": "17"
+      },
+      {
+        "key": "C",
+        "text": "18"
+      },
+      {
+        "key": "D",
+        "text": "19"
+      },
+      {
+        "key": "E",
+        "text": "20"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Pola dua larik selang-seling (+1 setiap dua langkah): suku berikutnya adalah 18.",
+    "weight": 10
+  },
+  {
+    "id": 155,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 6, 12, 20, 30, 42, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "50"
+      },
+      {
+        "key": "B",
+        "text": "52"
+      },
+      {
+        "key": "C",
+        "text": "54"
+      },
+      {
+        "key": "D",
+        "text": "56"
+      },
+      {
+        "key": "E",
+        "text": "60"
+      }
+    ],
+    "correctKey": "D",
+    "explanation": "Kunci Jawaban: (D). Pola n × (n + 1): 1×2=2, 2×3=6, 3×4=12, 4×5=20, 5×6=30, 6×7=42, 7×8=56.",
+    "weight": 10
+  },
+  {
+    "id": 156,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 50, 48, 44, 38, 30, ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "18"
+      },
+      {
+        "key": "B",
+        "text": "20"
+      },
+      {
+        "key": "C",
+        "text": "22"
+      },
+      {
+        "key": "D",
+        "text": "24"
+      },
+      {
+        "key": "E",
+        "text": "26"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pola pengurangan bilangan genap: -2, -4, -6, -8, -10. Angka berikutnya: 30 - 10 = 20.",
+    "weight": 10
+  },
+  {
+    "id": 157,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Mobil patroli polisi bergerak dengan kecepatan rata-rata 75 km/jam menuju lokasi TKP yang berjarak 150 km. Berapa waktu tempuh yang dibutuhkan?",
+    "options": [
+      {
+        "key": "A",
+        "text": "90 menit"
+      },
+      {
+        "key": "B",
+        "text": "105 menit"
+      },
+      {
+        "key": "C",
+        "text": "120 menit"
+      },
+      {
+        "key": "D",
+        "text": "135 menit"
+      },
+      {
+        "key": "E",
+        "text": "150 menit"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Waktu = Jarak / Kecepatan = 150 km / 75 km/jam = 2 jam (120 menit).",
+    "weight": 10
+  },
+  {
+    "id": 158,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Sebuah regu pengamanan terdiri atas 12 personil. Jika rasio personil Polri terhadap massa aksi adalah 1 : 25, berapa jumlah massa maksimum yang dapat diamankan sesuai rasio tersebut?",
+    "options": [
+      {
+        "key": "A",
+        "text": "240 orang"
+      },
+      {
+        "key": "B",
+        "text": "280 orang"
+      },
+      {
+        "key": "C",
+        "text": "300 orang"
+      },
+      {
+        "key": "D",
+        "text": "320 orang"
+      },
+      {
+        "key": "E",
+        "text": "350 orang"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Jumlah massa = 12 × 25 = 300 orang.",
+    "weight": 10
+  },
+  {
+    "id": 159,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Pada triwulan pertama tercatat 160 kasus kejahatan, dan pada triwulan kedua menurun menjadi 120 kasus. Berapakah persentase penurunan angka kejahatan tersebut?",
+    "options": [
+      {
+        "key": "A",
+        "text": "20%"
+      },
+      {
+        "key": "B",
+        "text": "25%"
+      },
+      {
+        "key": "C",
+        "text": "30%"
+      },
+      {
+        "key": "D",
+        "text": "33.3%"
+      },
+      {
+        "key": "E",
+        "text": "40%"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Penurunan = (160 - 120) / 160 × 100% = 40 / 160 × 100% = 25%.",
+    "weight": 10
+  },
+  {
+    "id": 160,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Kendaraan dinas menghabiskan 8 liter bensin untuk menempuh jarak 96 km. Berapa liter bensin yang diperlukan untuk rute patroli sejauh 240 km?",
+    "options": [
+      {
+        "key": "A",
+        "text": "16 liter"
+      },
+      {
+        "key": "B",
+        "text": "18 liter"
+      },
+      {
+        "key": "C",
+        "text": "20 liter"
+      },
+      {
+        "key": "D",
+        "text": "22 liter"
+      },
+      {
+        "key": "E",
+        "text": "25 liter"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Konsumsi = 96 / 8 = 12 km/liter. Kebutuhan = 240 / 12 = 20 liter.",
+    "weight": 10
+  },
+  {
+    "id": 161,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Sebuah pos polisi memiliki 45 personil. 60% dari personil bertugas di lapangan dan sisanya bertugas administrasi staf. Berapa personil yang bertugas administrasi staf?",
+    "options": [
+      {
+        "key": "A",
+        "text": "15 personil"
+      },
+      {
+        "key": "B",
+        "text": "18 personil"
+      },
+      {
+        "key": "C",
+        "text": "20 personil"
+      },
+      {
+        "key": "D",
+        "text": "24 personil"
+      },
+      {
+        "key": "E",
+        "text": "27 personil"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Personil staf = (100% - 60%) × 45 = 40% × 45 = 18 personil.",
+    "weight": 10
+  },
+  {
+    "id": 162,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Dua mobil patroli berangkat dari Mapolres menuju lokasi perbatasan dari arah berlawanan. Mobil A melaju 60 km/jam dan Mobil B melaju 80 km/jam. Jika mereka berjarak 280 km, setelah berapa jam mereka akan berpapasan?",
+    "options": [
+      {
+        "key": "A",
+        "text": "1.5 jam"
+      },
+      {
+        "key": "B",
+        "text": "2.0 jam"
+      },
+      {
+        "key": "C",
+        "text": "2.5 jam"
+      },
+      {
+        "key": "D",
+        "text": "3.0 jam"
+      },
+      {
+        "key": "E",
+        "text": "3.5 jam"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Waktu berpapasan = Jarak total / (vA + vB) = 280 / (60 + 80) = 280 / 140 = 2 jam.",
+    "weight": 10
+  },
+  {
+    "id": 163,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Rata-rata nilai tes jasmani 5 personil adalah 78. Jika 1 personil baru dengan nilai 90 bergabung, berapakah nilai rata-rata sekarang?",
+    "options": [
+      {
+        "key": "A",
+        "text": "79.0"
+      },
+      {
+        "key": "B",
+        "text": "80.0"
+      },
+      {
+        "key": "C",
+        "text": "81.0"
+      },
+      {
+        "key": "D",
+        "text": "82.5"
+      },
+      {
+        "key": "E",
+        "text": "84.0"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Total lama = 5 × 78 = 390. Total baru = 390 + 90 = 480. Rata-rata baru = 480 / 6 = 80.",
+    "weight": 10
+  },
+  {
+    "id": 164,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Anggaran pemeliharaan sarpras sebesar Rp120.000.000 dialokasikan untuk 3 unit: Unit Patroli 50%, Unit Reskrim 30%, dan Unit Intelijen sisanya. Berapakah anggaran untuk Unit Intelijen?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Rp18.000.000"
+      },
+      {
+        "key": "B",
+        "text": "Rp20.000.000"
+      },
+      {
+        "key": "C",
+        "text": "Rp24.000.000"
+      },
+      {
+        "key": "D",
+        "text": "Rp28.000.000"
+      },
+      {
+        "key": "E",
+        "text": "Rp32.000.000"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Persentase Intelijen = 100% - (50% + 30%) = 20%. Alokasi = 20% × Rp120.000.000 = Rp24.000.000.",
+    "weight": 10
+  },
+  {
+    "id": 165,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Sebuah gudang logistik menyimpan 360 rompi antipeluru. Jika setiap peleton membutuhkan 45 rompi, berapa peleton yang dapat menerima perlengkapan tersebut secara lengkap?",
+    "options": [
+      {
+        "key": "A",
+        "text": "6 peleton"
+      },
+      {
+        "key": "B",
+        "text": "7 peleton"
+      },
+      {
+        "key": "C",
+        "text": "8 peleton"
+      },
+      {
+        "key": "D",
+        "text": "9 peleton"
+      },
+      {
+        "key": "E",
+        "text": "10 peleton"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Jumlah peleton = 360 / 45 = 8 peleton.",
+    "weight": 10
+  },
+  {
+    "id": 166,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Empat petugas mampu memeriksa 120 berkas perkara dalam waktu 6 hari. Berapa berkas yang dapat diperiksa oleh 6 petugas dalam 4 hari dengan kecepatan kerja yang sama?",
+    "options": [
+      {
+        "key": "A",
+        "text": "100 berkas"
+      },
+      {
+        "key": "B",
+        "text": "110 berkas"
+      },
+      {
+        "key": "C",
+        "text": "120 berkas"
+      },
+      {
+        "key": "D",
+        "text": "130 berkas"
+      },
+      {
+        "key": "E",
+        "text": "140 berkas"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Produktivitas 1 orang per hari = 120 / (4 × 6) = 5 berkas. Maka 6 petugas dalam 4 hari = 6 × 4 × 5 = 120 berkas.",
+    "weight": 10
+  },
+  {
+    "id": 167,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Harga 3 unit radio komunikasi HT dan 2 baterai cadangan adalah Rp4.800.000. Jika harga 1 baterai cadangan Rp300.000, berapakah harga 1 unit HT?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Rp1.200.000"
+      },
+      {
+        "key": "B",
+        "text": "Rp1.300.000"
+      },
+      {
+        "key": "C",
+        "text": "Rp1.400.000"
+      },
+      {
+        "key": "D",
+        "text": "Rp1.500.000"
+      },
+      {
+        "key": "E",
+        "text": "Rp1.600.000"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Harga 2 baterai = Rp600.000. Total HT = Rp4.800.000 - Rp600.000 = Rp4.200.000. 1 unit HT = Rp4.200.000 / 3 = Rp1.400.000.",
+    "weight": 10
+  },
+  {
+    "id": 168,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Waktu operasional pos pengamanan Lebaran adalah 24 jam non-stop yang dibagi rata ke dalam 4 shift giliran jaga. Berapa jam durasi setiap shift?",
+    "options": [
+      {
+        "key": "A",
+        "text": "4 jam"
+      },
+      {
+        "key": "B",
+        "text": "6 jam"
+      },
+      {
+        "key": "C",
+        "text": "8 jam"
+      },
+      {
+        "key": "D",
+        "text": "10 jam"
+      },
+      {
+        "key": "E",
+        "text": "12 jam"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Durasi shift = 24 jam / 4 = 6 jam.",
+    "weight": 10
+  },
+  {
+    "id": 169,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Dari 200 pelanggar lalu lintas dalam operasi Zebra, 70% tidak membawa SIM, dan 45% tidak memakai helm SNI. Jika 25% melakukan kedua pelanggaran tersebut, berapa orang yang hanya melanggar salah satu aturan?",
+    "options": [
+      {
+        "key": "A",
+        "text": "110 orang"
+      },
+      {
+        "key": "B",
+        "text": "120 orang"
+      },
+      {
+        "key": "C",
+        "text": "130 orang"
+      },
+      {
+        "key": "D",
+        "text": "140 orang"
+      },
+      {
+        "key": "E",
+        "text": "150 orang"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Hanya SIM = 70% - 25% = 45%. Hanya Helm = 45% - 25% = 20%. Total salah satu = 45% + 20% = 65% dari 200 = 130 orang.",
+    "weight": 10
+  },
+  {
+    "id": 170,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Jika x = 25% dari 480 dan y = 1/3 dari 360, maka hubungan x dan y yang tepat adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "x > y"
+      },
+      {
+        "key": "B",
+        "text": "x < y"
+      },
+      {
+        "key": "C",
+        "text": "x = y"
+      },
+      {
+        "key": "D",
+        "text": "x = 2y"
+      },
+      {
+        "key": "E",
+        "text": "Hubungan tidak dapat ditentukan"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). x = 0.25 × 480 = 120. y = 1/3 × 360 = 120. Jadi x = y.",
+    "weight": 10
+  },
+  {
+    "id": 171,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Suatu regu menempuh 18 km dalam 20 menit saat patroli darurat. Berapakah kecepatan rata-rata mobil patroli dalam satuan km/jam?",
+    "options": [
+      {
+        "key": "A",
+        "text": "48 km/jam"
+      },
+      {
+        "key": "B",
+        "text": "50 km/jam"
+      },
+      {
+        "key": "C",
+        "text": "54 km/jam"
+      },
+      {
+        "key": "D",
+        "text": "60 km/jam"
+      },
+      {
+        "key": "E",
+        "text": "64 km/jam"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Kecepatan = Jarak / (Waktu dlm jam) = 18 km / (20/60 jam) = 18 × 3 = 54 km/jam.",
+    "weight": 10
+  },
+  {
+    "id": 172,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Aritmatika Taktis] Seorang penyidik memeriksa saksi dari pukul 08.45 sampai 11.15 WIB. Berapa total menit durasi pemeriksaan berlangsung?",
+    "options": [
+      {
+        "key": "A",
+        "text": "135 menit"
+      },
+      {
+        "key": "B",
+        "text": "145 menit"
+      },
+      {
+        "key": "C",
+        "text": "150 menit"
+      },
+      {
+        "key": "D",
+        "text": "155 menit"
+      },
+      {
+        "key": "E",
+        "text": "165 menit"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Dari 08.45 ke 11.15 = 2 jam 30 menit = 150 menit.",
+    "weight": 10
+  },
+  {
+    "id": 173,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Bareskrim : Reserse = Korlantas : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sabhara"
+      },
+      {
+        "key": "B",
+        "text": "Lalu Lintas"
+      },
+      {
+        "key": "C",
+        "text": "Brimob"
+      },
+      {
+        "key": "D",
+        "text": "Propam"
+      },
+      {
+        "key": "E",
+        "text": "Humas"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Bareskrim membidangi tugas reserse kriminal; Korlantas membidangi lalu lintas.",
+    "weight": 10
+  },
+  {
+    "id": 174,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Borgol : Tersangka = Helm Baja : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Saksi"
+      },
+      {
+        "key": "B",
+        "text": "Terdakwa"
+      },
+      {
+        "key": "C",
+        "text": "Pasukan Dalmas"
+      },
+      {
+        "key": "D",
+        "text": "Korban"
+      },
+      {
+        "key": "E",
+        "text": "Penyidik"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Borgol digunakan pada tersangka; helm baja digunakan oleh pasukan Pengendalian Massa (Dalmas) sebagai perlindungan.",
+    "weight": 10
+  },
+  {
+    "id": 175,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Sinonim kata DISKRESI dalam pelaksanaan tugas kepolisian adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kewenangan bertindak objektif"
+      },
+      {
+        "key": "B",
+        "text": "Kewajiban administratif"
+      },
+      {
+        "key": "C",
+        "text": "Pemberhentian dinas"
+      },
+      {
+        "key": "D",
+        "text": "Perintah tertulis mutlak"
+      },
+      {
+        "key": "E",
+        "text": "Pelanggaran disiplin"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Diskresi berarti kebebasan mengambil keputusan sendiri berdasarkan pertimbangan situasi yang tepat dan bertanggung jawab.",
+    "weight": 10
+  },
+  {
+    "id": 176,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Lawan kata (antonim) yang paling tepat untuk istilah OBJEKTIF adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Faktual"
+      },
+      {
+        "key": "B",
+        "text": "Rasional"
+      },
+      {
+        "key": "C",
+        "text": "Subjektif"
+      },
+      {
+        "key": "D",
+        "text": "Netral"
+      },
+      {
+        "key": "E",
+        "text": "Transparan"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Objektif berarti berdasarkan fakta sebenarnya tanpa dipengaruhi perasaan; lawannya adalah subjektif.",
+    "weight": 10
+  },
+  {
+    "id": 177,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Kompas : Arah = Speedometer : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Jarak"
+      },
+      {
+        "key": "B",
+        "text": "Suhu"
+      },
+      {
+        "key": "C",
+        "text": "Kecepatan"
+      },
+      {
+        "key": "D",
+        "text": "Bahan bakar"
+      },
+      {
+        "key": "E",
+        "text": "Waktu"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Kompas mengukur arah mata angin; speedometer mengukur kecepatan laju kendaraan.",
+    "weight": 10
+  },
+  {
+    "id": 178,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Jaksa : Penuntutan = Hakim : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Penyidikan"
+      },
+      {
+        "key": "B",
+        "text": "Pembelaan"
+      },
+      {
+        "key": "C",
+        "text": "Pengadilan / Memutus perkara"
+      },
+      {
+        "key": "D",
+        "text": "Penggeledahan"
+      },
+      {
+        "key": "E",
+        "text": "Penangkapan"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Jaksa bertugas melakukan penuntutan perkara di persidangan; Hakim bertugas mengadili dan memutus perkara.",
+    "weight": 10
+  },
+  {
+    "id": 179,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Sinonim kata INTEGRITAS yang paling dekat maknanya adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kekuasaan"
+      },
+      {
+        "key": "B",
+        "text": "Kejujuran dan keteguhan moral"
+      },
+      {
+        "key": "C",
+        "text": "Kecepatan bertindak"
+      },
+      {
+        "key": "D",
+        "text": "Ketenaran"
+      },
+      {
+        "key": "E",
+        "text": "Kecerdasan akademik"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Integritas bermakna kejujuran, keteguhan moral, dan keselarasan antara perkataan dengan tindakan.",
+    "weight": 10
+  },
+  {
+    "id": 180,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Dokter : Rumah Sakit = Polisi : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Pengadilan"
+      },
+      {
+        "key": "B",
+        "text": "Kantor Polisi"
+      },
+      {
+        "key": "C",
+        "text": "Rutan"
+      },
+      {
+        "key": "D",
+        "text": "Kecamatan"
+      },
+      {
+        "key": "E",
+        "text": "Pos ronda"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Dokter bertugas di rumah sakit; polisi bertugas di kantor polisi (Mapolres/Mapolsek).",
+    "weight": 10
+  },
+  {
+    "id": 181,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Pilihlah kelompok kata yang TIDAK setara dengan yang lain:",
+    "options": [
+      {
+        "key": "A",
+        "text": "Borgol"
+      },
+      {
+        "key": "B",
+        "text": "Pistol dinas"
+      },
+      {
+        "key": "C",
+        "text": "Tongkat T"
+      },
+      {
+        "key": "D",
+        "text": "Stempel dinas"
+      },
+      {
+        "key": "E",
+        "text": "Helm baja"
+      }
+    ],
+    "correctKey": "D",
+    "explanation": "Kunci Jawaban: (D). Borgol, pistol, tongkat T, dan helm baja adalah perlengkapan operasional taktis Polri, sedangkan stempel dinas adalah alat administrasi kantor.",
+    "weight": 10
+  },
+  {
+    "id": 182,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] KUHAP : Hukum Acara Pidana = KUHP : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Hukum Perdata"
+      },
+      {
+        "key": "B",
+        "text": "Hukum Pidana Materiil"
+      },
+      {
+        "key": "C",
+        "text": "Hukum Dagang"
+      },
+      {
+        "key": "D",
+        "text": "Hukum Tata Negara"
+      },
+      {
+        "key": "E",
+        "text": "Hukum Adat"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). KUHAP mengatur hukum acara formal pidana; KUHP mengatur hukum pidana materiil.",
+    "weight": 10
+  },
+  {
+    "id": 183,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Sinonim kata YURISDIKSI dalam hukum kepolisian adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kewenangan wilayah hukum"
+      },
+      {
+        "key": "B",
+        "text": "Perlindungan saksi"
+      },
+      {
+        "key": "C",
+        "text": "Penegakan etika"
+      },
+      {
+        "key": "D",
+        "text": "Bantuan operasional"
+      },
+      {
+        "key": "E",
+        "text": "Gelar perkara"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Yurisdiksi adalah batas wilayah atau lingkungan kekuasaan hukum berlakunya suatu kewenangan.",
+    "weight": 10
+  },
+  {
+    "id": 184,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Lawan kata dari TRANSPARAN dalam pelayanan publik adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Terbuka"
+      },
+      {
+        "key": "B",
+        "text": "Akuntabel"
+      },
+      {
+        "key": "C",
+        "text": "Tertutup"
+      },
+      {
+        "key": "D",
+        "text": "Terukur"
+      },
+      {
+        "key": "E",
+        "text": "Inklusif"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Transparan berarti terbuka dan jelas; lawannya adalah tertutup / rahasia gelap.",
+    "weight": 10
+  },
+  {
+    "id": 185,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Patroli : Pencegahan = Olah TKP : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Penuntutan"
+      },
+      {
+        "key": "B",
+        "text": "Pengungkapan bukti"
+      },
+      {
+        "key": "C",
+        "text": "Penghukuman"
+      },
+      {
+        "key": "D",
+        "text": "Pengawasan"
+      },
+      {
+        "key": "E",
+        "text": "Penghentian perkara"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Patroli berfungsi sebagai upaya preventif (pencegahan); Olah TKP berfungsi untuk pengungkapan tindak pidana (investigasi).",
+    "weight": 10
+  },
+  {
+    "id": 186,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Tribrata : Falsafah Hidup = Catur Prasetya : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Peraturan lalu lintas"
+      },
+      {
+        "key": "B",
+        "text": "Pedoman kerja Polri"
+      },
+      {
+        "key": "C",
+        "text": "Hukum perdata"
+      },
+      {
+        "key": "D",
+        "text": "Standar operasional toko"
+      },
+      {
+        "key": "E",
+        "text": "Sanksi disiplin"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Tribrata merupakan falsafah hidup Polri; Catur Prasetya merupakan pedoman kerja insan Bhayangkara.",
+    "weight": 10
+  },
+  {
+    "id": 187,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Surat Perintah Tugas : Sprin = Laporan Polisi : ...",
+    "options": [
+      {
+        "key": "A",
+        "text": "LP"
+      },
+      {
+        "key": "B",
+        "text": "BAP"
+      },
+      {
+        "key": "C",
+        "text": "SPDP"
+      },
+      {
+        "key": "D",
+        "text": "SP3"
+      },
+      {
+        "key": "E",
+        "text": "STPL"
+      }
+    ],
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Singkatan resmi kedinasan dari Laporan Polisi adalah LP.",
+    "weight": 10
+  },
+  {
+    "id": 188,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Verbal & Analogi Kedinasan] Antonim kata RESISTENSI dalam dinamika sosial kemasyarakatan adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Penolakan"
+      },
+      {
+        "key": "B",
+        "text": "Perlawanan"
+      },
+      {
+        "key": "C",
+        "text": "Kepatuhan / Penerimaan"
+      },
+      {
+        "key": "D",
+        "text": "Ketegangan"
+      },
+      {
+        "key": "E",
+        "text": "Kerusuhan"
+      }
+    ],
+    "correctKey": "C",
+    "explanation": "Kunci Jawaban: (C). Resistensi berarti perlawanan atau penolakan; lawannya adalah kepatuhan atau penerimaan.",
+    "weight": 10
+  },
+  {
+    "id": 189,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua penyidik Polri berpangkat perwira. Sebagian penyidik Polri memiliki sertifikasi audit forensik. Kesimpulan yang sah adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Semua perwira Polri pasti bersertifikasi audit forensik"
+      },
+      {
+        "key": "B",
+        "text": "Sebagian perwira Polri memiliki sertifikasi audit forensik"
+      },
+      {
+        "key": "C",
+        "text": "Tidak ada perwira Polri yang bersertifikasi audit forensik"
+      },
+      {
+        "key": "D",
+        "text": "Semua yang memiliki sertifikasi forensik bukan penyidik"
+      },
+      {
+        "key": "E",
+        "text": "Penyidik tidak perlu berpangkat perwira"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Karena semua penyidik berpangkat perwira dan sebagian memiliki sertifikasi audit forensik, maka sebagian perwira Polri memiliki sertifikasi audit forensik.",
+    "weight": 10
+  },
+  {
+    "id": 190,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Jika hujan lebat disertai badai, maka apel siaga dilakukan di aula dalam. Pagi ini apel siaga dilaksanakan di lapangan terbuka. Kesimpulan yang pasti adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Pagi ini hujan lebat di aula"
+      },
+      {
+        "key": "B",
+        "text": "Pagi ini tidak hujan lebat disertai badai"
+      },
+      {
+        "key": "C",
+        "text": "Apel siaga dibatalkan komandan"
+      },
+      {
+        "key": "D",
+        "text": "Aula dalam sedang direnovasi"
+      },
+      {
+        "key": "E",
+        "text": "Hujan terjadi setelah apel selesai"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Menggunakan modus tollens: p -> q, ~q, maka ~p. Karena apel tidak di aula dalam, maka pagi ini tidak hujan lebat disertai badai.",
+    "weight": 10
+  },
+  {
+    "id": 191,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Empat saksi diperiksa terkait waktu keberadaan di TKP perampokan pada pukul 21.00 WIB:\n- Saksi A: 'Saya bersama Saksi B di warung kopi pukul 20.45 - 21.30.'\n- Saksi B: 'Saya sendirian di rumah membaca buku sejak pukul 20.00.'\n- Saksi C: 'Saya melihat Saksi D di pasar pukul 21.00.'\n- Saksi D: 'Saya berada di pasar membeli obat pukul 21.00.'\nBerdasarkan alibi di atas, dua saksi yang keterangannya saling bertentangan secara langsung adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Saksi C dan Saksi D"
+      },
+      {
+        "key": "B",
+        "text": "Saksi A dan Saksi B"
+      },
+      {
+        "key": "C",
+        "text": "Saksi B dan Saksi C"
+      },
+      {
+        "key": "D",
+        "text": "Saksi A dan Saksi D"
+      },
+      {
+        "key": "E",
+        "text": "Semua saksi selaras"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Keterangan Saksi A mengatakan ia bersama Saksi B, sedangkan Saksi B menyatakan ia sendirian di rumah. Pernyataan A dan B bertentangan langsung.",
+    "weight": 10
+  },
+  {
+    "id": 192,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua kendaraan operasional kepolisian wajib diperiksa kelaikannya secara berkala. Kendaraan X tidak diperiksa kelaikannya secara berkala. Kesimpulan yang tepat adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Kendaraan X adalah mobil dinas pimpinan"
+      },
+      {
+        "key": "B",
+        "text": "Kendaraan X bukan kendaraan operasional kepolisian yang aktif"
+      },
+      {
+        "key": "C",
+        "text": "Kendaraan X telah lulus uji emisi"
+      },
+      {
+        "key": "D",
+        "text": "Semua kendaraan polisi tidak laik jalan"
+      },
+      {
+        "key": "E",
+        "text": "Pemeriksaan kelaikan ditunda sepihak"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Semua kendaraan operasional diperiksa berkala. Kendaraan X tidak diperiksa, maka Kendaraan X bukan kendaraan operasional kepolisian yang aktif digunakan.",
+    "weight": 10
+  },
+  {
+    "id": 193,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Tidak ada anggota kepolisian yang diperbolehkan mengonsumsi narkotika. Bripka Z adalah anggota kepolisian. Kesimpulan yang pasti adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Bripka Z bebas dari pengawasan Propam"
+      },
+      {
+        "key": "B",
+        "text": "Bripka Z tidak diperbolehkan mengonsumsi narkotika"
+      },
+      {
+        "key": "C",
+        "text": "Bripka Z bertugas di Satresnarkoba"
+      },
+      {
+        "key": "D",
+        "text": "Sebagian polisi boleh memakai obat penenang"
+      },
+      {
+        "key": "E",
+        "text": "Bripka Z telah menjalani tes urine"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Semua anggota Polri dilarang konsumsi narkoba. Karena Bripka Z anggota kepolisian, maka Bripka Z tidak diperbolehkan mengonsumsi narkotika.",
+    "weight": 10
+  },
+  {
+    "id": 194,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Di sebuah persimpangan jalan, kendaraan dari arah Barat hanya boleh belok kiri atau lurus. Mobil patroli datang dari arah Barat dan tidak belok kiri. Maka mobil patroli tersebut...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Berbalik arah kembali ke Barat"
+      },
+      {
+        "key": "B",
+        "text": "Bergerak lurus ke arah Timur"
+      },
+      {
+        "key": "C",
+        "text": "Belok kanan ke arah Selatan"
+      },
+      {
+        "key": "D",
+        "text": "Berhenti permanen"
+      },
+      {
+        "key": "E",
+        "text": "Masuk ke jalur trotoar"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Pilihan arah dari Barat hanya belok kiri atau lurus. Jika tidak belok kiri, maka dipastikan bergerak lurus.",
+    "weight": 10
+  },
+  {
+    "id": 195,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua dokumen rahasia berkas penyidikan disimpan dalam brankas terkunci. Dokumen Berkas M tidak disimpan dalam brankas terkunci. Kesimpulan yang logis adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Berkas M adalah dokumen sangat rahasia"
+      },
+      {
+        "key": "B",
+        "text": "Berkas M bukan dokumen rahasia penyidikan"
+      },
+      {
+        "key": "C",
+        "text": "Brankas penyidik rusak"
+      },
+      {
+        "key": "D",
+        "text": "Berkas M telah hilang"
+      },
+      {
+        "key": "E",
+        "text": "Semua berkas penyidik tidak rahasia"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Jika semua dokumen rahasia terkunci, maka berkas M yang tidak terkunci bukan dokumen rahasia berkas penyidikan.",
+    "weight": 10
+  },
+  {
+    "id": 196,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Jika seorang anggota Polri terbukti melanggar kode etik berat, maka ia akan menjalani Sidang KKEP. Inspektur Dua D tidak menjalani Sidang KKEP. Maka kesimpulannya adalah...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Inspektur Dua D terbukti melanggar kode etik berat"
+      },
+      {
+        "key": "B",
+        "text": "Inspektur Dua D tidak terbukti melanggar kode etik berat"
+      },
+      {
+        "key": "C",
+        "text": "Sidang KKEP belum dijadwalkan"
+      },
+      {
+        "key": "D",
+        "text": "Inspektur Dua D dimutasi ke Yanma"
+      },
+      {
+        "key": "E",
+        "text": "Pelanggaran dialihkan ke peradilan umum"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Modus tollens: Inspektur Dua D tidak terbukti melanggar kode etik berat.",
+    "weight": 10
+  },
+  {
+    "id": 197,
+    "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
+    "subtest": "KECERDASAN",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Setiap tindakan penangkapan oleh penyidik wajib dilengkapi Surat Perintah Penangkapan, kecuali dalam hal tertangkap tangan. Petugas menangkap tersangka Z tanpa Surat Perintah Penangkapan yang sah. Maka penangkapan tersebut sah HANYA JIKA...",
+    "options": [
+      {
+        "key": "A",
+        "text": "Tersangka berjanji kooperatif"
+      },
+      {
+        "key": "B",
+        "text": "Terjadi dalam keadaan tertangkap tangan"
+      },
+      {
+        "key": "C",
+        "text": "Penyidik berpangkat perwira menengah"
+      },
+      {
+        "key": "D",
+        "text": "Keluarga tersangka menyetujui"
+      },
+      {
+        "key": "E",
+        "text": "Tindak pidana diancam di bawah 5 tahun"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Kunci Jawaban: (B). Berdasarkan KUHAP Pasal 18 ayat (2), penangkapan tanpa surat perintah penangkapan hanya sah jika pelaku tertangkap tangan.",
     "weight": 10
   },
   {
     "id": 198,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Jika hari ini Rabu, 17 hari lagi jatuh pada hari ...",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Urutan prioritas pertama petugas kepolisian saat pertama kali tiba di TKP kecelakaan lalu lintas dengan korban luka parah adalah...",
     "options": [
       {
         "key": "A",
-        "text": "Jumat"
+        "text": "Mengamankan dan menolong korban luka ke fasilitas medis terdekat"
       },
       {
         "key": "B",
-        "text": "Sabtu"
+        "text": "Memeriksa SIM dan STNK pengemudi"
       },
       {
         "key": "C",
-        "text": "Minggu"
+        "text": "Menghubungi wartawan untuk rilis pers"
       },
       {
         "key": "D",
-        "text": "Senin"
+        "text": "Mengukur panjang jejak rem kendaraan"
       },
       {
         "key": "E",
-        "text": "Minggu"
+        "text": "Mengamankan barang bawaan yang berserakan"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. Sabtu 17 dibagi 7 bersisa 3; tiga hari setelah Rabu adalah Sabtu.",
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Prioritas mutlak utama kepolisian di TKP adalah keselamatan nyawa manusia: menolong korban dan mengamankan pertolongan medis segera.",
     "weight": 10
   },
   {
     "id": 199,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Sebuah kotak berisi 3 bola merah dan 2 bola putih. Peluang mengambil bola putih dalam satu pengambilan acak adalah ...",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua anggota Dalmas wajib memakai helm pelindung dan tameng. Sebagian anggota Dalmas membawa alat pelontar gas air mata. Kesimpulan yang sah adalah...",
     "options": [
       {
         "key": "A",
-        "text": "1/5"
+        "text": "Semua anggota Dalmas membawa pelontar gas air mata"
       },
       {
         "key": "B",
-        "text": "2/5"
+        "text": "Sebagian anggota yang membawa pelontar gas air mata wajib memakai helm dan tameng"
       },
       {
         "key": "C",
-        "text": "3/5"
+        "text": "Alat pelontar gas air mata menggantikan tameng"
       },
       {
         "key": "D",
-        "text": "1/2"
+        "text": "Tidak ada anggota Dalmas yang memakai tameng"
       },
       {
         "key": "E",
-        "text": "3/5"
+        "text": "Helm pelindung hanya untuk komandan kompi"
       }
     ],
     "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 2/5 Ada 2 bola putih dari total 5 bola, sehingga peluangnya 2/5.",
+    "explanation": "Kunci Jawaban: (B). Sebagian anggota yang membawa pelontar gas air mata tetap memakai helm pelindung dan tameng.",
     "weight": 10
   },
   {
     "id": 200,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
-    "stem": "Empat orang menyelesaikan pekerjaan dalam 6 hari. Dengan produktivitas sama, delapan orang menyelesaikannya dalam ...",
+    "stem": "[Penalaran Logis & Silogisme Penyidikan] Hasil penyelidikan menunjukkan bahwa Pelaku kejahatan memiliki ciri: bertato di lengan kiri ATAU memakai jaket hitam. Tersangka K tidak bertato di lengan kiri, namun ia terbukti sebagai pelaku. Maka tersangka K...",
     "options": [
       {
         "key": "A",
-        "text": "2 hari"
+        "text": "Memakai jaket hitam"
       },
       {
         "key": "B",
-        "text": "3 hari"
+        "text": "Tidak memakai jaket apapun"
       },
       {
         "key": "C",
-        "text": "4 hari"
+        "text": "Memiliki tato di lengan kanan"
       },
       {
         "key": "D",
-        "text": "5 hari BAGIAN II — LEMBAR JAWABAN PESERTA Tuliskan atau lingkari satu pilihan untuk setiap nomor. Jumlah benar: ______ / 100     Nilai: ______"
+        "text": "Bukan merupakan tersangka yang dicari"
       },
       {
         "key": "E",
-        "text": "5 hari"
+        "text": "Mengganti pakaian sebelum diperiksa"
       }
     ],
-    "correctKey": "B",
-    "explanation": "Kunci Jawaban: B. 3 hari Beban kerja 4×6=24 orang-hari; 24÷8=3 hari.",
+    "correctKey": "A",
+    "explanation": "Kunci Jawaban: (A). Pernyataan disjungtif (A atau B). Karena tidak A, maka dipastikan B (tersangka K memakai jaket hitam).",
     "weight": 10
   }
 ];
@@ -3165,7 +3201,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 201,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda mengetahui rekan mengubah angka dalam laporan agar hasil unit terlihat baik. Apa langkah paling tepat?",
+    "stem": "Anda mengetahui rekan mengubah angka dalam laporan agar hasil unit terlihat baik. Apa langkah paling tepat?",
     "options": [
       {
         "key": "A",
@@ -3208,7 +3244,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 202,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seorang kenalan meminta didahulukan dalam pelayanan tanpa alasan yang sah. Anda akan…",
+    "stem": "Seorang kenalan meminta didahulukan dalam pelayanan tanpa alasan yang sah. Anda akan…",
     "options": [
       {
         "key": "A",
@@ -3251,7 +3287,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 203,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menemukan barang milik warga di ruang pelayanan. Tindakan Anda…",
+    "stem": "Anda menemukan barang milik warga di ruang pelayanan. Tindakan Anda…",
     "options": [
       {
         "key": "A",
@@ -3294,7 +3330,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 204,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Atasan meminta Anda menyampaikan informasi yang belum terverifikasi sebagai fakta. Anda…",
+    "stem": "Atasan meminta Anda menyampaikan informasi yang belum terverifikasi sebagai fakta. Anda…",
     "options": [
       {
         "key": "A",
@@ -3337,7 +3373,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 205,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda melakukan kesalahan administrasi yang berdampak pada proses kerja. Anda…",
+    "stem": "Anda melakukan kesalahan administrasi yang berdampak pada proses kerja. Anda…",
     "options": [
       {
         "key": "A",
@@ -3380,7 +3416,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 206,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Rekan menawarkan hadiah dari pihak yang sedang berkepentingan dengan tugas Anda. Anda…",
+    "stem": "Rekan menawarkan hadiah dari pihak yang sedang berkepentingan dengan tugas Anda. Anda…",
     "options": [
       {
         "key": "A",
@@ -3423,7 +3459,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 207,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda diminta membagikan dokumen kedinasan ke grup yang tidak berwenang. Anda…",
+    "stem": "Anda diminta membagikan dokumen kedinasan ke grup yang tidak berwenang. Anda…",
     "options": [
       {
         "key": "A",
@@ -3466,7 +3502,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 208,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda melihat penggunaan kendaraan dinas untuk kepentingan pribadi. Anda…",
+    "stem": "Anda melihat penggunaan kendaraan dinas untuk kepentingan pribadi. Anda…",
     "options": [
       {
         "key": "A",
@@ -3509,7 +3545,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 209,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seorang teman meminta Anda menghapus catatan pelanggaran yang sah. Anda…",
+    "stem": "Seorang teman meminta Anda menghapus catatan pelanggaran yang sah. Anda…",
     "options": [
       {
         "key": "A",
@@ -3552,7 +3588,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 210,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menemukan dompet di area kantor tanpa pemilik terlihat. Anda…",
+    "stem": "Anda menemukan dompet di area kantor tanpa pemilik terlihat. Anda…",
     "options": [
       {
         "key": "A",
@@ -3595,7 +3631,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 211,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Dua tugas penting memiliki tenggat berdekatan. Anda…",
+    "stem": "Dua tugas penting memiliki tenggat berdekatan. Anda…",
     "options": [
       {
         "key": "A",
@@ -3638,7 +3674,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 212,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda terlambat karena kendala perjalanan yang tidak terduga. Anda…",
+    "stem": "Anda terlambat karena kendala perjalanan yang tidak terduga. Anda…",
     "options": [
       {
         "key": "A",
@@ -3681,7 +3717,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 213,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Tugas rutin terasa membosankan. Anda…",
+    "stem": "Tugas rutin terasa membosankan. Anda…",
     "options": [
       {
         "key": "A",
@@ -3724,7 +3760,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 214,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima instruksi yang belum jelas. Anda…",
+    "stem": "Anda menerima instruksi yang belum jelas. Anda…",
     "options": [
       {
         "key": "A",
@@ -3767,7 +3803,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 215,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Rekan satu tim tidak menyelesaikan bagian tugasnya. Anda…",
+    "stem": "Rekan satu tim tidak menyelesaikan bagian tugasnya. Anda…",
     "options": [
       {
         "key": "A",
@@ -3810,7 +3846,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 216,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menyadari ada tenggat yang mungkin tidak tercapai. Anda…",
+    "stem": "Anda menyadari ada tenggat yang mungkin tidak tercapai. Anda…",
     "options": [
       {
         "key": "A",
@@ -3853,7 +3889,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 217,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Setelah menyelesaikan tugas, Anda memiliki waktu tersisa. Anda…",
+    "stem": "Setelah menyelesaikan tugas, Anda memiliki waktu tersisa. Anda…",
     "options": [
       {
         "key": "A",
@@ -3896,7 +3932,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 218,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda diminta menggantikan rekan yang berhalangan. Anda…",
+    "stem": "Anda diminta menggantikan rekan yang berhalangan. Anda…",
     "options": [
       {
         "key": "A",
@@ -3939,7 +3975,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 219,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Dokumen penting perlu diperiksa sebelum dikirim. Anda…",
+    "stem": "Dokumen penting perlu diperiksa sebelum dikirim. Anda…",
     "options": [
       {
         "key": "A",
@@ -3982,7 +4018,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 220,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima kritik atas keterlambatan kerja. Anda…",
+    "stem": "Anda menerima kritik atas keterlambatan kerja. Anda…",
     "options": [
       {
         "key": "A",
@@ -4025,7 +4061,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 221,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Masyarakat berbicara dengan nada tinggi saat menyampaikan keluhan. Anda…",
+    "stem": "Masyarakat berbicara dengan nada tinggi saat menyampaikan keluhan. Anda…",
     "options": [
       {
         "key": "A",
@@ -4068,7 +4104,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 222,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda mendapat kritik keras di hadapan anggota lain. Anda…",
+    "stem": "Anda mendapat kritik keras di hadapan anggota lain. Anda…",
     "options": [
       {
         "key": "A",
@@ -4111,7 +4147,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 223,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Dalam satu hari muncul beberapa masalah mendadak. Anda…",
+    "stem": "Dalam satu hari muncul beberapa masalah mendadak. Anda…",
     "options": [
       {
         "key": "A",
@@ -4154,7 +4190,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 224,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda merasa sangat lelah sebelum tugas yang membutuhkan ketelitian. Anda…",
+    "stem": "Anda merasa sangat lelah sebelum tugas yang membutuhkan ketelitian. Anda…",
     "options": [
       {
         "key": "A",
@@ -4197,7 +4233,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 225,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seseorang sengaja memancing emosi Anda. Anda…",
+    "stem": "Seseorang sengaja memancing emosi Anda. Anda…",
     "options": [
       {
         "key": "A",
@@ -4240,7 +4276,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 226,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda gagal mencapai target kerja. Anda…",
+    "stem": "Anda gagal mencapai target kerja. Anda…",
     "options": [
       {
         "key": "A",
@@ -4283,7 +4319,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 227,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda berbeda pendapat dengan rekan dalam rapat yang memanas. Anda…",
+    "stem": "Anda berbeda pendapat dengan rekan dalam rapat yang memanas. Anda…",
     "options": [
       {
         "key": "A",
@@ -4326,7 +4362,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 228,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima kabar yang membuat cemas saat sedang bertugas. Anda…",
+    "stem": "Anda menerima kabar yang membuat cemas saat sedang bertugas. Anda…",
     "options": [
       {
         "key": "A",
@@ -4369,7 +4405,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 229,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Kesalahan kecil berulang membuat Anda frustrasi. Anda…",
+    "stem": "Kesalahan kecil berulang membuat Anda frustrasi. Anda…",
     "options": [
       {
         "key": "A",
@@ -4412,7 +4448,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 230,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda harus menyampaikan kabar yang tidak menyenangkan kepada tim. Anda…",
+    "stem": "Anda harus menyampaikan kabar yang tidak menyenangkan kepada tim. Anda…",
     "options": [
       {
         "key": "A",
@@ -4455,7 +4491,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 231,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Tim Anda belum memahami tujuan kegiatan. Anda…",
+    "stem": "Tim Anda belum memahami tujuan kegiatan. Anda…",
     "options": [
       {
         "key": "A",
@@ -4498,7 +4534,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 232,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Dua anggota memiliki konflik yang mengganggu tugas. Anda…",
+    "stem": "Dua anggota memiliki konflik yang mengganggu tugas. Anda…",
     "options": [
       {
         "key": "A",
@@ -4541,7 +4577,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 233,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Keputusan harus dibuat cepat tetapi informasi belum lengkap. Anda…",
+    "stem": "Keputusan harus dibuat cepat tetapi informasi belum lengkap. Anda…",
     "options": [
       {
         "key": "A",
@@ -4584,7 +4620,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 234,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anggota melakukan kesalahan pertama kali karena belum memahami prosedur. Anda…",
+    "stem": "Anggota melakukan kesalahan pertama kali karena belum memahami prosedur. Anda…",
     "options": [
       {
         "key": "A",
@@ -4627,7 +4663,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 235,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima usulan bawahan yang lebih efektif daripada rencana awal. Anda…",
+    "stem": "Anda menerima usulan bawahan yang lebih efektif daripada rencana awal. Anda…",
     "options": [
       {
         "key": "A",
@@ -4670,7 +4706,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 236,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Hasil tim baik, tetapi kontribusi anggota tidak merata. Anda…",
+    "stem": "Hasil tim baik, tetapi kontribusi anggota tidak merata. Anda…",
     "options": [
       {
         "key": "A",
@@ -4713,7 +4749,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 237,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Atasan meminta masukan tentang kebijakan yang berpotensi menimbulkan kendala. Anda…",
+    "stem": "Atasan meminta masukan tentang kebijakan yang berpotensi menimbulkan kendala. Anda…",
     "options": [
       {
         "key": "A",
@@ -4756,7 +4792,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 238,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anggota meminta arahan untuk tugas di luar pengalaman Anda. Anda…",
+    "stem": "Anggota meminta arahan untuk tugas di luar pengalaman Anda. Anda…",
     "options": [
       {
         "key": "A",
@@ -4799,7 +4835,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 239,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda harus membagi tugas dalam waktu terbatas. Anda…",
+    "stem": "Anda harus membagi tugas dalam waktu terbatas. Anda…",
     "options": [
       {
         "key": "A",
@@ -4842,7 +4878,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 240,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Setelah kegiatan, hasil tidak sesuai target. Anda…",
+    "stem": "Setelah kegiatan, hasil tidak sesuai target. Anda…",
     "options": [
       {
         "key": "A",
@@ -4885,7 +4921,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 241,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Rekan baru belum memahami budaya kerja unit. Anda…",
+    "stem": "Rekan baru belum memahami budaya kerja unit. Anda…",
     "options": [
       {
         "key": "A",
@@ -4928,7 +4964,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 242,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Pesan dalam grup kerja disalahartikan dan memicu ketegangan. Anda…",
+    "stem": "Pesan dalam grup kerja disalahartikan dan memicu ketegangan. Anda…",
     "options": [
       {
         "key": "A",
@@ -4971,7 +5007,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 243,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda tidak setuju dengan cara kerja rekan. Anda…",
+    "stem": "Anda tidak setuju dengan cara kerja rekan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5014,7 +5050,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 244,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Dalam rapat, satu anggota jarang berbicara. Anda…",
+    "stem": "Dalam rapat, satu anggota jarang berbicara. Anda…",
     "options": [
       {
         "key": "A",
@@ -5057,7 +5093,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 245,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Informasi penting belum diterima seluruh anggota. Anda…",
+    "stem": "Informasi penting belum diterima seluruh anggota. Anda…",
     "options": [
       {
         "key": "A",
@@ -5100,7 +5136,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 246,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima instruksi berbeda dari dua pihak. Anda…",
+    "stem": "Anda menerima instruksi berbeda dari dua pihak. Anda…",
     "options": [
       {
         "key": "A",
@@ -5143,7 +5179,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 247,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Rekan menyampaikan pendapat dengan cara kurang santun. Anda…",
+    "stem": "Rekan menyampaikan pendapat dengan cara kurang santun. Anda…",
     "options": [
       {
         "key": "A",
@@ -5186,7 +5222,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 248,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda perlu menyampaikan perubahan jadwal mendadak. Anda…",
+    "stem": "Anda perlu menyampaikan perubahan jadwal mendadak. Anda…",
     "options": [
       {
         "key": "A",
@@ -5229,7 +5265,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 249,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Tim lintas fungsi memiliki istilah kerja yang berbeda. Anda…",
+    "stem": "Tim lintas fungsi memiliki istilah kerja yang berbeda. Anda…",
     "options": [
       {
         "key": "A",
@@ -5272,7 +5308,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 250,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima pujian atas hasil yang sebenarnya dikerjakan bersama. Anda…",
+    "stem": "Anda menerima pujian atas hasil yang sebenarnya dikerjakan bersama. Anda…",
     "options": [
       {
         "key": "A",
@@ -5315,7 +5351,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 251,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seorang warga kesulitan memahami formulir. Anda…",
+    "stem": "Seorang warga kesulitan memahami formulir. Anda…",
     "options": [
       {
         "key": "A",
@@ -5358,7 +5394,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 252,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Warga datang dalam keadaan emosional karena merasa tidak didengar. Anda…",
+    "stem": "Warga datang dalam keadaan emosional karena merasa tidak didengar. Anda…",
     "options": [
       {
         "key": "A",
@@ -5401,7 +5437,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 253,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seorang penyandang disabilitas membutuhkan akses pelayanan. Anda…",
+    "stem": "Seorang penyandang disabilitas membutuhkan akses pelayanan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5444,7 +5480,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 254,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Warga meminta informasi yang tidak boleh dibuka kepada publik. Anda…",
+    "stem": "Warga meminta informasi yang tidak boleh dibuka kepada publik. Anda…",
     "options": [
       {
         "key": "A",
@@ -5487,7 +5523,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 255,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menghadapi orang yang berulang kali mengajukan pertanyaan sama. Anda…",
+    "stem": "Anda menghadapi orang yang berulang kali mengajukan pertanyaan sama. Anda…",
     "options": [
       {
         "key": "A",
@@ -5530,7 +5566,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 256,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Warga mengeluhkan perlakuan tidak adil. Anda…",
+    "stem": "Warga mengeluhkan perlakuan tidak adil. Anda…",
     "options": [
       {
         "key": "A",
@@ -5573,7 +5609,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 257,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda melihat rekan berbicara merendahkan pemohon layanan. Anda…",
+    "stem": "Anda melihat rekan berbicara merendahkan pemohon layanan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5616,7 +5652,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 258,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seorang warga tidak memiliki dokumen yang diperlukan. Anda…",
+    "stem": "Seorang warga tidak memiliki dokumen yang diperlukan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5659,7 +5695,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 259,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima kritik di media sosial terkait pelayanan. Anda…",
+    "stem": "Anda menerima kritik di media sosial terkait pelayanan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5702,7 +5738,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 260,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Seorang korban tampak takut saat dimintai keterangan. Anda…",
+    "stem": "Seorang korban tampak takut saat dimintai keterangan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5745,7 +5781,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 261,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Sistem kerja digital baru diterapkan. Anda…",
+    "stem": "Sistem kerja digital baru diterapkan. Anda…",
     "options": [
       {
         "key": "A",
@@ -5788,7 +5824,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 262,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda menerima umpan balik bahwa komunikasi Anda terlalu singkat. Anda…",
+    "stem": "Anda menerima umpan balik bahwa komunikasi Anda terlalu singkat. Anda…",
     "options": [
       {
         "key": "A",
@@ -5831,7 +5867,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 263,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Prosedur berubah sementara Anda terbiasa dengan cara lama. Anda…",
+    "stem": "Prosedur berubah sementara Anda terbiasa dengan cara lama. Anda…",
     "options": [
       {
         "key": "A",
@@ -5874,7 +5910,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 264,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda mendapat tugas pada bidang yang belum dikuasai. Anda…",
+    "stem": "Anda mendapat tugas pada bidang yang belum dikuasai. Anda…",
     "options": [
       {
         "key": "A",
@@ -5917,7 +5953,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 265,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Ada informasi viral tentang kejadian yang berkaitan dengan tugas. Anda…",
+    "stem": "Ada informasi viral tentang kejadian yang berkaitan dengan tugas. Anda…",
     "options": [
       {
         "key": "A",
@@ -5960,7 +5996,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 266,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Metode kerja baru ditawarkan oleh anggota junior. Anda…",
+    "stem": "Metode kerja baru ditawarkan oleh anggota junior. Anda…",
     "options": [
       {
         "key": "A",
@@ -6003,7 +6039,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 267,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda melakukan kesalahan karena belum memahami aplikasi. Anda…",
+    "stem": "Anda melakukan kesalahan karena belum memahami aplikasi. Anda…",
     "options": [
       {
         "key": "A",
@@ -6046,7 +6082,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 268,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Perubahan situasi membuat rencana awal tidak relevan. Anda…",
+    "stem": "Perubahan situasi membuat rencana awal tidak relevan. Anda…",
     "options": [
       {
         "key": "A",
@@ -6089,7 +6125,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 269,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Anda diminta mempelajari materi baru dalam waktu singkat. Anda…",
+    "stem": "Anda diminta mempelajari materi baru dalam waktu singkat. Anda…",
     "options": [
       {
         "key": "A",
@@ -6132,7 +6168,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 270,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Studi Kasus Kedinasan] Setelah pelatihan, Anda kembali ke rutinitas lama. Anda…",
+    "stem": "Setelah pelatihan, Anda kembali ke rutinitas lama. Anda…",
     "options": [
       {
         "key": "A",
@@ -6175,7 +6211,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 271,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya tetap menyampaikan fakta meskipun fakta tersebut dapat membuat saya mendapat teguran.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya tetap menyampaikan fakta meskipun fakta tersebut dapat membuat saya mendapat teguran.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6218,7 +6254,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 272,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menolak menggunakan fasilitas jabatan untuk kepentingan pribadi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menolak menggunakan fasilitas jabatan untuk kepentingan pribadi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6261,7 +6297,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 273,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya bersedia mengakui kesalahan tanpa menyalahkan rekan kerja.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya bersedia mengakui kesalahan tanpa menyalahkan rekan kerja.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6304,7 +6340,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 274,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menjaga kerahasiaan informasi kedinasan sesuai kewenangan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menjaga kerahasiaan informasi kedinasan sesuai kewenangan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6347,7 +6383,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 275,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya tidak mengubah laporan agar terlihat lebih baik dari keadaan sebenarnya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya tidak mengubah laporan agar terlihat lebih baik dari keadaan sebenarnya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6390,7 +6426,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 276,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya berani menolak ajakan yang bertentangan dengan aturan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya berani menolak ajakan yang bertentangan dengan aturan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6433,7 +6469,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 277,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menghindari janji yang tidak dapat saya penuhi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menghindari janji yang tidak dapat saya penuhi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6476,7 +6512,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 278,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya memperlakukan orang secara adil tanpa melihat kedekatan pribadi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya memperlakukan orang secara adil tanpa melihat kedekatan pribadi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6519,7 +6555,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 279,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya segera memperbaiki informasi keliru yang pernah saya sampaikan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya segera memperbaiki informasi keliru yang pernah saya sampaikan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6562,7 +6598,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 280,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya tetap mematuhi prosedur meskipun tidak sedang diawasi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya tetap mematuhi prosedur meskipun tidak sedang diawasi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6605,7 +6641,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 281,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menyusun prioritas agar pekerjaan selesai sesuai tenggat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menyusun prioritas agar pekerjaan selesai sesuai tenggat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6648,7 +6684,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 282,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya datang tepat waktu untuk kegiatan yang telah dijadwalkan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya datang tepat waktu untuk kegiatan yang telah dijadwalkan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6691,7 +6727,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 283,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menuntaskan tugas yang menjadi tanggung jawab saya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menuntaskan tugas yang menjadi tanggung jawab saya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6734,7 +6770,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 284,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya memeriksa kembali pekerjaan sebelum diserahkan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya memeriksa kembali pekerjaan sebelum diserahkan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6777,7 +6813,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 285,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya tetap bekerja sesuai standar meskipun tugas terasa rutin.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya tetap bekerja sesuai standar meskipun tugas terasa rutin.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6820,7 +6856,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 286,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya memberi kabar lebih awal jika ada hambatan yang mengancam tenggat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya memberi kabar lebih awal jika ada hambatan yang mengancam tenggat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6863,7 +6899,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 287,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menggunakan waktu kerja untuk kegiatan yang berkaitan dengan tugas.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menggunakan waktu kerja untuk kegiatan yang berkaitan dengan tugas.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6906,7 +6942,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 288,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menerima evaluasi atas hasil kerja tanpa menghindarinya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menerima evaluasi atas hasil kerja tanpa menghindarinya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6949,7 +6985,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 289,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya mencatat tindak lanjut agar tidak ada tugas yang terlupakan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya mencatat tindak lanjut agar tidak ada tugas yang terlupakan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -6992,7 +7028,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 290,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya bertanggung jawab atas keputusan yang berada dalam kewenangan saya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya bertanggung jawab atas keputusan yang berada dalam kewenangan saya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7035,7 +7071,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 291,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya berusaha tetap tenang ketika menghadapi kritik.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya berusaha tetap tenang ketika menghadapi kritik.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7078,7 +7114,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 292,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saat marah, saya menunda respons sampai dapat berpikir jernih.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saat marah, saya menunda respons sampai dapat berpikir jernih.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7121,7 +7157,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 293,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya dapat bekerja terarah ketika menghadapi beberapa tuntutan sekaligus.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya dapat bekerja terarah ketika menghadapi beberapa tuntutan sekaligus.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7164,7 +7200,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 294,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya tidak melampiaskan masalah pribadi kepada anggota tim.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya tidak melampiaskan masalah pribadi kepada anggota tim.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7207,7 +7243,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 295,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya mampu meminta jeda atau bantuan ketika tekanan mulai mengganggu kinerja.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya mampu meminta jeda atau bantuan ketika tekanan mulai mengganggu kinerja.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7250,7 +7286,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 296,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya mempertimbangkan fakta sebelum bereaksi terhadap provokasi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya mempertimbangkan fakta sebelum bereaksi terhadap provokasi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7293,7 +7329,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 297,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya dapat kembali fokus setelah mengalami kegagalan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya dapat kembali fokus setelah mengalami kegagalan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7336,7 +7372,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 298,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya menjaga cara bicara meskipun sedang tidak sependapat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya menjaga cara bicara meskipun sedang tidak sependapat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7379,7 +7415,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 299,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya mengenali tanda-tanda kelelahan pada diri sendiri.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya mengenali tanda-tanda kelelahan pada diri sendiri.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -7422,7 +7458,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 300,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "[Sikap Kedinasan & Integritas] Terkait prinsip kedinasan: \"Saya mencari cara penyelesaian, bukan terus-menerus menyalahkan keadaan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Terkait prinsip kedinasan: \"Saya mencari cara penyelesaian, bukan terus-menerus menyalahkan keadaan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
     "options": [
       {
         "key": "A",
@@ -13577,7 +13613,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 401,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #1] Komponen fisik komputer disebut…",
+    "stem": "Komponen fisik komputer disebut…",
     "options": [
       {
         "key": "A",
@@ -13594,6 +13630,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Malware"
+      },
+      {
+        "key": "E",
+        "text": "Brainware (Pengguna)"
       }
     ],
     "correctKey": "A",
@@ -13604,7 +13644,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 402,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #2] Perangkat lunak yang mengelola perangkat keras dan aplikasi adalah…",
+    "stem": "Perangkat lunak yang mengelola perangkat keras dan aplikasi adalah…",
     "options": [
       {
         "key": "A",
@@ -13621,6 +13661,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Driver printer saja"
+      },
+      {
+        "key": "E",
+        "text": "Firmware BIOS"
       }
     ],
     "correctKey": "B",
@@ -13631,7 +13675,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 403,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #3] Pusat pemrosesan instruksi komputer adalah…",
+    "stem": "Pusat pemrosesan instruksi komputer adalah…",
     "options": [
       {
         "key": "A",
@@ -13648,6 +13692,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Speaker"
+      },
+      {
+        "key": "E",
+        "text": "Motherboard"
       }
     ],
     "correctKey": "B",
@@ -13658,7 +13706,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 404,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #4] RAM berfungsi sebagai…",
+    "stem": "RAM berfungsi sebagai…",
     "options": [
       {
         "key": "A",
@@ -13675,6 +13723,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Penghubung internet"
+      },
+      {
+        "key": "E",
+        "text": "Harddisk eksternal offline"
       }
     ],
     "correctKey": "A",
@@ -13685,7 +13737,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 405,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #5] Perangkat untuk memasukkan teks adalah…",
+    "stem": "Perangkat untuk memasukkan teks adalah…",
     "options": [
       {
         "key": "A",
@@ -13702,6 +13754,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Proyektor"
+      },
+      {
+        "key": "E",
+        "text": "Trackball"
       }
     ],
     "correctKey": "C",
@@ -13712,7 +13768,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 406,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #6] Perangkat output visual adalah…",
+    "stem": "Perangkat output visual adalah…",
     "options": [
       {
         "key": "A",
@@ -13729,6 +13785,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Scanner"
+      },
+      {
+        "key": "E",
+        "text": "Plotter cetak teknik"
       }
     ],
     "correctKey": "B",
@@ -13739,7 +13799,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 407,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #7] Satuan kapasitas data digital adalah…",
+    "stem": "Satuan kapasitas data digital adalah…",
     "options": [
       {
         "key": "A",
@@ -13756,6 +13816,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Ampere"
+      },
+      {
+        "key": "E",
+        "text": "Hertz (Hz)"
       }
     ],
     "correctKey": "B",
@@ -13766,7 +13830,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 408,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #8] Alat untuk mengubah dokumen kertas menjadi digital adalah…",
+    "stem": "Alat untuk mengubah dokumen kertas menjadi digital adalah…",
     "options": [
       {
         "key": "A",
@@ -13783,6 +13847,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Keyboard"
+      },
+      {
+        "key": "E",
+        "text": "Barcode Scanner"
       }
     ],
     "correctKey": "A",
@@ -13793,7 +13861,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 409,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #9] SSD dan HDD digunakan untuk…",
+    "stem": "SSD dan HDD digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -13810,6 +13878,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengatur jaringan"
+      },
+      {
+        "key": "E",
+        "text": "Heatsink pendingin"
       }
     ],
     "correctKey": "B",
@@ -13820,7 +13892,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 410,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #10] Salinan data untuk pemulihan saat data utama hilang disebut…",
+    "stem": "Salinan data untuk pemulihan saat data utama hilang disebut…",
     "options": [
       {
         "key": "A",
@@ -13837,6 +13909,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Cookie"
+      },
+      {
+        "key": "E",
+        "text": "Enkripsi berkas"
       }
     ],
     "correctKey": "B",
@@ -13847,7 +13923,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 411,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #11] Perangkat lunak berbahaya disebut…",
+    "stem": "Perangkat lunak berbahaya disebut…",
     "options": [
       {
         "key": "A",
@@ -13864,6 +13940,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Shareware"
+      },
+      {
+        "key": "E",
+        "text": "Firmware"
       }
     ],
     "correctKey": "B",
@@ -13874,7 +13954,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 412,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #12] Papan utama tempat komponen komputer terhubung disebut…",
+    "stem": "Papan utama tempat komponen komputer terhubung disebut…",
     "options": [
       {
         "key": "A",
@@ -13890,18 +13970,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Flashdisk Windows dan pengelolaan berkas"
+        "text": "Flashdisk"
+      },
+      {
+        "key": "E",
+        "text": "Power Supply Unit"
       }
     ],
     "correctKey": "A",
-    "explanation": "Motherboard menghubungkan prosesor, RAM, penyimpanan, dan komponen lain. Windows dan pengelolaan berkas",
+    "explanation": "Motherboard menghubungkan prosesor, RAM, penyimpanan, dan komponen lain.",
     "weight": 10
   },
   {
     "id": 413,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #13] Ekstensi .docx umumnya untuk dokumen…",
+    "stem": "Ekstensi .docx umumnya untuk dokumen…",
     "options": [
       {
         "key": "A",
@@ -13918,6 +14002,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Audio"
+      },
+      {
+        "key": "E",
+        "text": "Arsip terkompresi ZIP"
       }
     ],
     "correctKey": "A",
@@ -13928,7 +14016,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 414,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #14] Ekstensi .xlsx digunakan untuk…",
+    "stem": "Ekstensi .xlsx digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -13945,6 +14033,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Video"
+      },
+      {
+        "key": "E",
+        "text": "Basis data SQL"
       }
     ],
     "correctKey": "B",
@@ -13955,7 +14047,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 415,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #15] Ekstensi .pptx digunakan untuk…",
+    "stem": "Ekstensi .pptx digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -13972,6 +14064,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Audio"
+      },
+      {
+        "key": "E",
+        "text": "Kode sumber program"
       }
     ],
     "correctKey": "B",
@@ -13982,7 +14078,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 416,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #16] Ctrl+C berfungsi untuk…",
+    "stem": "Ctrl+C berfungsi untuk…",
     "options": [
       {
         "key": "A",
@@ -13999,6 +14095,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mencetak"
+      },
+      {
+        "key": "E",
+        "text": "Memotong teks (Cut)"
       }
     ],
     "correctKey": "B",
@@ -14009,7 +14109,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 417,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #17] Ctrl+V berfungsi untuk…",
+    "stem": "Ctrl+V berfungsi untuk…",
     "options": [
       {
         "key": "A",
@@ -14026,6 +14126,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mencari"
+      },
+      {
+        "key": "E",
+        "text": "Menghapus teks terpilih"
       }
     ],
     "correctKey": "B",
@@ -14036,7 +14140,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 418,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #18] Ctrl+Z umumnya berfungsi untuk…",
+    "stem": "Ctrl+Z umumnya berfungsi untuk…",
     "options": [
       {
         "key": "A",
@@ -14053,6 +14157,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Refresh"
+      },
+      {
+        "key": "E",
+        "text": "Spasi ganda (Double spacing)"
       }
     ],
     "correctKey": "A",
@@ -14063,7 +14171,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 419,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #19] Folder digunakan untuk…",
+    "stem": "Folder digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14080,6 +14188,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghapus virus"
+      },
+      {
+        "key": "E",
+        "text": "Header dan Footer"
       }
     ],
     "correctKey": "A",
@@ -14090,7 +14202,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 420,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #20] Recycle Bin menampung…",
+    "stem": "Recycle Bin menampung…",
     "options": [
       {
         "key": "A",
@@ -14107,6 +14219,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Driver"
+      },
+      {
+        "key": "E",
+        "text": "Margin halaman"
       }
     ],
     "correctKey": "A",
@@ -14117,7 +14233,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 421,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #21] Untuk menemukan berkas, gunakan…",
+    "stem": "Untuk menemukan berkas, gunakan…",
     "options": [
       {
         "key": "A",
@@ -14134,6 +14250,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Task Manager saja"
+      },
+      {
+        "key": "E",
+        "text": "Perataan justified"
       }
     ],
     "correctKey": "A",
@@ -14144,7 +14264,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 422,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #22] Rename berarti…",
+    "stem": "Rename berarti…",
     "options": [
       {
         "key": "A",
@@ -14161,6 +14281,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengompres"
+      },
+      {
+        "key": "E",
+        "text": "Format mata uang"
       }
     ],
     "correctKey": "A",
@@ -14171,7 +14295,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 423,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #23] Ctrl+S biasanya digunakan untuk…",
+    "stem": "Ctrl+S biasanya digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14188,6 +14312,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Memilih semua"
+      },
+      {
+        "key": "E",
+        "text": "Grafik batang (Bar chart)"
       }
     ],
     "correctKey": "A",
@@ -14198,7 +14326,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 424,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #24] Ekstensi .pdf lazim digunakan untuk…",
+    "stem": "Ekstensi .pdf lazim digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14214,18 +14342,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Database relasional Microsoft Word"
+        "text": "Database relasional"
+      },
+      {
+        "key": "E",
+        "text": "Merge cells"
       }
     ],
     "correctKey": "A",
-    "explanation": "PDF mempertahankan tata letak dokumen lintas perangkat relatif konsisten. Microsoft Word",
+    "explanation": "PDF mempertahankan tata letak dokumen lintas perangkat relatif konsisten.",
     "weight": 10
   },
   {
     "id": 425,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #25] Microsoft Word terutama untuk…",
+    "stem": "Microsoft Word terutama untuk…",
     "options": [
       {
         "key": "A",
@@ -14242,6 +14374,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengatur router"
+      },
+      {
+        "key": "E",
+        "text": "Kondisional formatting"
       }
     ],
     "correctKey": "A",
@@ -14252,7 +14388,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 426,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #26] Ctrl+B digunakan untuk…",
+    "stem": "Ctrl+B digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14269,6 +14405,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Paste"
+      },
+      {
+        "key": "E",
+        "text": "Slide sorter view"
       }
     ],
     "correctKey": "A",
@@ -14279,7 +14419,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 427,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #27] Ctrl+I digunakan untuk…",
+    "stem": "Ctrl+I digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14296,6 +14436,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Find"
+      },
+      {
+        "key": "E",
+        "text": "Desain tema presentasi"
       }
     ],
     "correctKey": "B",
@@ -14306,7 +14450,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 428,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #28] Ctrl+U digunakan untuk…",
+    "stem": "Ctrl+U digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14323,6 +14467,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menyisipkan gambar"
+      },
+      {
+        "key": "E",
+        "text": "Penyesuaian aspek rasio"
       }
     ],
     "correctKey": "A",
@@ -14333,7 +14481,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 429,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #29] Ctrl+J pada Word menerapkan…",
+    "stem": "Ctrl+J pada Word menerapkan…",
     "options": [
       {
         "key": "A",
@@ -14350,6 +14498,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Rata kanan"
+      },
+      {
+        "key": "E",
+        "text": "Pengaturan audio latar"
       }
     ],
     "correctKey": "C",
@@ -14360,7 +14512,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 430,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #30] Header berada di bagian…",
+    "stem": "Header berada di bagian…",
     "options": [
       {
         "key": "A",
@@ -14377,6 +14529,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Nama file"
+      },
+      {
+        "key": "E",
+        "text": "Navigasi tombol aksi"
       }
     ],
     "correctKey": "A",
@@ -14387,7 +14543,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 431,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #31] Footer berada di bagian…",
+    "stem": "Footer berada di bagian…",
     "options": [
       {
         "key": "A",
@@ -14404,6 +14560,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Judul dokumen"
+      },
+      {
+        "key": "E",
+        "text": "Area kerja kanvas"
       }
     ],
     "correctKey": "B",
@@ -14414,7 +14574,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 432,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #32] Fitur Numbering digunakan untuk…",
+    "stem": "Fitur Numbering digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14431,6 +14591,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengunci file"
+      },
+      {
+        "key": "E",
+        "text": "Format vektor SVG"
       }
     ],
     "correctKey": "A",
@@ -14441,7 +14605,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 433,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #33] Find digunakan untuk…",
+    "stem": "Find digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14458,6 +14622,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengirim email"
+      },
+      {
+        "key": "E",
+        "text": "Panel properti"
       }
     ],
     "correctKey": "A",
@@ -14468,7 +14636,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 434,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #34] Mail Merge bermanfaat untuk…",
+    "stem": "Mail Merge bermanfaat untuk…",
     "options": [
       {
         "key": "A",
@@ -14485,6 +14653,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Membuat formula"
+      },
+      {
+        "key": "E",
+        "text": "Pengaturan rotasi objek"
       }
     ],
     "correctKey": "A",
@@ -14495,7 +14667,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 435,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #35] Save As digunakan untuk…",
+    "stem": "Save As digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14512,6 +14684,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mencetak"
+      },
+      {
+        "key": "E",
+        "text": "Penyelarasan kisi panduan"
       }
     ],
     "correctKey": "A",
@@ -14522,7 +14698,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 436,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #36] Orientasi halaman mendatar disebut…",
+    "stem": "Orientasi halaman mendatar disebut…",
     "options": [
       {
         "key": "A",
@@ -14539,6 +14715,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Justify"
+      },
+      {
+        "key": "E",
+        "text": "Server proksi"
       }
     ],
     "correctKey": "B",
@@ -14549,7 +14729,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 437,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #37] Track Changes digunakan untuk…",
+    "stem": "Track Changes digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14566,6 +14746,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengirim pesan"
+      },
+      {
+        "key": "E",
+        "text": "Web server"
       }
     ],
     "correctKey": "A",
@@ -14576,7 +14760,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 438,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #38] Nomor halaman disisipkan melalui…",
+    "stem": "Nomor halaman disisipkan melalui…",
     "options": [
       {
         "key": "A",
@@ -14593,6 +14777,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Home > Clipboard"
+      },
+      {
+        "key": "E",
+        "text": "Protokol FTP"
       }
     ],
     "correctKey": "A",
@@ -14603,7 +14791,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 439,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #39] Format PDF berguna untuk…",
+    "stem": "Format PDF berguna untuk…",
     "options": [
       {
         "key": "A",
@@ -14619,18 +14807,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Selalu memperkecil file Microsoft Excel"
+        "text": "Selalu memperkecil file"
+      },
+      {
+        "key": "E",
+        "text": "Bandwidth transfer"
       }
     ],
     "correctKey": "A",
-    "explanation": "PDF membantu menjaga tampilan dokumen, tetapi tidak menjamin keamanan atau ukuran kecil. Microsoft Excel",
+    "explanation": "PDF membantu menjaga tampilan dokumen, tetapi tidak menjamin keamanan atau ukuran kecil.",
     "weight": 10
   },
   {
     "id": 440,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #40] Excel terutama digunakan untuk…",
+    "stem": "Excel terutama digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14647,6 +14839,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengelola perangkat"
+      },
+      {
+        "key": "E",
+        "text": "Jaringan Mesh"
       }
     ],
     "correctKey": "A",
@@ -14657,7 +14853,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 441,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #41] Pertemuan baris dan kolom disebut…",
+    "stem": "Pertemuan baris dan kolom disebut…",
     "options": [
       {
         "key": "A",
@@ -14674,6 +14870,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Layer"
+      },
+      {
+        "key": "E",
+        "text": "Kabel Fiber Optik"
       }
     ],
     "correctKey": "B",
@@ -14684,7 +14884,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 442,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #42] Alamat kolom B baris 5 adalah…",
+    "stem": "Alamat kolom B baris 5 adalah…",
     "options": [
       {
         "key": "A",
@@ -14701,6 +14901,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "B-5"
+      },
+      {
+        "key": "E",
+        "text": "Subnet mask"
       }
     ],
     "correctKey": "B",
@@ -14711,7 +14915,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 443,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #43] Formula Excel umumnya diawali…",
+    "stem": "Formula Excel umumnya diawali…",
     "options": [
       {
         "key": "A",
@@ -14728,6 +14932,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "@"
+      },
+      {
+        "key": "E",
+        "text": "Port komunikasi TCP"
       }
     ],
     "correctKey": "B",
@@ -14738,7 +14946,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 444,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #44] SUM digunakan untuk…",
+    "stem": "SUM digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14755,6 +14963,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Kapitalisasi"
+      },
+      {
+        "key": "E",
+        "text": "Penyedia Layanan Internet (ISP)"
       }
     ],
     "correctKey": "A",
@@ -14765,7 +14977,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 445,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #45] AVERAGE(A1:A5) menghitung…",
+    "stem": "AVERAGE(A1:A5) menghitung…",
     "options": [
       {
         "key": "A",
@@ -14782,6 +14994,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Sel kosong"
+      },
+      {
+        "key": "E",
+        "text": "Router gateway"
       }
     ],
     "correctKey": "B",
@@ -14792,7 +15008,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 446,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #46] MAX menghasilkan…",
+    "stem": "MAX menghasilkan…",
     "options": [
       {
         "key": "A",
@@ -14809,6 +15025,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Jumlah teks"
+      },
+      {
+        "key": "E",
+        "text": "Koneksi hotspot nirkabel"
       }
     ],
     "correctKey": "A",
@@ -14819,7 +15039,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 447,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #47] MIN menghasilkan…",
+    "stem": "MIN menghasilkan…",
     "options": [
       {
         "key": "A",
@@ -14836,6 +15056,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Jumlah data"
+      },
+      {
+        "key": "E",
+        "text": "Autentikasi dua langkah (2FA)"
       }
     ],
     "correctKey": "B",
@@ -14846,7 +15070,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 448,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #48] COUNT menghitung…",
+    "stem": "COUNT menghitung…",
     "options": [
       {
         "key": "A",
@@ -14863,6 +15087,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Huruf"
+      },
+      {
+        "key": "E",
+        "text": "Phishing credential harvest"
       }
     ],
     "correctKey": "A",
@@ -14873,7 +15101,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 449,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #49] COUNTA menghitung…",
+    "stem": "COUNTA menghitung…",
     "options": [
       {
         "key": "A",
@@ -14890,6 +15118,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Kolom tersembunyi"
+      },
+      {
+        "key": "E",
+        "text": "Backup terisolasi offline"
       }
     ],
     "correctKey": "A",
@@ -14900,7 +15132,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 450,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #50] IF digunakan untuk…",
+    "stem": "IF digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14917,6 +15149,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengunci workbook"
+      },
+      {
+        "key": "E",
+        "text": "Trojan horse"
       }
     ],
     "correctKey": "A",
@@ -14927,7 +15163,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 451,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #51] Jika A1=80, hasil =IF(A1>=75,\"Lulus\",\"Belum\") adalah…",
+    "stem": "Jika A1=80, hasil =IF(A1>=75,\"Lulus\",\"Belum\") adalah…",
     "options": [
       {
         "key": "A",
@@ -14944,6 +15180,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Error"
+      },
+      {
+        "key": "E",
+        "text": "Adware promosi"
       }
     ],
     "correctKey": "B",
@@ -14954,7 +15194,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 452,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #52] A1:A10 menunjukkan…",
+    "stem": "A1:A10 menunjukkan…",
     "options": [
       {
         "key": "A",
@@ -14971,6 +15211,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Komentar"
+      },
+      {
+        "key": "E",
+        "text": "Enkripsi end-to-end"
       }
     ],
     "correctKey": "A",
@@ -14981,7 +15225,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 453,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #53] Sort digunakan untuk…",
+    "stem": "Sort digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -14998,6 +15242,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghapus workbook"
+      },
+      {
+        "key": "E",
+        "text": "Biometrik sidik jari"
       }
     ],
     "correctKey": "A",
@@ -15008,7 +15256,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 454,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #54] Filter digunakan untuk…",
+    "stem": "Filter digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -15025,6 +15273,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengganti nama file"
+      },
+      {
+        "key": "E",
+        "text": "WAF (Web Application Firewall)"
       }
     ],
     "correctKey": "A",
@@ -15035,7 +15287,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 455,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #55] Referensi absolut menggunakan tanda…",
+    "stem": "Referensi absolut menggunakan tanda…",
     "options": [
       {
         "key": "A",
@@ -15052,6 +15304,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "?"
+      },
+      {
+        "key": "E",
+        "text": "Audit jejak log sistem"
       }
     ],
     "correctKey": "A",
@@ -15062,7 +15318,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 456,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #56] Formula =A1+B1 disalin satu baris ke bawah menjadi…",
+    "stem": "Formula =A1+B1 disalin satu baris ke bawah menjadi…",
     "options": [
       {
         "key": "A",
@@ -15079,6 +15335,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "=B1+C1"
+      },
+      {
+        "key": "E",
+        "text": "Komputasi awan hibrida"
       }
     ],
     "correctKey": "B",
@@ -15089,7 +15349,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 457,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #57] Freeze Panes berguna untuk…",
+    "stem": "Freeze Panes berguna untuk…",
     "options": [
       {
         "key": "A",
@@ -15106,6 +15366,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghapus sheet"
+      },
+      {
+        "key": "E",
+        "text": "Virtual Private Cloud"
       }
     ],
     "correctKey": "A",
@@ -15116,7 +15380,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 458,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #58] Grafik dibuat melalui fitur…",
+    "stem": "Grafik dibuat melalui fitur…",
     "options": [
       {
         "key": "A",
@@ -15133,6 +15397,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Page Number"
+      },
+      {
+        "key": "E",
+        "text": "Sinkronisasi berkas otomatis"
       }
     ],
     "correctKey": "A",
@@ -15143,7 +15411,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 459,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #59] Error #DIV/0! muncul ketika…",
+    "stem": "Error #DIV/0! muncul ketika…",
     "options": [
       {
         "key": "A",
@@ -15159,18 +15427,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Font hilang PowerPoint"
+        "text": "Font hilang"
+      },
+      {
+        "key": "E",
+        "text": "Ketersediaan layanan 99.9%"
       }
     ],
     "correctKey": "A",
-    "explanation": "Excel menampilkan #DIV/0! saat penyebut operasi pembagian nol/kosong. PowerPoint",
+    "explanation": "Excel menampilkan #DIV/0! saat penyebut operasi pembagian nol/kosong.",
     "weight": 10
   },
   {
     "id": 460,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #60] PowerPoint digunakan untuk…",
+    "stem": "PowerPoint digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -15187,6 +15459,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Memindai"
+      },
+      {
+        "key": "E",
+        "text": "Redundansi data multi-wilayah"
       }
     ],
     "correctKey": "A",
@@ -15197,7 +15473,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 461,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #61] Satu halaman presentasi disebut…",
+    "stem": "Satu halaman presentasi disebut…",
     "options": [
       {
         "key": "A",
@@ -15214,6 +15490,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Folder"
+      },
+      {
+        "key": "E",
+        "text": "Kabel transmisi data"
       }
     ],
     "correctKey": "B",
@@ -15224,7 +15504,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 462,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #62] F5 umumnya memulai presentasi…",
+    "stem": "F5 umumnya memulai presentasi…",
     "options": [
       {
         "key": "A",
@@ -15241,6 +15521,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mencetak"
+      },
+      {
+        "key": "E",
+        "text": "Bluetooth low energy"
       }
     ],
     "correctKey": "A",
@@ -15251,7 +15535,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 463,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #63] Ctrl+M digunakan untuk…",
+    "stem": "Ctrl+M digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -15268,6 +15552,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menutup"
+      },
+      {
+        "key": "E",
+        "text": "Repeater penguat sinyal"
       }
     ],
     "correctKey": "A",
@@ -15278,7 +15566,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 464,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #64] Transition mengatur…",
+    "stem": "Transition mengatur…",
     "options": [
       {
         "key": "A",
@@ -15295,6 +15583,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Email"
+      },
+      {
+        "key": "E",
+        "text": "Mode senyap getar"
       }
     ],
     "correctKey": "A",
@@ -15305,7 +15597,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 465,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #65] Animation diterapkan pada…",
+    "stem": "Animation diterapkan pada…",
     "options": [
       {
         "key": "A",
@@ -15322,6 +15614,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Jaringan"
+      },
+      {
+        "key": "E",
+        "text": "Penguncian pola layar"
       }
     ],
     "correctKey": "A",
@@ -15332,7 +15628,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 466,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #66] Slide yang efektif sebaiknya…",
+    "stem": "Slide yang efektif sebaiknya…",
     "options": [
       {
         "key": "A",
@@ -15349,6 +15645,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Kontras rendah"
+      },
+      {
+        "key": "E",
+        "text": "Format terstruktur CSV"
       }
     ],
     "correctKey": "B",
@@ -15359,7 +15659,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 467,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #67] Presenter View membantu penyaji melihat…",
+    "stem": "Presenter View membantu penyaji melihat…",
     "options": [
       {
         "key": "A",
@@ -15376,6 +15676,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Kunci keyboard"
+      },
+      {
+        "key": "E",
+        "text": "Konversi karakter UTF-8"
       }
     ],
     "correctKey": "A",
@@ -15386,7 +15690,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 468,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #68] Ekspor presentasi menjadi PDF dilakukan melalui…",
+    "stem": "Ekspor presentasi menjadi PDF dilakukan melalui…",
     "options": [
       {
         "key": "A",
@@ -15403,6 +15707,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mail Merge"
+      },
+      {
+        "key": "E",
+        "text": "Validasi masukan data"
       }
     ],
     "correctKey": "A",
@@ -15413,7 +15721,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 469,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #69] Theme digunakan untuk…",
+    "stem": "Theme digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -15429,18 +15737,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Mengirim ke semua kontak Internet dan email"
+        "text": "Mengirim ke semua kontak"
+      },
+      {
+        "key": "E",
+        "text": "Pemilahan data dinamis"
       }
     ],
     "correctKey": "A",
-    "explanation": "Theme menerapkan kombinasi warna, font, dan efek. Internet dan email",
+    "explanation": "Theme menerapkan kombinasi warna, font, dan efek.",
     "weight": 10
   },
   {
     "id": 470,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #70] Aplikasi untuk menjelajahi situs web disebut…",
+    "stem": "Aplikasi untuk menjelajahi situs web disebut…",
     "options": [
       {
         "key": "A",
@@ -15457,6 +15769,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Antivirus"
+      },
+      {
+        "key": "E",
+        "text": "Ekspor tabel berkala"
       }
     ],
     "correctKey": "A",
@@ -15467,7 +15783,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 471,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #71] Alamat sumber daya internet disebut…",
+    "stem": "Alamat sumber daya internet disebut…",
     "options": [
       {
         "key": "A",
@@ -15484,6 +15800,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "USB"
+      },
+      {
+        "key": "E",
+        "text": "Tanda tangan digital RSA"
       }
     ],
     "correctKey": "A",
@@ -15494,7 +15814,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 472,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #72] HTTPS menunjukkan…",
+    "stem": "HTTPS menunjukkan…",
     "options": [
       {
         "key": "A",
@@ -15511,6 +15831,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Bebas malware"
+      },
+      {
+        "key": "E",
+        "text": "Watermark tanda air dokumen"
       }
     ],
     "correctKey": "A",
@@ -15521,7 +15845,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 473,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #73] Mesin pencari berguna untuk…",
+    "stem": "Mesin pencari berguna untuk…",
     "options": [
       {
         "key": "A",
@@ -15538,6 +15862,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mencetak"
+      },
+      {
+        "key": "E",
+        "text": "Riwayat versi dokumen"
       }
     ],
     "correctKey": "A",
@@ -15548,7 +15876,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 474,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #74] BCC pada email digunakan untuk…",
+    "stem": "BCC pada email digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -15565,6 +15893,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghapus subjek"
+      },
+      {
+        "key": "E",
+        "text": "Metadata berkas digital"
       }
     ],
     "correctKey": "A",
@@ -15575,7 +15907,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 475,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #75] Lampiran email disebut…",
+    "stem": "Lampiran email disebut…",
     "options": [
       {
         "key": "A",
@@ -15592,6 +15924,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Cache"
+      },
+      {
+        "key": "E",
+        "text": "Restriksi hak akses baca saja"
       }
     ],
     "correctKey": "A",
@@ -15602,7 +15938,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 476,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #76] Email kedinasan yang baik seharusnya…",
+    "stem": "Email kedinasan yang baik seharusnya…",
     "options": [
       {
         "key": "A",
@@ -15619,6 +15955,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Teruskan tanpa membaca"
+      },
+      {
+        "key": "E",
+        "text": "Sistem pendukung keputusan"
       }
     ],
     "correctKey": "A",
@@ -15629,7 +15969,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 477,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #77] Cloud storage adalah…",
+    "stem": "Cloud storage adalah…",
     "options": [
       {
         "key": "A",
@@ -15646,6 +15986,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Penghapus akun"
+      },
+      {
+        "key": "E",
+        "text": "Visualisasi analitik dashboard"
       }
     ],
     "correctKey": "A",
@@ -15656,7 +16000,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 478,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #78] Berbagi dokumen cloud paling aman dengan…",
+    "stem": "Berbagi dokumen cloud paling aman dengan…",
     "options": [
       {
         "key": "A",
@@ -15673,6 +16017,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Satu password bersama"
+      },
+      {
+        "key": "E",
+        "text": "Algoritma pencarian indeks"
       }
     ],
     "correctKey": "A",
@@ -15683,7 +16031,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 479,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #79] Informasi internet sebaiknya…",
+    "stem": "Informasi internet sebaiknya…",
     "options": [
       {
         "key": "A",
@@ -15699,18 +16047,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Tidak perlu cek tanggal Keamanan informasi"
+        "text": "Tidak perlu cek tanggal"
+      },
+      {
+        "key": "E",
+        "text": "Penyaringan data otomatis"
       }
     ],
     "correctKey": "B",
-    "explanation": "Periksa sumber, tanggal, konteks, dan bukti. Keamanan informasi",
+    "explanation": "Periksa sumber, tanggal, konteks, dan bukti.",
     "weight": 10
   },
   {
     "id": 480,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #80] Phishing adalah…",
+    "stem": "Phishing adalah…",
     "options": [
       {
         "key": "A",
@@ -15727,6 +16079,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Backup"
+      },
+      {
+        "key": "E",
+        "text": "Integritas relasi tabel"
       }
     ],
     "correctKey": "A",
@@ -15737,7 +16093,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 481,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #81] Kata sandi kuat sebaiknya…",
+    "stem": "Kata sandi kuat sebaiknya…",
     "options": [
       {
         "key": "A",
@@ -15754,6 +16110,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Dibagikan ke tim"
+      },
+      {
+        "key": "E",
+        "text": "Kamera termal pengintai"
       }
     ],
     "correctKey": "A",
@@ -15764,7 +16124,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 482,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #82] MFA berarti…",
+    "stem": "MFA berarti…",
     "options": [
       {
         "key": "A",
@@ -15781,6 +16141,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Dua monitor"
+      },
+      {
+        "key": "E",
+        "text": "Sensor inframerah"
       }
     ],
     "correctKey": "A",
@@ -15791,7 +16155,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 483,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #83] Lampiran email mencurigakan sebaiknya…",
+    "stem": "Lampiran email mencurigakan sebaiknya…",
     "options": [
       {
         "key": "A",
@@ -15808,6 +16172,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Matikan antivirus"
+      },
+      {
+        "key": "E",
+        "text": "GPS pelacak lokasi"
       }
     ],
     "correctKey": "B",
@@ -15818,7 +16186,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 484,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #84] Malware adalah…",
+    "stem": "Malware adalah…",
     "options": [
       {
         "key": "A",
@@ -15835,6 +16203,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Kabel"
+      },
+      {
+        "key": "E",
+        "text": "Radio komunikasi digital"
       }
     ],
     "correctKey": "A",
@@ -15845,7 +16217,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 485,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #85] Ransomware umumnya…",
+    "stem": "Ransomware umumnya…",
     "options": [
       {
         "key": "A",
@@ -15862,6 +16234,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Membersihkan cache"
+      },
+      {
+        "key": "E",
+        "text": "Sistem alarm perimeter"
       }
     ],
     "correctKey": "A",
@@ -15872,7 +16248,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 486,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #86] Saat memakai Wi-Fi publik…",
+    "stem": "Saat memakai Wi-Fi publik…",
     "options": [
       {
         "key": "A",
@@ -15889,6 +16265,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Abaikan peringatan"
+      },
+      {
+        "key": "E",
+        "text": "Server basis data terpusat"
       }
     ],
     "correctKey": "A",
@@ -15899,7 +16279,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 487,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #87] Data kedinasan seharusnya…",
+    "stem": "Data kedinasan seharusnya…",
     "options": [
       {
         "key": "A",
@@ -15916,6 +16296,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Dikirim ke siapa pun"
+      },
+      {
+        "key": "E",
+        "text": "Antarmuka grafis pengguna (GUI)"
       }
     ],
     "correctKey": "A",
@@ -15926,7 +16310,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 488,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #88] Pembaruan sistem penting karena…",
+    "stem": "Pembaruan sistem penting karena…",
     "options": [
       {
         "key": "A",
@@ -15943,6 +16327,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengubah password otomatis"
+      },
+      {
+        "key": "E",
+        "text": "Prosesor grafis GPU"
       }
     ],
     "correctKey": "A",
@@ -15953,7 +16341,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 489,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #89] Jika perangkat dinas hilang…",
+    "stem": "Jika perangkat dinas hilang…",
     "options": [
       {
         "key": "A",
@@ -15969,18 +16357,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Umumkan password Jaringan, data, dan troubleshooting"
+        "text": "Umumkan password"
+      },
+      {
+        "key": "E",
+        "text": "Port USB-C universal"
       }
     ],
     "correctKey": "A",
-    "explanation": "Pelaporan cepat memungkinkan pengamanan akun dan penanganan insiden. Jaringan, data, dan troubleshooting",
+    "explanation": "Pelaporan cepat memungkinkan pengamanan akun dan penanganan insiden.",
     "weight": 10
   },
   {
     "id": 490,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #90] Jaringan komputer adalah…",
+    "stem": "Jaringan komputer adalah…",
     "options": [
       {
         "key": "A",
@@ -15997,6 +16389,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Aplikasi slide"
+      },
+      {
+        "key": "E",
+        "text": "Kabel HDMI audio visual"
       }
     ],
     "correctKey": "A",
@@ -16007,7 +16403,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 491,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #91] Perangkat yang meneruskan paket antarjaringan disebut…",
+    "stem": "Perangkat yang meneruskan paket antarjaringan disebut…",
     "options": [
       {
         "key": "A",
@@ -16024,6 +16420,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Speaker"
+      },
+      {
+        "key": "E",
+        "text": "Penyimpanan solid state SSD"
       }
     ],
     "correctKey": "A",
@@ -16034,7 +16434,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 492,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #92] LAN adalah singkatan dari…",
+    "stem": "LAN adalah singkatan dari…",
     "options": [
       {
         "key": "A",
@@ -16051,6 +16451,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Local App Name"
+      },
+      {
+        "key": "E",
+        "text": "Memori cache L3"
       }
     ],
     "correctKey": "A",
@@ -16061,7 +16465,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 493,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #93] Alamat IP digunakan untuk…",
+    "stem": "Alamat IP digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -16078,6 +16482,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menyimpan Word"
+      },
+      {
+        "key": "E",
+        "text": "Baterai UPS cadangan"
       }
     ],
     "correctKey": "A",
@@ -16088,7 +16496,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 494,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #94] Wi-Fi merupakan teknologi…",
+    "stem": "Wi-Fi merupakan teknologi…",
     "options": [
       {
         "key": "A",
@@ -16105,6 +16513,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pendingin"
+      },
+      {
+        "key": "E",
+        "text": "Driver periferal resmi"
       }
     ],
     "correctKey": "A",
@@ -16115,7 +16527,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 495,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #95] Jika komputer tidak terhubung internet, langkah awal…",
+    "stem": "Jika komputer tidak terhubung internet, langkah awal…",
     "options": [
       {
         "key": "A",
@@ -16132,6 +16544,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Instal ulang OS langsung"
+      },
+      {
+        "key": "E",
+        "text": "Konektivitas Ethernet LAN"
       }
     ],
     "correctKey": "A",
@@ -16142,7 +16558,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 496,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #96] Database adalah…",
+    "stem": "Database adalah…",
     "options": [
       {
         "key": "A",
@@ -16159,6 +16575,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Jenis kabel"
+      },
+      {
+        "key": "E",
+        "text": "Kombinasi tombol Alt+Tab"
       }
     ],
     "correctKey": "A",
@@ -16169,7 +16589,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 497,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #97] Primary key berfungsi untuk…",
+    "stem": "Primary key berfungsi untuk…",
     "options": [
       {
         "key": "A",
@@ -16186,6 +16606,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengurutkan desktop"
+      },
+      {
+        "key": "E",
+        "text": "Kombinasi tombol Windows+L"
       }
     ],
     "correctKey": "A",
@@ -16196,7 +16620,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 498,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #98] CSV umumnya digunakan untuk…",
+    "stem": "CSV umumnya digunakan untuk…",
     "options": [
       {
         "key": "A",
@@ -16213,6 +16637,10 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Animasi slide"
+      },
+      {
+        "key": "E",
+        "text": "Tombol navigasi Esc"
       }
     ],
     "correctKey": "A",
@@ -16223,7 +16651,7 @@ const QUESTIONS_TKK: SimQuestion[] = [
     "id": 499,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #99] Jika printer tidak mencetak, langkah awal…",
+    "stem": "Jika printer tidak mencetak, langkah awal…",
     "options": [
       {
         "key": "A",
@@ -16239,18 +16667,22 @@ const QUESTIONS_TKK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Ganti semua kabel Tambahan: produktivitas dan praktik aman"
+        "text": "Ganti semua kabel"
+      },
+      {
+        "key": "E",
+        "text": "Kombinasi tombol Ctrl+Shift+Esc"
       }
     ],
     "correctKey": "A",
-    "explanation": "Periksa komponen dasar dan antrean cetak sebelum perbaikan lanjutan. Tambahan: produktivitas dan praktik aman",
+    "explanation": "Periksa komponen dasar dan antrean cetak sebelum perbaikan lanjutan.",
     "weight": 10
   },
   {
     "id": 500,
     "module": "Tes Kemampuan Komputer (TKK)",
     "subtest": "TKK",
-    "stem": "[Kompetensi Komputer & TI Polri #100] Perintah Ctrl+A umumnya berarti…",
+    "stem": "Perintah Ctrl+A umumnya berarti…",
     "options": [
       {
         "key": "A",
@@ -16267,10 +16699,14 @@ const QUESTIONS_TKK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tutup"
+      },
+      {
+        "key": "E",
+        "text": "Kombinasi tombol Ctrl+P"
       }
     ],
     "correctKey": "A",
-    "explanation": "Ctrl+A memilih seluruh teks atau objek dalam konteks aktif. Lembar Jawaban Tuliskan pilihan A, B, C, atau D pada setiap nomor. Evaluasi Hasil Latihan Jumlah benar: ______ dari 100 Jumlah salah: ______ Skor latihan: ______ / 100 Materi yang perlu diulang: ______________________________________________ Catatan perbaikan: ______________________________________________________ Interpretasi latihan pribadi (bukan standar resmi): 85–100: pemahaman sangat baik; pertahankan dengan praktik. 70–84: baik; ulangi materi yang masih keliru. 55–69: perlu penguatan pada beberapa materi. 0–54: ulangi konsep dasar dan latihan bertahap. Untuk penggunaan kedinasan, ikuti kebijakan keamanan informasi, kewenangan akses, dan petunjuk resmi satuan.",
+    "explanation": "Ctrl+A memilih seluruh teks atau objek dalam konteks aktif.",
     "weight": 10
   }
 ];
@@ -16283,7 +16719,7 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "id": 501,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #1] Pancasila berkedudukan sebagai apa?",
+    "stem": "Pancasila berkedudukan sebagai apa?",
     "options": [
       {
         "key": "A",
@@ -16300,6 +16736,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Hukum acara"
+      },
+      {
+        "key": "E",
+        "text": "Kaidah kebiasaan internasional"
       }
     ],
     "correctKey": "B",
@@ -16310,22 +16750,7 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "id": 502,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #2] Pilih satu jawaban paling tepat: A, B, C, atau D.",
-    "options": [
-      {
-        "key": "D",
-        "text": ""
-      }
-    ],
-    "correctKey": "B",
-    "explanation": "Rumusan lima sila tercantum dalam Pembukaan UUD 1945 alinea keempat.",
-    "weight": 10
-  },
-  {
-    "id": 503,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
-    "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #2] Rumusan Pancasila tercantum dalam bagian mana dari UUD 1945?  A. Batang tubuh Pasal 1",
+    "stem": "Rumusan Pancasila tercantum dalam bagian mana dari UUD 1945?",
     "options": [
       {
         "key": "A",
@@ -16342,6 +16767,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Dekrit Presiden"
+      },
+      {
+        "key": "E",
+        "text": "Keputusan Presiden langsung"
       }
     ],
     "correctKey": "B",
@@ -16349,10 +16778,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 504,
+    "id": 503,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #3] Sila ketiga Pancasila menekankan nilai apa?  A. Persatuan Indonesia",
+    "stem": "Sila ketiga Pancasila menekankan nilai apa?",
     "options": [
       {
         "key": "A",
@@ -16369,6 +16798,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Musyawarah"
+      },
+      {
+        "key": "E",
+        "text": "Menjaga stabilitas nilai tukar Rupiah"
       }
     ],
     "correctKey": "A",
@@ -16376,10 +16809,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 505,
+    "id": 504,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #4] Menurut UUD 1945, kedaulatan berada di tangan siapa?  A. Presiden",
+    "stem": "Menurut UUD 1945, kedaulatan berada di tangan siapa?",
     "options": [
       {
         "key": "A",
@@ -16396,6 +16829,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "DPR saja"
+      },
+      {
+        "key": "E",
+        "text": "Membentuk lembaga peradilan baru"
       }
     ],
     "correctKey": "C",
@@ -16403,10 +16840,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 506,
+    "id": 505,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #5] Indonesia adalah negara apa menurut Pasal 1 ayat (3) UUD 1945?  A. Negara kekuasaan",
+    "stem": "Indonesia adalah negara apa menurut Pasal 1 ayat (3) UUD 1945?",
     "options": [
       {
         "key": "A",
@@ -16423,6 +16860,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Negara militer"
+      },
+      {
+        "key": "E",
+        "text": "Kaidah adat istiadat setempat"
       }
     ],
     "correctKey": "B",
@@ -16430,10 +16871,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 507,
+    "id": 506,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #6] Lembaga yang memegang kekuasaan membentuk undang-undang adalah?  A. DPR",
+    "stem": "Lembaga yang memegang kekuasaan membentuk undang-undang adalah?",
     "options": [
       {
         "key": "A",
@@ -16450,6 +16891,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "KY"
+      },
+      {
+        "key": "E",
+        "text": "Peraturan Daerah Provinsi"
       }
     ],
     "correctKey": "A",
@@ -16457,10 +16902,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 508,
+    "id": 507,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #7] Presiden menurut UUD 1945 memegang kekuasaan apa?  A. Kehakiman",
+    "stem": "Presiden menurut UUD 1945 memegang kekuasaan apa?",
     "options": [
       {
         "key": "A",
@@ -16477,6 +16922,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Legislasi tunggal"
+      },
+      {
+        "key": "E",
+        "text": "Surat izin dari instansi asal"
       }
     ],
     "correctKey": "B",
@@ -16484,10 +16933,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 509,
+    "id": 508,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #8] Bentuk negara Indonesia adalah?  A. Serikat",
+    "stem": "Bentuk negara Indonesia adalah?",
     "options": [
       {
         "key": "A",
@@ -16503,7 +16952,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Konfederasi  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 4"
+        "text": "Konfederasi"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan penindakan tanpa dasar hukum"
       }
     ],
     "correctKey": "B",
@@ -16511,10 +16964,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 510,
+    "id": 509,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #9] Persamaan warga negara di hadapan hukum dikenal sebagai prinsip apa?  A. Equality before the law",
+    "stem": "Persamaan warga negara di hadapan hukum dikenal sebagai prinsip apa?",
     "options": [
       {
         "key": "A",
@@ -16531,6 +16984,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Dominasi mayoritas"
+      },
+      {
+        "key": "E",
+        "text": "Menerima imbalan sukarela warga"
       }
     ],
     "correctKey": "A",
@@ -16538,10 +16995,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 511,
+    "id": 510,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #10] Pembatasan kekuasaan dalam negara hukum terutama bertujuan untuk apa?  A. Mempercepat hukuman tanpa proses",
+    "stem": "Pembatasan kekuasaan dalam negara hukum terutama bertujuan untuk apa?",
     "options": [
       {
         "key": "A",
@@ -16558,6 +17015,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengutamakan pejabat"
+      },
+      {
+        "key": "E",
+        "text": "Diskresi tanpa pertimbangan situasional"
       }
     ],
     "correctKey": "B",
@@ -16565,10 +17026,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 512,
+    "id": 511,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #11] Undang-undang pokok yang mengatur Polri adalah?  A. UU 2 Tahun 2002",
+    "stem": "Undang-undang pokok yang mengatur Polri adalah?",
     "options": [
       {
         "key": "A",
@@ -16585,6 +17046,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "UU 5 Tahun 2014"
+      },
+      {
+        "key": "E",
+        "text": "Menolak laporan sebelum ada bukti kuat"
       }
     ],
     "correctKey": "A",
@@ -16592,10 +17057,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 513,
+    "id": 512,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #12] Tiga tugas pokok Polri meliputi apa?  A. Membentuk UU, mengadili, memenjarakan",
+    "stem": "Tiga tugas pokok Polri meliputi apa?",
     "options": [
       {
         "key": "A",
@@ -16612,6 +17077,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pertahanan militer"
+      },
+      {
+        "key": "E",
+        "text": "Membatasi akses bantuan hukum tersangka"
       }
     ],
     "correctKey": "B",
@@ -16619,10 +17088,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 514,
+    "id": 513,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #13] Polri berada di bawah siapa dalam struktur ketatanegaraan?  A. DPR",
+    "stem": "Polri berada di bawah siapa dalam struktur ketatanegaraan?",
     "options": [
       {
         "key": "A",
@@ -16639,6 +17108,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Gubernur"
+      },
+      {
+        "key": "E",
+        "text": "Menyita barang tanpa surat penetapan"
       }
     ],
     "correctKey": "B",
@@ -16646,10 +17119,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 515,
+    "id": 514,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #14] Kapolri diangkat dan diberhentikan Presiden dengan persetujuan siapa?  A. DPR",
+    "stem": "Kapolri diangkat dan diberhentikan Presiden dengan persetujuan siapa?",
     "options": [
       {
         "key": "A",
@@ -16666,6 +17139,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mahkamah Konstitusi"
+      },
+      {
+        "key": "E",
+        "text": "Menahan saksi untuk penyelidikan awal"
       }
     ],
     "correctKey": "A",
@@ -16673,10 +17150,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 516,
+    "id": 515,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #15] Fungsi kepolisian merupakan fungsi pemerintahan di bidang apa?  A. Moneter",
+    "stem": "Fungsi kepolisian merupakan fungsi pemerintahan di bidang apa?",
     "options": [
       {
         "key": "A",
@@ -16693,6 +17170,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pendidikan tinggi"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan penyadapan tanpa izin pengadilan"
       }
     ],
     "correctKey": "B",
@@ -16700,10 +17181,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 517,
+    "id": 516,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #16] Polri sebagai Kepolisian Nasional berarti apa?  A. Setiap daerah berdiri terpisah",
+    "stem": "Polri sebagai Kepolisian Nasional berarti apa?",
     "options": [
       {
         "key": "A",
@@ -16720,6 +17201,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Di bawah pemda"
+      },
+      {
+        "key": "E",
+        "text": "Menghentikan kasus atas dasar perdamaian sepihak"
       }
     ],
     "correctKey": "B",
@@ -16727,10 +17212,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 518,
+    "id": 517,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #17] Pelaksanaan tugas Polri harus menjunjung tinggi apa?  A. Kepentingan pribadi",
+    "stem": "Pelaksanaan tugas Polri harus menjunjung tinggi apa?",
     "options": [
       {
         "key": "A",
@@ -16746,7 +17231,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Kepentingan kelompok  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 5"
+        "text": "Kepentingan kelompok"
+      },
+      {
+        "key": "E",
+        "text": "Menyerahkan tahanan kepada pihak keluarga"
       }
     ],
     "correctKey": "B",
@@ -16754,10 +17243,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 519,
+    "id": 518,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #18] Contoh tugas preventif kepolisian adalah?  A. Patroli pencegahan gangguan kamtibmas",
+    "stem": "Contoh tugas preventif kepolisian adalah?",
     "options": [
       {
         "key": "A",
@@ -16774,6 +17263,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Putusan perdata"
+      },
+      {
+        "key": "E",
+        "text": "Mengumumkan identitas korban kejahatan asusila"
       }
     ],
     "correctKey": "A",
@@ -16781,10 +17274,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 520,
+    "id": 519,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #19] Contoh tindakan represif dalam penegakan hukum adalah?  A. Penyidikan tindak pidana sesuai hukum",
+    "stem": "Contoh tindakan represif dalam penegakan hukum adalah?",
     "options": [
       {
         "key": "A",
@@ -16801,6 +17294,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Kampanye tertib lalu lintas"
+      },
+      {
+        "key": "E",
+        "text": "Menerima hadiah tanda terima kasih dari korban"
       }
     ],
     "correctKey": "A",
@@ -16808,10 +17305,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 521,
+    "id": 520,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #20] Pelayanan publik Polri seharusnya seperti apa?  A. Hanya untuk kenalan",
+    "stem": "Pelayanan publik Polri seharusnya seperti apa?",
     "options": [
       {
         "key": "A",
@@ -16827,7 +17324,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Menolak kelompok rentan  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 6"
+        "text": "Menolak kelompok rentan"
+      },
+      {
+        "key": "E",
+        "text": "Menyalahgunakan senjata api untuk intimidasi"
       }
     ],
     "correctKey": "B",
@@ -16835,10 +17336,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 522,
+    "id": 521,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #21] Salah satu kewenangan umum Polri menurut UU 2/2002 adalah?  A. Menerima laporan/pengaduan",
+    "stem": "Salah satu kewenangan umum Polri menurut UU 2/2002 adalah?",
     "options": [
       {
         "key": "A",
@@ -16855,6 +17356,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Membuat APBN"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan panggilan gelar perkara"
       }
     ],
     "correctKey": "A",
@@ -16862,10 +17367,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 523,
+    "id": 522,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #22] Tindakan pertama di TKP bertujuan antara lain untuk apa?  A. Mengubah posisi barang",
+    "stem": "Tindakan pertama di TKP bertujuan antara lain untuk apa?",
     "options": [
       {
         "key": "A",
@@ -16882,6 +17387,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menyebarkan identitas korban"
+      },
+      {
+        "key": "E",
+        "text": "Mengubah isi berita acara pemeriksaan (BAP)"
       }
     ],
     "correctKey": "B",
@@ -16889,10 +17398,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 524,
+    "id": 523,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #23] Prinsip legalitas dalam tindakan kepolisian berarti apa?  A. Tindakan memiliki dasar hukum",
+    "stem": "Prinsip legalitas dalam tindakan kepolisian berarti apa?",
     "options": [
       {
         "key": "A",
@@ -16909,6 +17418,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Aturan boleh diabaikan"
+      },
+      {
+        "key": "E",
+        "text": "Menolak perintah atasan yang sah sesuai aturan"
       }
     ],
     "correctKey": "A",
@@ -16916,10 +17429,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 525,
+    "id": 524,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #24] Prinsip nesesitas dalam penggunaan kekuatan menghendaki apa?  A. Kekuatan sebagai pilihan pertama",
+    "stem": "Prinsip nesesitas dalam penggunaan kekuatan menghendaki apa?",
     "options": [
       {
         "key": "A",
@@ -16936,6 +17449,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tanpa evaluasi"
+      },
+      {
+        "key": "E",
+        "text": "Memberikan keterangan pers tanpa koordinasi humas"
       }
     ],
     "correctKey": "B",
@@ -16943,10 +17460,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 526,
+    "id": 525,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #25] Prinsip proporsionalitas berarti apa?  A. Kekuatan seimbang dengan ancaman dan tujuan sah",
+    "stem": "Prinsip proporsionalitas berarti apa?",
     "options": [
       {
         "key": "A",
@@ -16963,6 +17480,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tanpa menilai risiko"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan pungutan liar dalam pengurusan SIM"
       }
     ],
     "correctKey": "A",
@@ -16970,10 +17491,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 527,
+    "id": 526,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #26] Akuntabilitas tindakan kepolisian menuntut apa?  A. Tidak ada pencatatan",
+    "stem": "Akuntabilitas tindakan kepolisian menuntut apa?",
     "options": [
       {
         "key": "A",
@@ -16990,6 +17511,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghindari evaluasi"
+      },
+      {
+        "key": "E",
+        "text": "Menahan barang bukti kendaraan di luar kantor"
       }
     ],
     "correctKey": "B",
@@ -16997,10 +17522,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 528,
+    "id": 527,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #27] Diskresi kepolisian seharusnya digunakan bagaimana?  A. Sesuka hati",
+    "stem": "Diskresi kepolisian seharusnya digunakan bagaimana?",
     "options": [
       {
         "key": "A",
@@ -17017,6 +17542,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghindari prosedur"
+      },
+      {
+        "key": "E",
+        "text": "Menghapus rekaman kamera pengawas (CCTV)"
       }
     ],
     "correctKey": "B",
@@ -17024,10 +17553,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 529,
+    "id": 528,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #28] Saat menerima laporan masyarakat, petugas sebaiknya?  A. Menilai pelapor sebelum mendengar",
+    "stem": "Saat menerima laporan masyarakat, petugas sebaiknya?",
     "options": [
       {
         "key": "A",
@@ -17044,6 +17573,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Meminta imbalan"
+      },
+      {
+        "key": "E",
+        "text": "Menyebarkan rahasia operasi di media sosial"
       }
     ],
     "correctKey": "B",
@@ -17051,10 +17584,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 530,
+    "id": 529,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #29] Jika konflik warga berpotensi meluas, langkah awal tepat adalah?  A. Memihak kelompok",
+    "stem": "Jika konflik warga berpotensi meluas, langkah awal tepat adalah?",
     "options": [
       {
         "key": "A",
@@ -17070,7 +17603,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Pergi tanpa koordinasi  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 7"
+        "text": "Pergi tanpa koordinasi"
+      },
+      {
+        "key": "E",
+        "text": "Membela pihak tertentu karena hubungan kerabat"
       }
     ],
     "correctKey": "B",
@@ -17078,10 +17615,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 531,
+    "id": 530,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #30] Barang temuan yang diterima petugas harus bagaimana?  A. Dibawa pulang",
+    "stem": "Barang temuan yang diterima petugas harus bagaimana?",
     "options": [
       {
         "key": "A",
@@ -17098,6 +17635,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Dibiarkan tanpa tanda terima"
+      },
+      {
+        "key": "E",
+        "text": "Menggunakan kendaraan dinas untuk urusan pribadi"
       }
     ],
     "correctKey": "B",
@@ -17105,10 +17646,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 532,
+    "id": 531,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #31] KUHP nasional diatur dalam undang-undang nomor berapa?  A. UU 1 Tahun 2023",
+    "stem": "KUHP nasional diatur dalam undang-undang nomor berapa?",
     "options": [
       {
         "key": "A",
@@ -17125,6 +17666,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "PP 2 Tahun 2003"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan standar operasional prosedur patroli"
       }
     ],
     "correctKey": "A",
@@ -17132,10 +17677,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 533,
+    "id": 532,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #32] KUHP nasional mulai berlaku kapan?  A. 1 Januari 2024",
+    "stem": "KUHP nasional mulai berlaku kapan?",
     "options": [
       {
         "key": "A",
@@ -17152,6 +17697,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "2 Januari 2023"
+      },
+      {
+        "key": "E",
+        "text": "Memperlakukan tahanan secara diskriminatif"
       }
     ],
     "correctKey": "B",
@@ -17159,10 +17708,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 534,
+    "id": 533,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #33] Asas legalitas pidana secara umum mengandung prinsip apa?  A. Tidak ada pidana tanpa aturan pidana sebelumnya",
+    "stem": "Asas legalitas pidana secara umum mengandung prinsip apa?",
     "options": [
       {
         "key": "A",
@@ -17179,6 +17728,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Hukuman berdasar prasangka"
+      },
+      {
+        "key": "E",
+        "text": "Menunda penyerahan berkas perkara ke kejaksaan"
       }
     ],
     "correctKey": "A",
@@ -17186,10 +17739,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 535,
+    "id": 534,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #34] Pertanggungjawaban pidana pada prinsipnya berkaitan dengan apa?  A. Kesalahan dan kemampuan bertanggung jawab",
+    "stem": "Pertanggungjawaban pidana pada prinsipnya berkaitan dengan apa?",
     "options": [
       {
         "key": "A",
@@ -17206,6 +17759,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pendapat tetangga"
+      },
+      {
+        "key": "E",
+        "text": "Membocorkan rencana razia kepada sasaran"
       }
     ],
     "correctKey": "A",
@@ -17213,10 +17770,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 536,
+    "id": 535,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #35] Perbedaan tindak pidana dan pelanggaran etik adalah?  A. Selalu sama",
+    "stem": "Perbedaan tindak pidana dan pelanggaran etik adalah?",
     "options": [
       {
         "key": "A",
@@ -17233,6 +17790,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pidana hanya di kantor"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan keselamatan masyarakat saat penindakan"
       }
     ],
     "correctKey": "B",
@@ -17240,10 +17801,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 537,
+    "id": 536,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #36] Pidana dijatuhkan oleh siapa?  A. Penyidik",
+    "stem": "Pidana dijatuhkan oleh siapa?",
     "options": [
       {
         "key": "A",
@@ -17260,6 +17821,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Ketua RT"
+      },
+      {
+        "key": "E",
+        "text": "Menggunakan kekerasan dalam interogasi saksi"
       }
     ],
     "correctKey": "B",
@@ -17267,10 +17832,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 538,
+    "id": 537,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #37] Tujuan pemidanaan modern dapat mencakup apa?  A. Pembalasan tanpa batas",
+    "stem": "Tujuan pemidanaan modern dapat mencakup apa?",
     "options": [
       {
         "key": "A",
@@ -17287,6 +17852,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menguntungkan korban dengan cara apa pun"
+      },
+      {
+        "key": "E",
+        "text": "Menolak pendampingan penasihat hukum"
       }
     ],
     "correctKey": "B",
@@ -17294,10 +17863,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 539,
+    "id": 538,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #38] Percobaan melakukan tindak pidana pada umumnya berkaitan dengan apa?  A. Niat saja selalu cukup",
+    "stem": "Percobaan melakukan tindak pidana pada umumnya berkaitan dengan apa?",
     "options": [
       {
         "key": "A",
@@ -17313,7 +17882,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Kesalahan administrasi  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 8"
+        "text": "Kesalahan administrasi"
+      },
+      {
+        "key": "E",
+        "text": "Menerima janji atau suap dari pihak berperkara"
       }
     ],
     "correctKey": "B",
@@ -17321,10 +17894,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 540,
+    "id": 539,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #39] Pembelaan terpaksa dalam hukum pidana dikenal dengan istilah apa?  A. Noodweer",
+    "stem": "Pembelaan terpaksa dalam hukum pidana dikenal dengan istilah apa?",
     "options": [
       {
         "key": "A",
@@ -17341,6 +17914,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Grasi"
+      },
+      {
+        "key": "E",
+        "text": "Menutupi pelanggaran rekan kerja satu unit"
       }
     ],
     "correctKey": "A",
@@ -17348,10 +17925,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 541,
+    "id": 540,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #40] Penerapan KUHP dalam perkara konkret harus memperhatikan apa?  A. Perasaan petugas",
+    "stem": "Penerapan KUHP dalam perkara konkret harus memperhatikan apa?",
     "options": [
       {
         "key": "A",
@@ -17367,7 +17944,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Tekanan massa  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 9"
+        "text": "Tekanan massa"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan keluhan pelayanan pengaduan warga"
       }
     ],
     "correctKey": "B",
@@ -17375,10 +17956,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 542,
+    "id": 541,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #41] KUHAP yang berlaku sejak 2 Januari 2026 adalah?  A. UU 8 Tahun 1981",
+    "stem": "KUHAP yang berlaku sejak 2 Januari 2026 adalah?",
     "options": [
       {
         "key": "A",
@@ -17395,17 +17976,21 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "UU 2 Tahun 2002"
+      },
+      {
+        "key": "E",
+        "text": "Menggunakan fasilitas dinas tanpa izin pimpinan"
       }
     ],
     "correctKey": "B",
-    "explanation": "UU 20/2025 menggantikan UU 8/1981 dan berlaku sejak 2 Januari 2026.  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 21",
+    "explanation": "UU 20/2025 menggantikan UU 8/1981 dan berlaku sejak 2 Januari 2026.",
     "weight": 10
   },
   {
-    "id": 543,
+    "id": 542,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #42] Penyelidikan pada pokoknya bertujuan untuk apa?  A. Menentukan apakah peristiwa diduga tindak pidana untuk ditindaklanjuti",
+    "stem": "Penyelidikan pada pokoknya bertujuan untuk apa?",
     "options": [
       {
         "key": "A",
@@ -17422,6 +18007,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Eksekusi putusan"
+      },
+      {
+        "key": "E",
+        "text": "Menolak kehadiran pihak pelapor dalam mediasi"
       }
     ],
     "correctKey": "A",
@@ -17429,10 +18018,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 544,
+    "id": 543,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #43] Penyidikan pada pokoknya bertujuan untuk apa?  A. Mengumpulkan bukti untuk membuat terang tindak pidana dan menemukan tersangka",
+    "stem": "Penyidikan pada pokoknya bertujuan untuk apa?",
     "options": [
       {
         "key": "A",
@@ -17449,6 +18038,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menentukan hukuman oleh polisi"
+      },
+      {
+        "key": "E",
+        "text": "Menyita barang di luar daftar surat perintah penyitaan"
       }
     ],
     "correctKey": "A",
@@ -17456,10 +18049,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 545,
+    "id": 544,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #44] Penyidik wajib bekerja berdasarkan apa?  A. Perintah siapa pun",
+    "stem": "Penyidik wajib bekerja berdasarkan apa?",
     "options": [
       {
         "key": "A",
@@ -17476,6 +18069,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Target pengakuan"
+      },
+      {
+        "key": "E",
+        "text": "Mengalihkan tanggung jawab piket tanpa serah terima"
       }
     ],
     "correctKey": "B",
@@ -17483,10 +18080,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 546,
+    "id": 545,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #45] UU 20/2025 menekankan penguatan hak siapa?  A. Tersangka, terdakwa, terpidana, saksi, korban, penyandang disabilitas",
+    "stem": "UU 20/2025 menekankan penguatan hak siapa?",
     "options": [
       {
         "key": "A",
@@ -17503,6 +18100,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Hanya penuntut umum"
+      },
+      {
+        "key": "E",
+        "text": "Menunda pembuatan laporan polisi tindak pidana"
       }
     ],
     "correctKey": "A",
@@ -17510,10 +18111,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 547,
+    "id": 546,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #46] Praperadilan merupakan mekanisme apa?  A. Pengawasan yudisial atas tindakan/proses tertentu menurut KUHAP",
+    "stem": "Praperadilan merupakan mekanisme apa?",
     "options": [
       {
         "key": "A",
@@ -17530,6 +18131,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pengadilan militer"
+      },
+      {
+        "key": "E",
+        "text": "Menyembunyikan informasi penting saat olah TKP"
       }
     ],
     "correctKey": "A",
@@ -17537,10 +18142,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 548,
+    "id": 547,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #47] Barang bukti harus dikelola dengan prinsip apa?  A. Bebas dipindahkan",
+    "stem": "Barang bukti harus dikelola dengan prinsip apa?",
     "options": [
       {
         "key": "A",
@@ -17557,6 +18162,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tanpa identifikasi"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan penangkapan tanpa menunjukkan identitas"
       }
     ],
     "correctKey": "B",
@@ -17564,10 +18173,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 549,
+    "id": 548,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #48] Keterangan saksi yang baik dalam pembuktian adalah?  A. Berdasarkan yang dilihat, didengar, dialami sesuai hukum",
+    "stem": "Keterangan saksi yang baik dalam pembuktian adalah?",
     "options": [
       {
         "key": "A",
@@ -17584,6 +18193,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Hasil tekanan"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan asas praduga tak bersalah"
       }
     ],
     "correctKey": "A",
@@ -17591,10 +18204,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 550,
+    "id": 549,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #49] Hak atas bantuan hukum bertujuan untuk apa?  A. Menghalangi proses hukum",
+    "stem": "Hak atas bantuan hukum bertujuan untuk apa?",
     "options": [
       {
         "key": "A",
@@ -17610,7 +18223,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Menentukan hasil perkara  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 10"
+        "text": "Menentukan hasil perkara"
+      },
+      {
+        "key": "E",
+        "text": "Mengintimidasi saksi agar mengubah keterangan"
       }
     ],
     "correctKey": "B",
@@ -17618,10 +18235,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 551,
+    "id": 550,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #50] Keadilan restoratif menitikberatkan pada apa?  A. Pemulihan yang sah dengan memperhatikan korban, pelaku, masyarakat",
+    "stem": "Keadilan restoratif menitikberatkan pada apa?",
     "options": [
       {
         "key": "A",
@@ -17638,6 +18255,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Ancaman"
+      },
+      {
+        "key": "E",
+        "text": "Menolak koordinasi antar-instansi penegak hukum"
       }
     ],
     "correctKey": "A",
@@ -17645,10 +18266,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 552,
+    "id": 551,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #51] Perpol yang mengatur Kode Etik Profesi dan Komisi Kode Etik Polri adalah?  A. Perpol 7 Tahun 2022",
+    "stem": "Perpol yang mengatur Kode Etik Profesi dan Komisi Kode Etik Polri adalah?",
     "options": [
       {
         "key": "A",
@@ -17665,6 +18286,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "UU 20 Tahun 2025"
+      },
+      {
+        "key": "E",
+        "text": "Mempercepat perkara karena adanya imbalan"
       }
     ],
     "correctKey": "A",
@@ -17672,10 +18297,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 553,
+    "id": 552,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #52] Peraturan disiplin anggota Polri diatur dalam?  A. PP 2 Tahun 2003",
+    "stem": "Peraturan disiplin anggota Polri diatur dalam?",
     "options": [
       {
         "key": "A",
@@ -17692,6 +18317,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "PP 7 Tahun 2022"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan barang bukti digital yang rentan hilang"
       }
     ],
     "correctKey": "A",
@@ -17699,10 +18328,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 554,
+    "id": 553,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #53] Kode etik profesi terutama berfungsi sebagai apa?  A. Pedoman sikap, perilaku, perbuatan anggota",
+    "stem": "Kode etik profesi terutama berfungsi sebagai apa?",
     "options": [
       {
         "key": "A",
@@ -17719,6 +18348,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pedoman kampanye"
+      },
+      {
+        "key": "E",
+        "text": "Menolak perlindungan kepada saksi kunci"
       }
     ],
     "correctKey": "A",
@@ -17726,10 +18359,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 555,
+    "id": 554,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #54] Integritas dalam tugas kepolisian tercermin dari apa?  A. Mengubah fakta",
+    "stem": "Integritas dalam tugas kepolisian tercermin dari apa?",
     "options": [
       {
         "key": "A",
@@ -17746,6 +18379,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menerima hadiah ilegal"
+      },
+      {
+        "key": "E",
+        "text": "Membuat keputusan berdasarkan opini pribadi"
       }
     ],
     "correctKey": "B",
@@ -17753,10 +18390,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 556,
+    "id": 555,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #55] Konflik kepentingan terjadi ketika apa?  A. Kepentingan pribadi berpotensi memengaruhi objektivitas tugas",
+    "stem": "Konflik kepentingan terjadi ketika apa?",
     "options": [
       {
         "key": "A",
@@ -17773,6 +18410,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Atasan supervisi"
+      },
+      {
+        "key": "E",
+        "text": "Menghalangi tersangka menghubungi keluarga"
       }
     ],
     "correctKey": "A",
@@ -17780,10 +18421,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 557,
+    "id": 556,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #56] Jika mengetahui rekan meminta imbalan ilegal, tindakan profesional adalah?  A. Ikut menerima",
+    "stem": "Jika mengetahui rekan meminta imbalan ilegal, tindakan profesional adalah?",
     "options": [
       {
         "key": "A",
@@ -17800,6 +18441,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Meminta bagian"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan hak asasi tahanan yang sakit"
       }
     ],
     "correctKey": "C",
@@ -17807,10 +18452,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 558,
+    "id": 557,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #57] Praduga tak bersalah berarti apa?  A. Tersangka pasti bersalah",
+    "stem": "Praduga tak bersalah berarti apa?",
     "options": [
       {
         "key": "A",
@@ -17827,6 +18472,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Korban tidak boleh melapor"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan razia tanpa dilengkapi surat perintah tugas"
       }
     ],
     "correctKey": "B",
@@ -17834,10 +18483,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 559,
+    "id": 558,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #58] Perlakuan terhadap tahanan harus bagaimana?  A. Menghormati martabat dan hak yang dijamin hukum",
+    "stem": "Perlakuan terhadap tahanan harus bagaimana?",
     "options": [
       {
         "key": "A",
@@ -17853,7 +18502,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Dipertontonkan  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 11"
+        "text": "Dipertontonkan"
+      },
+      {
+        "key": "E",
+        "text": "Menyimpan barang bukti narkotika di tempat pribadi"
       }
     ],
     "correctKey": "A",
@@ -17861,10 +18514,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 560,
+    "id": 559,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #59] Penyiksaan untuk memperoleh pengakuan adalah?  A. Dibenarkan",
+    "stem": "Penyiksaan untuk memperoleh pengakuan adalah?",
     "options": [
       {
         "key": "A",
@@ -17881,6 +18534,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Boleh atas perintah informal"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan rantai komando saat situasi darurat"
       }
     ],
     "correctKey": "B",
@@ -17888,10 +18545,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 561,
+    "id": 560,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #60] Netralitas anggota Polri dalam politik praktis menuntut apa?  A. Mendukung peserta dengan jabatan",
+    "stem": "Netralitas anggota Polri dalam politik praktis menuntut apa?",
     "options": [
       {
         "key": "A",
@@ -17907,7 +18564,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Kampanye dengan fasilitas dinas  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 12"
+        "text": "Kampanye dengan fasilitas dinas"
+      },
+      {
+        "key": "E",
+        "text": "Menyerahkan dokumen rahasia kepada pihak ketiga"
       }
     ],
     "correctKey": "B",
@@ -17915,10 +18576,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 562,
+    "id": 561,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #61] Fungsi utama lalu lintas berkaitan dengan apa?  A. Kamseltibcarlantas",
+    "stem": "Fungsi utama lalu lintas berkaitan dengan apa?",
     "options": [
       {
         "key": "A",
@@ -17935,6 +18596,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pengawasan bank"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan etika komunikasi di ruang publik"
       }
     ],
     "correctKey": "A",
@@ -17942,10 +18607,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 563,
+    "id": 562,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #62] Contoh kegiatan preventif Satlantas adalah?  A. Pendidikan masyarakat dan pengaturan lalu lintas",
+    "stem": "Contoh kegiatan preventif Satlantas adalah?",
     "options": [
       {
         "key": "A",
@@ -17962,6 +18627,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pemasyarakatan"
+      },
+      {
+        "key": "E",
+        "text": "Menyebarkan informasi hoax di lingkungan kedinasan"
       }
     ],
     "correctKey": "A",
@@ -17969,10 +18638,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 564,
+    "id": 563,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #63] Fungsi Reserse terutama berhubungan dengan apa?  A. Penyelidikan dan penyidikan tindak pidana",
+    "stem": "Fungsi Reserse terutama berhubungan dengan apa?",
     "options": [
       {
         "key": "A",
@@ -17989,6 +18658,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pajak"
+      },
+      {
+        "key": "E",
+        "text": "Menolak penugasan operasi pengamanan wilayah"
       }
     ],
     "correctKey": "A",
@@ -17996,10 +18669,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 565,
+    "id": 564,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #64] Fungsi Intelkam mendukung tugas melalui apa?  A. Pengumpulan dan analisis informasi untuk deteksi/peringatan dini",
+    "stem": "Fungsi Intelkam mendukung tugas melalui apa?",
     "options": [
       {
         "key": "A",
@@ -18016,6 +18689,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Paspor"
+      },
+      {
+        "key": "E",
+        "text": "Menggunakan seragam dinas tidak sesuai regulasi"
       }
     ],
     "correctKey": "A",
@@ -18023,10 +18700,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 566,
+    "id": 565,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #65] Fungsi Samapta antara lain melaksanakan apa?  A. Kegiatan preventif seperti patroli dan penjagaan",
+    "stem": "Fungsi Samapta antara lain melaksanakan apa?",
     "options": [
       {
         "key": "A",
@@ -18043,6 +18720,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pemilu"
+      },
+      {
+        "key": "E",
+        "text": "Membawa senjata api dinas ke tempat hiburan malam"
       }
     ],
     "correctKey": "A",
@@ -18050,10 +18731,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 567,
+    "id": 566,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #66] Fungsi Binmas menitikberatkan pada apa?  A. Pembinaan masyarakat dan kemitraan",
+    "stem": "Fungsi Binmas menitikberatkan pada apa?",
     "options": [
       {
         "key": "A",
@@ -18070,6 +18751,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Bea cukai"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan instruksi kapolsek dalam apel pagi"
       }
     ],
     "correctKey": "A",
@@ -18077,10 +18762,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 568,
+    "id": 567,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #67] Identifikasi kepolisian membantu apa?  A. Pengenalan identitas melalui metode ilmiah sesuai kewenangan",
+    "stem": "Identifikasi kepolisian membantu apa?",
     "options": [
       {
         "key": "A",
@@ -18097,6 +18782,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghapus TKP"
+      },
+      {
+        "key": "E",
+        "text": "Menolak menandatangani pakta integritas dinas"
       }
     ],
     "correctKey": "A",
@@ -18104,10 +18793,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 569,
+    "id": 568,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #68] Laboratorium forensik berperan dalam apa?  A. Pemeriksaan ilmiah barang bukti",
+    "stem": "Laboratorium forensik berperan dalam apa?",
     "options": [
       {
         "key": "A",
@@ -18124,6 +18813,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pengaturan lantas"
+      },
+      {
+        "key": "E",
+        "text": "Mengurangi jatah ransum dinas personel piket"
       }
     ],
     "correctKey": "A",
@@ -18131,10 +18824,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 570,
+    "id": 569,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #69] Kedokteran kepolisian dapat mendukung apa?  A. Pemeriksaan medis-forensik sesuai kewenangan",
+    "stem": "Kedokteran kepolisian dapat mendukung apa?",
     "options": [
       {
         "key": "A",
@@ -18150,7 +18843,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Penerbitan SIM  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 13"
+        "text": "Penerbitan SIM"
+      },
+      {
+        "key": "E",
+        "text": "Memalsukan tanda tangan pimpinan pada disposisi"
       }
     ],
     "correctKey": "A",
@@ -18158,10 +18855,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 571,
+    "id": 570,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #70] Kemitraan polisi-masyarakat bertujuan apa?  A. Membangun kepercayaan dan pemecahan masalah kamtibmas bersama",
+    "stem": "Kemitraan polisi-masyarakat bertujuan apa?",
     "options": [
       {
         "key": "A",
@@ -18178,6 +18875,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Membatasi pelaporan"
+      },
+      {
+        "key": "E",
+        "text": "Menghilangkan dokumen rekam jejak personel"
       }
     ],
     "correctKey": "A",
@@ -18185,10 +18886,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 572,
+    "id": 571,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #71] Kepemimpinan berintegritas ditunjukkan dengan apa?  A. Memberi teladan dan bertanggung jawab",
+    "stem": "Kepemimpinan berintegritas ditunjukkan dengan apa?",
     "options": [
       {
         "key": "A",
@@ -18205,6 +18906,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengubah laporan"
+      },
+      {
+        "key": "E",
+        "text": "Mengintervensi penyidik unit lain secara sepihak"
       }
     ],
     "correctKey": "A",
@@ -18212,10 +18917,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 573,
+    "id": 572,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #72] Delegasi tugas yang baik harus disertai apa?  A. Tujuan, kewenangan, tanggung jawab, pengawasan",
+    "stem": "Delegasi tugas yang baik harus disertai apa?",
     "options": [
       {
         "key": "A",
@@ -18232,6 +18937,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tanpa evaluasi"
+      },
+      {
+        "key": "E",
+        "text": "Menolak mediasi restorative justice yang memenuhi syarat"
       }
     ],
     "correctKey": "A",
@@ -18239,10 +18948,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 574,
+    "id": 573,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #73] Saat menerima informasi belum terverifikasi, pimpinan sebaiknya?  A. Menyebarkan",
+    "stem": "Saat menerima informasi belum terverifikasi, pimpinan sebaiknya?",
     "options": [
       {
         "key": "A",
@@ -18259,6 +18968,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghapus catatan"
+      },
+      {
+        "key": "E",
+        "text": "Menunda pelaksanaan eksekusi putusan pengadilan"
       }
     ],
     "correctKey": "B",
@@ -18266,10 +18979,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 575,
+    "id": 574,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #74] Dalam situasi darurat, prioritas pertama petugas adalah?  A. Keselamatan jiwa dan pengendalian risiko",
+    "stem": "Dalam situasi darurat, prioritas pertama petugas adalah?",
     "options": [
       {
         "key": "A",
@@ -18286,6 +18999,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghindari koordinasi"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan laporan warga terkait peredaran miras"
       }
     ],
     "correctKey": "A",
@@ -18293,10 +19010,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 576,
+    "id": 575,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #75] Pelayanan berorientasi masyarakat berarti?  A. Responsif, mudah diakses, adil, informatif",
+    "stem": "Pelayanan berorientasi masyarakat berarti?",
     "options": [
       {
         "key": "A",
@@ -18313,6 +19030,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Pungutan ilegal"
+      },
+      {
+        "key": "E",
+        "text": "Menjadikan pos lantas sebagai tempat komersial"
       }
     ],
     "correctKey": "A",
@@ -18320,10 +19041,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 577,
+    "id": 576,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #76] Pengawasan melekat atasan bertujuan apa?  A. Memastikan tugas sesuai aturan dan memperbaiki penyimpangan",
+    "stem": "Pengawasan melekat atasan bertujuan apa?",
     "options": [
       {
         "key": "A",
@@ -18340,6 +19061,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menutup laporan"
+      },
+      {
+        "key": "E",
+        "text": "Menggunakan rotator dan sirine saat bukan tugas darurat"
       }
     ],
     "correctKey": "A",
@@ -18347,10 +19072,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 578,
+    "id": 577,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #77] Evaluasi setelah operasi berguna untuk apa?  A. Mengidentifikasi hasil, kendala, dan perbaikan",
+    "stem": "Evaluasi setelah operasi berguna untuk apa?",
     "options": [
       {
         "key": "A",
@@ -18367,6 +19092,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghindari belajar"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan keamanan kantor komando polsek"
       }
     ],
     "correctKey": "A",
@@ -18374,10 +19103,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 579,
+    "id": 578,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #78] Dalam konflik internal tim, pemimpin sebaiknya?  A. Mendengar pihak, memeriksa fakta, menyelesaikan adil",
+    "stem": "Dalam konflik internal tim, pemimpin sebaiknya?",
     "options": [
       {
         "key": "A",
@@ -18393,7 +19122,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Menyebarkan isu  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 14"
+        "text": "Menyebarkan isu"
+      },
+      {
+        "key": "E",
+        "text": "Menolak laporan orang hilang sebelum 1x24 jam"
       }
     ],
     "correctKey": "A",
@@ -18401,10 +19134,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 580,
+    "id": 579,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #79] Indikator pelayanan baik antara lain?  A. Kepastian prosedur, waktu, keterbukaan, kepuasan pengguna",
+    "stem": "Indikator pelayanan baik antara lain?",
     "options": [
       {
         "key": "A",
@@ -18421,6 +19154,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Prosedur berubah-ubah"
+      },
+      {
+        "key": "E",
+        "text": "Meminta biaya administrasi penerbitan SKCK ilegal"
       }
     ],
     "correctKey": "A",
@@ -18428,10 +19165,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 581,
+    "id": 580,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #80] Perwira menerima kritik valid dari anggota. Sikap terbaik?  A. Menolak karena pangkat",
+    "stem": "Perwira menerima kritik valid dari anggota. Sikap terbaik?",
     "options": [
       {
         "key": "A",
@@ -18447,7 +19184,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Menghapus bukti  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 15"
+        "text": "Menghapus bukti"
+      },
+      {
+        "key": "E",
+        "text": "Menolak pengamanan unjuk rasa damai warga"
       }
     ],
     "correctKey": "B",
@@ -18455,10 +19196,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 582,
+    "id": 581,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #81] Rekan memakai kendaraan dinas untuk kepentingan pribadi yang dilarang. Respons?  A. Mengabaikan",
+    "stem": "Rekan memakai kendaraan dinas untuk kepentingan pribadi yang dilarang. Respons?",
     "options": [
       {
         "key": "A",
@@ -18475,6 +19216,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Meminta imbalan"
+      },
+      {
+        "key": "E",
+        "text": "Mengambil gambar korban kekerasan untuk konsumsi pribadi"
       }
     ],
     "correctKey": "B",
@@ -18482,10 +19227,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 583,
+    "id": 582,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #82] Di TKP kecelakaan, kerumunan menghalangi ambulans. Prioritas?  A. Membiarkan",
+    "stem": "Di TKP kecelakaan, kerumunan menghalangi ambulans. Prioritas?",
     "options": [
       {
         "key": "A",
@@ -18502,6 +19247,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Memindahkan barang tanpa catatan"
+      },
+      {
+        "key": "E",
+        "text": "Membocorkan materi ujian seleksi dinas internal"
       }
     ],
     "correctKey": "B",
@@ -18509,10 +19258,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 584,
+    "id": 583,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #83] Pelapor meminta kepastian terlapor langsung ditahan. Petugas sebaiknya?  A. Menjanjikan penahanan",
+    "stem": "Pelapor meminta kepastian terlapor langsung ditahan. Petugas sebaiknya?",
     "options": [
       {
         "key": "A",
@@ -18529,6 +19278,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menolak laporan"
+      },
+      {
+        "key": "E",
+        "text": "Menolak tes urin berkala pencegahan narkoba"
       }
     ],
     "correctKey": "B",
@@ -18536,10 +19289,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 585,
+    "id": 584,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #84] Atasan meminta bawahan mengubah fakta laporan. Bawahan sebaiknya?  A. Menuruti",
+    "stem": "Atasan meminta bawahan mengubah fakta laporan. Bawahan sebaiknya?",
     "options": [
       {
         "key": "A",
@@ -18556,6 +19309,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Membuat laporan palsu"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan transaksi mencurigakan di rekening dinas"
       }
     ],
     "correctKey": "B",
@@ -18563,10 +19320,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 586,
+    "id": 585,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #85] Informasi intelijen berbeda dengan temuan lapangan. Langkah tepat?  A. Mengabaikan salah satunya",
+    "stem": "Informasi intelijen berbeda dengan temuan lapangan. Langkah tepat?",
     "options": [
       {
         "key": "A",
@@ -18583,17 +19340,21 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Sebarkan informasi mentah"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan panggilan komisi kode etik polri"
       }
     ],
     "correctKey": "B",
-    "explanation": "Keputusan operasional harus adaptif dan berbasis verifikasi.  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 22",
+    "explanation": "Keputusan operasional harus adaptif dan berbasis verifikasi.",
     "weight": 10
   },
   {
-    "id": 587,
+    "id": 586,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #86] Korban takut memberi keterangan. Petugas sebaiknya?  A. Mengintimidasi",
+    "stem": "Korban takut memberi keterangan. Petugas sebaiknya?",
     "options": [
       {
         "key": "A",
@@ -18610,6 +19371,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Sebarkan rekaman"
+      },
+      {
+        "key": "E",
+        "text": "Menutupi status tersangka seorang pejabat daerah"
       }
     ],
     "correctKey": "B",
@@ -18617,10 +19382,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 588,
+    "id": 587,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #87] Saat menerima pengaduan diskriminasi, petugas harus?  A. Berdasar prasangka",
+    "stem": "Saat menerima pengaduan diskriminasi, petugas harus?",
     "options": [
       {
         "key": "A",
@@ -18637,6 +19402,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Memaksa berdamai"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan protokol kesehatan saat penanganan massa"
       }
     ],
     "correctKey": "B",
@@ -18644,10 +19413,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 589,
+    "id": 588,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #88] Jika terjadi kesalahan prosedur, langkah tepat?  A. Menutupinya",
+    "stem": "Jika terjadi kesalahan prosedur, langkah tepat?",
     "options": [
       {
         "key": "A",
@@ -18664,6 +19433,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Hilangkan dokumen"
+      },
+      {
+        "key": "E",
+        "text": "Menghalangi wartawan meliput kegiatan humas resmi"
       }
     ],
     "correctKey": "B",
@@ -18671,10 +19444,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 590,
+    "id": 589,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #89] Saat tekanan massa meningkat, komandan lapangan harus?  A. Instruksi jelas, komunikasi, nilai ancaman, deeskalasi",
+    "stem": "Saat tekanan massa meningkat, komandan lapangan harus?",
     "options": [
       {
         "key": "A",
@@ -18690,7 +19463,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Biarkan anggota sendiri  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 16"
+        "text": "Biarkan anggota sendiri"
+      },
+      {
+        "key": "E",
+        "text": "Menolak supervisi dari inspektorat pengawasan daerah"
       }
     ],
     "correctKey": "A",
@@ -18698,10 +19475,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 591,
+    "id": 590,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #90] Keputusan tepat ketika data belum cukup adalah?  A. Membuat kesimpulan pasti",
+    "stem": "Keputusan tepat ketika data belum cukup adalah?",
     "options": [
       {
         "key": "A",
@@ -18718,6 +19495,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Hukum pihak termudah"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan perawatan berkala kendaraan dinas"
       }
     ],
     "correctKey": "B",
@@ -18725,10 +19506,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 592,
+    "id": 591,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #91] Akronim PRESISI dikenal sebagai apa?  A. Prediktif, Responsibilitas, Transparansi Berkeadilan",
+    "stem": "Akronim PRESISI dikenal sebagai apa?",
     "options": [
       {
         "key": "A",
@@ -18745,6 +19526,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Proaktif, Resmi, Sistematis, Integratif"
+      },
+      {
+        "key": "E",
+        "text": "Menolak pembinaan rohani dan mental di satker"
       }
     ],
     "correctKey": "A",
@@ -18752,10 +19537,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 593,
+    "id": 592,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #92] Pemolisian prediktif menekankan apa?  A. Data dan analisis untuk mengantisipasi gangguan",
+    "stem": "Pemolisian prediktif menekankan apa?",
     "options": [
       {
         "key": "A",
@@ -18772,6 +19557,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengabaikan evaluasi"
+      },
+      {
+        "key": "E",
+        "text": "Melakukan pinjaman online ilegal mengatasnamakan dinas"
       }
     ],
     "correctKey": "A",
@@ -18779,10 +19568,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 594,
+    "id": 593,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #93] Transparansi berkeadilan berarti apa?  A. Semua informasi dibuka tanpa batas",
+    "stem": "Transparansi berkeadilan berarti apa?",
     "options": [
       {
         "key": "A",
@@ -18799,6 +19588,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Mengutamakan orang berpengaruh"
+      },
+      {
+        "key": "E",
+        "text": "Mengancam pelapor agar mencabut laporannya"
       }
     ],
     "correctKey": "B",
@@ -18806,10 +19599,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 595,
+    "id": 594,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #94] Responsibilitas dalam pelayanan menekankan apa?  A. Tanggung jawab atas tugas, keputusan, dampak",
+    "stem": "Responsibilitas dalam pelayanan menekankan apa?",
     "options": [
       {
         "key": "A",
@@ -18826,6 +19619,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tanpa standar"
+      },
+      {
+        "key": "E",
+        "text": "Menolak menyerahkan senjata dinas saat evaluasi"
       }
     ],
     "correctKey": "A",
@@ -18833,10 +19630,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 596,
+    "id": 595,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #95] Kepercayaan publik terhadap Polri dibangun melalui apa?  A. Kinerja profesional, integritas, keadilan, pelayanan baik",
+    "stem": "Kepercayaan publik terhadap Polri dibangun melalui apa?",
     "options": [
       {
         "key": "A",
@@ -18853,6 +19650,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Perlakuan istimewa"
+      },
+      {
+        "key": "E",
+        "text": "Menyimpan amunisi dinas melebihi batas ketentuan"
       }
     ],
     "correctKey": "A",
@@ -18860,10 +19661,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 597,
+    "id": 596,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #96] Koordinasi lintas instansi diperlukan karena apa?  A. Masalah publik memerlukan kewenangan dan keahlian beberapa lembaga",
+    "stem": "Koordinasi lintas instansi diperlukan karena apa?",
     "options": [
       {
         "key": "A",
@@ -18880,6 +19681,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Menghilangkan tanggung jawab"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan laporan kekerasan dalam rumah tangga (KDRT)"
       }
     ],
     "correctKey": "A",
@@ -18887,10 +19692,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 598,
+    "id": 597,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #97] Dalam penggunaan media sosial anggota perlu menjaga apa?  A. Sebar data perkara kapan saja",
+    "stem": "Dalam penggunaan media sosial anggota perlu menjaga apa?",
     "options": [
       {
         "key": "A",
@@ -18907,6 +19712,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Berdebat dengan pelapor"
+      },
+      {
+        "key": "E",
+        "text": "Membatalkan penilangan dengan kompensasi uang"
       }
     ],
     "correctKey": "B",
@@ -18914,10 +19723,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 599,
+    "id": 598,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #98] Data pribadi korban/saksi sebaiknya bagaimana?  A. Disebar demi transparansi",
+    "stem": "Data pribadi korban/saksi sebaiknya bagaimana?",
     "options": [
       {
         "key": "A",
@@ -18933,7 +19742,11 @@ const QUESTIONS_TPK: SimQuestion[] = [
       },
       {
         "key": "D",
-        "text": "Dipakai pribadi  SIMULASI TPK SIP — BUKAN SOAL RESMI / BOCORAN SELEKSI POLRI Halaman 17"
+        "text": "Dipakai pribadi"
+      },
+      {
+        "key": "E",
+        "text": "Menyembunyikan buronan DPO di kediaman pribadi"
       }
     ],
     "correctKey": "B",
@@ -18941,10 +19754,10 @@ const QUESTIONS_TPK: SimQuestion[] = [
     "weight": 10
   },
   {
-    "id": 600,
+    "id": 599,
     "module": "Tes Pengetahuan Kepolisian (TPK)",
     "subtest": "TPK",
-    "stem": "[Pengetahuan Kepolisian & Regulasi #99] Profesionalisme anggota menuntut kompetensi yang bagaimana?  A. Dipelihara melalui pendidikan, latihan, evaluasi",
+    "stem": "Profesionalisme anggota menuntut kompetensi yang bagaimana?",
     "options": [
       {
         "key": "A",
@@ -18961,10 +19774,45 @@ const QUESTIONS_TPK: SimQuestion[] = [
       {
         "key": "D",
         "text": "Popularitas"
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan instruksi pengamanan TPS saat pemilu"
       }
     ],
     "correctKey": "A",
     "explanation": "Kompetensi harus terus dikembangkan agar sesuai tantangan dan hukum terbaru.",
+    "weight": 10
+  },
+  {
+    "id": 600,
+    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "subtest": "TPK",
+    "stem": "Sikap yang mencerminkan pelindung, pengayom, pelayan masyarakat adalah?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Menakut-nakuti"
+      },
+      {
+        "key": "B",
+        "text": "Hadir, mendengar, melindungi hak, bertindak adil sesuai hukum"
+      },
+      {
+        "key": "C",
+        "text": "Menghindari kelompok rentan"
+      },
+      {
+        "key": "D",
+        "text": "Kepentingan pribadi"
+      },
+      {
+        "key": "E",
+        "text": "Menolak melayani masyarakat dengan sikap humanis"
+      }
+    ],
+    "correctKey": "B",
+    "explanation": "Esensi peran Polri ialah melindungi, mengayomi, melayani secara profesional dan adil.",
     "weight": 10
   }
 ];
@@ -18988,9 +19836,9 @@ export const SIMULATION_PACKETS: SimPacket[] = [
     category: 'PSIKOTES',
     subtest: 'KECERDASAN',
     title: 'Pretest CAT Psikotes — Subtes Kecerdasan',
-    subtitle: '100 Soal • 90 Menit • Verbal, Numerik, Deret, Logika Alibi & Spasial',
+    subtitle: '100 Soal • 90 Menit • Figural Bergambar, Denah Peta, Deret Angka, Aritmatika & Logika',
     description:
-      '100 butir soal kecerdasan standar seleksi Polri mencakup analogi verbal, logika penyidikan, deret aritmatika patroli, denah wilayah tugas, dan penalaran analitis.',
+      '100 butir soal kecerdasan standar seleksi Polri mencakup penalaran figural bergambar, orientasi denah tata letak wilayah tugas, deret angka pola bertingkat, aritmatika taktis, analogi verbal, dan silogisme penyidikan.',
     badge: '100 Soal • 90 Menit',
     durationSeconds: 90 * 60,
     questions: QUESTIONS_KECERDASAN,
