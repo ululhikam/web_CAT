@@ -269,8 +269,8 @@
           <svg viewBox="0 0 650 280" class="chart-svg" preserveAspectRatio="none">
             <defs>
               <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.45" />
-                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.02" />
+                <stop offset="0%" stop-color="#4e73df" stop-opacity="0.45" />
+                <stop offset="100%" stop-color="#4e73df" stop-opacity="0.02" />
               </linearGradient>
             </defs>
 
@@ -307,7 +307,7 @@
             <polyline
               points={trendPolyline}
               fill="none"
-              stroke="#4f46e5"
+              stroke="#4e73df"
               stroke-width="3.5"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -315,7 +315,7 @@
 
             <!-- Titik + skor -->
             {#each trendPoints as point (point.examDate + point.score)}
-              <circle cx={point.x} cy={point.y} r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
+              <circle cx={point.x} cy={point.y} r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
               <text x={point.x} y={point.y - 12} class="point-label" text-anchor="middle">
                 {formatScore(point.score)}
               </text>
@@ -599,7 +599,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     border: none;
     padding: 0.65rem 1.25rem;
@@ -612,7 +612,7 @@
   }
 
   .btn-start-cat:hover {
-    background: var(--color-primary-hover);
+    background: #2e59d9;
     transform: translateY(-1px);
   }
 
@@ -620,7 +620,7 @@
   .banner-tryout {
     background: #ffffff;
     border: 1px solid #e3e6f0;
-    border-left: 5px solid var(--color-primary);
+    border-left: 5px solid #4e73df;
     border-radius: 10px;
     padding: 1.5rem 1.75rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
@@ -629,7 +629,7 @@
   .banner-tag {
     font-size: 10.5px;
     font-weight: 850;
-    color: var(--color-primary);
+    color: #4e73df;
     letter-spacing: 0.06em;
   }
 
@@ -659,7 +659,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     border: none;
     padding: 0.6rem 1.25rem;
@@ -671,7 +671,7 @@
   }
 
   .btn-primary-launch:hover {
-    background: var(--color-primary-hover);
+    background: #2e59d9;
   }
 
   .btn-secondary-launch {
@@ -679,7 +679,7 @@
     align-items: center;
     gap: 0.5rem;
     background: #f8f9fc;
-    color: var(--color-primary);
+    color: #4e73df;
     border: 1px solid #d1d3e2;
     padding: 0.6rem 1.25rem;
     border-radius: 7px;
@@ -746,7 +746,7 @@
   }
 
   .stat-trend--up { color: #1cc88a; }
-  .stat-trend--down { color: var(--color-primary); }
+  .stat-trend--down { color: #4e73df; }
   .trend-text { color: #858796; font-weight: 500; }
 
   .stat-card__right {
@@ -757,7 +757,7 @@
     place-items: center;
   }
 
-  .stat-icon--blue { background: #eaecf4; color: var(--color-primary); }
+  .stat-icon--blue { background: #eaecf4; color: #4e73df; }
   .stat-icon--green { background: #e8f9f2; color: #1cc88a; }
   .stat-icon--cyan { background: #e5f7f9; color: #36b9cc; }
   .stat-icon--orange { background: #fef7e7; color: #f6c23e; }
@@ -795,7 +795,7 @@
   .card-box__title {
     font-size: 0.95rem;
     font-weight: 800;
-    color: var(--color-primary);
+    color: #4e73df;
     margin: 0;
   }
 
@@ -826,7 +826,7 @@
 
   .point-label {
     font-size: 10.5px;
-    fill: var(--color-primary);
+    fill: #4e73df;
     font-weight: 800;
   }
 
@@ -904,7 +904,7 @@
   .progress-fill {
     height: 100%;
     border-radius: 999px;
-    background: var(--color-primary);
+    background: #4e73df;
   }
 
   .progress-fill--weak {
@@ -922,7 +922,7 @@
   .link-view-more {
     font-size: 12.5px;
     font-weight: 750;
-    color: var(--color-primary);
+    color: #4e73df;
     background: none;
     border: none;
     cursor: pointer;
@@ -960,7 +960,7 @@
 
   .ruang-table th {
     background: #f8f9fc;
-    color: var(--color-primary);
+    color: #4e73df;
     font-weight: 800;
     font-size: 11.5px;
     text-transform: uppercase;
@@ -982,7 +982,7 @@
   }
 
   .btn-table-action {
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     border: none;
     padding: 0.35rem 0.75rem;
@@ -993,12 +993,12 @@
   }
 
   .btn-table-action:hover {
-    background: var(--color-primary-hover);
+    background: #2e59d9;
   }
 
   /* NOTICES */
   .notice-header {
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     padding: 1rem 1.25rem;
     border-radius: 7px 7px 0 0;
@@ -1028,7 +1028,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     font-size: 12px;
     font-weight: 800;
@@ -1102,7 +1102,7 @@
   }
 
   .modal-header {
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     padding: 1rem 1.5rem;
     display: flex;
@@ -1142,7 +1142,7 @@
 
   .btn-nav-prev {
     background: #eaecf4;
-    color: var(--color-primary);
+    color: #4e73df;
     border: none;
     padding: 0.6rem 1.15rem;
     border-radius: 6px;
@@ -1180,7 +1180,7 @@
   }
 
   .detail-score-box {
-    background: var(--color-primary);
+    background: #4e73df;
     color: #ffffff;
     padding: 1rem 1.25rem;
     border-radius: 8px;

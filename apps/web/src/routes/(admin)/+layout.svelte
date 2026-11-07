@@ -265,7 +265,7 @@
     z-index: var(--z-toast);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-md);
-    background: var(--color-primary, #4f46e5);
+    background: #4e73df;
     color: #fff;
     font-size: var(--text-sm);
   }
@@ -318,7 +318,7 @@
 
   .sidebar__top {
     height: 70px;
-    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 60%, #312e81 100%);
+    background: linear-gradient(135deg, #5a67d8 0%, #4e73df 100%);
     padding: 0 1.25rem;
     display: flex;
     align-items: center;
@@ -422,15 +422,15 @@
 
   .nav__link:hover {
     background: #f8f9fc;
-    color: var(--color-primary, #4f46e5);
+    color: #4e73df;
     text-decoration: none;
   }
 
   .nav__link--active {
     background: #f4f6fd;
-    color: var(--color-primary, #4f46e5);
+    color: #4e73df;
     font-weight: 750;
-    border-left: 3px solid var(--color-primary, #4f46e5);
+    border-left: 3px solid #4e73df;
     border-radius: 0 8px 8px 0;
   }
 
@@ -457,7 +457,7 @@
   }
 
   .nav__link--active .nav__chevron {
-    color: var(--color-primary, #4f46e5);
+    color: #4e73df;
   }
 
   .shell--super .nav__link--active .nav__chevron {
@@ -526,7 +526,7 @@
   /* TOPBAR (RuangAdmin Indigo Banner) */
   .topbar {
     height: 70px;
-    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 60%, #312e81 100%);
+    background: linear-gradient(135deg, #5a67d8 0%, #4e73df 100%);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
@@ -632,7 +632,7 @@
     height: 36px;
     border-radius: 50%;
     background: #ffffff;
-    color: var(--color-primary, #4f46e5);
+    color: #4e73df;
     font-size: 13px;
     font-weight: 850;
     display: grid;
@@ -652,7 +652,7 @@
     height: 9px;
     border-radius: 50%;
     background: #1cc88a;
-    border: 2px solid var(--color-primary, #4f46e5);
+    border: 2px solid #4e73df;
   }
 
   .shell--super .online-dot {

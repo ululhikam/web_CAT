@@ -458,7 +458,7 @@
   }
 
   .pref-card--selected {
-    border-color: var(--color-primary, #4f46e5);
+    border-color: var(--color-primary, #2563eb);
     background: rgba(37, 99, 235, 0.04);
   }
 
@@ -479,8 +479,8 @@
   }
 
   .pref-radio--active {
-    border-color: var(--color-primary, #4f46e5);
-    background: var(--color-primary, #4f46e5);
+    border-color: var(--color-primary, #2563eb);
+    background: var(--color-primary, #2563eb);
     box-shadow: inset 0 0 0 3px #fff;
   }
 
@@ -500,7 +500,7 @@
 
   .pref-badge-hint {
     font-size: var(--text-xs);
-    color: var(--color-primary, #4f46e5);
+    color: var(--color-primary, #2563eb);
     font-weight: 500;
   }
 

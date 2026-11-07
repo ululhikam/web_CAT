@@ -6,60 +6,50 @@
   <div class="container footer__grid">
     <div>
       <div class="footer__brand-row">
-        <div class="footer__logo-wrap">
-          <img src="/logo-badge.png" alt="Logo TES CAT" width="40" height="40" />
-        </div>
-        <div>
-          <p class="footer__brand">TES CAT POLRI</p>
-          <span class="footer__brand-sub">Sistem Simulasi CAT Lulus SIP & Akpol</span>
-        </div>
+        <img src="/logo-mark.png" alt="" width="40" height="40" />
+        <p class="footer__brand">TES CAT</p>
       </div>
       <p class="footer__note">
-        Platform simulasi ujian CAT Polri terintegrasi: Psikotes (Kecerdasan, Kepribadian, Kecermatan),
-        Tes Kemampuan Komputer (TKK), dan Tes Pengetahuan Kepolisian (TPK) standar seleksi dinas.
+        Latihan TES CAT ujian Polri: Psikologi, TKK, dan TPK dengan sistem gugur seperti seleksi
+        sebenarnya. Bukan situs resmi Polri.
       </p>
     </div>
 
-    <nav aria-label="Materi Ujian">
-      <p class="footer__title">Materi Ujian</p>
+    <nav aria-label="Produk">
+      <p class="footer__title">Produk</p>
       <ul>
-        <li><a href="/#struktur">Psikotes Kecerdasan (100 Soal)</a></li>
-        <li><a href="/#struktur">Mental Kepribadian (100 Soal)</a></li>
-        <li><a href="/#struktur">Kecermatan Monokrom (500 Kolom)</a></li>
-        <li><a href="/#struktur">TKK Komputer & TI (100 Soal)</a></li>
-        <li><a href="/#struktur">TPK Regulasi & Hukum (100 Soal)</a></li>
+        <li><a href="/#tes">Struktur tes</a></li>
+        <li><a href="/#alur">Cara kerja</a></li>
+        <li><a href="/#faq">FAQ</a></li>
       </ul>
     </nav>
 
-    <nav aria-label="Akses & Bantuan">
-      <p class="footer__title">Akses Peserta</p>
+    <nav aria-label="Bantuan">
+      <p class="footer__title">Bantuan</p>
       <ul>
-        <li><a href="/login">Masuk ke Sistem CAT</a></li>
-        <li><a href="/#kalkulator">Kalkulator Ambang Batas</a></li>
-        <li><a href="/#faq">Pusat Bantuan & FAQ</a></li>
+        <li><a href="/login">Masuk</a></li>
         <li><a href="mailto:support@webcat.id">support@webcat.id</a></li>
       </ul>
     </nav>
   </div>
 
   <div class="container footer__bottom">
-    <p>&copy; {year} TES CAT Polri. Seluruh materi latihan terstandarisasi seleksi kedinasan.</p>
-    <p class="footer__badge-text">Sistem CAT Lulus SIP • Presisi & Akuntabel</p>
+    <p>&copy; {year} TES CAT. Semua hak dilindungi.</p>
+    <p>Dibuat untuk persiapan seleksi Polri.</p>
   </div>
 </footer>
 
 <style>
   .footer {
-    margin-top: var(--space-20);
-    padding-block: var(--space-16) var(--space-8);
-    background: linear-gradient(180deg, var(--brand-950) 0%, #0d0038 100%);
-    color: var(--neutral-300);
-    border-top: 1px solid rgba(129, 140, 248, 0.2);
+    margin-top: var(--space-24);
+    padding-block: var(--space-12) var(--space-8);
+    background: var(--neutral-900);
+    color: var(--neutral-200);
   }
 
   .footer__grid {
     display: grid;
-    gap: var(--space-10);
+    gap: var(--space-8);
   }
 
   .footer__brand-row {
@@ -68,54 +58,34 @@
     gap: var(--space-3);
   }
 
-  .footer__logo-wrap {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: #ffffff;
-    display: grid;
-    place-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    flex-shrink: 0;
-  }
-
-  .footer__logo-wrap img {
+  .footer__brand-row img {
     display: block;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
-    border-radius: 8px;
+    flex-shrink: 0;
   }
 
   .footer__brand {
     font-size: var(--text-lg);
-    font-weight: 850;
-    color: #ffffff;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-
-  .footer__brand-sub {
-    font-size: 11px;
-    color: var(--accent-cyan);
-    font-weight: 600;
+    font-weight: 700;
+    color: #fff;
   }
 
   .footer__note {
-    margin-top: var(--space-3);
-    max-width: 44ch;
+    margin-top: var(--space-2);
+    max-width: 40ch;
     font-size: var(--text-sm);
     color: var(--neutral-400);
-    line-height: 1.6;
   }
 
   .footer__title {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
     font-size: var(--text-xs);
-    font-weight: 800;
-    letter-spacing: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--neutral-400);
   }
 
   ul {
@@ -129,32 +99,25 @@
   }
 
   a {
-    color: var(--neutral-300);
+    color: var(--neutral-200);
     text-decoration: none;
-    transition: color 0.15s ease;
   }
 
   a:hover {
-    color: var(--accent-cyan);
-    text-decoration: none;
+    color: #fff;
+    text-decoration: underline;
   }
 
   .footer__bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
     gap: var(--space-3);
-    margin-top: var(--space-12);
-    padding-top: var(--space-6);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: var(--space-10);
+    padding-top: var(--space-5);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
     font-size: var(--text-xs);
     color: var(--neutral-400);
-  }
-
-  .footer__badge-text {
-    color: var(--brand-300);
-    font-weight: 600;
   }
 
   @media (min-width: 768px) {

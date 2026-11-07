@@ -301,8 +301,8 @@
           <svg viewBox="0 0 650 280" class="chart-svg" preserveAspectRatio="none">
             <defs>
               <linearGradient id="adminChartGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.4" />
-                <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.02" />
+                <stop offset="0%" stop-color="#4e73df" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#4e73df" stop-opacity="0.02" />
               </linearGradient>
             </defs>
 
@@ -343,16 +343,16 @@
                  C 370 120, 390 100, 440 90
                  C 490 80, 520 65, 580 58"
               fill="none"
-              stroke="#4f46e5"
+              stroke="#4e73df"
               stroke-width="3.5"
               stroke-linecap="round"
             />
 
             <!-- Dot markers -->
-            <circle cx="60" cy="220" r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
-            <circle cx="200" cy="175" r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
-            <circle cx="320" cy="130" r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
-            <circle cx="440" cy="90" r="4.5" fill="#4f46e5" stroke="#ffffff" stroke-width="2" />
+            <circle cx="60" cy="220" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
+            <circle cx="200" cy="175" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
+            <circle cx="320" cy="130" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
+            <circle cx="440" cy="90" r="4.5" fill="#4e73df" stroke="#ffffff" stroke-width="2" />
             <circle cx="580" cy="58" r="5" fill="#1cc88a" stroke="#ffffff" stroke-width="2" />
 
             <!-- X-Axis Labels -->
@@ -549,7 +549,7 @@
   }
 
   .crumb-link {
-    color: #4f46e5;
+    color: #4e73df;
     text-decoration: none;
   }
 
@@ -625,7 +625,7 @@
   }
 
   .banner-pill--admin {
-    background: #4f46e5;
+    background: #2563eb;
     color: #ffffff;
   }
 
@@ -691,7 +691,7 @@
   .stat-label {
     font-size: 11px;
     font-weight: 800;
-    color: #4f46e5;
+    color: #4e73df;
     letter-spacing: 0.05em;
     margin-bottom: 0.35rem;
     text-transform: uppercase;
@@ -707,7 +707,7 @@
 
   .stat-value--role {
     font-size: 1.15rem;
-    color: #4f46e5;
+    color: #4e73df;
   }
 
   .stat-trend {
@@ -723,7 +723,7 @@
   }
 
   .stat-trend--neutral {
-    color: #4f46e5;
+    color: #4e73df;
   }
 
   .trend-text {
@@ -740,7 +740,7 @@
     flex-shrink: 0;
   }
 
-  .stat-icon--blue { background: #eaecf4; color: #4f46e5; }
+  .stat-icon--blue { background: #eaecf4; color: #4e73df; }
   .stat-icon--green { background: #e8f8f2; color: #1cc88a; }
   .stat-icon--cyan { background: #e4f7f9; color: #36b9cc; }
   .stat-icon--orange { background: #fdf5e6; color: #f6c23e; }
@@ -794,7 +794,7 @@
   }
 
   .signup-notice__all {
-    color: #4f46e5;
+    color: #4e73df;
     font-size: var(--text-xs);
     font-weight: 700;
     text-decoration: none;
@@ -884,7 +884,7 @@
   .card-box__title {
     font-size: 1.05rem;
     font-weight: 750;
-    color: #4f46e5;
+    color: #4e73df;
     margin: 0;
   }
 
@@ -901,7 +901,7 @@
     font-size: 11.5px;
     font-weight: 700;
     padding: 0.3rem 0.75rem;
-    background: #4f46e5;
+    background: #4e73df;
     color: #ffffff;
     border-radius: 6px;
     text-decoration: none;
@@ -987,7 +987,7 @@
   .link-view-more {
     font-size: 12px;
     font-weight: 750;
-    color: #4f46e5;
+    color: #4e73df;
     text-decoration: none;
   }
 
@@ -1029,7 +1029,7 @@
 
   .ruang-table th {
     background: #f8f9fc;
-    color: #4f46e5;
+    color: #4e73df;
     font-weight: 750;
     padding: 0.85rem 1.25rem;
     border-bottom: 1px solid #eaecf4;
@@ -1173,12 +1173,12 @@
 
   .shortcut-item:hover {
     background: #f8f9fc;
-    color: #4f46e5;
+    color: #4e73df;
     text-decoration: none;
   }
 
   .shortcut-icon {
-    color: #4f46e5;
+    color: #4e73df;
     display: grid;
     place-items: center;
   }

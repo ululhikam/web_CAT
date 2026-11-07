@@ -626,7 +626,7 @@
     font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-primary);
+    color: #1e3a8a;
     margin-bottom: 0.65rem;
   }
 
@@ -651,7 +651,7 @@
      ========================================================================= */
   .hero-section {
     padding: 4.5rem 0 5rem;
-    background: radial-gradient(1200px 600px at 85% 15%, rgba(99, 102, 241, 0.07) 0%, rgba(6, 182, 212, 0.04) 40%, rgba(255, 255, 255, 0) 80%), #ffffff;
+    background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
   }
 
@@ -679,8 +679,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.35rem 0.85rem;
-    background: #f5f3ff;
-    border: 1px solid #ddd6fe;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
     border-radius: 4px;
     margin-bottom: 1.5rem;
   }
@@ -689,14 +689,14 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-primary);
+    background: #1e3a8a;
   }
 
   .status-pill__text {
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: var(--color-primary);
+    color: #1e3a8a;
   }
 
   .hero-headline {
@@ -727,7 +727,7 @@
   .btn-text-link {
     font-size: 0.95rem;
     font-weight: 650;
-    color: var(--color-primary);
+    color: #1e3a8a;
     text-decoration: none;
     padding: 0.65rem 0.5rem;
     transition: color 0.15s ease;
@@ -802,7 +802,7 @@
   }
 
   .cat-widget__head {
-    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 60%, #312e81 100%);
+    background: #0f172a;
     padding: 0.85rem 1.25rem;
     display: flex;
     align-items: center;
@@ -817,7 +817,7 @@
   }
 
   .subtest-badge {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    background: #1e3a8a;
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.05em;
@@ -856,7 +856,7 @@
   }
 
   .q-num {
-    color: var(--color-primary);
+    color: #1e3a8a;
   }
 
   .q-text {
@@ -892,8 +892,8 @@
   }
 
   .option-btn--selected {
-    border-color: var(--color-primary);
-    background: #f5f3ff;
+    border-color: #1e3a8a;
+    background: #f0f7ff;
   }
 
   .option-key {
@@ -910,7 +910,7 @@
   }
 
   .option-btn--selected .option-key {
-    background: var(--color-primary);
+    background: #1e3a8a;
     color: #ffffff;
   }
 
@@ -973,15 +973,13 @@
   }
 
   .btn-widget-nav--next {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    background: #1e3a8a;
     color: #ffffff;
-    border-color: #4f46e5;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    border-color: #1e3a8a;
   }
 
   .btn-widget-nav--next:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-    border-color: #4338ca;
+    background: #172554;
   }
 
   /* =========================================================================
@@ -1058,8 +1056,8 @@
   }
 
   .tab-btn--active {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+    color: #1e3a8a;
+    border-bottom-color: #1e3a8a;
   }
 
   .tab-btn__num {
@@ -1072,8 +1070,8 @@
   }
 
   .tab-btn--active .tab-btn__num {
-    background: #eef2ff;
-    color: var(--color-primary);
+    background: #e0f2fe;
+    color: #0369a1;
   }
 
   .tab-pane {
@@ -1140,7 +1138,7 @@
   }
 
   .text-primary {
-    color: var(--color-primary);
+    color: #1e3a8a;
   }
 
   .subtest-list-header {
@@ -1199,9 +1197,9 @@
   }
 
   .spec-pill--time {
-    background: #eef2ff;
-    border-color: #c7d2fe;
-    color: var(--color-primary);
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e3a8a;
   }
 
   /* =========================================================================
@@ -1267,7 +1265,7 @@
 
   .range-slider {
     width: 100%;
-    accent-color: var(--color-primary);
+    accent-color: #1e3a8a;
     cursor: pointer;
   }
 
@@ -1387,8 +1385,8 @@
     width: 42px;
     height: 42px;
     border-radius: 8px;
-    background: #f5f3ff;
-    color: var(--color-primary);
+    background: #f1f5f9;
+    color: #1e3a8a;
     display: grid;
     place-items: center;
     margin-bottom: 1.25rem;
@@ -1448,7 +1446,7 @@
 
   .faq-icon {
     font-size: 1.25rem;
-    color: var(--color-primary);
+    color: #1e3a8a;
     font-weight: 600;
     transition: transform 0.15s ease;
   }

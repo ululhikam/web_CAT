@@ -152,7 +152,7 @@
     right: -2px;
     min-width: 17px;
     padding: 1px 4px;
-    border: 1.5px solid var(--color-primary, #4f46e5);
+    border: 1.5px solid #4e73df;
     border-radius: 999px;
     color: #ffffff;
     font-size: 9.5px;
@@ -254,7 +254,7 @@
     display: block;
     padding: 0.7rem 1rem;
     border-top: 1px solid #eaecf4;
-    color: var(--color-primary, #4f46e5);
+    color: #4e73df;
     font-size: var(--text-xs);
     font-weight: 600;
     text-align: center;

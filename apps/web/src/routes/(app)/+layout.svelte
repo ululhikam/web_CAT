@@ -589,8 +589,7 @@
 
   .sidebar__brand {
     min-height: clamp(3.25rem, 8.5dvh, 4.5rem);
-    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 60%, #312e81 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: #4e73df;
     padding: 0 clamp(0.85rem, 2.5vw, 1.25rem);
     display: flex;
     align-items: center;
@@ -688,16 +687,16 @@
   }
 
   .nav-link:hover {
-    background: var(--neutral-50);
-    color: var(--color-primary);
+    background: #f8f9fc;
+    color: #4e73df;
     text-decoration: none;
   }
 
   .nav-link--active {
-    background: var(--brand-50);
-    color: var(--color-primary);
+    background: #f4f6fd;
+    color: #4e73df;
     font-weight: 750;
-    border-left: 3px solid var(--color-primary);
+    border-left: 3px solid #4e73df;
     border-radius: 0 8px 8px 0;
   }
 
@@ -758,7 +757,7 @@
   }
 
   .nav-link--active .nav-link__arrow {
-    color: var(--color-primary);
+    color: #4e73df;
   }
 
   .nav-badge {
@@ -818,8 +817,7 @@
   /* TOPBAR (RuangAdmin Indigo Banner) */
   .topbar {
     min-height: clamp(3.25rem, 8.5dvh, 4.5rem);
-    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 70%, #2e1065 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: #4e73df;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
@@ -883,7 +881,7 @@
     padding: 1px 4.5px;
     border-radius: 999px;
     line-height: 1.2;
-    border: 1.5px solid var(--brand-950);
+    border: 1.5px solid #4e73df;
   }
 
   .badge-count--red { background: #e74a3b; }
@@ -923,7 +921,7 @@
     height: 36px;
     border-radius: 50%;
     background: #ffffff;
-    color: var(--color-primary);
+    color: #4e73df;
     font-size: 13px;
     font-weight: 850;
     display: grid;
@@ -939,7 +937,7 @@
     height: 9px;
     border-radius: 50%;
     background: #1cc88a;
-    border: 2px solid var(--brand-950);
+    border: 2px solid #4e73df;
   }
 
   .topbar-username {
@@ -990,7 +988,7 @@
   }
 
   .dropdown-header {
-    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 100%);
+    background: #4e73df;
     color: #ffffff;
     padding: 0.85rem 1rem;
     border-radius: 7px 7px 0 0;
@@ -1041,7 +1039,7 @@
   }
 
   .dot--red { background: #e74a3b; }
-  .dot--blue { background: var(--color-primary); }
+  .dot--blue { background: #4e73df; }
   .dot--green { background: #1cc88a; }
   .dot--orange { background: #f6c23e; }
 
@@ -1104,8 +1102,8 @@
   }
 
   .user-nav-link:hover {
-    background: var(--brand-50);
-    color: var(--color-primary);
+    background: #f4f6fd;
+    color: #4e73df;
   }
 
   .dropdown-divider {
