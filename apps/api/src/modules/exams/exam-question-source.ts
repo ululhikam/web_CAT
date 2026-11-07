@@ -123,18 +123,30 @@ export function deterministicUuid(value: string): string {
 /* ------------------------------------------------------------------ fixtures */
 
 const LIKERT_LABELS = ['1', '2', '3', '4', '5'] as const;
-const LIKERT_DIMENSIONS = ['KEPEMIMPINAN', 'KERJASAMA', 'STABILITAS'] as const;
+const LIKERT_DIMENSIONS = [
+  'INTEGRITAS',
+  'DISIPLIN',
+  'TANGGUNG_JAWAB',
+  'PENGENDALIAN_DIRI',
+  'KERJASAMA',
+  'PELAYANAN',
+  'KEPEMIMPINAN',
+] as const;
 const LIKERT_STATEMENTS = [
-  'Saya mengambil keputusan dengan tegas saat kelompok membutuhkan arahan.',
-  'Saya mendengarkan pendapat orang lain sebelum menyimpulkan sesuatu.',
-  'Saya tetap tenang ketika menghadapi tekanan waktu.',
-  'Saya lebih suka bekerja sendiri daripada berdiskusi dengan tim.',
-  'Saya memeriksa ulang pekerjaan yang akan diserahkan.',
-  'Saya mudah tersinggung ketika dikritik di depan umum.',
-  'Saya berani memikul tanggung jawab atas kesalahan tim.',
-  'Saya menyesuaikan cara kerja dengan kebutuhan rekan satu tim.',
-  'Saya dapat menahan emosi saat situasi tidak sesuai harapan.',
-  'Saya cenderung menunda keputusan sulit hingga orang lain memutuskan.',
+  'Saya menolak segala bentuk gratifikasi dan intervensi informal yang dapat mempengaruhi integritas penyidikan perkara.',
+  'Saya mematuhi ketentuan hierarki komando dan tata tertib dinas kepolisian secara konsisten tanpa mencari celah pembenaran.',
+  'Saya berani memikul tanggung jawab atas keputusan taktis regu di lapangan tanpa melempar kesalahan kepada bawahan.',
+  'Saya tetap tenang, fokus, dan tidak terpancing emosi saat menghadapi provokasi atau ancaman dari pihak luar saat bertugas.',
+  'Saya aktif berkoordinasi dan mengutamakan keberhasilan tim gabungan lintas fungsi di atas kepentingan ego sektoral.',
+  'Saya memberikan pelayanan masyarakat secara transparan, ramah, dan cepat tanpa membeda-bedakan status sosial warga.',
+  'Saya berani mengambil keputusan diskresi kepolisian yang cepat, terukur, dan akuntabel demi keselamatan jiwa warga.',
+  'Saya menjaga kerahasiaan rencana operasi penggerebekan dan tidak membocorkan informasi dinas kepada pihak mana pun.',
+  'Saya memeriksa kembali kelaikan peralatan taktis dan administrasi sebelum diterjunkan ke lokasi pengamanan darurat.',
+  'Saya mendahulukan keselamatan serta pemulihan korban rentan saat menerima laporan tindak pidana di ruang SPKT.',
+  'Saya memberikan keteladanan moral dan kedisiplinan kerja kepada bawahan serta membina kekompakan regu tugas.',
+  'Saya mengutamakan musyawarah dan keterbukaan komunikasi dalam mengatasi friksi pandangan di lingkungan satuan kerja.',
+  'Saya bersedia mengakui kelalaian administrasi secara ksatria dan segera melakukan perbaikan demi kepentingan kedinasan.',
+  'Saya konsisten menjaga objektivitas penilaian dan tidak terpengaruh oleh hubungan kekerabatan dalam menegakkan hukum.',
 ] as const;
 
 const KECERDASAN_TOPICS = [
@@ -249,6 +261,60 @@ function buildChoice(
       'Barat (270 derajat)',
       'Selatan (180 derajat)',
     ];
+  } else if (
+    stemPrefix === 'TKK' ||
+    topic.toLowerCase().includes('keras') ||
+    topic.toLowerCase().includes('lunak') ||
+    topic.toLowerCase().includes('jaringan') ||
+    topic.toLowerCase().includes('keamanan') ||
+    topic.toLowerCase().includes('perkantoran')
+  ) {
+    if (topic.toLowerCase().includes('jaringan')) {
+      stem = `[Kompetensi Jaringan Komputer] Protokol jaringan pada layer aplikasi TCP/IP yang bertugas mengonfigurasi alamat IP, subnet mask, dan default gateway secara otomatis ke komputer klien di lingkungan satker Polri adalah...`;
+      answer = 'Dynamic Host Configuration Protocol (DHCP)';
+      distractors = [
+        'Domain Name System (DNS)',
+        'Simple Mail Transfer Protocol (SMTP)',
+        'File Transfer Protocol (FTP)',
+        'Post Office Protocol v3 (POP3)',
+      ];
+    } else if (topic.toLowerCase().includes('keamanan')) {
+      stem = `[Keamanan Siber & Informasi] Tindakan rekayasa sosial (social engineering) di mana pelaku menyamarkan identitas melalui tautan palsu untuk mencuri kredensial akun dinas personel kepolisian disebut...`;
+      answer = 'Phishing';
+      distractors = [
+        'Distributed Denial of Service (DDoS)',
+        'Structured Query Language (SQL) Injection',
+        'Brute Force Attack',
+        'Cross-Site Scripting (XSS)',
+      ];
+    } else if (topic.toLowerCase().includes('lunak')) {
+      stem = `[Sistem Operasi & Perangkat Lunak] Perintah pada Command Prompt (CMD) sistem operasi Windows yang digunakan untuk menguji konektivitas dan latensi jaringan menuju server command center adalah...`;
+      answer = 'ping';
+      distractors = [
+        'ipconfig',
+        'tracert',
+        'chkdsk',
+        'netstat',
+      ];
+    } else if (topic.toLowerCase().includes('perkantoran')) {
+      stem = `[Aplikasi Perkantoran Dinas] Pada Microsoft Excel, fungsi yang digunakan untuk mencari data pada kolom pertama suatu tabel dan mengembalikan nilai dari kolom lain pada baris yang sama adalah...`;
+      answer = '=VLOOKUP()';
+      distractors = [
+        '=INDEX()',
+        '=COUNTIF()',
+        '=SUMIFS()',
+        '=CONCATENATE()',
+      ];
+    } else {
+      stem = `[Perangkat Keras Komputer] Komponen perangkat keras non-volatile modern berkecepatan tinggi yang memanfaatkan jalur PCIe untuk menyimpan sistem operasi dan berkas digital kepolisian adalah...`;
+      answer = 'Solid State Drive (SSD) NVMe';
+      distractors = [
+        'Random Access Memory (RAM)',
+        'Hard Disk Drive (HDD) IDE',
+        'Read Only Memory (ROM)',
+        'Power Supply Unit (PSU)',
+      ];
+    }
   } else {
     stem = `[Studi Kasus & Regulasi Kepolisian] Sesuai UU No. 2 Tahun 2002 dan kode etik profesi Polri, tindakan diskresi kepolisian di lapangan dapat dibenarkan secara hukum apabila...`;
     answer = 'Memenuhi asas nesesitas, proporsionalitas, dan semata-mata untuk kepentingan umum';

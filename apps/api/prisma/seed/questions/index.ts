@@ -29,9 +29,9 @@ import type { SeedDifficulty, SeedQuestionMedia } from './types';
  * Cakupan:
  *   PSIKOLOGI — Kecerdasan 100 + 3 multi-jawaban + 44 figural,
  *               Kepribadian 140, Kecermatan 500, Pass Hand 150
- *   TKK       — 87 pilihan tunggal + 3 multi-jawaban + 15 figural
- *               (perangkat keras 20, perangkat lunak 18, jaringan 18,
- *                keamanan 17, penalaran 14)
+ *   TKK       — 107 pilihan tunggal + 3 multi-jawaban (110 soal teknis murni)
+ *               (perangkat keras 27, perangkat lunak 25, jaringan 20,
+ *                keamanan 20, penalaran 15)
  *   TPK       — 100 soal (10 kelompok materi × 10)
  *
  * Semua soal berstatus PUBLISHED. `exam-question-source.ts` baru memakai bank

@@ -461,7 +461,7 @@ const KEC_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
 
 const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
   {
-    code: 'TKK-FIG-001',
+    code: 'PSI-KEC-FIG-045',
     family: 'series',
     seed: 100,
     difficulty: 'EASY',
@@ -470,7 +470,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TKK-FIG-002',
+    code: 'PSI-KEC-FIG-046',
     family: 'series',
     seed: 101,
     difficulty: 'MEDIUM',
@@ -479,7 +479,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TKK-FIG-003',
+    code: 'PSI-KEC-FIG-047',
     family: 'series',
     seed: 102,
     difficulty: 'MEDIUM',
@@ -488,7 +488,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TKK-FIG-004',
+    code: 'PSI-KEC-FIG-048',
     family: 'series',
     seed: 103,
     difficulty: 'HARD',
@@ -497,7 +497,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pola'],
   },
   {
-    code: 'TKK-FIG-005',
+    code: 'PSI-KEC-FIG-049',
     family: 'rotation',
     seed: 100,
     difficulty: 'MEDIUM',
@@ -506,7 +506,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'rotasi'],
   },
   {
-    code: 'TKK-FIG-006',
+    code: 'PSI-KEC-FIG-050',
     family: 'rotation',
     seed: 101,
     difficulty: 'HARD',
@@ -515,7 +515,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'rotasi'],
   },
   {
-    code: 'TKK-FIG-007',
+    code: 'PSI-KEC-FIG-051',
     family: 'rotation',
     seed: 102,
     difficulty: 'HARD',
@@ -524,7 +524,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'rotasi'],
   },
   {
-    code: 'TKK-FIG-008',
+    code: 'PSI-KEC-FIG-052',
     family: 'mirror',
     seed: 100,
     difficulty: 'MEDIUM',
@@ -533,7 +533,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pencerminan'],
   },
   {
-    code: 'TKK-FIG-009',
+    code: 'PSI-KEC-FIG-053',
     family: 'mirror',
     seed: 101,
     difficulty: 'HARD',
@@ -542,7 +542,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'pencerminan'],
   },
   {
-    code: 'TKK-FIG-010',
+    code: 'PSI-KEC-FIG-054',
     family: 'mirror',
     seed: 102,
     difficulty: 'HARD',
@@ -554,7 +554,7 @@ const TKK_IMAGE: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
 
 const TKK_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
   {
-    code: 'TKK-FIG-011',
+    code: 'PSI-KEC-FIG-055',
     family: 'count',
     seed: 100,
     difficulty: 'EASY',
@@ -563,7 +563,7 @@ const TKK_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'hitung'],
   },
   {
-    code: 'TKK-FIG-012',
+    code: 'PSI-KEC-FIG-056',
     family: 'count',
     seed: 101,
     difficulty: 'MEDIUM',
@@ -572,7 +572,7 @@ const TKK_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'hitung'],
   },
   {
-    code: 'TKK-FIG-013',
+    code: 'PSI-KEC-FIG-057',
     family: 'direction',
     seed: 100,
     difficulty: 'EASY',
@@ -581,7 +581,7 @@ const TKK_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'arah'],
   },
   {
-    code: 'TKK-FIG-014',
+    code: 'PSI-KEC-FIG-058',
     family: 'direction',
     seed: 101,
     difficulty: 'MEDIUM',
@@ -590,7 +590,7 @@ const TKK_TEXT_WITH_STEM: ReadonlyArray<Omit<FiguralSeed, 'type'>> = [
     tags: ['figural', 'arah'],
   },
   {
-    code: 'TKK-FIG-015',
+    code: 'PSI-KEC-FIG-059',
     family: 'direction',
     seed: 102,
     difficulty: 'MEDIUM',
@@ -612,12 +612,15 @@ function withType(
 export const FIGURAL_KECERDASAN: readonly FiguralSeed[] = [
   ...withType(KEC_IMAGE, 'IMAGE_CHOICE'),
   ...withType(KEC_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
-];
-
-export const FIGURAL_TKK: readonly FiguralSeed[] = [
   ...withType(TKK_IMAGE, 'IMAGE_CHOICE'),
   ...withType(TKK_TEXT_WITH_STEM, 'SINGLE_CHOICE'),
 ];
+
+/**
+ * TKK tidak lagi memuat soal figural/rotasi gambar (dipindahkan seluruhnya ke Psikotes Kecerdasan).
+ * Diekspor sebagai larik kosong agar kompatibilitas kode pengimpor tetap terjaga.
+ */
+export const FIGURAL_TKK: readonly FiguralSeed[] = [];
 
 /* ------------------------------------------------------- aset & kunci opsi */
 

@@ -3201,4307 +3201,4304 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
     "id": 201,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda mengetahui rekan mengubah angka dalam laporan agar hasil unit terlihat baik. Apa langkah paling tepat?",
+    "stem": "Anda mengetahui rekan kerja mengubah angka dalam laporan rekapitulasi penindakan agar hasil unit terlihat melampaui target. Tindakan paling tepat adalah...",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkannya karena bukan tanggung jawab saya.",
-        "weight": 3
+        "text": "Membiarkannya karena tidak merugikan keuangan pribadi saya.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memastikan fakta, mengingatkan rekan, dan menggunakan jalur pelaporan yang berlaku bila tidak diperbaiki.",
+        "text": "Memverifikasi fakta, mengingatkan rekan secara persuasif, dan melaporkan melalui jalur kedinasan bila tidak diperbaiki.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyebarkan cerita kepada semua rekan.",
-        "weight": 4
+        "text": "Menceritakan kekeliruan tersebut kepada semua rekan di grup percakapan informal.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Mengubah angka lain agar seimbang.",
+        "text": "Mengubah angka unit saya sendiri agar data terlihat serasi.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menegur rekan tersebut secara pribadi namun tidak berani melapor jika diabaikan.",
+        "weight": 3
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 3
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Verifikasi, koreksi, dan jalur pelaporan resmi menjaga integritas serta menghindari tuduhan tanpa dasar.",
+    "explanation": "Tindakan berintegritas menuntut verifikasi data, upaya koreksi internal secara persuasif, dan pelaporan berjenjang demi menjaga keakuratan dokumen dinas.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 202,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang kenalan meminta didahulukan dalam pelayanan tanpa alasan yang sah. Anda akan…",
+    "stem": "Seorang kerabat dekat meminta Anda mendahulukan pengurusan SIM tanpa melalui ujian praktik yang sah. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengabulkan karena hubungan baik.",
-        "weight": 3
+        "text": "Membantunya karena menjaga hubungan kekerabatan keluarga besar.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Meminta imbalan sebagai gantinya.",
-        "weight": 2
+        "text": "Meminta imbalan jasa tambahan atas bantuan yang diberikan.",
+        "weight": 1
       },
       {
         "key": "C",
-        "text": "Menjelaskan prosedur dan melayani sesuai urutan serta ketentuan.",
+        "text": "Menolak secara santun dan menjelaskan bahwa seluruh pemohon wajib mengikuti prosedur ujian sesuai aturan.",
         "weight": 5
       },
       {
         "key": "D",
-        "text": "Meminta rekan lain melakukannya diam-diam.",
-        "weight": 1
+        "text": "Menolak dengan nada ketus dan memarahinya di depan umum.",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyarankan kerabat menghubungi calo di luar kantor pelayanan.",
+        "weight": 1
       }
     ],
     "correctKey": "C",
     "optionWeights": {
-      "A": 3,
-      "B": 2,
+      "A": 1,
+      "B": 1,
       "C": 5,
-      "D": 1,
-      "E": 2
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (C) dengan bobot maksimal 5 poin. Pelayanan harus objektif dan bebas dari perlakuan istimewa yang tidak sah.",
+    "explanation": "Integritas pelayanan publik kepolisian mengharuskan penolakan perlakuan khusus secara santun dengan tetap mengedukasi aturan resmi.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 203,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menemukan barang milik warga di ruang pelayanan. Tindakan Anda…",
+    "stem": "Saat membersihkan ruang pemeriksaan usai gelar perkara, Anda menemukan dompet berisi sejumlah uang milik saksi yang tertinggal. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyimpannya untuk sementara tanpa catatan.",
-        "weight": 3
-      },
-      {
-        "key": "B",
-        "text": "Mengumumkan detail barang di media sosial.",
-        "weight": 2
-      },
-      {
-        "key": "C",
-        "text": "Menyerahkannya melalui prosedur barang temuan dan membuat pencatatan.",
-        "weight": 5
-      },
-      {
-        "key": "D",
-        "text": "Membawanya pulang agar aman.",
+        "text": "Menyimpan dompet tersebut dan menggunakannya jika tidak ada yang mencari.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "B",
+        "text": "Segera mencatatnya dalam buku register barang temuan dan menyerahkannya kepada perwira piket SPKT untuk dikembalikan.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menitipkannya kepada petugas kebersihan kantor.",
         "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menunggu hingga pemiliknya datang sendiri tanpa melaporkannya ke buku inventaris.",
+        "weight": 3
+      },
+      {
+        "key": "E",
+        "text": "Mengambil uangnya dan mengembalikan dompet beserta kartu identitasnya.",
+        "weight": 1
       }
     ],
-    "correctKey": "C",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 3,
-      "B": 2,
-      "C": 5,
-      "D": 1,
-      "E": 2
+      "A": 1,
+      "B": 5,
+      "C": 2,
+      "D": 3,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (C) dengan bobot maksimal 5 poin. Pencatatan dan mekanisme resmi melindungi pemilik maupun petugas.",
+    "explanation": "Menyerahkan barang temuan melalui pencatatan resmi register SPKT menjamin keamanan barang bukti dan akuntabilitas personel.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 204,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Atasan meminta Anda menyampaikan informasi yang belum terverifikasi sebagai fakta. Anda…",
+    "stem": "Atasan meminta Anda mencantumkan kegiatan sosialisasi yang sebenarnya belum terlaksana ke dalam laporan pertanggungjawaban penyerapan anggaran. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyampaikannya agar atasan senang.",
-        "weight": 3
+        "text": "Menuruti perintah atasan tanpa membantah demi kelancaran administrasi.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjelaskan status informasi dan mengusulkan verifikasi sebelum disampaikan.",
+        "text": "Menyampaikan secara sopan kepada atasan bahwa pelaporan harus sesuai realisasi riil dan siap membantu mempercepat pelaksanaan kegiatan tersebut.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menolak dengan kata-kata kasar.",
-        "weight": 4
+        "text": "Menolak secara kasar dan melaporkan atasan langsung ke media sosial.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Meneruskan tanpa memberi konteks.",
+        "text": "Menyetujui namun meminta kompensasi bagian dari anggaran tersebut.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Membicarakan perintah tersebut dengan rekan sejawat tanpa memberikan solusi.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kejujuran informasi dan komunikasi hormat harus dijaga bersamaan.",
+    "explanation": "Integritas menuntut penolakan manipulasi dokumen secara beretika dengan menawarkan percepatan realisasi kegiatan riil.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 205,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda melakukan kesalahan administrasi yang berdampak pada proses kerja. Anda…",
+    "stem": "Pihak pelapor kasus penipuan online memberikan bingkisan bernilai mahal sebagai ucapan terima kasih karena perkaranya lekas ditangani. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyembunyikannya sampai diketahui orang lain.",
-        "weight": 3
+        "text": "Menerima bingkisan tersebut karena diberikan secara sukarela setelah perkara selesai.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mengakui, melaporkan kepada pihak terkait, dan segera memperbaiki sesuai prosedur.",
+        "text": "Menolak bingkisan dengan santun dan menjelaskan bahwa penanganan perkara adalah tugas dinas kepolisian yang bebas biaya.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyalahkan petugas sebelumnya.",
-        "weight": 4
+        "text": "Menerima bingkisan lalu membagikannya kepada seluruh staf penyidik.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menghapus dokumen terkait.",
+        "text": "Menolak di depan kantor namun meminta dikirimkan ke alamat rumah pribadi.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Meminta bingkisan diganti dengan uang tunai untuk kas unit kerja.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Akuntabilitas menuntut pengungkapan dan tindakan korektif.",
+    "explanation": "Menolak gratifikasi dalam bentuk apa pun menjaga marwah independensi dan profesionalisme penyidik kepolisian.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 206,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Rekan menawarkan hadiah dari pihak yang sedang berkepentingan dengan tugas Anda. Anda…",
+    "stem": "Anda mengetahui rekan penyidik membocorkan jadwal penggerebekan lokasi perjudian kepada pengelola lokasi. Langkah Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menerima karena dianggap tanda terima kasih.",
-        "weight": 3
-      },
-      {
-        "key": "B",
-        "text": "Menerima lalu membaginya.",
-        "weight": 2
-      },
-      {
-        "key": "C",
-        "text": "Menolak atau melaporkan sesuai aturan gratifikasi yang berlaku.",
-        "weight": 5
-      },
-      {
-        "key": "D",
-        "text": "Menerima jika tidak diketahui orang lain.",
+        "text": "Pura-pura tidak tahu agar tidak dimusuhi di kesatuan.",
         "weight": 1
       },
       {
+        "key": "B",
+        "text": "Mengumpulkan indikasi pendukung dan segera melaporkan pelanggaran kode etik tersebut kepada Si Propam.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Meminta bagian uang tutup mulut dari rekan tersebut.",
+        "weight": 1
+      },
+      {
+        "key": "D",
+        "text": "Menegur rekan di depan tahanan lain tanpa melapor ke atasan.",
+        "weight": 2
+      },
+      {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menghubungi media massa secara anonim.",
         "weight": 2
       }
     ],
-    "correctKey": "C",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 3,
-      "B": 2,
-      "C": 5,
-      "D": 1,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 2,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (C) dengan bobot maksimal 5 poin. Menjaga independensi dan mengikuti ketentuan gratifikasi mencegah konflik kepentingan.",
+    "explanation": "Pembocoran rahasia operasi adalah pelanggaran disiplin berat yang wajib dilaporkan kepada Si Propam melalui bukti pendukung.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 207,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda diminta membagikan dokumen kedinasan ke grup yang tidak berwenang. Anda…",
+    "stem": "Saat melakukan penindakan tilang elektronik dan manual, pengemudi berusaha menyelipkan uang damai di balik surat kendaraan. Respons Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengirim agar pekerjaan cepat.",
-        "weight": 3
-      },
-      {
-        "key": "B",
-        "text": "Memastikan kewenangan penerima dan menggunakan kanal yang disetujui.",
+        "text": "Mengembalikan uang tersebut secara tegas, mengedukasi pelanggar tentang sistem tilang resmi, dan memproses pelanggaran.",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Menerima uang damai tersebut demi mempercepat kelancaran arus lalu lintas.",
+        "weight": 1
+      },
+      {
         "key": "C",
-        "text": "Mengirim sebagian halaman saja.",
-        "weight": 4
+        "text": "Mengancam pelanggar dengan hukuman pidana suap tanpa menjelaskan prosedur tilang.",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meminta orang lain mengirim.",
+        "text": "Mengabaikan pelanggaran dan membiarkan pengemudi melintas.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyita uang tersebut untuk keperluan kas patroli regu.",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 3,
-      "B": 5,
-      "C": 4,
+      "A": 5,
+      "B": 1,
+      "C": 3,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Informasi hanya dibagikan kepada pihak berwenang melalui kanal yang tepat.",
+    "explanation": "Menolak suap secara tegas dan memproses tilang resmi mencerminkan kepatuhan penuh terhadap integritas penegak hukum lalu lintas.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 208,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda melihat penggunaan kendaraan dinas untuk kepentingan pribadi. Anda…",
+    "stem": "Anda ditawari fasilitas menginap gratis di hotel berbintang oleh seorang saksi yang sedang diperiksa dalam kasus korupsi. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menganggap hal biasa.",
-        "weight": 3
+        "text": "Menerima fasilitas tersebut selama tidak mempengaruhi kesimpulan berita acara.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Memastikan konteks dan menindaklanjuti melalui mekanisme internal yang berlaku.",
+        "text": "Menolak fasilitas tersebut dan memilih akomodasi dinas resmi yang telah dianggarkan kesatuan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Memotret lalu mengunggahnya ke publik.",
-        "weight": 4
+        "text": "Mengajak anggota keluarga untuk turut menikmati fasilitas tersebut.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Ikut menggunakan.",
+        "text": "Menerima fasilitas atas nama unit penyidikan.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Meminta fasilitas hotel dialihkan dalam bentuk uang tunai.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Fakta perlu dipastikan dan penanganan dilakukan secara proporsional melalui jalur resmi.",
+    "explanation": "Menggunakan anggaran dinas resmi dan menolak fasilitas dari pihak terkait perkara mencegah terjadinya konflik kepentingan.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 209,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang teman meminta Anda menghapus catatan pelanggaran yang sah. Anda…",
+    "stem": "Seorang tokoh masyarakat meminta agar berkas perkara pidana anaknya diselesaikan secara damai tanpa melalui peradilan hukum pidana murni. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menghapus karena pertemanan.",
-        "weight": 3
+        "text": "Langsung menyetujui permintaan tersebut demi menjaga hubungan baik dengan tokoh masyarakat.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menolak secara profesional dan menjelaskan bahwa catatan harus sesuai fakta dan aturan.",
+        "text": "Menjelaskan mekanisme Restorative Justice (RJ) secara transparan sesuai Perpol No. 8/2021 dan memastikan syarat materiil serta formil terpenuhi.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menunda sampai ia memberi imbalan.",
-        "weight": 4
+        "text": "Menolak secara arogan tanpa memberikan penjelasan hukum yang edukatif.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Mengubah tanggal saja.",
+        "text": "Meminta sejumlah uang pelicin untuk menghentikan penyidikan perkara.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membiarkan perkara menggantung tanpa kepastian hukum.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Keadilan dan integritas tidak boleh dikalahkan hubungan pribadi.",
+    "explanation": "Penyelesaian perkara melalui keadilan restoratif harus berpijak pada ketentuan yuridis resmi Perpol No. 8 Tahun 2021 secara transparan.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 210,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menemukan dompet di area kantor tanpa pemilik terlihat. Anda…",
+    "stem": "Anda melihat rekan kerja menggunakan mobil patroli dinas kepolisian untuk mengantar keperluan belanja pribadi keluarganya saat jam dinas. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengambil uangnya dan membuang dompet.",
-        "weight": 3
+        "text": "Mengabaikannya karena bukan urusan tugas saya.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Menyerahkan kepada petugas/pengelola yang berwenang dengan pencatatan.",
+        "text": "Mengingatkan rekan bahwa kendaraan dinas inventaris hanya boleh digunakan untuk tugas operasional kepolisian.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyimpan tanpa memberi tahu siapa pun.",
-        "weight": 4
+        "text": "Meminjam mobil dinas tersebut untuk keperluan pribadi saya sendiri pada hari berikutnya.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Meninggalkannya begitu saja. Disiplin dan tanggung jawab",
+        "text": "Memviralkan rekaman mobil tersebut ke akun media sosial publik.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Melaporkan secara anonim ke provos tanpa melakukan teguran persuasif terlebih dahulu.",
+        "weight": 3
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 3
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Penyerahan tercatat memberi perlindungan dan peluang pengembalian kepada pemilik.",
+    "explanation": "Mengingatkan rekan secara persuasif tentang peruntukan aset dinas menjaga kepatuhan tata kelola inventaris institusi.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 211,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dua tugas penting memiliki tenggat berdekatan. Anda…",
+    "stem": "Ketika membuat laporan hasil interogasi tersangka, rekan penyidik mengusulkan menambahkan pengakuan palsu yang tidak diucapkan tersangka agar dakwaan semakin kuat. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengerjakan yang paling disukai dahulu.",
-        "weight": 3
+        "text": "Menyetujui usulan tersebut agar tersangka segera dihukum berat.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memetakan urgensi, dampak, waktu, lalu mengomunikasikan prioritas kepada atasan bila perlu.",
+        "text": "Menolak tegas usulan tersebut dan memastikan isi BAP hanya memuat keterangan faktual tersangka sesuai asas Due Process of Law.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menunda keduanya.",
-        "weight": 4
+        "text": "Mengundurkan diri dari proses penyidikan tanpa memberikan sanggahan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menyerahkan keduanya tanpa koordinasi.",
+        "text": "Menyerahkan penyusunan berkas kepada rekan tanpa membaca ulang.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menanyakan pendapat tersangka mengenai penambahan pasal tersebut.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Prioritas berbasis urgensi dan dampak serta komunikasi mencegah keterlambatan.",
+    "explanation": "Penyidikan kepolisian berpijak pada fakta objektif dan scientific crime investigation, menolak keras rekayasa keterangan dalam BAP.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 212,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda terlambat karena kendala perjalanan yang tidak terduga. Anda…",
+    "stem": "Anda menemukan kesalahan perhitungan dalam penetapan denda tilang tilang elektronik (ETLE) yang merugikan masyarakat pemilik kendaraan. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Tidak memberi kabar.",
-        "weight": 3
+        "text": "Membiarkan data tersebut karena sistem sudah berjalan otomatis.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Segera memberi informasi, memperkirakan waktu tiba, dan mengikuti arahan.",
+        "text": "Segera berkoordinasi dengan tim IT dan pimpinan Satlantas untuk melakukan koreksi sistem serta menginformasikan kepada pemilik kendaraan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Membuat alasan palsu.",
-        "weight": 4
+        "text": "Menghapus data pelanggaran secara manual tanpa izin atasan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menyalahkan rekan.",
+        "text": "Menyalahkan pihak ketiga vendor penyedia perangkat kamera.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menunggu ada komplain resmi dari warga baru bertindak.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Komunikasi dini dan kejujuran adalah respons yang bertanggung jawab.",
+    "explanation": "Koreksi proaktif terhadap anomali sistem teknologi penegakan hukum menunjukkan tanggung jawab moral dan akuntabilitas dinas.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 213,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Tugas rutin terasa membosankan. Anda…",
+    "stem": "Seorang pengusaha menawarkan bantuan renovasi pos polisi dengan harapan kendaraannya bebas dari pemeriksaan muatan berlebih (ODOL). Respons Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengurangi ketelitian.",
-        "weight": 3
+        "text": "Menerima tawaran tersebut demi perbaikan fasilitas pos pengamanan.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Tetap mengikuti standar dan mencari cara kerja lebih efisien tanpa mengubah prosedur.",
+        "text": "Menjelaskan bahwa bantuan hibah harus melalui mekanisme resmi kedinasan dan tidak dapat dikaitkan dengan kelonggaran penegakan hukum.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyerahkan kepada orang lain tanpa izin.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengabaikannya.",
+        "text": "Meminta pengusaha memberikan bantuan tunai langsung ke personel pos.",
         "weight": 1
       },
       {
+        "key": "D",
+        "text": "Menolak tawaran secara kasar dan mengusir pengusaha tersebut.",
+        "weight": 2
+      },
+      {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menerima bantuan dan tetap menilang kendaraannya tanpa pemberitahuan.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
-      "D": 1,
+      "C": 1,
+      "D": 2,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Konsistensi mutu tetap penting pada pekerjaan rutin.",
+    "explanation": "Bantuan hibah sarana dinas wajib melalui jalur resmi kedinasan serta tidak boleh mengorbankan integritas penegakan hukum lalu lintas.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 214,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima instruksi yang belum jelas. Anda…",
+    "stem": "Dalam tugas penjagaan tahanan, keluarga salah satu tahanan meminta izin memasukkan telepon genggam ke dalam ruang sel dengan imbalan uang. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menebak maksudnya.",
-        "weight": 3
+        "text": "Mengizinkan selama telepon hanya digunakan untuk menghubungi anak dan istri.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Meminta penjelasan tentang tujuan, batas, dan tenggat sebelum melaksanakan.",
+        "text": "Menolak secara tegas dan menyita barang terlarang tersebut sesuai SOP pengamanan ruang tahanan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengabaikan instruksi.",
-        "weight": 4
+        "text": "Menerima uangnya namun menyimpan telepon di loker penjagaan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Meminta anggota lain menebak.",
+        "text": "Mengizinkan pada malam hari saat perwira pengawas sedang tidur.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membiarkan keluarga memasukkan barang tanpa memeriksa isi bawaan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Klarifikasi lebih aman daripada asumsi yang berisiko.",
+    "explanation": "Menjaga ruang tahanan steril dari alat komunikasi ilegal adalah SOP mutlak demi mencegah pengendalian kejahatan dari dalam sel.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 215,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Rekan satu tim tidak menyelesaikan bagian tugasnya. Anda…",
+    "stem": "Saat bertugas sebagai panitia lelang barang inventaris dinas yang telah rusak, ada peserta lelang yang mengajak berkomplot menetapkan harga rendah. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Langsung mempermalukannya di depan umum.",
-        "weight": 3
+        "text": "Menyetujui ajakan tersebut demi mendapatkan bagian keuntungan lelang.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menghubungi secara langsung, memastikan kendala, dan menyepakati tindak lanjut.",
+        "text": "Menolak ajakan tersebut, mencatat percobaan kolusi, dan memastikan proses lelang berjalan terbuka sesuai taksiran wajar KPKNL.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Membiarkan seluruh pekerjaan gagal.",
-        "weight": 4
+        "text": "Membatalkan seluruh proses lelang secara sepihak tanpa koordinasi pimpinan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Mengambil alih tanpa memberi tahu.",
+        "text": "Menyerahkan keputusan sepenuhnya kepada peserta lelang lainnya.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membantu peserta lelang dengan syarat rahasia terjaga.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Komunikasi langsung dan penyelesaian bersama menjaga akuntabilitas tim.",
+    "explanation": "Proses lelang aset negara harus menjunjung tinggi prinsip transparansi, persaingan sehat, dan akuntabilitas keuangan negara.",
     "dimension": "Integritas & Etika Profesi"
   },
   {
     "id": 216,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menyadari ada tenggat yang mungkin tidak tercapai. Anda…",
+    "stem": "Meskipun jarak rumah ke kantor cukup jauh dan cuaca hujan deras, Anda dijadwalkan menjadi perwira apel pagi pukul 07.00 WIB. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menunggu sampai tenggat lewat.",
-        "weight": 3
+        "text": "Datang terlambat dan menyampaikan alasan cuaca buruk kepada pimpinan.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Melaporkan lebih awal, menjelaskan hambatan, dan menawarkan rencana pemulihan.",
+        "text": "Berangkat lebih awal dengan persiapan mantel hujan agar dapat memimpin apel tepat waktu sesuai jadwal dinas.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengubah tanggal dokumen.",
-        "weight": 4
+        "text": "Meminta rekan lain menggantikan tugas tanpa pemberitahuan resmi.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menyalahkan sistem.",
+        "text": "Tidak hadir dan langsung masuk saat jam kerja pelayanan dimulai.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menghubungi operator piket agar apel ditunda hingga hujan reda.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Peringatan dini memberi ruang untuk mitigasi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kedisiplinan waktu ditunjukkan dengan kesiapan mengantisipasi kendala perjalanan demi menepati komitmen tugas dinas.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 217,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Setelah menyelesaikan tugas, Anda memiliki waktu tersisa. Anda…",
+    "stem": "Saat hendak melakukan penangkapan tersangka narkotika, tim mendapati surat perintah penangkapan tertinggal di markas. Langkah regu...",
     "options": [
       {
         "key": "A",
-        "text": "Menggunakan waktu untuk urusan pribadi tanpa izin.",
-        "weight": 3
+        "text": "Tetap melakukan penangkapan paksa tanpa surat dan mengurus administrasinya kemudian.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Memeriksa hasil, merapikan dokumentasi, atau meminta tugas prioritas berikutnya.",
+        "text": "Memerintahkan satu personel mengambil surat tugas resmi secara cepat sementara regu melakukan pengintaian status quo.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengganggu rekan.",
-        "weight": 4
+        "text": "Membatalkan operasi secara permanen dan membiarkan tersangka melarikan diri.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Pulang tanpa mengikuti ketentuan.",
+        "text": "Membuat surat perintah palsu di tempat menggunakan tanda tangan rekan.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Mengancam tersangka agar menyerah secara sukarela tanpa surat resmi.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Inisiatif tetap harus sesuai aturan dan kebutuhan unit.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Pengamanan tersangka wajib mematuhi legalitas formil KUHAP; pengintaian taktis tetap berjalan sambil melengkapi surat perintah tugas.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 218,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda diminta menggantikan rekan yang berhalangan. Anda…",
+    "stem": "Pimpinan menginstruksikan seluruh personel wajib mengenakan rompi antipeluru dan helm taktis saat patroli malam di zona merah. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menolak tanpa mempertimbangkan situasi.",
-        "weight": 3
+        "text": "Hanya mengenakan rompi saat memasuki wilayah yang diperkirakan ada musuh.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Memastikan kewenangan dan kesiapan, lalu membantu sesuai arahan.",
+        "text": "Memakai seluruh perlengkapan pelindung diri sesuai instruksi sejak keluar mako demi keselamatan kerja.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Melaksanakan tugas di luar kompetensi tanpa konsultasi.",
-        "weight": 4
+        "text": "Menolak memakai karena rompi terasa berat dan membatasi gerak tubuh.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengeluh kepada masyarakat.",
+        "text": "Menyimpan rompi di bagasi mobil patroli untuk diperlihatkan saat ada pemeriksaan provos.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Memakai helm saja tanpa mengenakan rompi antipeluru.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kesediaan membantu perlu disertai pemeriksaan kompetensi dan kewenangan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Mematuhi SOP perlengkapan keselamatan dinas melindungi personel dari ancaman fatalitas di area rawan kerawanan.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 219,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dokumen penting perlu diperiksa sebelum dikirim. Anda…",
+    "stem": "Saat bertugas jaga tahanan pada pukul 03.00 dini hari, rasa kantuk melanda Anda sangat hebat. Tindakan paling tepat adalah...",
     "options": [
       {
         "key": "A",
-        "text": "Mengirim cepat tanpa pemeriksaan.",
-        "weight": 3
+        "text": "Tidur sejenak di meja penjagaan dan meminta tahanan tidak berisik.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memeriksa identitas, isi, lampiran, tujuan, dan kewenangan penerima.",
+        "text": "Mencuci muka, melakukan peregangan ringan, dan bergiliran dengan rekan jaga untuk memastikan situasi sel tetap termonitor.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Meminta orang yang tidak terkait memeriksa data rahasia.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengirim versi lama.",
+        "text": "Meninggalkan ruang jaga dan mencari kopi di warung luar markas.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Membiarkan pintu sel terkunci gembok tanpa perlu melakukan patroli keliling lorong.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Menyalakan musik bervolume keras di ruang tahanan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Daftar pemeriksaan sederhana mengurangi kesalahan administrasi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Menjaga kewaspadaan piket melalui pembagian giliran aktif dan kebugaran fisik mencegah risiko tahanan melarikan diri.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 220,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima kritik atas keterlambatan kerja. Anda…",
+    "stem": "Dalam penyusunan berkas administrasi penyelidikan, terdapat format baru sesuai Perkap terbaru yang belum Anda kuasai. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membalas dengan emosi.",
-        "weight": 3
+        "text": "Tetap menggunakan format lama karena sudah biasa dan mudah.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mendengarkan, memeriksa fakta, mengakui bagian yang benar, dan menyusun perbaikan.",
+        "text": "Mempelajari pedoman format baru dari buku panduan dinas serta berkonsultasi dengan perwira hukum kesatuan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menghindari pemberi kritik.",
-        "weight": 4
+        "text": "Menyerahkan seluruh tugas pembuatan berkas kepada staf magang.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menyalahkan seluruh tim. Pengendalian emosi dan tekanan",
+        "text": "Menunda pembuatan berkas hingga format lama diizinkan kembali.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Membuat berkas dengan format campuran seadanya.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Sikap terbuka dan rencana perbaikan lebih produktif daripada defensif.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kepatuhan terhadap regulasi baru menunjukkan komitmen adaptif dan disiplin profesional dalam standardisasi dokumen penyidikan.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 221,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Masyarakat berbicara dengan nada tinggi saat menyampaikan keluhan. Anda…",
+    "stem": "Saat melakukan pengawalan tahanan menuju pengadilan, salah satu tahanan meminta borgolnya dilepas dengan alasan tangan kram. Respons Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menaikkan suara agar didengar.",
-        "weight": 3
+        "text": "Melepas borgol sepenuhnya karena merasa kasihan kepada tahanan.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjaga nada bicara, mendengarkan, dan mengarahkan percakapan pada fakta serta solusi.",
+        "text": "Memeriksa kekencangan borgol, menyesuaikan tingkat kenyamanan tanpa melepas kunci pengaman, dan tetap waspada sesuai SOP pengawalan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Meninggalkan tanpa penjelasan.",
-        "weight": 4
+        "text": "Membentak tahanan dan memperketat borgol hingga sakit.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengejek keluhannya.",
+        "text": "Mengizinkan melepas borgol jika tahanan berjanji tidak kabur.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Mengabaikan keluhan tahanan tanpa memeriksa kondisi fisiknya.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Deeskalasi dimulai dengan pengendalian diri dan komunikasi yang jelas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Memastikan prosedur keamanan pengawalan tetap berlaku ketat sambil secara proporsional memeriksa kondisi fisik tahanan.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 222,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda mendapat kritik keras di hadapan anggota lain. Anda…",
+    "stem": "Anda melihat rekan bintara piket menerima tamu masyarakat di luar jam besuk tahanan resmi. Langkah Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Langsung membalas.",
-        "weight": 3
+        "text": "Membiarkannya karena merasa tidak enak menegur senior.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Tetap tenang, meminta contoh spesifik, dan membahas tindak lanjut secara profesional.",
+        "text": "Mengingatkan rekan piket bahwa jam besuk telah diatur secara ketat dalam SOP rutan demi mencegah penyelundupan barang terlarang.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyimpan dendam.",
-        "weight": 4
+        "text": "Membantu tamu tersebut masuk ke dalam ruang tahanan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menyebarkan keburukan pengkritik.",
+        "text": "Melaporkan rekan ke media massa tanpa komunikasi internal.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Meminta bayaran tiket masuk dari tamu tersebut.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Respons tenang memungkinkan substansi kritik dinilai tanpa memperbesar konflik.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Penegakan disiplin waktu kunjungan rutan merupakan kunci utama menjaga keamanan fasilitas tahanan kepolisian.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 223,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam satu hari muncul beberapa masalah mendadak. Anda…",
+    "stem": "Sebelum mengoperasikan senjata api dinas laras panjang saat pengamanan pemilu, tindakan wajib yang harus Anda lakukan adalah...",
     "options": [
       {
         "key": "A",
-        "text": "Mengerjakan semuanya sekaligus tanpa urutan.",
-        "weight": 3
+        "text": "Langsung mengisi peluru ke kamar senjata dan mencabut pengaman.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengidentifikasi risiko, menetapkan prioritas, dan meminta dukungan bila kapasitas tidak cukup.",
+        "text": "Melakukan pemeriksaan visual dan fisik kelaikan mekanik, kebersihan laras, dan memastikan laras mengarah ke arah yang aman.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Panik dan berhenti bekerja.",
-        "weight": 4
+        "text": "Menembakkan senjata ke udara untuk menguji fungsinya.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Memilih masalah termudah saja.",
+        "text": "Meminjamkan senjata kepada warga masyarakat yang ingin berfoto.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membawa senjata tanpa memeriksa buku mutasi amunisi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Prioritas dan dukungan yang tepat menjaga efektivitas di bawah tekanan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Disiplin keamanan penanganan senjata api inventaris (weapons safety rules) wajib dipatuhi demi mencegah tembakan tidak disengaja.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 224,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda merasa sangat lelah sebelum tugas yang membutuhkan ketelitian. Anda…",
+    "stem": "Ketika diperintahkan membuat laporan intelijen kilat mengenai situasi kamtibmas pasca aksi massa, batas waktu pengiriman adalah 30 menit. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memaksakan diri tanpa memberi tahu siapa pun.",
-        "weight": 3
+        "text": "Mengirim laporan ala kadarnya tanpa memverifikasi kebenaran informasi.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Menilai kondisi, melaporkan bila berisiko, dan mengikuti pengaturan istirahat/pengganti yang berlaku.",
+        "text": "Menyusun poin-poin data kunci yang telah diverifikasi secara cepat, cermat, dan mengirimkan laporan sebelum batas waktu habis.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengonsumsi apa pun agar tetap terjaga.",
-        "weight": 4
+        "text": "Meminta perpanjangan waktu 2 jam dan mengabaikan sifat kedaruratan laporan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Mengabaikan prosedur.",
+        "text": "Mengabaikan perintah dan menunggu arahan lanjutan.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyalin laporan hari kemarin tanpa memperbarui fakta lapangan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kesadaran kondisi fisik merupakan bagian dari keselamatan dan mutu tugas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Disiplin kecepatan dan akurasi informasi intelijen sangat krusial dalam mendukung pimpinan mengambil keputusan taktis.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 225,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seseorang sengaja memancing emosi Anda. Anda…",
+    "stem": "Saat bertugas mengamankan aksi unjuk rasa, orator demonstrasi menyampaikan kata-kata provokatif terhadap institusi kepolisian. Tindakan regu...",
     "options": [
       {
         "key": "A",
-        "text": "Membalas provokasi.",
-        "weight": 3
+        "text": "Membalas makian orator dengan pengeras suara mobil Raisa.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Tidak terpancing, menjaga jarak aman, dan bertindak sesuai prosedur.",
+        "text": "Tetap dalam formasi pertahanan Dalmas, mengabaikan provokasi verbal, dan bertindak sesuai arahan komandan kompi.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengancam di luar kewenangan.",
-        "weight": 4
+        "text": "Maju menyerang massa tanpa menunggu aba-aba dari komandan peleton.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengunggah identitasnya.",
+        "text": "Meninggalkan barisan untuk mengamankan diri sendiri.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Melepaskan gas air mata atas inisiatif pribadi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pengendalian diri mencegah eskalasi dan menjaga tindakan tetap proporsional.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kepatuhan terhadap garis komando saat pengendalian massa mencegah eskalasi anarkis dan menjamin penerapan SOP yang sah.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 226,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda gagal mencapai target kerja. Anda…",
+    "stem": "Sesuai aturan kedinasan, setiap serah terima piket wajib dilaksanakan pengecekan jumlah tahanan dan barang inventaris. Rekan mengajak melewati proses ini karena terburu-buru pulang. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyembunyikan hasil.",
-        "weight": 3
+        "text": "Menyetujui usulan rekan agar cepat beristirahat.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menganalisis penyebab, melaporkan secara jujur, dan menyusun langkah perbaikan.",
+        "text": "Menolak tegas dan bersikeras melaksanakan apel serah terima serta pengecekan fisik bersama personel piket baru sesuai SOP.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyalahkan keadaan tanpa evaluasi.",
-        "weight": 4
+        "text": "Hanya mengecek jumlah tahanan lewat buku mutasi tanpa melihat kondisi fisik.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Berhenti mencoba.",
+        "text": "Melakukan serah terima lewat panggilan telepon.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menandatangani buku mutasi kosong dan pulang lebih dahulu.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kegagalan dapat menjadi sumber pembelajaran bila ditangani terbuka.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Serah terima fisik piket jaga menjamin tidak adanya selisih inventaris dan memastikan status kesehatan tahanan secara nyata.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 227,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda berbeda pendapat dengan rekan dalam rapat yang memanas. Anda…",
+    "stem": "Ketika pimpinan memberikan teguran tertulis atas keterlambatan pengiriman berkas perkara, sikap Anda adalah...",
     "options": [
       {
         "key": "A",
-        "text": "Memotong pembicaraan.",
-        "weight": 3
+        "text": "Membantah dan menyalahkan bagian pos pengiriman berkas ekspedisi.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Menyampaikan alasan berbasis data dengan bahasa santun dan memberi ruang tanggapan.",
+        "text": "Menerima teguran dengan sikap ksatria, mengevaluasi sistem kerja unit, dan berjanji memperbaiki manajemen waktu.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Meninggalkan rapat sambil membanting pintu.",
-        "weight": 4
+        "text": "Melakukan aksi mogok kerja sebagai bentuk protes.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengajak rekan lain memihak.",
+        "text": "Menghindari komunikasi dengan pimpinan selama beberapa minggu.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Mengajukan mutasi pindah ke satuan lain yang lebih santai.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Asertivitas dan penghormatan menjaga diskusi tetap produktif.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Sikap ksatria dan disiplin menerima koreksi pimpinan merupakan ciri kedewasaan perwira dalam memperbaiki kinerja kedinasan.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 228,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima kabar yang membuat cemas saat sedang bertugas. Anda…",
+    "stem": "Saat berpatroli, Anda melihat sepeda motor rekan polisi lain tidak dilengkapi spion dan pelat nomor dinas yang sah. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkan kecemasan menguasai tugas.",
-        "weight": 3
+        "text": "Membiarkannya karena solidaritas sesama anggota korps kepolisian.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mengambil langkah yang diperlukan secara wajar, meminta dukungan bila perlu, dan menjaga keselamatan pelaksanaan tugas.",
+        "text": "Mengingatkan rekan secara baik-baik bahwa anggota Polri harus menjadi teladan tertib berlalu lintas di jalan raya.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Melampiaskan emosi kepada orang lain.",
-        "weight": 4
+        "text": "Memviralkan rekan tersebut di media sosial tanpa koordinasi.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengambil keputusan besar secara impulsif.",
+        "text": "Membantu membuatkan pelat dinas palsu.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menghukum rekan dengan push-up di pinggir jalan umum.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pengenalan emosi dan dukungan yang tepat membantu mempertahankan fokus.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Menegakkan disiplin internal dimulai dari saling mengingatkan ketertiban berlalu lintas agar tidak mencoreng citra institusi.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 229,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Kesalahan kecil berulang membuat Anda frustrasi. Anda…",
+    "stem": "Dalam melaksanakan olah tempat kejadian perkara (TKP) pembunuhan, warga sekitar mendesak ingin masuk ke dalam garis polisi (police line). Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memarahi semua orang.",
-        "weight": 3
+        "text": "Mengizinkan tokoh masyarakat masuk untuk melihat jenazah.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mencari pola penyebab dan memperbaiki proses atau daftar pemeriksaan.",
+        "text": "Secara humanis namun tegas melarang warga melintasi garis polisi demi menjaga keaslian dan status quo jejak forensik di TKP.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengabaikan kesalahan.",
-        "weight": 4
+        "text": "Membiarkan warga masuk karena jumlah personel polisi kalah banyak.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menyembunyikan catatan.",
+        "text": "Menggunakan senjata tajam untuk menakut-nakuti warga.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membubarkan warga dengan menyemprotkan air pemadam kebakaran.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Perbaikan sistem sering lebih efektif daripada menyalahkan individu.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Menjaga status quo TKP dari kontaminasi warga merupakan prosedur mutlak keberhasilan pengungkapan bukti forensik ilmiah.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 230,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda harus menyampaikan kabar yang tidak menyenangkan kepada tim. Anda…",
+    "stem": "Instruksi dinas mewajibkan pemusnahan berkas formulir permohonan yang salah cetak menggunakan mesin penghancur kertas (paper shredder). Rekan Anda membuangnya langsung ke tempat sampah terbuka. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyampaikan dengan kasar agar cepat selesai.",
-        "weight": 3
+        "text": "Mengikuti cara rekan karena lebih cepat dan tidak memakan waktu.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyampaikan fakta secara jelas, empatik, dan menjelaskan langkah berikutnya.",
+        "text": "Mengambil kembali berkas tersebut dan memusnahkannya dengan paper shredder demi mencegah kebocoran data pribadi pemohon.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyembunyikan informasi.",
-        "weight": 4
+        "text": "Membakar sampah di halaman kantor yang mengganggu pernapasan warga.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Membuat kabar terdengar lebih baik dari kenyataan. Kepemimpinan dan keputusan",
+        "text": "Menjual berkas bekas tersebut kepada pengepul kertas loak.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membiarkan berkas berserakan di ruang kerja.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kejujuran yang disampaikan dengan empati menjaga kepercayaan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Pemusnahan berkas berdata identitas sesuai SOP dokumen rahasia melindungi privasi warga dan keamanan informasi publik.",
+    "dimension": "Disiplin & Ketaatan Prosedur"
   },
   {
     "id": 231,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Tim Anda belum memahami tujuan kegiatan. Anda…",
+    "stem": "Saat bertugas mengawal tahanan berisiko tinggi menuju rumah sakit untuk perawatan darurat, tahanan mencoba memanfaatkan kelengahan untuk melarikan diri. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyalahkan anggota.",
-        "weight": 3
+        "text": "Panik dan melepaskan tembakan membabi-buta di kerumunan pasien.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjelaskan tujuan, hasil yang diharapkan, peran, dan jalur koordinasi.",
+        "text": "Menerapkan teknik melumpuhkan tanpa senjata api sesuai level eskalasi ancaman dan segera mengamankan kembali borgol tahanan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Membiarkan mereka bekerja sendiri.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengubah tujuan tanpa koordinasi.",
+        "text": "Membiarkan tahanan lari dan beralasan kelalaian pihak perawat.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Meminta bantuan warga sipil bersenjata tajam untuk mengejar.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Menyerah dan meninggalkan lokasi rumah sakit.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pemimpin perlu memastikan pemahaman bersama sebelum pelaksanaan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Tanggung jawab pengawalan menuntut kesiapan respon taktis pelumpuhan proporsional tanpa membahayakan keselamatan pasien sipil di sekitar.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 232,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dua anggota memiliki konflik yang mengganggu tugas. Anda…",
+    "stem": "Anda ditugaskan menyusun Surat Pemberitahuan Perkembangan Hasil Penyidikan (SP2HP) kepada pelapor kasus pencurian, namun data labfor belum keluar. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memihak teman dekat.",
-        "weight": 3
+        "text": "Tidak mengirimkan SP2HP sampai seluruh hasil labfor selesai tanpa batas waktu.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mendengar kedua pihak, memisahkan fakta dari asumsi, lalu menyepakati penyelesaian profesional.",
+        "text": "Tetap mengirimkan SP2HP tepat waktu dengan menerangkan secara transparan tahapan pemeriksaan labfor yang sedang berlangsung.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Membiarkan konflik membesar.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengumumkan masalah pribadi mereka.",
+        "text": "Membuat kesimpulan labfor palsu agar pelapor tidak bertanya-tanya.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Menyuruh pelapor datang sendiri memeriksa ke laboratorium forensik.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan surat permohonan perkembangan perkara dari pelapor.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Proses yang adil dan berbasis fakta membantu memulihkan kerja sama.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kewajiban penyidik menyampaikan SP2HP secara berkala adalah wujud akuntabilitas transparansi penyidikan kepada masyarakat.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 233,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Keputusan harus dibuat cepat tetapi informasi belum lengkap. Anda…",
+    "stem": "Saat memeriksa senjata inventaris dinas pasca patroli, Anda mendapati ada 1 butir amunisi yang hilang atau tidak cocok dengan catatan logistik. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menebak tanpa menilai risiko.",
-        "weight": 3
+        "text": "Membeli amunisi gelap di pasar ilegal untuk menggantikan yang hilang.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengumpulkan fakta minimum yang kritis, menilai risiko, bertindak dalam kewenangan, dan mengevaluasi.",
+        "text": "Melaporkan secara jujur ketidaksesuaian amunisi kepada Ba Logistik dan perwira pengawas serta membuat laporan kronologis tertulis.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menunda tanpa batas.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengikuti tekanan pihak paling keras.",
+        "text": "Mengubah angka catatan mutasi agar data terlihat seimbang.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Menyalahkan rekan jaga sebelumnya yang telah pulang.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Menyimpan senjata dan pura-pura tidak menyadari selisih amunisi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Keputusan cepat tetap membutuhkan dasar informasi dan batas kewenangan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Akuntabilitas pertanggungjawaban amunisi dinas menuntut kejujuran pelaporan kronologis demi mencegah penyalahgunaan senjata api.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 234,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anggota melakukan kesalahan pertama kali karena belum memahami prosedur. Anda…",
+    "stem": "Dalam penugasan pengamanan TPS Pemilu di pedalaman, terjadi banjir bandang yang mengancam keselamatan logistik kotak suara. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Langsung mempermalukannya.",
-        "weight": 3
+        "text": "Menyelamatkan barang pribadi dan membiarkan kotak suara hanyut.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengoreksi, menjelaskan prosedur, memastikan pemahaman, dan memantau perbaikan.",
+        "text": "Berkoordinasi dengan KPPS dan warga mengevakuasi kotak suara ke tempat aman tertinggi serta mengawal segel kotak suara secara ketat.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Membiarkan kesalahan berulang.",
-        "weight": 4
+        "text": "Membuka kotak suara untuk mengeringkan surat suara yang basah tanpa saksi.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengambil seluruh tugasnya selamanya.",
+        "text": "Meninggalkan TPS dan kembali ke markas komando polsek.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menyerahkan pengamanan kotak suara kepada relawan tanpa pengawasan.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pembinaan yang jelas sesuai untuk kesalahan karena kurang pemahaman, sambil tetap menjaga standar.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Pengamanan logistik negara adalah amanat tanggung jawab mutlak personel kepolisian yang wajib diprioritaskan saat krisis kontinjensi.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 235,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima usulan bawahan yang lebih efektif daripada rencana awal. Anda…",
+    "stem": "Ketika mengemudikan kendaraan dinas, Anda tanpa sengaja menyenggol pagar rumah warga hingga rusak ringan. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menolak karena merasa harus selalu benar.",
-        "weight": 3
+        "text": "Segera tancap gas meninggalkan lokasi mumpung tidak ada saksi yang melihat.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menilai usulan berdasarkan bukti, aturan, risiko, dan manfaat.",
+        "text": "Berhenti, turun dari kendaraan, menemui pemilik rumah, meminta maaf secara santun, dan bertanggung jawab mengganti biaya perbaikan pagar.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menerima tanpa pemeriksaan.",
-        "weight": 4
+        "text": "Menyalahkan pemilik rumah karena memasang pagar terlalu dekat dengan jalan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Mengklaim usulan itu sebagai ide sendiri.",
+        "text": "Menakut-nakuti pemilik rumah dengan kewenangan dinas kepolisian.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyuruh bawahan Anda mengaku sebagai pengemudi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pemimpin perlu terbuka, tetapi tetap melakukan penilaian yang bertanggung jawab.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Perwira berintegritas dan bertanggung jawab mengakui kelalaian secara ksatria serta memberikan ganti rugi wajar kepada masyarakat.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 236,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Hasil tim baik, tetapi kontribusi anggota tidak merata. Anda…",
+    "stem": "Anda ditunjuk sebagai bendahara pengeluaran unit penugasan operasi khusus dan memegang uang operasional lapangan. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengambil seluruh pujian.",
-        "weight": 3
+        "text": "Menggunakan sebagian uang dinas untuk keperluan trading pribadi dengan janji dikembalikan.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengapresiasi kontribusi secara adil dan membahas pembagian kerja untuk kegiatan berikutnya.",
+        "text": "Mencatat setiap pengeluaran secara transparan, melampirkan bukti transaksi sah, dan membuat buku kas harian yang dapat diaudit sewaktu-waktu.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengabaikan anggota yang bekerja keras.",
-        "weight": 4
+        "text": "Membelanjakan dana tanpa kuitansi pendukung karena situasi lapangan.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menyalahkan anggota di depan umum.",
+        "text": "Membagi sisa dana operasional sebagai bonus pribadi tanpa persetujuan komandan.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyimpan pembukuan hanya dalam ingatan pribadi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pengakuan yang adil dan evaluasi pembagian kerja menjaga motivasi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Akuntabilitas tata kelola keuangan penugasan kepolisian wajib dibuktikan dengan pencatatan tertib dan bukti kuitansi yang sah.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 237,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Atasan meminta masukan tentang kebijakan yang berpotensi menimbulkan kendala. Anda…",
+    "stem": "Sebuah berkas perkara penganiayaan yang Anda tangani ditolak kejaksaan karena batas waktu penahanan tersangka hampir habis. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Diam walau memiliki data penting.",
-        "weight": 3
+        "text": "Menyerah dan melepaskan tersangka tanpa petunjuk jaksa.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyampaikan risiko dan alternatif secara hormat, berbasis data.",
+        "text": "Bekerja ekstra melengkapi kekurangan berkas (P-19) bersama tim secara cermat sebelum masa penahanan berakhir demi kepastian hukum.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengkritik pribadi pembuat kebijakan.",
-        "weight": 4
+        "text": "Menyalahkan jaksa penuntut umum di hadapan keluarga korban.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menyebarkan keberatan ke luar organisasi.",
+        "text": "Memalsukan tanda tangan jaksa agar berkas tampak telah P-21.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menunda penyerahan berkas hingga masa penahanan kedaluwarsa.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Masukan profesional membantu keputusan lebih matang.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Tanggung jawab penyidikan menuntut kerja keras melengkapi petunjuk P-19 secara cermat dalam batas tenggat hukum yang sah.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 238,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anggota meminta arahan untuk tugas di luar pengalaman Anda. Anda…",
+    "stem": "Saat bertugas di pos pelayanan pengaduan, sistem komputer pendaftaran mendadak mengalami gangguan jaringan offline. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memberi jawaban asal.",
-        "weight": 3
+        "text": "Menutup loket dan meminta warga datang kembali esok hari.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mengakui batas pengetahuan, mencari rujukan atau ahli yang tepat, lalu memberi arahan terverifikasi.",
+        "text": "Segera beralih ke pencatatan register manual sementara waktu agar warga tetap terlayani dengan tertib tanpa menunggu perbaikan server.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menghindar selamanya.",
-        "weight": 4
+        "text": "Menyalahkan tim teknisi jaringan di hadapan antrean warga.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Meminta anggota menebak.",
+        "text": "Duduk santai di ruang tunggu sambil bermain telepon genggam.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menerima pengaduan hanya dari warga yang Anda kenal baik.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pemimpin yang bertanggung jawab tidak berpura-pura mengetahui semua hal.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Solutif dan bertanggung jawab dalam pelayanan publik memastikan hak masyarakat tetap terlayani melalui mitigasi prosedur manual.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 239,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda harus membagi tugas dalam waktu terbatas. Anda…",
+    "stem": "Ketika barang bukti elektronik berupa laptop tersangka korupsi berada di bawah pengawasan Anda, rekan ingin meminjamnya untuk keperluan mengetik. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membagi sama rata tanpa melihat kompetensi.",
-        "weight": 3
+        "text": "Mengizinkan peminjaman asalkan tidak menghapus file penting.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mempertimbangkan kompetensi, beban, urgensi, dan kebutuhan pengawasan.",
+        "text": "Menolak dengan tegas dan menjelaskan bahwa barang bukti berstatus disegel dan tidak boleh diakses tanpa penetapan pengadilan dan berita acara.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Memberikan semua tugas kepada orang terdekat.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Memilih anggota secara acak.",
+        "text": "Membiarkan rekan menggunakan laptop tanpa pengawasan.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Membongkar harddisk laptop tersebut untuk diperiksa sendiri.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Menjual laptop tersebut dan menggantinya dengan unit serupa.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pembagian tugas efektif mempertimbangkan kemampuan dan beban kerja.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Menjaga integritas rantai bukti (chain of custody) barang bukti digital merupakan tanggung jawab mutlak penyidik tindak pidana.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 240,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Setelah kegiatan, hasil tidak sesuai target. Anda…",
+    "stem": "Saat mengawasi apel malam ruang tahanan, seorang tahanan mengeluh sakit dada hebat dan sesak napas. Langkah Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mencari kambing hitam.",
-        "weight": 3
+        "text": "Menyuruh tahanan tidur dan beristirahat tanpa tindakan medis.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Melakukan evaluasi terbuka, mengidentifikasi faktor kendali, dan menetapkan perbaikan terukur.",
+        "text": "Segera berkoordinasi dengan perwira jaga dan membawa tahanan ke Dokkes atau rumah sakit terdekat dengan pengawalan ketat sesuai SOP.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menghapus catatan evaluasi.",
-        "weight": 4
+        "text": "Memberikan obat pribadi yang Anda miliki tanpa resep dokter.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menganggap evaluasi tidak perlu. Kerja sama dan komunikasi",
+        "text": "Mengeluarkan tahanan ke halaman luar tanpa borgol pengaman.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menunggu hingga jadwal pemeriksaan kesehatan rutin esok pagi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Evaluasi berorientasi pembelajaran memperkuat kinerja berikutnya.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Perlindungan hak asasi dan kesehatan tahanan adalah tanggung jawab hukum personel kepolisian; rujukan medis segera wajib dilakukan.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 241,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Rekan baru belum memahami budaya kerja unit. Anda…",
+    "stem": "Setelah selesai melaksanakan razia balap liar, Anda menemukan beberapa helm sitaan tercecer di pinggir jalan. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkannya belajar sendiri.",
-        "weight": 3
+        "text": "Mengambil helm yang bagus untuk digunakan sendiri di rumah.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Membantu orientasi, menjelaskan aturan kerja, dan mengenalkan jalur bertanya.",
+        "text": "Mengumpulkan seluruh helm, mendatanya dalam daftar barang sitaan razia, dan membawanya ke kantor untuk disimpan di gudang barang bukti.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengejek ketidaktahuannya.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Memberi informasi yang salah sebagai candaan.",
+        "text": "Meninggalkan helm di pinggir jalan karena bukan tanggung jawab saya.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Membagikan helm kepada warga sekitar yang menonton razia.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Membuang helm tersebut ke sungai dekat lokasi razia.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Dukungan awal mempercepat adaptasi dan mencegah kesalahan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Semua barang sitaan hasil operasi kepolisian wajib diinventarisasi secara tertib dan disimpan dalam gudang barang bukti resmi.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 242,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Pesan dalam grup kerja disalahartikan dan memicu ketegangan. Anda…",
+    "stem": "Ketika pimpinan memberikan tugas memimpin tim verifikasi data internal kesatuan dengan tenggat waktu ketat, sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menambah komentar menyindir.",
-        "weight": 3
+        "text": "Mendelegasikan seluruh pekerjaan kepada bawahan dan pergi meninggalkan kantor.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengklarifikasi maksud dengan bahasa netral dan menghubungi pihak terkait bila perlu.",
+        "text": "Menyusun pembagian kerja yang proporsional, memimpin pengecekan silang data secara berkala, dan memastikan hasil akurat sebelum diserahkan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Meneruskan tangkapan layar ke luar grup.",
-        "weight": 4
+        "text": "Membuat kesimpulan data berdasarkan estimasi kira-kira tanpa verifikasi.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menghapus pesan orang lain.",
+        "text": "Menunda penyerahan laporan hingga ditegur berkali-kali oleh pimpinan.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Meminta tim lain mengambil alih tugas unit Anda.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Klarifikasi langsung mengurangi salah paham digital.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kepemimpinan yang bertanggung jawab memastikan supervisi aktif dan akurasi data dalam menyelesaikan target kedinasan.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 243,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda tidak setuju dengan cara kerja rekan. Anda…",
+    "stem": "Saat bertugas patroli jalan raya, Anda menemukan lampu sirene kendaraan dinas mati akibat korsleting sekring. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membicarakannya di belakang.",
-        "weight": 3
+        "text": "Tetap berpatroli tanpa sirene dan mengabaikan kerusakan kendaraan.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Menyampaikan masukan secara pribadi, spesifik, dan berfokus pada pekerjaan.",
+        "text": "Menepi di tempat aman, mengganti sekring cadangan yang tersedia atau segera melaporkannya ke bengkel dinas logistik polres.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menghambat pekerjaannya.",
-        "weight": 4
+        "text": "Memukul lampu sirene dengan tongkat polisi agar menyala kembali.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Memaksakan cara sendiri.",
+        "text": "Mematikan mobil dan pulang ke rumah sebelum jam dinas selesai.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyalakan klakson terus-menerus sebagai pengganti sirene.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Masukan spesifik dan langsung lebih konstruktif daripada gosip atau sabotase.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Memelihara kelaikan operasional sarana mobilitas dinas merupakan bentuk tanggung jawab keselamatan personel dan pengguna jalan.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 244,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam rapat, satu anggota jarang berbicara. Anda…",
+    "stem": "Anda ditugaskan mendampingi saksi mahkota dalam perjalanan menuju pengadilan. Keluarga terdakwa berusaha mendekati saksi untuk mengintimidasi. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menganggap ia tidak memiliki ide.",
-        "weight": 3
+        "text": "Membiarkan keluarga terdakwa berbicara agar tidak terjadi keributan.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memberi kesempatan menyampaikan pendapat tanpa memaksanya.",
+        "text": "Menempatkan posisi tubuh sebagai barikade pengaman, menjauhkan pihak pengintimidasi, dan memastikan saksi memasuki ruang steril pengadilan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengabaikannya terus.",
-        "weight": 4
+        "text": "Membalas intimidasi dengan kekerasan fisik di depan umum.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menjawab atas namanya.",
+        "text": "Meninggalkan saksi dan bersembunyi di mobil pengawal.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyarankan saksi untuk mengubah keterangannya di persidangan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Ruang partisipasi membantu tim memperoleh sudut pandang beragam.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Tanggung jawab perlindungan saksi mengharuskan tindakan proteksi fisik yang sigap, tegas, dan berpedoman pada SOP perlindungan saksi.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 245,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Informasi penting belum diterima seluruh anggota. Anda…",
+    "stem": "Dalam evaluasi triwulan, satuan kerja Anda mendapatkan nilai kinerja terendah akibat keterlambatan penyelesaian laporan online. Sebagai staf operator, Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menganggap semua sudah tahu.",
-        "weight": 3
+        "text": "Menyalahkan pimpinan karena sering memberikan tugas tambahan lain.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Memastikan informasi diterima melalui kanal resmi dan meminta konfirmasi bila penting.",
+        "text": "Mengakui kelemahan dalam manajemen waktu, menganalisis faktor penghambat, dan berkomitmen memperbaiki ritme pelaporan harian.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyalahkan anggota.",
-        "weight": 4
+        "text": "Bersikap masa bodoh karena merasa sudah bekerja sesuai gaji.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengirim ke akun pribadi yang tidak aman.",
+        "text": "Mengajukan pengunduran diri dari posisi operator sistem data.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menghapus akun operator agar sistem dinilai rusak.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Konfirmasi penerimaan penting untuk koordinasi yang dapat dipertanggungjawabkan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Sikap akuntabel menerima hasil evaluasi kinerja secara konstruktif dan berkomitmen melakukan perbaikan sistem kerja nyata.",
+    "dimension": "Tanggung Jawab & Akuntabilitas"
   },
   {
     "id": 246,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima instruksi berbeda dari dua pihak. Anda…",
+    "stem": "Saat bertugas mengurai kemacetan parah di perempatan jalan, seorang pengemudi mobil mewah memaki Anda dengan kata-kata kasar karena merasa jalurnya tertahan. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memilih yang paling mudah.",
-        "weight": 3
+        "text": "Balik memaki pengemudi tersebut dengan suara lebih keras.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengklarifikasi prioritas melalui jalur komando dan mendokumentasikan arahan.",
+        "text": "Tetap tenang, tidak terpancing emosi, menjelaskan pengaturan prioritas arus dengan santun namun tegas, lalu melanjutkan penarikan arus.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Melaksanakan keduanya tanpa menilai konflik.",
-        "weight": 4
+        "text": "Memukul kap mobil pengemudi menggunakan tongkat pengatur lalu lintas.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengabaikan keduanya.",
+        "text": "Meninggalkan perempatan dan membiarkan kemacetan bertambah parah.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Menahan kendaraan pengemudi tersebut selama berjam-jam tanpa alasan hukum.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Klarifikasi rantai komando mencegah perintah yang saling bertentangan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kematangan stabilitas emosi aparat penegak hukum diuji dari kemampuan tetap tenang, sopan, dan berfokus pada tugas utama saat diprovokasi.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 247,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Rekan menyampaikan pendapat dengan cara kurang santun. Anda…",
+    "stem": "Ketika memeriksa tersangka pencurian yang berbelit-belit dan terus berbohong saat diinterogasi, Anda merasa sangat jengkel. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membalas dengan penghinaan.",
-        "weight": 3
+        "text": "Melakukan intimidasi fisik agar tersangka segera mengaku.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menanggapi substansi dan mengajak menjaga cara komunikasi.",
+        "text": "Menghentikan pemeriksaan sejenak untuk menenangkan pikiran, lalu melanjutkan interogasi berbasis teknik pembuktian ilmiah dan data konfrontasi bukti.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyebarkan rekaman percakapan.",
-        "weight": 4
+        "text": "Menyerahkan interogasi kepada bintara muda untuk diberi pelajaran fisik.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menghentikan semua komunikasi.",
+        "text": "Mengurung tersangka di ruangan gelap tanpa makan dan minum.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menutup berkas dan membebaskan tersangka begitu saja.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Fokus pada substansi sambil menjaga etika lebih efektif.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Pengendalian emosi penyidik mencegah pelanggaran HAM dan memastikan pengakuan diperoleh melalui scientific crime investigation yang sah.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 248,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda perlu menyampaikan perubahan jadwal mendadak. Anda…",
+    "stem": "Massa pengunjuk rasa melemparkan botol air mineral dan tomat busuk ke arah perisai Dalmas yang Anda pegang. Komandan belum memberi aba-aba maju. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memberi tahu sebagian orang saja.",
-        "weight": 3
+        "text": "Membalas melempar botol kembali ke arah kerumunan massa.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyampaikan perubahan, alasan yang dapat dibagikan, dampak, dan konfirmasi penerimaan.",
+        "text": "Menahan emosi, merapatkan perisai dalam formasi bertahan, dan tetap disiplin menunggu aba-aba dari komandan peleton.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menunggu orang bertanya.",
-        "weight": 4
+        "text": "Keluar dari barisan pertahanan untuk mengejar pelempar botol sendirian.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengubah jadwal tanpa pemberitahuan.",
+        "text": "Melempar tameng ke tanah dan lari meninggalkan regu.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Mencabut pistol dinas untuk menakut-nakuti pengunjuk rasa.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Komunikasi lengkap membantu semua pihak menyesuaikan rencana.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kekuatan mental pasukan pengendalian massa terletak pada ketahanan menahan emosi dan kedisiplinan formasi menunggu instruksi resmi.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 249,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Tim lintas fungsi memiliki istilah kerja yang berbeda. Anda…",
+    "stem": "Keluarga Anda sedang mengalami masalah pribadi yang berat di rumah, sementara Anda harus melayani masyarakat di loket pengaduan. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menganggap istilah unit sendiri paling benar.",
-        "weight": 3
+        "text": "Melampiaskan kekesalan rumah tangga kepada warga yang datang melapor.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyepakati definisi dan tujuan bersama sebelum pembagian pekerjaan.",
+        "text": "Menyisihkan beban masalah pribadi saat memakai seragam dinas dan tetap melayani masyarakat dengan ramah, empati, dan profesional.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menghindari koordinasi.",
-        "weight": 4
+        "text": "Menutup loket lebih awal untuk menyelesaikan urusan pribadi.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Membiarkan kebingungan.",
+        "text": "Menceritakan masalah pribadi kepada warga yang sedang melapor.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Bekerja sambil menangis di depan meja pelayanan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Bahasa bersama mengurangi kesalahan koordinasi lintas fungsi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Profesionalisme kepolisian menuntut kematangan emosi untuk memisahkan urusan personal dari dedikasi pelayanan prima kepada warga.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 250,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima pujian atas hasil yang sebenarnya dikerjakan bersama. Anda…",
+    "stem": "Dalam apel konsolidasi, pimpinan menegur hasil kerja peleton Anda secara keras di hadapan seluruh anggota satuan. Respons Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Mengambil seluruh kredit.",
-        "weight": 3
+        "text": "Memotong omongan pimpinan di tengah lapangan untuk membela diri.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengakui kontribusi tim dan menjelaskan peran secara proporsional.",
+        "text": "Mendengarkan teguran dengan sikap sempurna, mengendalikan reaksi kecewa, dan menjadikan kritik sebagai bahan evaluasi perbaikan peleton.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menolak semua pujian dengan marah.",
-        "weight": 4
+        "text": "Menunjukkan ekspresi wajah sinis dan bersungut-sungut di barisan apel.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menyebut nama tanpa persetujuan dalam konteks sensitif. Pelayanan dan empati",
+        "text": "Mengajak anggota peleton lain memboikot kegiatan dinas berikutnya.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menulis curhatan kekesalan terhadap pimpinan di status media sosial.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pengakuan yang adil menunjukkan kerendahan hati dan menghargai tim.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kedewasaan personel diwujudkan dalam kemampuan menerima evaluasi pimpinan dengan sikap tenang, bijak, dan berorientasi pada koreksi diri.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 251,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang warga kesulitan memahami formulir. Anda…",
+    "stem": "Saat bertugas mengamankan pertandingan sepak bola, suporter tim tuan rumah mengejek dan menyanyikan yel-yel menghina polisi. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyuruhnya pergi.",
-        "weight": 3
+        "text": "Menantang suporter berkelahi di tribun penonton.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjelaskan bagian yang diperlukan dengan bahasa sederhana tanpa mengambil alih informasi yang harus ia isi sendiri.",
+        "text": "Tetap bersikap humanis, tenang, tidak terprovokasi, dan fokus mengawasi pergerakan massa guna mencegah potensi kerusuhan fisik.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengisi data dengan perkiraan.",
-        "weight": 4
+        "text": "Menyerang penonton menggunakan gas air mata tanpa koordinasi panitia.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Meminta imbalan bantuan.",
+        "text": "Ikut menyanyikan yel-yel menghina tim sepak bola lawan.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Meninggalkan sektor tribun pengamanan sebelum pertandingan selesai.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Bantuan yang jelas menjaga akses pelayanan sekaligus akurasi data.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Fokus pengamanan kamtibmas menuntut pengendalian diri tingkat tinggi agar tidak terdistraksi oleh provokasi verbal penonton olahraga.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 252,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Warga datang dalam keadaan emosional karena merasa tidak didengar. Anda…",
+    "stem": "Anda mendapati akun media sosial Anda diserang komentar negatif dan fitnah dari oknum warganet terkait penindakan tilang yang viral. Langkah Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memotong penjelasannya.",
-        "weight": 3
+        "text": "Membalas komentar dengan makian kasar dan ancaman pasal UU ITE secara emosional.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mendengarkan, merangkum keluhan, lalu menjelaskan pilihan tindak lanjut yang tersedia.",
+        "text": "Menahan diri dari membalas secara emosional, mendokumentasikan bukti tangkapan layar, dan melaporkannya ke Bagian Humas kesatuan untuk klarifikasi resmi.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menjanjikan hasil yang belum pasti.",
-        "weight": 4
+        "text": "Mengajak teman-teman satu angkatan menyerbu akun warganet tersebut.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menyalahkan warga.",
+        "text": "Menghapus akun dan mogok menjalankan tugas patroli jalan raya.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menantang warganet tersebut untuk duel secara terbuka di lapangan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Mendengar aktif dan penjelasan realistis membangun kepercayaan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Menghadapi serangan siber dan opini publik negatif harus melalui jalur kehumasan resmi dan penegakan hukum yang profesional, bukan amarah personal.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 253,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang penyandang disabilitas membutuhkan akses pelayanan. Anda…",
+    "stem": "Saat melakukan patroli malam, Anda mencurigai kendaraan yang melarikan diri saat hendak dihentikan. Setelah terkejar, pengemudi ternyata remaja panik tanpa SIM. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memintanya menunggu tanpa kepastian.",
-        "weight": 3
+        "text": "Memukul pengemudi remaja tersebut karena telah merepotkan pengejaran polisi.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengupayakan akomodasi yang layak sesuai fasilitas dan prosedur.",
+        "text": "Mengendalikan amarah pasca pengejaran, memeriksa identitas pengemudi dengan tegas dan tenang, serta memproses pelanggaran sesuai hukum anak yang berlaku.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengabaikan kebutuhannya.",
-        "weight": 4
+        "text": "Menghancurkan kaca mobil remaja tersebut dengan helm dinas.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Meminta orang lain mengurus tanpa koordinasi.",
+        "text": "Meminta uang tebusan agar remaja tersebut tidak ditangkap.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Melepaskan remaja tersebut tanpa sanksi apa pun karena merasa kasihan.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Aksesibilitas dan perlakuan bermartabat mendukung pelayanan setara.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Adrenalin tinggi pasca pengejaran harus segera dinetralkan dengan pengendalian diri agar tindakan penegakan hukum tetap proporsional dan terukur.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 254,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Warga meminta informasi yang tidak boleh dibuka kepada publik. Anda…",
+    "stem": "Seorang rekan kerja sering mengkritik cara kerja Anda di depan rekan-rekan lain dengan nada meremehkan. Respons Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membocorkan agar dianggap membantu.",
-        "weight": 3
+        "text": "Memukul rekan kerja tersebut di ruang istirahat untuk memberi pelajaran.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjelaskan batas keterbukaan dan mengarahkan ke prosedur permohonan yang sah.",
+        "text": "Menjaga ketenangan emosi, mengajak rekan tersebut berdiskusi empat mata secara dewasa untuk mendengar masukan konkretnya, dan membuktikan kinerja terbaik.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengarang jawaban.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Menyebarkan dokumen tanpa izin.",
+        "text": "Menyebarkan gosip buruk tentang kehidupan pribadi rekan tersebut.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Menangis di depan atasan dan menuntut rekan tersebut dimutasi.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Mengabaikan tugas kedinasan unit karena merasa tidak dihargai.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pelayanan yang baik tetap melindungi informasi yang dikecualikan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Menyelesaikan dinamika hubungan kerja internal secara dewasa dan kepala dingin menjaga iklim kerja kesatuan tetap solid dan produktif.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 255,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menghadapi orang yang berulang kali mengajukan pertanyaan sama. Anda…",
+    "stem": "Ketika mengantre pembagian bekal penugasan operasi pengamanan pemilu yang panjang dan melelahkan, seorang anggota berusaha menyelak antrean Anda. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menunjukkan kejengkelan.",
-        "weight": 3
+        "text": "Mendorong anggota tersebut hingga terjatuh ke tanah.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjawab dengan sabar dan memeriksa apakah penjelasan sebelumnya sudah dipahami.",
+        "text": "Mengingatkan anggota tersebut dengan sopan namun tegas agar tertib menghormati antrean demi keadilan bersama seluruh personel.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengabaikannya.",
-        "weight": 4
+        "text": "Diam saja namun menyimpan kebencian mendalam.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Mengejeknya.",
+        "text": "Membalas dengan menyelak antrean orang lain di depan Anda.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Berteriak membuat keributan yang menarik perhatian pimpinan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kesabaran dan pemeriksaan pemahaman meningkatkan kualitas layanan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Pengendalian diri dalam situasi antrean menumbuhkan budaya ketertiban internal dan saling menghargai sesama anggota korps kepolisian.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 256,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Warga mengeluhkan perlakuan tidak adil. Anda…",
+    "stem": "Saat bertugas mengamankan konser musik akbar, cuaca sangat panas dan debu beterbangan tebal, sementara penonton terus berdesak-desakan. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Langsung menyimpulkan ia salah.",
-        "weight": 3
+        "text": "Marah-marah kepada penonton dan mendorong barikade dengan keras.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mencatat keluhan, memeriksa fakta, dan menjelaskan mekanisme penanganan.",
+        "text": "Menjaga kesabaran, membasahi wajah, minum air putih cukup, dan tetap bersikap ramah namun waspada mengarahkan arus penonton.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menjanjikan petugas akan dihukum.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Menghapus pengaduan.",
+        "text": "Meninggalkan barikade dan berteduh di tenda VIP tanpa izin.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Mengusir penonton yang berdiri di dekat pagar pembatas.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Membiarkan penonton merusak pagar pembatas karena lelah.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pengaduan perlu ditangani objektif tanpa menjanjikan hasil sebelum pemeriksaan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Ketahanan fisik dan stabilitas emosi di lingkungan penugasan ekstrem merupakan kompetensi dasar personel dalam menjaga kamtibmas.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 257,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda melihat rekan berbicara merendahkan pemohon layanan. Anda…",
+    "stem": "Anda mendapati tersangka pembunuhan sadis yang korbannya adalah anak kecil bersikap dingin dan tidak menunjukkan penyesalan saat diperiksa. Reaksi Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Ikut tertawa.",
-        "weight": 3
+        "text": "Menyiksa tersangka agar merasakan sakitnya penderitaan korban.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengingatkan secara profesional dan menindaklanjuti sesuai mekanisme bila diperlukan.",
+        "text": "Menahan luapan kemarahan batin, tetap bertindak objektif sesuai koridor hukum, dan menyusun konstruksi pasal dakwaan seberat-beratnya berdasarkan bukti kuat.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Merekam dan menyebarkan.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Berpura-pura tidak melihat dalam semua keadaan.",
+        "text": "Menolak memeriksa tersangka dan membiarkan kasusnya terbengkalai.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Menyebarkan foto wajah tersangka ke publik sebelum penetapan resmi.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Membiarkan tersangka dipukuli oleh pihak keluarga korban di ruang penyidikan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Menjaga martabat pengguna layanan merupakan tanggung jawab bersama.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Keadilan hukum ditegakkan melalui ketelitian bukti yuridis yang tak terbantahkan, bukan melalui luapan kemarahan emosional penyidik.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 258,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang warga tidak memiliki dokumen yang diperlukan. Anda…",
+    "stem": "Setelah bertugas selama 14 hari penuh tanpa libur dalam operasi kemanusiaan bencana gempa bumi, fisik dan psikis Anda sangat lelah. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memalsukan dokumen.",
-        "weight": 3
+        "text": "Mengeluh di media sosial bahwa institusi memperlakukan anggota secara tidak adil.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjelaskan persyaratan dan alternatif prosedural yang sah.",
+        "text": "Memanfaatkan waktu istirahat yang diberikan pimpinan secara efektif untuk pemulihan fisik dan mental serta menjaga semangat pengabdian demi warga korban.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Meminta uang agar proses berjalan.",
-        "weight": 4
+        "text": "Mogok bertugas membantu pencarian korban di reruntuhan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menolak tanpa penjelasan.",
+        "text": "Melampiaskan stres kepada relawan warga sipil.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Mengonsumsi obat-obatan terlarang penambah stamina tanpa resep dokter.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Penjelasan persyaratan yang jelas mencegah praktik tidak sah.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Manajemen stres dan pemulihan stamina yang teratur menjaga kesehatan mental personel dalam penugasan operasi kemanusiaan jangka panjang.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 259,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima kritik di media sosial terkait pelayanan. Anda…",
+    "stem": "Saat melakukan negosiasi dengan warga yang memblokir jalan lintas provinsi akibat sengketa lahan, warga berbicara dengan nada tinggi dan mengacungkan parang. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membalas dengan emosi dan membuka data pribadi.",
-        "weight": 3
+        "text": "Langsung menembak warga yang memegang parang tanpa peringatan.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Melaporkan melalui kanal yang tepat, memeriksa fakta, dan memberi respons resmi yang proporsional.",
+        "text": "Tetap tenang, mengambil jarak aman taktis, menenangkan situasi dengan komunikasi persuasif kearifan lokal, dan mengajak perwakilan berdialog di pos pengamanan.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengajak rekan menyerang akun tersebut.",
-        "weight": 4
+        "text": "Lari meninggalkan lokasi negosiasi karena ketakutan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menghapus kritik dengan akses tidak sah.",
+        "text": "Menantang warga untuk adu kekuatan fisik dengan polisi.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Membiarkan jalan terblokir selamanya tanpa ada upaya mediasi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Respons publik harus menjaga etika, privasi, dan akurasi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Pengendalian emosi dalam negosiasi krisis di lapangan mengedepankan pendekatan persuasif dan de-eskalasi konflik tanpa jatuhnya korban.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 260,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang korban tampak takut saat dimintai keterangan. Anda…",
+    "stem": "Ketika berkas perkara yang Anda siapkan dengan teliti dicoret dan direvisi total oleh perwira pengawas karena beda penafsiran hukum, Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Memaksanya menjawab cepat.",
-        "weight": 3
+        "text": "Membanting berkas di meja kerja dan menolak memperbaikinya.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menciptakan suasana aman, menjelaskan proses, dan mengikuti prosedur pemeriksaan yang berlaku.",
+        "text": "Mengendalikan rasa kecewa, mendiskusikan poin koreksi secara ilmiah hukum dengan perwira pengawas, dan melakukan perbaikan demi kesempurnaan berkas.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyalahkan korban.",
-        "weight": 4
+        "text": "Membicarakan keburukan perwira pengawas kepada sesama penyidik.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menceritakan kasusnya kepada orang lain. Adaptabilitas dan pembelajaran",
+        "text": "Mengajukan cuti panjang mendadak untuk menghindar dari revisi.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyerahkan berkas yang dicoret langsung ke kejaksaan tanpa revisi.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pendekatan empatik dan prosedural membantu menjaga martabat serta kualitas informasi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kematangan profesionalisme terlihat dari kemampuan menerima koreksi dengan pikiran terbuka dan semangat menyempurnakan kualitas berkas perkara.",
+    "dimension": "Pengendalian Diri & Stabilitas Emosi"
   },
   {
     "id": 261,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sistem kerja digital baru diterapkan. Anda…",
+    "stem": "Dalam operasi penangkapan gembong narkoba lintas batas, tim gabungan terdiri dari fungsi Reskrim, Intelkam, dan Brimob. Tindakan paling tepat bagi tim...",
     "options": [
       {
         "key": "A",
-        "text": "Menolak mempelajarinya.",
-        "weight": 3
+        "text": "Setiap fungsi bergerak sendiri-sendiri tanpa koordinasi radio agar tidak berebut peran.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengikuti pelatihan, mencoba sesuai panduan, dan melaporkan kendala secara spesifik.",
+        "text": "Melaksanakan briefing komando terpadu, berbagi peta sasaran secara transparan, mematuhi peran masing-masing, dan menjaga komunikasi frekuensi radio yang disiplin.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Meminta orang lain mengerjakan selamanya.",
-        "weight": 4
+        "text": "Menolak berbagi informasi intelijen agar tangkapan dinilai murni prestasi satuan Reskrim.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menggunakan akun orang lain.",
+        "text": "Mundur dari operasi karena merasa peran Brimob lebih berbahaya.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menunggu operasi selesai baru mendatangi TKP.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Belajar aktif dan penggunaan akun yang benar menjaga keamanan serta kompetensi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Keberhasilan penindakan taktis skala besar bertumpu pada soliditas sinergi komando, transparansi informasi, dan koordinasi terpadu lintas fungsi.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 262,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menerima umpan balik bahwa komunikasi Anda terlalu singkat. Anda…",
+    "stem": "Seorang rekan satu regu patroli mengalami musibah sakit mendadak sehingga pos jaga rawan kekurangan personel. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menganggap semua orang terlalu sensitif.",
-        "weight": 3
+        "text": "Menolak membantu penambahan jam dinas karena bukan jadwal piket saya.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Meminta contoh, menilai dampaknya, dan menyesuaikan kejelasan komunikasi.",
+        "text": "Secara sukarela menawarkan diri mengisi kekosongan pos jaga atau berkoordinasi mengatur rotasi giliran tugas bersama regu lain demi keamanan mako.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Membalas kritik.",
-        "weight": 4
+        "text": "Membiarkan pos kosong tanpa laporan kepada perwira piket.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menghindari komunikasi.",
+        "text": "Menyuruh warga sipil menjaga pos kepolisian.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menuntut upah lembur tambahan di depan rekan yang sedang sakit.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Umpan balik konkret dapat diterjemahkan menjadi perbaikan perilaku.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Soliditas korps dan rasa empati kedinasan diwujudkan dalam kesediaan saling membackup saat rekan menghadapi kedaruratan.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 263,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Prosedur berubah sementara Anda terbiasa dengan cara lama. Anda…",
+    "stem": "Saat menggelar operasi penyekatan jalur mudik lebaran bersama instansi TNI, Dishub, dan Satpol PP, terjadi perbedaan pendapat mengenai titik pengalihan arus. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Tetap menggunakan cara lama.",
-        "weight": 3
+        "text": "Memaksakan kehendak Polri dan mengabaikan saran dari instansi lain.",
+        "weight": 2
       },
       {
         "key": "B",
-        "text": "Mempelajari ketentuan terbaru dan meminta klarifikasi bila ada bagian yang belum jelas.",
+        "text": "Mengajak seluruh unsur perwakilan instansi berembuk di tenda posko gabungan untuk menentukan skema rekayasa arus terbaik demi kepentingan masyarakat.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyuruh tim mengabaikan perubahan.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengubah prosedur sendiri.",
+        "text": "Menarik seluruh personel polisi dan membiarkan instansi lain bekerja sendiri.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Menyerahkan seluruh keputusan lalu lintas kepada pihak luar tanpa pertimbangan teknis.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Membiarkan kemacetan terjadi tanpa kesepakatan rekayasa jalan.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 2,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Adaptasi harus mengikuti ketentuan yang berlaku.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kepemimpinan sinergis lintas instansi mengutamakan musyawarah mufakat dan kolaborasi teknis demi keberhasilan pelayanan masyarakat bersama.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 264,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda mendapat tugas pada bidang yang belum dikuasai. Anda…",
+    "stem": "Dalam tim penyusunan rencana kerja tahunan (Renja), ada anggota bintara muda yang menyampaikan ide digitalisasi pengarsipan berkas. Respons Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Berpura-pura ahli.",
-        "weight": 3
+        "text": "Meremehkan idenya karena ia personel baru yang belum berpengalaman.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memetakan kebutuhan kompetensi, belajar, dan berkonsultasi dengan personel yang berwenang.",
+        "text": "Menyambut baik ide inovatif tersebut, mempelajari teknis penerapannya, dan memberikan ruang bagi anggota untuk mempresentasikan konsepnya di forum tim.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menolak semua tugas baru.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Mengerjakan tanpa memeriksa risiko.",
+        "text": "Mencuri ide tersebut dan mengakuinya sebagai pemikiran pribadi kepada pimpinan.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Menolak inovasi baru karena lebih nyaman dengan cara manual konvensional.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Menyuruh anggota tersebut fokus pada tugas piket jaga saja.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Pengembangan kompetensi disertai konsultasi mencegah kesalahan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Iklim kerja tim yang sehat mendorong inklusivitas ide dan inovasi konstruktif tanpa memandang batasan senioritas semata.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 265,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ada informasi viral tentang kejadian yang berkaitan dengan tugas. Anda…",
+    "stem": "Saat bertugas sebagai tim SAR gabungan pencarian korban tenggelam bersama Basarnas, perahu karet satuan Anda mengalami kerusakan baling-baling motor. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Langsung meneruskan.",
-        "weight": 3
+        "text": "Menghentikan pencarian dan bersantai di posko darat.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memeriksa sumber dan fakta sebelum menyampaikan atau mengambil tindakan.",
+        "text": "Segera berkoordinasi dengan tim Basarnas untuk bergabung menaiki perahu cadangan mereka serta membantu tugas pengamatan visual dari atas perahu.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menambah spekulasi.",
-        "weight": 4
-      },
-      {
-        "key": "D",
-        "text": "Menggunakan informasi anonim sebagai kepastian.",
+        "text": "Menyalahkan rekan pengemudi perahu atas kerusakan teknis tersebut.",
         "weight": 1
       },
       {
-        "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "key": "D",
+        "text": "Meminjam perahu nelayan tanpa izin untuk melanjutkan pencarian sendirian.",
         "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Meminta pimpinan membatalkan status pencarian korban.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
-      "D": 1,
-      "E": 2
+      "C": 1,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Verifikasi adalah kebiasaan penting dalam lingkungan informasi cepat.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kemampuan beradaptasi dan berintegrasi dengan armada instansi mitra saat krisis membuktikan komitmen sinergi penyelamatan kemanusiaan.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 266,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Metode kerja baru ditawarkan oleh anggota junior. Anda…",
+    "stem": "Rekan satu tim penyidikan Anda mengalami kesulitan dalam menganalisis data jejak digital (digital forensics) perkara penipuan. Anda yang memahami IT akan...",
     "options": [
       {
         "key": "A",
-        "text": "Menolak karena usia/pangkat.",
-        "weight": 3
+        "text": "Mengejek ketidaktahuannya di depan rekan kerja lainnya.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menilai manfaat dan risikonya secara objektif.",
+        "text": "Meluangkan waktu untuk mendampingi, memandu teknik penarikan data, dan berbagi pengetahuan teknis agar kemampuan tim meningkat secara merata.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menerima tanpa uji coba.",
-        "weight": 4
+        "text": "Menolak membantu dengan alasan bukan bagian dari rincian tugas formal saya.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengambil ide tanpa mengakui pengusul.",
+        "text": "Mengerjakan seluruh kasusnya namun meminta imbalan uang pribadi.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menyarankan rekan memalsukan bukti digital daripada repot menganalisis.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Kualitas ide tidak ditentukan semata-mata oleh senioritas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Transfer pengetahuan (knowledge sharing) antar-rekan kerja memperkuat kompetensi kolektif satuan dalam mengungkap kejahatan modern.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 267,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda melakukan kesalahan karena belum memahami aplikasi. Anda…",
+    "stem": "Ketika operasi penertiban tambang ilegal berhasil mengamankan alat berat, ada rekan yang ingin langsung mengumumkan keberhasilan tim di akun media sosial pribadinya sebelum rilis resmi humas. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Menyembunyikan kesalahan.",
-        "weight": 3
+        "text": "Mendukungnya agar akun media sosial rekan menjadi viral dan terkenal.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Melaporkan dampaknya, meminta bantuan, dan mempelajari panduan agar tidak terulang.",
+        "text": "Mengingatkan rekan bahwa publikasi operasi wajib satu pintu melalui Humas Polri demi menjaga kerahasiaan pengembangan target berikutnya.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyalahkan aplikasi tanpa bukti.",
-        "weight": 4
+        "text": "Ikut-ikutan membuat konten video di lokasi penggerebekan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menghapus data.",
+        "text": "Merampas telepon genggam rekan dan membantingnya.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menjual informasi penangkapan kepada media swasta secara rahasia.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Transparansi dan pembelajaran mengurangi risiko berulang.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Disiplin komunikasi publik institusi menjaga kerahasiaan penyidikan lanjutan dan menghormati peran kehumasan resmi kepolisian.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 268,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Perubahan situasi membuat rencana awal tidak relevan. Anda…",
+    "stem": "Dalam tugas pengamanan unjuk rasa, Anda melihat ada celah kosong pada barisan pertahanan kompi sebelah yang berpotensi diterobos massa. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Tetap menjalankan rencana lama tanpa evaluasi.",
-        "weight": 3
+        "text": "Membiarkannya karena itu merupakan sektor tanggung jawab kompi lain.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menilai perubahan, menyesuaikan rencana dalam kewenangan, dan mengomunikasikan dampaknya.",
+        "text": "Segera memberitahukan komandan peleton Anda dan berkomunikasi dengan komandan kompi sebelah untuk segera melakukan perapatan formasi saling melengkapi.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menghentikan semua kegiatan tanpa alasan.",
-        "weight": 4
+        "text": "Menertawakan kelalaian formasi kompi sebelah.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Mengambil keputusan di luar kewenangan.",
+        "text": "Lari mundur sebelum massa menerobos celah tersebut.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Mendorong massa agar menyerbu celah kosong tersebut.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Adaptasi yang terukur menjaga tujuan dan kepatuhan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Kewaspadaan kolektif dan komunikasi taktis lintas unit menjamin keutuhan sistem pengamanan serta mencegah kegagalan operasi pertahanan.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 269,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda diminta mempelajari materi baru dalam waktu singkat. Anda…",
+    "stem": "Saat bertugas sebagai Bhabinkamtibmas, Babinsa dari Koramil setempat sedang menyelenggarakan kegiatan bakti sosial karya bakti pembersihan saluran air. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Membaca sekilas tanpa memahami.",
-        "weight": 3
+        "text": "Tidak hadir karena kegiatan tersebut diinisiasi oleh pihak militer.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menentukan pokok penting, memakai sumber tepercaya, dan menguji pemahaman.",
+        "text": "Hadir bersama warga binaan, aktif bergotong-royong bersama Babinsa, dan memperkuat pilar sinergitas TNI-Polri di tengah masyarakat.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Menyalin jawaban orang lain.",
-        "weight": 4
+        "text": "Datang hanya untuk berfoto dokumentasi lalu pergi meninggalkan lokasi.",
+        "weight": 2
       },
       {
         "key": "D",
-        "text": "Menunda sampai tenggat.",
+        "text": "Melarang warga binaan ikut membantu kegiatan Babinsa.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
-        "weight": 2
+        "text": "Menggelar acara tandingan di waktu dan lokasi yang sama.",
+        "weight": 1
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 2,
       "D": 1,
-      "E": 2
+      "E": 1
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Belajar terstruktur meningkatkan pemahaman dalam waktu terbatas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Sinergitas Tiga Pilar (Bhabinkamtibmas, Babinsa, dan Kepala Desa) diwujudkan melalui partisipasi aktif nyata dalam kegiatan kemasyarakatan.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 270,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Setelah pelatihan, Anda kembali ke rutinitas lama. Anda…",
+    "stem": "Dalam penyelesaian berkas perkara yang kompleks, terjadi kebuntuan koordinasi antara penyidik kepolisian dan jaksa penuntut umum (JPU). Langkah tim...",
     "options": [
       {
         "key": "A",
-        "text": "Tidak menerapkan materi.",
-        "weight": 3
+        "text": "Saling melempar tuduhan dan berdebat secara emosional di media massa.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memilih praktik yang relevan, menerapkannya sesuai aturan, dan mengevaluasi hasil.",
+        "text": "Mengajukan permohonan gelar perkara bersama (koordinasi pra-penuntutan) untuk menyamakan persepsi yuridis pembuktian alat bukti.",
         "weight": 5
       },
       {
         "key": "C",
-        "text": "Mengubah semua proses tanpa persetujuan.",
-        "weight": 4
+        "text": "Menghentikan penyidikan perkara tanpa dasar hukum yang jelas.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Menganggap pelatihan tidak berguna. Panduan Jawaban dan Penjelasan Bagian A: tidak memiliki kunci benar-salah. Gunakan skala 1–5 untuk mencatat respons yang paling sesuai dengan diri Anda. Pernyataan positif menggambarkan kecenderungan perilaku yang umumnya mendukung kinerja profesional; skor tinggi bukan jaminan kelulusan dan bukan ukuran tunggal kepribadian. Untuk refleksi Bagian A, tandai pernyataan yang Anda jawab 1 atau 2 pada aspek yang penting bagi pekerjaan. Tanyakan: apakah ada contoh nyata yang mendukung jawaban saya? Apakah ada kebiasaan kecil yang perlu diperbaiki? Hindari mengubah jawaban hanya agar terlihat sempurna.",
+        "text": "Melaporkan pihak kejaksaan kepada komisi yudisial tanpa dasar bukti.",
         "weight": 1
       },
       {
         "key": "E",
-        "text": "Menunda tindakan dan melihat perkembangan situasi tanpa berkoordinasi.",
+        "text": "Mengabaikan petunjuk jaksa dan memaksakan pengiriman berkas berkali-kali.",
         "weight": 2
       }
     ],
     "correctKey": "B",
     "optionWeights": {
-      "A": 3,
+      "A": 1,
       "B": 5,
-      "C": 4,
+      "C": 1,
       "D": 1,
       "E": 2
     },
-    "explanation": "Penilaian Bobot Etika Polri: Pilihan paling konstruktif adalah opsi (B) dengan bobot maksimal 5 poin. Transfer pembelajaran perlu dilakukan secara bertahap dan terukur.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "Koordinasi pra-penuntutan melalui gelar perkara bersama adalah mekanisme resmi Criminal Justice System untuk mempercepat kelengkapan berkas perkara.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 271,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya tetap menyampaikan fakta meskipun fakta tersebut dapat membuat saya mendapat teguran.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Ketika anggota regu patroli Anda melakukan kesalahan navigasi arah sehingga terlambat tiba di lokasi laporan perkelahian warga, Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Memarahi dan mempermalukan pengemudi di hadapan warga masyarakat.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Fokus mengamankan TKP terlebih dahulu bersama regu, lalu melakukan evaluasi rute dan peta wilayah secara konstruktif saat konsolidasi internal.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Membiarkan perkelahian berlanjut sebagai hukuman atas keterlambatan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Melaporkan pengemudi ke provos saat itu juga di pinggir jalan.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Meninggalkan regu dan berjalan kaki sendirian.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Mengutamakan penyelesaian penanganan krisis di lapangan, kemudian melakukan debriefing evaluasi teknis secara objektif demi perbaikan tim.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 272,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menolak menggunakan fasilitas jabatan untuk kepentingan pribadi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Unit kerja Anda dipercaya menyelenggarakan simulasi penanganan ancaman terorisme tingkat polda. Rekan kerja tampak pasif dan bingung dengan perannya. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
-      },
-      {
-        "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
-      },
-      {
-        "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Mengerjakan seluruh skenario sendirian agar acara cepat selesai.",
         "weight": 2
       },
       {
+        "key": "B",
+        "text": "Mengajak rekan berdiskusi, membedah buku pedoman latihan bersama, dan membagi tanggung jawab adegan secara jelas sesuai kompetensinya.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Melaporkan kepasifan rekan kepada pimpinan agar mereka ditegur keras.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Membatalkan simulasi dan beralasan sarana prasarana kurang memadai.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menertawakan kebingungan rekan di depan umum.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 2,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Membangun kolaborasi aktif melalui pendampingan dan kejelasan pembagian peran menumbuhkan rasa percaya diri serta kekompakan kelompok kerja.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 273,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya bersedia mengakui kesalahan tanpa menyalahkan rekan kerja.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat bertugas di pos pantau arus wisata, ada anggota dari satuan lalu lintas lain yang membutuhkan bantuan sarana komunikasi cadangan karena handy talky (HT) miliknya rusak. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menolak meminjamkan karena bukan berasal dari satu polres yang sama.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Meminjamkan perangkat komunikasi cadangan dinas yang tersedia dan memastikan frekuensi terhubung demi kelancaran koordinasi pengamanan arus.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menyewakan perangkat cadangan tersebut dengan tarif harian.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Menyuruh rekan tersebut menggunakan sinyal asap untuk berkomunikasi.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyembunyikan seluruh perangkat komunikasi cadangan di laci terkunci.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Semangat kebersamaan korps Tribrata melintasi batas kewilayahan satker demi menunjang kelancaran misi pengamanan lalu lintas nasional.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 274,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menjaga kerahasiaan informasi kedinasan sesuai kewenangan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Dalam operasi penegakan hukum tindak pidana kehutanan (illegal logging) bersama Polhut Kemenhut, tim dihadapkan pada medan hutan lebat yang ekstrem. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menuntut personel Polhut membawa seluruh logistik kepolisian.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Menjalin komunikasi taktis yang solid, saling menjaga keselamatan antarpersonel, dan memadukan keahlian navigasi rimba Polhut dengan taktik penindakan Polri.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Memutuskan kembali ke pangkalan dan membiarkan pelaku penebangan liar lolos.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Berjalan mendahului rombongan sendirian tanpa peta rujukan.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyalahkan cuaca dan mendirikan tenda istirahat di tengah jalur bahaya.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Sinergi lintas sektoral di medan operasi gabungan mengintegrasikan keunggulan taktis masing-masing unsur demi menuntaskan target operasi negara.",
+    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
   },
   {
     "id": 275,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya tidak mengubah laporan agar terlihat lebih baik dari keadaan sebenarnya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang warga penyandang disabilitas tuna rungu datang ke SPKT untuk melaporkan kehilangan dokumen penting, namun petugas loket kesulitan memahami bahasa isyaratnya. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menyuruh warga tersebut pulang dan mencari juru bahasa sendiri.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mendekati warga tersebut dengan ramah, menyediakan media tulis/kertas atau aplikasi teks di telepon genggam, dan melayani pelaporan dengan sabar.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Membentak warga tersebut agar berbicara lebih jelas.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Mengabaikan warga tersebut dan melayani pelapor lain yang normal.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menertawakan keterbatasan fisik warga tersebut.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Pelayanan kepolisian yang inklusif dan humanis menuntut inisiatif adaptasi sarana komunikasi agar hak pelayanan warga berkebutuhan khusus terpenuhi.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 276,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya berani menolak ajakan yang bertentangan dengan aturan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang ibu histeris mendatangi kantor polisi melaporkan bahwa balitanya hilang di pasar tradisional. Sikap Anda saat menerima laporan...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menyuruh ibu tersebut tenang dan menunggu masa 1x24 jam sebelum membuat laporan resmi.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Menenangkan sang ibu dengan empati, mencatat ciri-ciri fisik anak secara cepat, dan segera menyiarkan informasi darurat ke seluruh jajaran patroli terdekat.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Memarahi sang ibu karena dinilai lalai menjaga anaknya di tempat ramai.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Meminta biaya operasional pencarian kepada ibu tersebut.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
-        "weight": 1
+        "text": "Mencatat laporan di buku tanpa melakukan tindakan lapangan.",
+        "weight": 2
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
-      "E": 1
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
+      "E": 2
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Kedaruratan kehilangan anak memerlukan respons kilat (quick response), empati tinggi, dan koordinasi radio seketika tanpa menunggu masa 24 jam.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 277,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menghindari janji yang tidak dapat saya penuhi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Ketika mengantre perpanjangan SKCK di loket pelayanan, warga mengeluhkan ruang tunggu yang panas karena pendingin ruangan (AC) mati. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menyuruh warga keluar jika merasa kepanasan di kantor polisi.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Menyampaikan permohonan maaf atas ketidaknyamanan, membuka ventilasi jendela, menyediakan kipas angin portabel cadangan, dan segera menghubungi teknisi perbaikan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Memarahi petugas keamanan kantor atas kerusakan AC.",
         "weight": 2
       },
       {
+        "key": "D",
+        "text": "Pura-pura tidak mendengar keluhan warga yang mengantre.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menutup loket pelayanan SKCK untuk hari itu.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Responsivitas terhadap kenyamanan fasilitas pelayanan publik mencerminkan komitmen kepolisian yang berorientasi pada kepuasan masyarakat.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 278,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya memperlakukan orang secara adil tanpa melihat kedekatan pribadi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat bertugas patroli siang hari di jalan arteri, Anda melihat seorang kakek pejalan kaki kesulitan menyeberang jalan akibat padatnya arus kendaraan cepat. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
-      },
-      {
-        "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
-      },
-      {
-        "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Membunyikan sirine mobil patroli dari kejauhan agar kendaraan lain berhenti sendiri.",
         "weight": 2
       },
       {
+        "key": "B",
+        "text": "Menepikan kendaraan di tempat aman, turun ke jalan, menghentikan arus kendaraan dengan aba-aba tangan yang jelas, dan menuntun sang kakek menyeberang hingga selamat.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Mengabaikan kakek tersebut karena bukan penindakan pelanggaran hukum.",
+        "weight": 1
+      },
+      {
+        "key": "D",
+        "text": "Merekam kakek tersebut untuk bahan konten media sosial pribadi.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyuruh kakek tersebut berjalan mencari jembatan penyeberangan orang yang jauh.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 2,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Perlindungan dan pertolongan nyata kepada warga lansia di jalan raya merupakan implementasi nilai luhur tugas pokok Polri sebagai pelindung dan pengayom.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 279,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya segera memperbaiki informasi keliru yang pernah saya sampaikan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang korban kekerasan seksual datang melapor ke kantor kepolisian dalam kondisi trauma berat dan takut bertemu polisi pria. Sebagai perwira piket, Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Memaksa korban menceritakan kronologi di hadapan seluruh petugas piket pria.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mengantar korban ke Ruang Pelayanan Khusus (RPK), memanggil penyidik Polwan dari Unit PPA, serta memastikan privasi dan pendampingan psikologis korban terjaga.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menolak laporan karena korban tidak membawa bukti visum mandiri.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Menanyakan pertanyaan yang menyudutkan gaya pakaian korban saat kejadian.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyuruh korban pulang dan berdamai dengan pelaku kekerasan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "SOP penanganan korban kekerasan seksual mewajibkan pemeriksaan di Ruang Pelayanan Khusus oleh penyidik Polwan demi melindungi kondisi psikologis korban.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 280,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya tetap mematuhi prosedur meskipun tidak sedang diawasi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Di media sosial viral keluhan warga mengenai adanya oknum petugas yang meminta biaya fotokopi berkas laporan kehilangan di polsek Anda. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menyerang akun warga tersebut dengan komentar pembelaan diri yang agresif.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Melakukan investigasi internal bersama perwira Provost, menertibkan praktik pungutan tidak resmi, dan menyediakan sarana fotokopi gratis bagi masyarakat pemohon.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menutup pelayanan penerbitan surat kehilangan di polsek.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Membiarkan keluhan tersebut hilang dengan sendirinya.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
-        "weight": 1
+        "text": "Menyalahkan pimpinan polres atas minimnya anggaran fotokopi kantor.",
+        "weight": 2
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
-      "E": 1
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
+      "E": 2
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Menindaklanjuti keluhan masyarakat dengan perbaikan sistemik dan penertiban internal menjaga marwah pelayanan publik kepolisian yang bersih dan akuntabel.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 281,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menyusun prioritas agar pekerjaan selesai sesuai tenggat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat patroli subuh, Anda menemukan anak jalanan yang tidur menggigil di emperan ruko dalam kondisi kelaparan. Tindakan paling tepat adalah...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Mengusir anak tersebut dengan tongkat polisi agar kota terlihat tertib.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Membangunkan dengan lembut, memberikan makanan dan minuman, mendata identitas keluarganya, serta berkoordinasi dengan Dinas Sosial untuk pembinaan lanjutan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menangkap anak tersebut dan memasukkannya ke dalam sel tahanan kriminal.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Mengabaikannya karena urusan anak jalanan bukan tugas pokok penegak hukum.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Memfoto anak tersebut untuk meminta donasi di rekening pribadi Anda.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Pendekatan humanis kepada kelompok rentan dan anak jalanan mengutamakan perlindungan sosial dan sinergi dengan instansi kesejahteraan sosial negara.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 282,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya datang tepat waktu untuk kegiatan yang telah dijadwalkan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang pengendara motor yang Anda hentikan karena tidak memakai helm menangis tersedu-sedu dan mengaku sedang panik menuju rumah sakit karena anaknya kritis. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Tetap menyita sepeda motornya di tempat dan membiarkan pengendara berjalan kaki.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Memverifikasi situasi secara cepat, memberikan pengawalan patroli motor menuju rumah sakit demi keselamatan anak, dan memproses pembinaan edukasi tilang kemudian.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Memarahi pengendara karena berbohong menggunakan alasan anak sakit.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Meminta uang damai agar pengendara diizinkan lewat tanpa helm.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
-        "weight": 1
+        "text": "Melepaskan pengendara tanpa helm dan membiarkannya ngebut membahayakan diri di jalan.",
+        "weight": 2
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
-      "E": 1
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
+      "E": 2
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Diskresi kepolisian yang berkeadilan mendahulukan nilai kemanusiaan darurat keselamatan jiwa dengan memberikan diskresi pengawalan menuju rumah sakit.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 283,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menuntaskan tugas yang menjadi tanggung jawab saya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Warga masyarakat di wilayah binaan Anda merasa takut melapor adanya bandar miras oplosan karena takut diintimidasi preman. Langkah Bhabinkamtibmas...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Mengumumkan nama pelapor di pengeras suara masjid desa.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Membangun saluran aduan rahasia (hotline khusus), menjamin kerahasiaan identitas saksi pelapor, dan berkoordinasi dengan tim opsnal untuk penindakan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menyuruh warga menangkap sendiri bandar miras tersebut.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Menolak menangani aduan jika warga tidak mau menjadi saksi terbuka di persidangan.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Membiarkan peredaran miras karena tidak ada aduan tertulis resmi.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Menumbuhkan kepercayaan masyarakat (public trust) dicapai melalui jaminan kerahasiaan identitas dan perlindungan penuh kepada warga pelapor kejahatan.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 284,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya memeriksa kembali pekerjaan sebelum diserahkan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat memberikan materi penyuluhan bahaya narkoba di sekolah menengah, para siswa tampak bosan dengan materi hukum yang kaku. Pendekatan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Membentak para siswa agar memperhatikan ceramah dengan tertib.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mengubah metode penyampaian dengan media interaktif, studi kasus nyata yang relevan bagi remaja, kuis berhadiah, dan dialog komunikasi dua arah yang hangat.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Mempersingkat materi menjadi 5 menit dan langsung pulang.",
         "weight": 2
       },
       {
+        "key": "D",
+        "text": "Mengancam akan menilang seluruh siswa yang tidak memperhatikan.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyerahkan mic kepada guru dan tidur di belakang kelas.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Penyuluhan Binmas yang humanis dan edukatif menuntut kreativitas komunikasi agar pesan pencegahan kejahatan dapat diterima generasi muda secara efektif.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 285,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya tetap bekerja sesuai standar meskipun tugas terasa rutin.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang turis asing kehilangan paspor dan dompet di kawasan objek wisata, namun turis tersebut tidak bisa berbahasa Indonesia. Tindakan petugas pos pam...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Mengusir turis tersebut karena menyulitkan komunikasi petugas pos.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Menyapa dengan ramah menggunakan bahasa Inggris dasar atau aplikasi penerjemah, menenangkan turis tersebut, menerbitkan surat tanda lapor kehilangan, dan membantu menghubungi kedutaannya.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Meminta bayaran dolar untuk biaya penterjemahan bahasa.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Menyuruh turis tersebut mencari kantor imigrasi sendiri.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Mengabaikan turis tersebut hingga ia pergi dengan kebingungan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Pelayanan prima kepada wisatawan mencerminkan profesionalisme standar internasional kepolisian dalam menjaga keamanan destinasi pariwisata nasional.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 286,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya memberi kabar lebih awal jika ada hambatan yang mengancam tenggat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang warga mendatangi kantor polisi pada malam hari meminta bantuan mediasi perselisihan batas pekarangan dengan tetangganya yang memanas. Tindakan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
-      },
-      {
-        "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
-      },
-      {
-        "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Menolak melayani karena masalah perdata tanah bukan urusan polisi pidana.",
         "weight": 2
       },
       {
+        "key": "B",
+        "text": "Menerima warga dengan baik, mendengarkan duduk perkara secara objektif, dan menawarkan kehadiran Bhabinkamtibmas untuk problem solving bersama kepala desa esok hari secara damai.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menyuruh kedua warga tersebut saling menuntut di pengadilan perdata.",
+        "weight": 2
+      },
+      {
+        "key": "D",
+        "text": "Menahan kedua belah pihak di sel kantor polisi agar tidak ribut.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Meminta sertifikat tanah asli warga sebagai jaminan laporan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 2,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Peran kepolisian dalam Pemolisian Masyarakat (Polmas) mengedepankan problem solving awal untuk meredam potensi konflik horizontal antarwarga.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 287,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menggunakan waktu kerja untuk kegiatan yang berkaitan dengan tugas.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Setelah jam pelayanan SIM ditutup pukul 15.00 WIB, seorang buruh pabrik yang baru saja izin kerja datang dengan terengah-engah memohon perpanjangan SIM karena hari itu adalah hari terakhir masa berlakunya. Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menutup pintu loket di depan wajah warga tanpa sepatah kata pun.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Memeriksa kelengkapan berkas, mengapresiasi itikad baik warga yang telah berusaha hadir, dan melayaninya melalui diskresi pelayanan lembur singkat agar SIM-nya tidak hangus.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Meminta bayaran denda keterlambatan uang pribadi sebesar dua kali lipat.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Menyuruh warga membuat SIM baru dari awal dengan ujian tes ulang.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
-        "weight": 1
+        "text": "Menyalahkan buruh tersebut mengapa baru datang sore hari.",
+        "weight": 2
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
-      "E": 1
+      "E": 2
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Diskresi pelayanan humanis dalam batas kewajaran administrasi mencegah kerugian hak warga yang telah menunjukkan itikad baik mematuhi hukum.",
+    "dimension": "Pelayanan Publik & Humanis"
   },
   {
     "id": 288,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menerima evaluasi atas hasil kerja tanpa menghindarinya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Sebagai komandan regu patroli malam, Anda menerima informasi bahwa sekelompok geng motor bersenjata tajam sedang bergerak menuju pemukiman warga. Keputusan taktis Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menunggu hingga ada laporan warga yang menjadi korban baru bergerak.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mengonsolidasikan regu dengan perlengkapan taktis, melapor ke perwira pengendali (Padal), mengarahkan rute penyekatan sebelum kelompok masuk ke pemukiman, dan meminta bantuan perkuatan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menghindari rute geng motor agar personel regu patroli aman dari risiko.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Memerintahkan anggota regu melepaskan tembakan peluru tajam ke arah kepala tanpa peringatan.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Membubarkan regu patroli dan berlindung di dalam kantor polsek.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Kepemimpinan taktis lapangan menuntut kesigapan langkah preventif penyekatan, koordinasi rantai komando, dan penindakan proporsional demi melindungi warga.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 289,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya mencatat tindak lanjut agar tidak ada tugas yang terlupakan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Dalam regu yang Anda pimpin, terdapat dua personel senior yang berselisih paham mengenai pembagian jadwal piket pengamanan, sehingga suasana kerja menjadi tegang. Sikap Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Membiarkan perselisihan berlanjut hingga salah satu mengalah sendiri.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Memanggil kedua personel ke ruang kerja, mendengarkan argumen masing-masing secara objektif, menegaskan kembali aturan dinas, dan menetapkan rotasi jadwal yang adil serta transparan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Memihak kepada personel yang paling dekat dengan Anda secara pribadi.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Menghukum kedua personel dengan mencabut hak cuti mereka secara sepihak.",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Mengeluh kepada komandan kompi bahwa bawahan Anda tidak bisa diatur.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
+      "A": 1,
+      "B": 5,
+      "C": 1,
       "D": 2,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Pemimpin yang efektif mengambil peran aktif sebagai penengah yang adil, menyelesaikan konflik internal secara bijaksana, dan menegakkan aturan objektif.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 290,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya bertanggung jawab atas keputusan yang berada dalam kewenangan saya.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat memimpin operasi tangkap tangan penyelundupan barang terlarang di pelabuhan, target melarikan diri ke area keramaian pasar ikan. Keputusan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Memerintahkan penembakan beruntun ke arah kerumunan pasar.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Menginstruksikan pengepungan pintu keluar pasar secara senyap tanpa melepaskan tembakan yang dapat memicu kepanikan warga, serta berkoordinasi dengan pengamanan pelabuhan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Membatalkan pengejaran dan membiarkan pelaku kabur demi kenyamanan.",
         "weight": 2
       },
       {
+        "key": "D",
+        "text": "Menyuruh warga pasar menabrakkan diri ke arah pelaku yang membawa senjata tajam.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Melepaskan gas air mata di dalam pasar ikan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Keputusan taktis di area padat penduduk wajib mengutamakan keselamatan jiwa masyarakat sipil melalui teknik pengepungan perimeter tanpa senjata api.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 291,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya berusaha tetap tenang ketika menghadapi kritik.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Unit kerja Anda dihadapkan pada target penuntasan perkara (Crime Clearance) yang menurun tajam dalam bulan ini. Sebagai kanit, langkah strategis Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menyalahkan bintara penyidik di hadapan pimpinan saat rapat polda.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Menggelar evaluasi gelar perkara internal, membedah hambatan pembuktian pada setiap berkas yang macet, serta menyusun jadwal asistensi teknis pemecahan masalah perkara.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Memalsukan laporan statistik agar angka pengungkapan perkara tampak tinggi.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Menghentikan penyidikan seluruh perkara yang sulit pembuktiannya.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Mengundurkan diri dari jabatan kepala unit penyidikan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Kepemimpinan visioner berfokus pada penyelesaian akar masalah (problem-solving) dan penguatan kapasitas tim dalam mendongkrak produktivitas kerja.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 292,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saat marah, saya menunda respons sampai dapat berpikir jernih.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang anggota regu Anda melakukan kesalahan prosedur penilangan karena kurang memahami aturan tilang baru sehingga videonya menuai kritik publik. Tindakan Anda sebagai pimpinan...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Langsung mencopot dan menghukum anggota tersebut di depan media massa untuk cuci tangan.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mengambil alih pertanggungjawaban komando, memberikan pembinaan dan pelatihan intensif kepada anggota, serta menyampaikan klarifikasi korektif yang santun kepada publik.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Membela anggota secara membabi-buta meskipun jelas-jelas tindakannya salah.",
         "weight": 2
       },
       {
+        "key": "D",
+        "text": "Menyembunyikan anggota tersebut di daerah terpencil tanpa pembinaan.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menghapus akun humas polres agar tidak melihat kritik warga.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Pemimpin sejati memegang prinsip akuntabilitas komando, melindungi kehormatan institusi dengan pembinaan internal yang mendidik dan klarifikasi transparan.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 293,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya dapat bekerja terarah ketika menghadapi beberapa tuntutan sekaligus.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat bertugas mengamankan evakuasi warga korban tanah longsor, akses jalan utama terputus dan alat berat belum tiba. Sebagai perwira pengendali lapangan, Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
-      },
-      {
-        "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
-      },
-      {
-        "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Menunggu instruksi komando polda tanpa melakukan tindakan penyelamatan apa pun.",
         "weight": 2
       },
       {
+        "key": "B",
+        "text": "Mengambil inisiatif diskresi darurat mengerahkan personel dan relawan merintis jalur evakuasi alternatif setapak menggunakan tandu manual demi menyelamatkan korban luka parah.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menyuruh warga korban longsor berjalan sendiri melintasi area rawan longsor susulan.",
+        "weight": 1
+      },
+      {
+        "key": "D",
+        "text": "Kembali ke markas komando karena fasilitas operasi dinilai minim.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Mengumumkan kepada publik bahwa operasi penyelamatan mustahil dilakukan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 2,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Inisiatif kepemimpinan darurat (crisis leadership) menuntut keberanian mengambil diskresi penyelamatan rute alternatif saat keselamatan jiwa warga terancam maut.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 294,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya tidak melampiaskan masalah pribadi kepada anggota tim.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Pimpinan memberikan target penyerapan anggaran operasional dan penyusunan laporan pertanggungjawaban dalam sisa waktu 3 hari. Langkah Anda sebagai ketua tim...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menolak target tersebut karena dinilai tidak masuk akal.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Membuat rencana kerja harian yang terperinci, membagi klaster penyusunan SPJ kepada anggota tim sesuai tupoksi, dan memonitor kelengkapan kuitansi setiap 4 jam.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menyerahkan seluruh berkas kosong kepada bendahara pengeluaran.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Menyalin SPJ tahun lalu tanpa memeriksa keabsahan transaksi riil.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Membiarkan batas waktu terlewati dan menerima teguran pimpinan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Kemampuan manajerial pemimpin diuji dari efektivitas perencanaan kerja terstruktur dan pengawasan intensif dalam menyelesaikan tenggat waktu dinas.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 295,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya mampu meminta jeda atau bantuan ketika tekanan mulai mengganggu kinerja.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Dalam situasi kebakaran hutan dan lahan (Karhutla), arah angin mendadak berbalik menuju posko pemadaman tim Anda. Keputusan cepat Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Menyuruh pasukan tetap memadamkan api di titik yang sama tanpa peduli arah angin.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Segera meniup peluit darurat, memerintahkan pergeseran pasukan mundur teratur ke zona aman yang telah ditentukan, dan mengatur formasi pemadaman dari arah berlawanan.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Lari sendirian meninggalkan anggota pasukan di tengah kepulan asap tebal.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Menyerah dan membiarkan api membakar peralatan pemadam dinas.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyiramkan air ke seragam dinas sendiri dan tidur di semak belukar.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Keputusan taktis tanggap darurat memprioritaskan keselamatan jiwa personel (force protection) dengan reposisi terencana sebelum melakukan penanggulangan lanjutan.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 296,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya mempertimbangkan fakta sebelum bereaksi terhadap provokasi.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Saat mengevaluasi pembagian penghargaan kenaikan pangkat luar biasa (KPLB), ada anggota berprestasi yang kurang disukai di kesatuan karena sifatnya yang pendiam. Keputusan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Mencoret namanya dan mengusulkan anggota lain yang lebih populer.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Tetap mengusulkan nama anggota tersebut secara adil berdasarkan fakta riil data pengungkapan kasus dan prestasi operasionalnya yang gemilang.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Mengusulkan nama anggota keluarga pimpinan kesatuan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Membatalkan seluruh usulan KPLB bagi unit Anda.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Meminta imbalan uang dari anggota tersebut jika ingin diusulkan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Objektivitas dan keadilan meritokrasi merupakan pilar kepemimpinan berwibawa yang menghargai dedikasi nyata tanpa bias subjektivitas pertemanan.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 297,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya dapat kembali fokus setelah mengalami kegagalan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Sebagai padal pengamanan sidang vonis terorisme, suasana di ruang sidang mulai ricuh oleh teriakan simpatisan terdakwa. Keputusan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Membiarkan simpatisan berteriak agar persidangan segera dibubarkan hakim.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Berkoordinasi dengan majelis hakim, memerintahkan regu sterilisasi menertibkan simpatisan anarkis keluar dari ruang sidang, dan memperkuat perimeter keamanan di dalam ruang sidang.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Menembakkan senjata api ke langit-langit ruang sidang pengadilan.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Memborgol majelis hakim dan jaksa penuntut umum.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Meninggalkan ruang sidang dan menutup pintu dari luar.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Menjaga wibawa peradilan (contempt of court) dan ketertiban ruang sidang dilakukan melalui penertiban terukur dan penguatan pengamanan perimeter.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 298,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya menjaga cara bicara meskipun sedang tidak sependapat.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Seorang bintara muda dalam tim Anda tampak kehilangan rasa percaya diri setelah gagal dalam ujian menembak kualifikasi kelas satu. Tindakan kepemimpinan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Mengejek bintara tersebut di depan anggota lain agar merasa malu.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mengajak bintara tersebut berdiskusi, mengevaluasi kesalahan teknik membidik, memberikan bimbingan latihan ekstra secara sabar, dan menumbuhkan kembali semangat juangnya.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Mencabut hak membawa senjata api secara permanen tanpa evaluasi.",
         "weight": 2
       },
       {
+        "key": "D",
+        "text": "Menyuruh bintara tersebut mengurus mutasi ke bagian administrasi non-lapangan.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Mengabaikan masalah moral bawahan karena bukan urusan pribadi komandan.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 2,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Fungsi kepemimpinan pembinaan (mentoring) berfokus pada pengembangan potensi bawahan melalui evaluasi teknik dan dorongan motivasi mental yang berkelanjutan.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 299,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya mengenali tanda-tanda kelelahan pada diri sendiri.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Dalam pelaksanaan pengamanan rute konvoi kepala negara sahabat, terjadi kecelakaan lalu lintas warga sipil pada jalur alternatif yang sedang Anda amankan. Keputusan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
-      },
-      {
-        "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
-      },
-      {
-        "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
-      },
-      {
-        "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
+        "text": "Mengabaikan korban kecelakaan karena tugas utama adalah pengawalan VVIP.",
         "weight": 2
       },
       {
+        "key": "B",
+        "text": "Membagi personel regu: menugaskan dua personel memberikan pertolongan pertama dan evakuasi korban ke tepi jalan, sementara jalur utama VVIP tetap steril dan terjaga aman.",
+        "weight": 5
+      },
+      {
+        "key": "C",
+        "text": "Menutup total seluruh jalur jalan raya dan menelantarkan korban di aspal.",
+        "weight": 1
+      },
+      {
+        "key": "D",
+        "text": "Memerintahkan konvoi VVIP berhenti dan ikut menolong korban kecelakaan.",
+        "weight": 1
+      },
+      {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menyalahkan korban mengapa melintas di rute pengamanan negara.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 2,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Kepemimpinan taktis yang cakap mampu mengambil keputusan pembagian peran terukur (task allocation): prioritas keselamatan VVIP terjaga dan korban sipil tertolong.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   },
   {
     "id": 300,
     "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Terkait prinsip kedinasan: \"Saya mencari cara penyelesaian, bukan terus-menerus menyalahkan keadaan.\". Bagaimana tindakan konkret yang paling mencerminkan diri Anda saat bertugas?",
+    "stem": "Sebagai perwira pengendali, Anda menemukan fakta bahwa rencana penyergapan sarang peredaran senjata api ilegal telah tercium oleh mata-mata musuh. Keputusan Anda...",
     "options": [
       {
         "key": "A",
-        "text": "Selalu saya terapkan secara konsisten dan tegas dalam setiap situasi tugas kedinasan, tanpa kompromi.",
-        "weight": 5
+        "text": "Tetap memaksakan rencana awal menyerbu ke titik sasaran yang telah siap disergap musuh.",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Hampir selalu saya terapkan, dan bila ada kendala lapangan segera saya koordinasikan dengan pimpinan.",
-        "weight": 4
+        "text": "Mengubah rencana taktis operasi secara mendadak, menunda penyerbuan langsung, mengubah waktu serta sudut perimeter sergapan, dan mengisolasi jalur kebocoran informasi internal.",
+        "weight": 5
       },
       {
         "key": "C",
-        "text": "Saya berusaha menerapkan sesuai kondisi situasi dan arahan rekan kerja di lapangan.",
-        "weight": 3
+        "text": "Membatalkan seluruh penegakan hukum dan membiarkan para pelaku bebas beroperasi.",
+        "weight": 1
       },
       {
         "key": "D",
-        "text": "Kadang-kadang saya terapkan jika situasi memungkinkan dan tidak menimbulkan gesekan.",
-        "weight": 2
+        "text": "Menyerang markas musuh seorang diri tanpa melibatkan pasukan regu.",
+        "weight": 1
       },
       {
         "key": "E",
-        "text": "Saya cenderung mengikuti kebiasaan umum lingkungan tugas meskipun berbeda dengan prinsip tersebut.",
+        "text": "Menghubungi pimpinan musuh untuk bernegosiasi damai.",
         "weight": 1
       }
     ],
-    "correctKey": "A",
+    "correctKey": "B",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
-      "C": 3,
-      "D": 2,
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 1,
       "E": 1
     },
-    "explanation": "Penilaian Bobot Sikap: Nilai 5 diperoleh pada opsi (A) karena menunjukkan komitmen teguh terhadap nilai Tribrata dan Catur Prasetya dalam pelaksanaan tugas Polri.",
-    "dimension": "Komitmen Kedinasan"
+    "explanation": "Keberanian mengubah rencana operasi saat intelijen mendeteksi kebocoran taktik melindungi nyawa pasukan regu dan menjamin keberhasilan penegakan hukum.",
+    "dimension": "Kepemimpinan & Pengambilan Keputusan"
   }
 ];
 
-/* -------------------------------------------------------------------------- */
-/* 3. KUMPULAN SOAL KECERMATAN (100 Butir / 5 Kolom @ 20 Butir)               */
-/* -------------------------------------------------------------------------- */
 const QUESTIONS_KECERMATAN: SimQuestion[] = [
   {
     "id": 3001,
