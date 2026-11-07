@@ -1717,10 +1717,10 @@
     justify-content: space-between;
     gap: var(--space-3);
     padding: 0.75rem 1.25rem;
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-900) 60%, #312e81 100%);
     color: #ffffff;
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.18);
+    box-shadow: 0 4px 16px rgba(23, 0, 91, 0.22);
   }
 
   .cat-exam-bar__left {
@@ -1902,8 +1902,8 @@
   }
 
   .dot--current {
-    background: #2563eb;
-    border-color: #2563eb;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
   }
 
   .dot--answered {
@@ -2395,10 +2395,10 @@
   }
 
   .palette__item--current {
-    border-color: #2563eb !important;
-    background: #eff6ff !important;
-    color: #2563eb !important;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    border-color: var(--color-primary) !important;
+    background: #f5f3ff !important;
+    color: var(--color-primary) !important;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
     font-weight: 800;
   }
 
@@ -2415,11 +2415,11 @@
   }
 
   .palette__item--current.palette__item--answered {
-    box-shadow: 0 0 0 3px #2563eb, inset 0 0 0 1px #ffffff;
+    box-shadow: 0 0 0 3px var(--color-primary), inset 0 0 0 1px #ffffff;
   }
 
   .palette__item--current.palette__item--flagged {
-    box-shadow: 0 0 0 3px #2563eb, inset 0 0 0 1px #ffffff;
+    box-shadow: 0 0 0 3px var(--color-primary), inset 0 0 0 1px #ffffff;
   }
 
   .facts {
@@ -2495,9 +2495,9 @@
     margin: var(--space-6) auto;
     padding: var(--space-8);
     background: var(--color-surface);
-    border: 2px solid var(--color-brand, #3b82f6);
+    border: 2px solid var(--color-primary);
     border-radius: var(--radius-xl, 16px);
-    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 8px 10px -6px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.12), 0 8px 10px -6px rgba(79, 70, 229, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2523,7 +2523,7 @@
   }
 
   .jeda-briefing--kecermatan {
-    border-left: 4px solid var(--color-brand, #3b82f6);
+    border-left: 4px solid var(--color-primary);
   }
 
   .jeda-card__badge {

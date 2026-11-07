@@ -22,17 +22,19 @@
 <header class="header">
   <div class="header__inner">
     <a class="brand" href="/" aria-label="TES CAT — Beranda">
-      <img
-        class="brand__logo"
-        src="/logo-badge.png"
-        alt=""
-        width="36"
-        height="36"
-        aria-hidden="true"
-      />
+      <div class="brand__logo-wrap">
+        <img
+          class="brand__logo"
+          src="/logo-badge.png"
+          alt="Logo TES CAT"
+          width="38"
+          height="38"
+          aria-hidden="true"
+        />
+      </div>
       <div class="brand__text">
         <span class="brand__title">TES CAT</span>
-        <span class="brand__sub">Portal Seleksi Polri</span>
+        <span class="brand__sub">Portal Resmi Seleksi Polri</span>
       </div>
     </a>
 
@@ -46,10 +48,10 @@
       {#if session.loading && !session.user}
         <span class="actions__skeleton" aria-hidden="true"></span>
       {:else if session.user}
-        <a class="btn btn--outline" href={home}>Buka Dashboard</a>
+        <a class="btn btn--outline" href={home}>Dashboard</a>
         <button class="btn btn--ghost" type="button" onclick={logout}>Keluar</button>
       {:else}
-        <a class="btn btn--secondary" href="/login">Masuk Akun</a>
+        <a class="btn btn--secondary" href="/login">Masuk</a>
         <a class="btn btn--primary" href="/login">Mulai Ujian</a>
       {/if}
     </div>
@@ -61,15 +63,18 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-border);
+    transition: all 0.2s ease;
   }
 
   .header__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
     padding: 0.85rem 1.5rem;
     gap: 1.5rem;
@@ -78,17 +83,34 @@
   .brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
     text-decoration: none;
-    color: #0f172a;
+    color: var(--color-text);
+  }
+
+  .brand__logo-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #ffffff;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+    flex-shrink: 0;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: transform 0.2s ease;
+  }
+
+  .brand:hover .brand__logo-wrap {
+    transform: scale(1.04);
   }
 
   .brand__logo {
     display: block;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     object-fit: contain;
-    flex-shrink: 0;
+    border-radius: 8px;
   }
 
   .brand__text {
@@ -97,23 +119,27 @@
   }
 
   .brand__title {
-    font-size: 1rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: #0f172a;
-    line-height: 1.2;
+    font-size: 1.05rem;
+    font-weight: 850;
+    letter-spacing: -0.025em;
+    background: linear-gradient(135deg, var(--brand-950) 0%, var(--brand-700) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.15;
   }
 
   .brand__sub {
-    font-size: 11px;
-    color: #64748b;
-    font-weight: 500;
+    font-size: 10.5px;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
 
   .nav {
     display: none;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.75rem;
   }
 
   @media (min-width: 860px) {
@@ -125,86 +151,95 @@
   .nav__link {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #475569;
+    color: var(--color-text-muted);
     text-decoration: none;
+    position: relative;
+    padding: 4px 0;
     transition: color 0.15s ease;
   }
 
   .nav__link:hover {
-    color: #1e3a8a;
+    color: var(--color-primary);
     text-decoration: none;
   }
 
   .actions {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
 
   .actions__skeleton {
     display: block;
     width: 80px;
     height: 36px;
-    border-radius: 6px;
-    background: #f1f5f9;
+    border-radius: 8px;
+    background: var(--neutral-100);
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.55rem 1.15rem;
-    border-radius: 6px;
+    padding: 0.55rem 1.2rem;
+    border-radius: var(--radius-sm);
     font-size: 0.875rem;
     font-weight: 650;
     text-decoration: none;
     transition: all 0.15s ease;
     cursor: pointer;
     border: 1px solid transparent;
+    line-height: 1;
   }
 
   .btn--primary {
-    background: #1e3a8a;
+    background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-700) 100%);
     color: #ffffff;
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
   .btn--primary:hover {
-    background: #172554;
+    background: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-800) 100%);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
     text-decoration: none;
+    transform: translateY(-1px);
   }
 
   .btn--secondary {
     background: #ffffff;
-    color: #0f172a;
-    border-color: #cbd5e1;
+    color: var(--color-text);
+    border-color: var(--color-border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .btn--secondary:hover {
-    background: #f8fafc;
-    border-color: #94a3b8;
+    background: var(--neutral-50);
+    border-color: var(--brand-300);
+    color: var(--color-primary);
     text-decoration: none;
   }
 
   .btn--outline {
     background: #ffffff;
-    color: #1e3a8a;
-    border-color: #cbd5e1;
+    color: var(--color-primary);
+    border-color: var(--brand-200);
   }
 
   .btn--outline:hover {
-    background: #f1f5f9;
-    border-color: #1e3a8a;
+    background: var(--brand-50);
+    border-color: var(--color-primary);
     text-decoration: none;
   }
 
   .btn--ghost {
     background: transparent;
-    color: #64748b;
+    color: var(--color-text-muted);
     padding-inline: 0.75rem;
   }
 
   .btn--ghost:hover {
-    color: #dc2626;
+    color: var(--color-danger);
+    background: var(--color-danger-soft);
     text-decoration: none;
   }
 </style>

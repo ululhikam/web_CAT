@@ -1611,8 +1611,8 @@
   }
 
   .cat-tile__icon--blue {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: #e0e7ff;
+    color: #4338ca;
   }
 
   .cat-tile__icon--amber {
@@ -2760,11 +2760,11 @@
 
   .psikotes-summary-note {
     font-size: var(--text-sm);
-    color: var(--color-primary, #1e3a8a);
-    background: color-mix(in srgb, var(--color-primary, #1e3a8a) 8%, transparent);
+    color: var(--color-primary, #4f46e5);
+    background: color-mix(in srgb, var(--color-primary, #4f46e5) 8%, transparent);
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
-    border-left: 3px solid var(--color-primary, #1e3a8a);
+    border-left: 3px solid var(--color-primary, #4f46e5);
     margin-top: 0.25rem;
   }
 
@@ -2882,8 +2882,8 @@
   }
 
   .weight-stat-item--4 {
-    border-color: #3b82f6;
-    background: #eff6ff;
+    border-color: #6366f1;
+    background: #eef2ff;
   }
 
   .weight-stat-item--3 {
