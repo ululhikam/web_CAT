@@ -7,6 +7,7 @@
   import Badge from '@webcat/ui/components/Badge.svelte';
   import Alert from '@webcat/ui/components/Alert.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
+  import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
   import { session } from '$lib/stores/session.svelte';
   import { examRunner } from '$lib/stores/examRunner.svelte';
   import { examPreferences } from '$lib/stores/examPreferences.svelte';
@@ -781,7 +782,8 @@
           onclick={enterFullscreen}
           title="Beralih ke mode layar penuh"
         >
-          {isFullscreen ? '⤢ Layar Penuh' : '⛶ Layar Penuh'}
+          <AdminIcon name="maximize" size={14} />
+          <span>Layar Penuh</span>
         </button>
       </div>
     </header>
@@ -882,7 +884,8 @@
 
             <div class="jeda-briefing jeda-briefing--kepribadian">
               <h3 class="jeda-briefing__title">
-                📋 Petunjuk Subtes 2: {subtest.name}
+                <AdminIcon name="audit" size={16} />
+                <span>Petunjuk Subtes 2: {subtest.name}</span>
               </h3>
               <div class="jeda-briefing__grid">
                 <div class="jeda-briefing__item">
@@ -913,7 +916,8 @@
 
             <div class="jeda-actions">
               <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
-                ⚡ Kerjakan Sekarang (Mulai Subtes Mental Kepribadian)
+                <AdminIcon name="zap" size={16} />
+                <span>Kerjakan Sekarang (Mulai Subtes Mental Kepribadian)</span>
               </Button>
               <Button variant="secondary" onclick={enterFullscreen}>
                 {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
@@ -959,7 +963,8 @@
 
             <div class="jeda-briefing jeda-briefing--kecermatan">
               <h3 class="jeda-briefing__title">
-                📋 Petunjuk Subtes 3: {subtest.name}
+                <AdminIcon name="audit" size={16} />
+                <span>Petunjuk Subtes 3: {subtest.name}</span>
               </h3>
               <div class="jeda-briefing__grid">
                 <div class="jeda-briefing__item">
@@ -990,7 +995,8 @@
 
             <div class="jeda-actions">
               <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
-                ⚡ Kerjakan Sekarang (Mulai Subtes Kecermatan)
+                <AdminIcon name="zap" size={16} />
+                <span>Kerjakan Sekarang (Mulai Subtes Kecermatan)</span>
               </Button>
               <Button variant="secondary" onclick={enterFullscreen}>
                 {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}
@@ -1034,7 +1040,8 @@
 
             <div class="jeda-briefing">
               <h3 class="jeda-briefing__title">
-                📋 Petunjuk Subtes: {subtest.name}
+                <AdminIcon name="audit" size={16} />
+                <span>Petunjuk Subtes: {subtest.name}</span>
               </h3>
               <div class="jeda-briefing__grid">
                 <div class="jeda-briefing__item">
@@ -1058,7 +1065,8 @@
 
             <div class="jeda-actions">
               <Button size="lg" loading={examRunner.loading} onclick={openSubtest}>
-                ⚡ Kerjakan Sekarang (Mulai {subtest.name})
+                <AdminIcon name="zap" size={16} />
+                <span>Kerjakan Sekarang (Mulai {subtest.name})</span>
               </Button>
               <Button variant="secondary" onclick={enterFullscreen}>
                 {isFullscreen ? 'Mode Layar Penuh Aktif' : 'Masuk Layar Penuh'}

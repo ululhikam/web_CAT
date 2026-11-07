@@ -7,6 +7,7 @@
   import Field from '@webcat/ui/components/Field.svelte';
   import Input from '@webcat/ui/components/Input.svelte';
   import Spinner from '@webcat/ui/components/Spinner.svelte';
+  import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
   import { apiRequest, apiErrorMessage } from '$lib/api/client';
   import { session } from '$lib/stores/session.svelte';
   import { examPreferences } from '$lib/stores/examPreferences.svelte';
@@ -304,7 +305,7 @@
             <p class="pref-card__text">
               Seketika setelah Anda memilih jawaban, sistem langsung berpindah ke butir soal berikutnya secara otomatis tanpa perlu mengklik tombol Berikutnya.
             </p>
-            <span class="pref-badge-hint">⚡ Menghemat waktu &amp; sangat direkomendasikan</span>
+            <span class="pref-badge-hint"><AdminIcon name="zap" size={14} /> Menghemat waktu &amp; sangat direkomendasikan</span>
           </button>
 
           <button
@@ -323,7 +324,7 @@
             <p class="pref-card__text">
               Jawaban tersimpan namun Anda tetap berada di nomor soal tersebut. Pindah nomor soal hanya jika Anda menekan tombol "Berikutnya" atau mengklik nomor di kisi soal.
             </p>
-            <span class="pref-badge-hint">✋ Lebih tenang &amp; leluasa meninjau pilihan</span>
+            <span class="pref-badge-hint"><AdminIcon name="check" size={14} /> Lebih tenang &amp; leluasa meninjau pilihan</span>
           </button>
         </div>
 

@@ -182,9 +182,9 @@
             {#if result.status === 'ELIMINATED'}
               Sesi dinyatakan gugur{result.eliminatedSubtestCode ? ` pada subtes ${result.eliminatedSubtestCode}` : ''}.
             {:else if result.passed === true}
-              🎉 Selamat! Akumulasi skor memenuhi syarat kelulusan seleksi Polri (di atas ambang batas kelulusan minimal tanpa persentase).
+              Selamat! Akumulasi skor memenuhi syarat kelulusan seleksi Polri (di atas ambang batas kelulusan minimal tanpa persentase).
             {:else if result.passed === false}
-              ⚠️ Perhatian: Akumulasi skor berada di bawah ambang batas minimal kelulusan. Tingkatkan latihan Anda.
+              Perhatian: Akumulasi skor berada di bawah ambang batas minimal kelulusan. Tingkatkan latihan Anda.
             {:else}
               Hasil evaluasi akhir tersimpan resmi di basis data sistem CAT.
             {/if}

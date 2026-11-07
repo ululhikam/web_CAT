@@ -3401,11 +3401,11 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
 const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
   {
     "id": 201,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "MEDIUM",
-    "stem": "Saya menolak segala bentuk pemberian gratifikasi, bingkisan, atau imbalan dari pihak berperkara meskipun tanpa ada perjanjian khusus sebelumnya.",
+    "difficulty": "HARD",
+    "stem": "Saat memimpin tim penyidik dalam penanganan kasus dugaan tindak pidana korupsi pengadaan barang daerah, Anda didatangi oleh utusan pihak berperkara di luar jam dinas. Utusan tersebut menawarkan uang tunai dalam jumlah besar serta janji renovasi fasilitas kantor polsek jika Anda bersedia melemahkan alat bukti di resume berkas perkara. Menghadapi tawaran tersebut, saya menolak dengan tegas, mencatat upaya penyuapan tersebut ke dalam laporan intelijen, dan mengamankan seluruh barang bukti sesuai prosedur hukum.",
     "options": [
       {
         "key": "A",
@@ -3441,16 +3441,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Integritas sejati menuntut penolakan tegas terhadap setiap gratifikasi yang dapat mempengaruhi objektivitas tugas penegakan hukum Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Integritas penegak hukum menuntut penolakan tanpa kompromi terhadap gratifikasi atau suap, serta kewajiban mendokumentasikan upaya intervensi hukum secara transparan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 202,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "EASY",
-    "stem": "Ketika terjadi kesalahan pencatatan barang bukti oleh rekan satu regu, saya berani menyampaikannya secara jujur kepada pimpinan agar dilakukan pembetulan resmi.",
+    "difficulty": "MEDIUM",
+    "stem": "Dalam proses rekapitulasi audit tahunan penggunaan anggaran operasional patroli, Anda menemukan adanya kelebihan anggaran dinas sebesar Rp 35.000.000 yang tidak sengaja tercatat ganda oleh bendahara pengeluaran. Bendahara menyarankan agar dana lebih tersebut dimasukkan ke kas tidak resmi unit untuk operasional santai karena tidak akan terdeteksi auditor luar. Sikap saya adalah menolak saran tersebut dan segera mengembalikan kelebihan dana ke kas negara melalui pembetulan berita acara resmi.",
     "options": [
       {
         "key": "A",
@@ -3486,16 +3486,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Kejujuran dalam tata kelola barang bukti merupakan pilar utama transparansi penyidikan dan kepercayaan masyarakat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Kejujuran tata kelola keuangan negara adalah prinsip mutlak; dana dinas bukan milik pribadi maupun kelompok dan wajib dipertanggungjawabkan hingga rupiah terakhir. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 203,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "EASY",
-    "stem": "Jika peluang manipulasi data absensi dinas tidak akan pernah diketahui siapapun, wajar jika sesekali dimanfaatkan untuk keperluan mendesak.",
+    "difficulty": "HARD",
+    "stem": "Ketika melakukan razia kendaraan bermotor gabungan, Anda menghentikan seorang pengendara mobil mewah yang melanggar marka jalan dan tidak membawa STNK sah. Pengendara tersebut mengaku memiliki kedekatan keluarga dengan petinggi Mabes Polri dan mengancam akan memutasikan Anda jika tetap ditilang. Sikap saya adalah membiarkan pengemudi tersebut melanjutkan perjalanan tanpa surat tilang demi menjaga keselamatan karier saya di kepolisian.",
     "options": [
       {
         "key": "A",
@@ -3531,26 +3531,26 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Sikap berintegritas konsisten menjauhi manipulasi meskipun tidak ada pengawasan langsung. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Prinsip kesetaraan di hadapan hukum (equality before the law) mewajibkan setiap pelanggar ditindak tanpa diskriminasi atau rasa takut terhadap ancaman relasi kekuasaan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 204,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "MEDIUM",
-    "stem": "Saya selalu melaporkan penggunaan anggaran operasional dinas secara riil dan transparan tanpa ada penggelembungan biaya kuitansi.",
+    "difficulty": "HARD",
+    "stem": "Seorang rekan satu angkatan Anda di kesatuan tertangkap basah di rekaman CCTV internal polres sedang mengambil telepon genggam milik seorang korban kecelakaan dari ruang penyimpanan barang bukti. Ia memohon kepada Anda agar tidak melaporkan hal tersebut kepada Propam dengan alasan ekonomi keluarganya sedang terpuruk. Sikap saya adalah mengabaikan pelanggaran tersebut demi menjaga nama baik dan solidaritas persaudaraan satu angkatan kelulusan.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 5
+        "weight": 1
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "C",
@@ -3560,42 +3560,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 1
+        "weight": 5
       }
     ],
-    "correctKey": "A",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
+      "A": 1,
+      "B": 2,
       "C": 3,
-      "D": 2,
-      "E": 1
+      "D": 4,
+      "E": 5
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Akuntabilitas keuangan negara adalah kewajiban hukum dan cerminan etika moral insan Bhayangkara. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Solidaritas korps (jiwa korsa) yang sejati tidak boleh melindungi tindakan kriminal atau pelanggaran hukum yang merusak kehormatan institusi Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 205,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "MEDIUM",
-    "stem": "Menutup mata atas pelanggaran disiplin rekan kerja demi menjaga solidaritas angkatan adalah hal yang dapat dimaklumi.",
+    "difficulty": "HARD",
+    "stem": "Dalam gelar perkara penentuan status tersangka kasus pengeroyokan antarkelompok pemuda, pimpinan satuan meminta analisis hukum objektif dari Anda. Anda mengetahui bahwa salah satu saksi kunci memberikan keterangan palsu karena diarahkan oleh oknum tertentu. Meskipun ada tekanan halus untuk mengikuti arahan saksi palsu demi percepatan target kasus, saya tetap membeberkan fakta inkonsistensi keterangan saksi tersebut secara jujur dalam lembar rekomendasi penyidikan.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -3605,32 +3605,32 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Jiwa korsa yang benar (esprit de corps) tidak boleh melindungi pelanggaran hukum atau mencederai integritas institusi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Penyidik Polri wajib bersikap jujur dan objektif; rekayasa keterangan demi mengejar target penanganan perkara mencederai rasa keadilan masyarakat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 206,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "HARD",
-    "stem": "Saya tetap menolak permintaan titipan perlakuan khusus perkara dari tokoh berpengaruh di wilayah hukum tempat saya bertugas.",
+    "difficulty": "MEDIUM",
+    "stem": "Saat ditugaskan dalam pengamanan pemilihan umum di TPS pedalaman, salah satu perwakilan tim sukses peserta pemilu menawarkan amplop berisi uang saku ekstra kepada seluruh personel jaga agar bersikap longgar terhadap pengawasan kotak suara saat istirahat malam. Menghadapi situasi ini, saya menolak amplop tersebut secara terbuka dan menegaskan bahwa netralitas serta integritas pengamanan Polri tidak dapat dibeli.",
     "options": [
       {
         "key": "A",
@@ -3666,16 +3666,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Persamaan di hadapan hukum (equality before the law) wajib dijunjung tinggi tanpa membedakan status sosial. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Netralitas dan integritas Polri dalam mengawal pesta demokrasi adalah pilar stabilitas negara yang tidak boleh dinodai oleh pemberian materi. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 207,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
     "difficulty": "EASY",
-    "stem": "Saya merasa tidak perlu mengembalikan kelebihan uang saku dinas yang ditransfer bagian logistik jika tidak ada tagihan susulan.",
+    "stem": "Setelah selesai melaksanakan dinas luar kota dalam rangka pelacakan buronan, Anda menyadari bahwa pihak hotel memberikan potongan diskon besar sehingga biaya riil penginapan jauh lebih kecil daripada plafon dana SPPD yang dicairkan. Mengingat SPPD adalah hak dinas, saya menganggap wajar dan sah-sah saja untuk mencantumkan kuitansi plafon maksimal dan menyimpan selisih anggarannya.",
     "options": [
       {
         "key": "A",
@@ -3711,16 +3711,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Integritas personal menuntut pengembalian hak yang bukan miliknya secara proaktif. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Pertanggungjawaban keuangan dinas wajib berbasis pengeluaran riil (at cost); memanipulasi kuitansi SPPD tergolong pelanggaran disiplin dan tindak koruptif. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 208,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
     "difficulty": "HARD",
-    "stem": "Saya memegang teguh sumpah jabatan dan rahasia negara serta tidak membocorkan rencana operasi kepolisian kepada pihak manapun.",
+    "stem": "Dalam penanganan perkara kecelakaan lalu lintas yang mengakibatkan korban meninggal dunia, keluarga pelaku menawarkan biaya santunan berlipat ganda langsung kepada keluarga korban asalkan Anda sebagai penyidik menghilangkan pasal kelalaian berat dalam berkas perkara. Sikap saya adalah menegaskan bahwa proses perdamaian perdata tidak serta-merta menggugurkan proses pidana, dan pasal dakwaan tetap disusun sesuai fakta hasil olah TKP.",
     "options": [
       {
         "key": "A",
@@ -3756,26 +3756,26 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Menjaga kerahasiaan taktik dan data operasi adalah komitmen mutlak perlindungan keselamatan personel dan keberhasilan misi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Penyidik wajib profesional dan tegak lurus pada hukum materiil; mediasi ganti rugi tidak boleh disalahgunakan untuk menghapus delik pidana kelalaian berat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 209,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "EASY",
-    "stem": "Bila terdesak waktu, menggunakan sarana dinas untuk kepentingan rekreasi keluarga tanpa izin pimpinan adalah hal wajar.",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika menyusun laporan statistik bulanan tindak kriminalitas di wilayah hukum polsek, angka pencurian kendaraan bermotor mengalami lonjakan tajam. Rekan Anda menyarankan agar sebagian laporan pengaduan masyarakat tidak dimasukkan ke dalam register resmi agar polsek tidak dinilai berkinerja buruk oleh polres. Sikap saya adalah menolak manipulasi data tersebut dan menyajikan data riil sebagai dasar evaluasi penggelaran patroli.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -3785,42 +3785,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Fasilitas dinas adalah inventaris negara yang peruntukannya mutlak untuk tugas pelayanan dan operasional kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Data kriminalitas yang akurat dan jujur sangat krusial sebagai dasar pengambilan keputusan taktis pimpinan dalam penempatan personel keamanan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 210,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Integritas dan Kejujuran",
-    "difficulty": "HARD",
-    "stem": "Saya berani menanggung konsekuensi hukum dan dinas atas setiap pernyataan serta keputusan yang saya buat dalam berita acara.",
+    "difficulty": "EASY",
+    "stem": "Anda mengetahui bahwa atasan langsung Anda menggunakan kendaraan dinas roda empat milik satuan untuk kepentingan liburan pribadi keluarganya ke luar provinsi tanpa izin dinas resmi. Sikap saya adalah memanfaatkan kesempatan tersebut untuk ikut meminta izin memakai fasilitas dinas lain untuk keperluan pribadi saya.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 5
+        "weight": 1
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "C",
@@ -3830,32 +3830,32 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 1
+        "weight": 5
       }
     ],
-    "correctKey": "A",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
+      "A": 1,
+      "B": 2,
       "C": 3,
-      "D": 2,
-      "E": 1
+      "D": 4,
+      "E": 5
     },
-    "explanation": "[Aspek Integritas dan Kejujuran] Tanggung jawab moral dan kejujuran formal dalam produk administrasi kepolisian adalah inti integritas perwira. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Integritas dan Kejujuran] Penyalahgunaan fasilitas dinas oleh orang lain tidak membenarkan diri sendiri untuk ikut melanggar; anggota Polri wajib menjaga integritas pemanfaatan aset negara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 211,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
     "difficulty": "HARD",
-    "stem": "Sebagai perwira pengendali, saya siap berdiri di garis depan bersama anggota dalam situasi tugas berisiko tinggi.",
+    "stem": "Dalam insiden unjuk rasa buruh yang tiba-tiba berujung anarki dan pelemparan batu di depan gerbang kantor dinas, beberapa anggota regu dalmas Anda mulai panik dan terpancing emosi untuk membalas melempar. Sebagai perwira pengendali lapangan, saya segera mengambil komando di barisan terdepan, menyerukan pembentukan formasi pertahanan perisai rapat, dan melarang keras anggota melakukan tindakan balasan liar di luar komando.",
     "options": [
       {
         "key": "A",
@@ -3891,16 +3891,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Kepemimpinan keteladanan (leading by example) menumbuhkan moral tempur, keberanian, dan kepercayaan anak buah di lapangan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Kepemimpinan di situasi genting menuntut kehadiran fisik di garis depan, ketenangan emosional, dan kendali komando yang mutlak demi keselamatan bersama. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 212,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
     "difficulty": "MEDIUM",
-    "stem": "Saya memberikan bimbingan dan kesempatan berkembang kepada anggota bawahan yang melakukan kekeliruan teknis agar prestasinya meningkat.",
+    "stem": "Unit kerja yang Anda pimpin berhasil mengungkap sindikat peredaran gelap narkotika jaringan internasional yang mendapat liputan luas dari berbagai media nasional. Saat sesi konferensi pers dan evaluasi pimpinan, saya secara terbuka menyampaikan apresiasi serta peran krusial seluruh anggota lapangan yang telah bekerja siang malam tanpa tidur membuntuti target.",
     "options": [
       {
         "key": "A",
@@ -3936,16 +3936,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Pemimpin transformasional fokus pada pembinaan sumber daya manusia Polri dengan memberikan koreksi konstruktif. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Pemimpin yang berjiwa besar senantiasa membagikan penghargaan kepada bawahan, membangun kebanggaan tim, dan tidak memonopoli keberhasilan sendirian. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 213,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "EASY",
-    "stem": "Bila tim saya berhasil mencapai target, seluruh apresiasi dan penghargaan seharusnya diperuntukkan bagi komandan unit saja.",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika rencana operasi penggerebekan lokasi perjudian bocor dan target operasi melarikan diri sebelum tim tiba, suasana moral tim menjadi sangat terpukul. Sebagai pimpinan regu, sikap saya adalah menyalahkan anggota termuda secara keras di depan seluruh personel agar ia menyadari kecerobohannya.",
     "options": [
       {
         "key": "A",
@@ -3981,16 +3981,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kepemimpinan] Pemimpin yang arif membagi keberhasilan bersama seluruh anggota tim dan tidak egois mengklaim prestasi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Pemimpin sejati pantang mempermalukan anak buah di depan publik; evaluasi kegagalan operasi harus dilakukan secara sistematis dan edukatif. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 214,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "MEDIUM",
-    "stem": "Saya mendengarkan masukan dan saran teknis dari para bintara lapangan sebelum menetapkan rencana taktis patroli.",
+    "difficulty": "HARD",
+    "stem": "Anda mendapati adanya jurang perbedaan pendapat yang tajam antara perwira senior dan bintara muda mengenai strategi pengamanan malam pergantian tahun baru. Sebagai perwira yang dituakan, saya mengumpulkan kedua belah pihak dalam forum diskusi terbuka, mendengarkan argumen taktis masing-masing, lalu merumuskan solusi terpadu yang mengakomodasi pengalaman senior dan inovasi teknologi yunior.",
     "options": [
       {
         "key": "A",
@@ -4026,26 +4026,26 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Kepemimpinan partisipatif menggabungkan data real-time lapangan untuk meminimalkan risiko taktis. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Kepemimpinan kolaboratif mampu menjembatani kesenjangan generasi (cross-generation) demi soliditas dan keunggulan strategi satuan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 215,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "HARD",
-    "stem": "Dalam keadaan darurat, saya menyerahkan seluruh keputusan strategis kepada bawahan agar saya bebas dari tuntutan bila gagal.",
+    "difficulty": "MEDIUM",
+    "stem": "Dalam penugasan pos pengamanan mudik yang berlangsung selama dua pekan dengan jam kerja ekstrem, Anda melihat anggota mulai menunjukkan gejala kejenuhan mental dan kelelahan fisik. Sikap saya adalah berinisiatif mengatur rotasi giliran istirahat bergantian, menyiapkan asupan suplemen kesehatan, dan turut bergantian menggantikan posisi jaga di lapangan.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -4055,42 +4055,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Pemimpin sejati pantang melempar tanggung jawab komando (command responsibility) kepada anak buah. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Perhatian humanis pemimpin terhadap kebugaran fisik dan mental anak buah menjamin kontinuitas kesiapsiagaan operasional pos pelayanan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 216,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "HARD",
-    "stem": "Saya mampu memotivasi regu yang kelelahan setelah patroli panjang untuk tetap siaga menghadapi potensi kontinjensi.",
+    "difficulty": "EASY",
+    "stem": "Sebagai komandan satuan, saya merasa tidak perlu meluangkan waktu mendengarkan keluhan pribadi atau hambatan keluarga yang dialami personel bawahan, karena urusan dinas harus dipisahkan sepenuhnya dari urusan emosional rumah tangga mereka.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 5
+        "weight": 1
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "C",
@@ -4100,42 +4100,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 1
+        "weight": 5
       }
     ],
-    "correctKey": "A",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
+      "A": 1,
+      "B": 2,
       "C": 3,
-      "D": 2,
-      "E": 1
+      "D": 4,
+      "E": 5
     },
-    "explanation": "[Aspek Kepemimpinan] Kemampuan menginjeksi semangat juang dan resiliensi tim merupakan indikator vital kepemimpinan lapangan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Kepemimpinan kepolisian yang efektif memerlukan empati dan kepedulian atas kesejahteraan psikososial anggota agar terhindar dari burnout atau deviasi perilaku. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 217,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
     "difficulty": "MEDIUM",
-    "stem": "Menegur kesalahan anggota di hadapan khalayak umum efektif memberikan efek jera secara instan.",
+    "stem": "Seorang bawahan di unit Anda melakukan kekeliruan dalam pengetikan nomor pasal sangkaan pada berkas perkara tahap satu sehingga dikembalikan oleh kejaksaan (P-19). Tindakan saya adalah memanggil anggota tersebut secara empat mata, membimbing teknis penyusunan berkas yang benar, dan menetapkan mekanisme re-check berlapis sebelum berkas keluar.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -4145,32 +4145,32 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Koreksi terhadap personel harus mengedepankan etika kepemimpinan: puji di depan umum, tegur secara tertutup demi martabat anggota. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Kepemimpinan edukatif memandang kesalahan teknis bawahan sebagai sarana transfer ilmu (coaching) guna meningkatkan kompetensi jangka panjang. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 218,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "MEDIUM",
-    "stem": "Saya mendelegasikan tugas sesuai kompetensi masing-masing anggota secara adil dan terukur.",
+    "difficulty": "HARD",
+    "stem": "Menghadapi situasi kerusuhan massal yang berkembang sangat cepat di mana jaringan komunikasi ke markas komando pusat terputus total, seorang perwira harus berani mengambil keputusan diskresi taktis mandiri dan siap mempertanggungjawabkannya di hadapan pimpinan kelak.",
     "options": [
       {
         "key": "A",
@@ -4206,16 +4206,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Delegasi wewenang yang efektif mencerminkan manajemen manajerial perwira Polri yang profesional. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Karakter perwira komando tercermin dari keberanian memutus jalan keluar taktis demi mencegah jatuhnya korban jiwa di saat komando atasan terisolasi. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 219,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "EASY",
-    "stem": "Seorang komandan tidak perlu mengetahui latar belakang dan kendala pribadi anggotanya, yang penting target tercapai.",
+    "difficulty": "HARD",
+    "stem": "Bila ada proyek penugasan pengamanan yang berisiko tinggi dan memiliki potensi timbulnya benturan hukum, saya memilih mendelegasikan seluruh wewenang penandatanganan surat perintah kepada bawahan agar nama saya tidak tercatat bila terjadi tuntutan hukum.",
     "options": [
       {
         "key": "A",
@@ -4251,16 +4251,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kepemimpinan] Pendekatan humanis dan kepedulian terhadap kondisi psikologis personel adalah kunci loyalitas dan efektivitas tim. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Melarikan diri dari tanggung jawab komando (command responsibility) adalah pelanggaran berat etika perwira dan mencerminkan mentalitas pengecut. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 220,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kepemimpinan",
-    "difficulty": "HARD",
-    "stem": "Saya berani mengambil keputusan komando yang sulit dengan cepat demi menyelamatkan nyawa masyarakat dan keselamatan regu.",
+    "difficulty": "MEDIUM",
+    "stem": "Dalam memimpin apel pagi dan pengarahan tugas harian, saya senantiasa menanamkan doktrin Tribrata dan Catur Prasetya serta mengaitkannya dengan implementasi pelayanan masyarakat nyata yang sedang dihadapi satuan hari itu.",
     "options": [
       {
         "key": "A",
@@ -4296,16 +4296,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kepemimpinan] Ketegasan komando dalam momen kritis adalah kualitas mutlak seorang perwira Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kepemimpinan] Pemimpin transformasional menginternalisasi nilai-nilai luhur filosofi kepolisian menjadi panduan perilaku operasional sehari-hari para personel. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kepemimpinan"
   },
   {
     "id": 221,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
     "difficulty": "HARD",
-    "stem": "Saya mampu berbicara dengan nada tenang dan rasional meskipun sedang diprovokasi atau dimaki oleh massa yang berunjuk rasa.",
+    "stem": "Saat bertugas mengatur arus lalu lintas di perempatan padat di bawah sengatan terik matahari, seorang pengemudi mobil yang melanggar marka membunyikan klakson bertubi-tubi dan melontarkan umpatan kasar menghina seragam kepolisian Anda. Menghadapi situasi tersebut, saya tetap menarik napas dalam-dalam, berbicara dengan nada tenang dan sopan, serta menegakkan sanksi tilang secara profesional tanpa membalas dengan emosi.",
     "options": [
       {
         "key": "A",
@@ -4341,16 +4341,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Pengendalian Emosi] Pengendalian diri dan kematangan emosi mencegah ekskalasi konflik dan menjaga citra Polri yang humanis. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Kematangan pengendalian emosi mencegah provokasi publik berkembang menjadi friksi fisik dan mempertahankan kehormatan wibawa institusi Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 222,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
     "difficulty": "MEDIUM",
-    "stem": "Saat lelah fisik dan beban tugas menumpuk, saya tetap melayani laporan masyarakat dengan senyum, sapa, dan salam.",
+    "stem": "Setelah menjalankan tugas siaga patroli selama 24 jam nonstop, Anda didatangi warga yang melaporkan kasus kehilangan dengan nada menuntut, cerewet, dan berkali-kali meremehkan kinerja kepolisian. Sikap saya adalah mendengarkan inti aduan dengan sabar, menenangkan pelapor, dan segera membuatkan laporan kehilangan dengan senyum ramah.",
     "options": [
       {
         "key": "A",
@@ -4386,16 +4386,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Pengendalian Emosi] Dedikasi pelayanan publik menuntut stabilisasi emosi pribadi agar masyarakat mendapatkan hak perlindungan prima. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Pelayanan prima kepolisian menuntut stabilitas emosi dan daya tahan sabar yang tinggi dalam melayani masyarakat dari berbagai latar belakang psikologis. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 223,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
-    "difficulty": "EASY",
-    "stem": "Saya merasa wajar membalas perlakuan kasar pengemudi yang menolak ditilang dengan kata-kata bentakan keras.",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika sebuah video potongan singkat razia kepolisian yang Anda pimpin viral di media sosial dengan narasi bohong yang menyudutkan Anda, saya merasa sangat marah dan langsung membuat postingan video bantahan di akun pribadi dengan kata-kata emosional menyerang netizen.",
     "options": [
       {
         "key": "A",
@@ -4431,16 +4431,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Pengendalian Emosi] Anggota Polri harus mampu mengendalikan emosi dan menerapkan asas profesionalisme serta kesabaran dalam penegakan hukum. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Aparat kepolisian dilarang berpolemik secara emosional di ruang digital; klarifikasi informasi publik wajib melalui jalur resmi Humas Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 224,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
-    "difficulty": "MEDIUM",
-    "stem": "Ketika mendapat kritik pedas di media sosial mengenai kinerja kesatuan saya, saya menyikapinya sebagai bahan evaluasi perbaikan diri.",
+    "difficulty": "HARD",
+    "stem": "Dalam proses interogasi terhadap tersangka pelaku tindak pidana asusila terhadap anak di bawah umur yang bersikap arogan dan berbelit-belit, saya mampu menahan kemarahan nurani saya dan tidak melakukan kekerasan fisik maupun intimidasi verbal yang bertentangan dengan HAM.",
     "options": [
       {
         "key": "A",
@@ -4476,16 +4476,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Pengendalian Emosi] Sikap terbuka terhadap kritik publik menunjukkan kedewasaan mental dan ketahanan emosional yang tinggi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Profesionalisme penyidik diuji dari kemampuannya mengendalikan rasa geram nurani demi menjunjung tinggi kaidah scientific investigation dan prinsip anti-kekerasan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 225,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
     "difficulty": "EASY",
-    "stem": "Jika rekan sekerja menyalahkan saya atas keterlambatan laporan, saya langsung meninggikan suara untuk membela diri.",
+    "stem": "Saat pimpinan menegur hasil penulisan laporan Anda di hadapan rapat gabungan perwira karena adanya beberapa kesalahan ketik teknis, saya merasa tersinggung dan menunjukkan ekspresi wajah masam serta tidak bersemangat mengikuti rapat hingga selesai.",
     "options": [
       {
         "key": "A",
@@ -4521,16 +4521,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Pengendalian Emosi] Reaksi defensif yang meledak-ledak merusak keharmonisan tim; penyelesaian harus dengan dialog kepala dingin. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Kedewasaan emosional tercermin dari sikap lapang dada menerima koreksi kedinasan tanpa merespons secara reaktif atau bersikap kekanak-kanakan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 226,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
-    "difficulty": "HARD",
-    "stem": "Saya dapat berpikir jernih dan mengambil tindakan terukur saat berada di bawah tekanan situasi kerusuhan massal.",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika terjadi perselisihan pendapat sengit antara saya dan rekan satu unit terkait pembagian sektor patroli malam, saya memilih menenangkan diri sejenak di ruang istirahat sebelum melanjutkan pembahasan secara berkepala dingin berbasis data kerawanan wilayah.",
     "options": [
       {
         "key": "A",
@@ -4566,16 +4566,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Pengendalian Emosi] Kemampuan mengontrol kecemasan dan adrenalin menjamin keputusan taktis diambil berdasarkan akal sehat bukan kepanikan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Teknik pendinginan emosi (cooling down) efektif mereduksi ketegangan antarpribadi dan mengembalikan fokus pada pemecahan masalah objektif. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 227,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
-    "difficulty": "MEDIUM",
-    "stem": "Rasa jengkel terhadap atasan yang menegur membuat saya enggan menjalankan instruksi berikutnya dengan sungguh-sungguh.",
+    "difficulty": "EASY",
+    "stem": "Saya menganggap wajar bila sesekali seorang polisi membanting pintu atau memukul meja di hadapan masyarakat saat merasa sangat lelah dan diabaikan instruksinya.",
     "options": [
       {
         "key": "A",
@@ -4611,16 +4611,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Pengendalian Emosi] Perwira profesional memisahkan perasaan emosional personal dari komitmen pelaksanaan perintah dinas. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Tindakan agresif fisik atau gestur intimidatif kepada masyarakat dilarang keras dan melanggar kode etik kesopanan insan Bhayangkara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 228,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
     "difficulty": "HARD",
-    "stem": "Saya selalu mengambil jeda napas sejenak sebelum merespons provokasi tersangka agar tindakan saya tidak melanggar HAM.",
+    "stem": "Ketika menghadapi keluarga korban pembunuhan yang histeris dan memaki petugas karena pelaku belum tertangkap, saya mendekati mereka dengan empati, merangkul pihak keluarga, dan menjelaskan langkah-langkah konkret penyidikan yang sedang giat dilakukan tim.",
     "options": [
       {
         "key": "A",
@@ -4656,16 +4656,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Pengendalian Emosi] Tindakan kepolisian yang taat prosedur dan berlandaskan HAM lahir dari kemampuan menunda respons emosional negatif. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Empati dan kestabilan emosi memungkinkan personel menjadi peredam duka (crisis responder) bagi masyarakat yang sedang mengalami trauma hebat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 229,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
-    "difficulty": "EASY",
-    "stem": "Saya mudah kehilangan kesabaran jika harus menjelaskan prosedur berulang kali kepada masyarakat lanjut usia.",
+    "difficulty": "MEDIUM",
+    "stem": "Bila saya mengalami permasalahan keuangan atau konflik rumah tangga yang berat, konsentrasi dan keramahan saya dalam melayani masyarakat di loket pengurusan SKCK atau SIM biasanya akan menurun drastis.",
     "options": [
       {
         "key": "A",
@@ -4701,16 +4701,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Pengendalian Emosi] Polri sebagai pelayan masyarakat wajib memiliki kesabaran dan empati ekstra kepada kelompok rentan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Integritas pelayanan menuntut kemampuan kompartementalisasi mental yang ketat agar problem domestik tidak mencemari mutu pelayanan kedinasan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 230,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Pengendalian Emosi",
-    "difficulty": "MEDIUM",
-    "stem": "Saya tidak membawa persoalan pribadi atau masalah keluarga ke dalam interaksi tugas kedinasan sehari-hari.",
+    "difficulty": "HARD",
+    "stem": "Menghadapi provokasi massa suporter sepak bola yang mengolok-olok barikade polisi di stadion, saya tetap berdiri tegak, pandangan fokus ke depan, dan tidak menunjukkan gestur yang memancing eskalasi kericuhan.",
     "options": [
       {
         "key": "A",
@@ -4746,16 +4746,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Pengendalian Emosi] Pemisahan tegas ranah domestik dan kedinasan menjamin konsistensi performa kerja kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Pengendalian Emosi] Disiplin barisan dan ketenangan emosional personel pengendali massa adalah benteng utama pencegahan bentrokan terbuka. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Pengendalian Emosi"
   },
   {
     "id": 231,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
     "difficulty": "EASY",
-    "stem": "Saya selalu hadir di tempat tugas dan apel pagi setidaknya 15 menit sebelum waktu yang ditentukan dalam surat perintah.",
+    "stem": "Setiap hari penugasan dinas, saya selalu membiasakan diri hadir di markas komando sekurang-kurangnya 20 menit sebelum jadwal apel pagi dimulai untuk memeriksa kesiapan seragam dinas, inventaris senpi, dan kendaraan operasional unit.",
     "options": [
       {
         "key": "A",
@@ -4791,16 +4791,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Ketepatan waktu apel adalah cerminan kedisiplinan dasar dan kesiapan operasional prajurit Bhayangkara. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Ketepatan waktu dan persiapan matang pra-tugas adalah cermin kedisiplinan prajurit Bhayangkara yang siap operasional setiap saat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 232,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
-    "difficulty": "MEDIUM",
-    "stem": "Ketika membuat kesalahan dalam pemberkasan administrasi, saya mengakuinya secara terbuka dan segera membetulkannya.",
+    "difficulty": "HARD",
+    "stem": "Saat bertugas piket jaga tahanan pada dini hari, saya tidak pernah tertidur atau meninggalkan lorong sel tahanan sedetik pun tanpa adanya serah terima resmi dengan personel pengganti yang sah, demi mengantisipasi potensi tahanan kabur atau melukai diri.",
     "options": [
       {
         "key": "A",
@@ -4836,16 +4836,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Keberanian bertanggung jawab atas kesalahan sendiri merupakan bukti kedewasaan dan kehormatan korps. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Kewaspadaan tanpa jeda pada pos pengamanan tahanan adalah wujud tanggung jawab mutlak atas nyawa dan keamanan ruang tahanan negara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 233,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
     "difficulty": "EASY",
-    "stem": "Meninggalkan pos penjagaan sebelum anggota regu pengganti tiba adalah hal yang biasa jika shift sudah berakhir.",
+    "stem": "Jika jam pergantian dinas telah tiba namun anggota regu dinas pengganti belum hadir karena terkendala ban bocor, wajar bagi saya untuk langsung meninggalkan pos penjagaan karena masa tugas saya secara jam kerja telah habis.",
     "options": [
       {
         "key": "A",
@@ -4881,16 +4881,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Pos penjagaan mutlak tidak boleh kosong sedetik pun; serah terima jaga harus dilakukan secara fisik dan sah. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Pos pengamanan dan penjagaan kepolisian mutlak tidak boleh kosong; petugas jaga wajib bertahan hingga serah terima fisik selesai. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 234,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
     "difficulty": "MEDIUM",
-    "stem": "Saya merawat dan memastikan senjata api dinas serta perlengkapan selalu dalam kondisi bersih, aman, dan siap pakai.",
+    "stem": "Dalam melaksanakan perawatan berkala terhadap senjata api dinas laras pendek yang dipinjam-pakaikan, saya memastikan pembersihan senjata, pemeriksaan laras, dan pencatatan amunisi dilakukan secara cermat sesuai kartu kontrol logistik dinas.",
     "options": [
       {
         "key": "A",
@@ -4926,26 +4926,26 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Pemeliharaan inventaris dinas, khususnya senpi, adalah tanggung jawab mutlak keselamatan diri dan institusi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Pertanggungjawaban materiel dinas, khususnya senjata api dan amunisi, menyangkut legalitas dan keselamatan nyawa personel maupun publik. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 235,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
-    "difficulty": "EASY",
-    "stem": "Saya mengabaikan perintah dinas tertulis jika merasa perintah tersebut terlalu merepotkan saya pribadi.",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika membuat kesalahan dalam menginput data identitas tersangka pada aplikasi sistem penyidikan digital sehingga berkas tertunda, saya berani mengakui kesalahan tersebut kepada atasan dan bekerja lembur hingga larut malam untuk membetulkannya.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -4955,42 +4955,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Kepatuhan pada rantai komando dan perintah sah kedinasan adalah sendi pokok tegaknya disiplin Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Tanggung jawab moral sejati dibuktikan dengan keberanian mengakui kekeliruan personal serta inisiatif proaktif menuntaskan perbaikannya. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 236,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
-    "difficulty": "MEDIUM",
-    "stem": "Saya menuntaskan setiap laporan penyelidikan sesuai tenggat waktu (deadline) tanpa perlu ditagih berulang kali oleh atasan.",
+    "difficulty": "EASY",
+    "stem": "Bila atasan memberikan instruksi patroli sambang desa pada malam hari yang sedang hujan lebat dan dingin, saya memilih tetap berada di pos ronda dan membuat laporan fiktif seolah-olah seluruh rute telah selesai dikunjungi.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 5
+        "weight": 1
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "C",
@@ -5000,42 +5000,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 1
+        "weight": 5
       }
     ],
-    "correctKey": "A",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
+      "A": 1,
+      "B": 2,
       "C": 3,
-      "D": 2,
-      "E": 1
+      "D": 4,
+      "E": 5
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Akuntabilitas waktu penyelesaian tugas mencerminkan etos kerja tinggi dan komitmen pelayanan prima. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Pemalsuan dokumen pelaksanaan tugas patroli merupakan pelanggaran etika dan disiplin yang merugikan jaminan keamanan warga. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 237,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
-    "difficulty": "MEDIUM",
-    "stem": "Menunda pembuatan laporan patroli hingga hari berikutnya tidak menjadi masalah selama situasi wilayah aman.",
+    "difficulty": "EASY",
+    "stem": "Saya selalu memastikan kerapian seragam dinas Polri (Gampol), atribut kepangkatan, kebersihan sepatu dinas, serta sikap tampang rambut dan kumis tercukur rapi sesuai standar peraturan kedinasan yang berlaku.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -5045,32 +5045,32 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Laporan patroli wajib segera disusun saat peristiwa masih segar demi validitas data intelijen kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Penampilan luar yang tertib dan berdisiplin tinggi memancarkan wibawa hukum, rasa hormat, dan rasa aman bagi masyarakat yang dilayani. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 238,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
-    "difficulty": "EASY",
-    "stem": "Saya mematuhi ketentuan tata tertib kerapian seragam dinas (Gampol) dan sikap tampang sesuai peraturan kedinasan.",
+    "difficulty": "HARD",
+    "stem": "Dalam penyusunan Berita Acara Pemeriksaan (BAP), saya meneliti kembali setiap lembar kata demi kata dan mencocokkannya dengan rekaman alat bukti sebelum diajukan tanda tangan tersangka demi kepastian hukum yang paripurna.",
     "options": [
       {
         "key": "A",
@@ -5106,16 +5106,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Penampilan dan sikap tampang yang rapi menumbuhkan wibawa institusi kepolisian di mata publik. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Ketelitian dan disiplin administrasi penyidikan menjamin berkas perkara kokoh di pengadilan dan tidak cacat formil. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 239,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
-    "difficulty": "HARD",
-    "stem": "Saya merasa tidak bertanggung jawab jika ada barang bukti yang rusak selama berada di ruangan yang saya jaga.",
+    "difficulty": "EASY",
+    "stem": "Menggunakan kendaraan patroli lalu lintas untuk mengantar anggota keluarga berbelanja ke mall tanpa izin pimpinan adalah hal yang lazim karena bensin kendaraan ditanggung negara.",
     "options": [
       {
         "key": "A",
@@ -5151,16 +5151,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Petugas jaga memikul tanggung jawab hukum dan dinas atas keamanan seluruh aset di area pengawasannya. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Pemanfaatan sarana prasarana dinas untuk urusan domestik pribadi adalah bentuk penyalahgunaan wewenang dan ketidakdisiplinan aset negara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 240,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Disiplin dan Tanggung Jawab",
     "difficulty": "HARD",
-    "stem": "Saya menjalankan tugas patroli malam dengan dedikasi tinggi meskipun tidak ada pimpinan yang mengawasi di lapangan.",
+    "stem": "Meskipun tidak ada perwira piket yang sedang melakukan inspeksi mendadak ke pos ronda malam saya, saya tetap berkeliling memantau pemukiman warga secara berkala sesuai jadwal yang telah ditetapkan.",
     "options": [
       {
         "key": "A",
@@ -5196,16 +5196,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Integritas disiplin mandiri (self-discipline) beroperasi atas dasar kesadaran moral tanpa memerlukan pengawasan ketat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Disiplin dan Tanggung Jawab] Disiplin sejati berakar dari integritas batin (self-discipline) yang beroperasi konsisten tanpa bergantung pada ada atau tidaknya pengawasan atasan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 241,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
-    "difficulty": "MEDIUM",
-    "stem": "Saya aktif membantu rekan seunit yang sedang kewalahan menangani antrean pelayanan masyarakat meskipun tugas saya sudah selesai.",
+    "difficulty": "HARD",
+    "stem": "Dalam operasi gabungan razia balap liar dan knalpot brong bersama unsur Kodim TNI dan Dinas Perhubungan, saya aktif berkoordinasi dengan perwira instansi lain, saling bertukar informasi titik penyekatan, dan saling memback-up keselamatan personel di lapangan.",
     "options": [
       {
         "key": "A",
@@ -5241,16 +5241,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Solidaritas proaktif dan gotong royong mempercepat pencapaian misi kesatuan dan memperkuat ikatan tim. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Sinergisitas TNI-Polri dan keterpaduan lintas instansi adalah kunci mutlak keberhasilan operasi penertiban wilayah berskala besar. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 242,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
-    "difficulty": "HARD",
-    "stem": "Saya mampu menjalin komunikasi yang harmonis dan kooperatif dengan aparat TNI dan instansi pemerintah daerah saat bertugas bersama.",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika salah satu subnit di kantor polsek Anda kewalahan menghadapi lonjakan pemohon SKCK menjelang pendaftaran CPNS, saya yang sedang menyelesaikan administrasi ringan segera berinisiatif membantu memverifikasi berkas agar masyarakat tidak menunggu terlalu lama.",
     "options": [
       {
         "key": "A",
@@ -5286,16 +5286,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Sinergisitas TNI-Polri dan keterpaduan lintas sektoral adalah kunci stabilitas kamtibmas yang kokoh. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Jiwa gotong royong dan kesiapan membantu rekan kerja mempercepat pelayanan publik dan memperkuat ikatan kekeluargaan kesatuan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 243,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
     "difficulty": "EASY",
-    "stem": "Saya lebih suka bekerja sendiri dan enggan berbagi informasi taktis kepada rekan satu tim penyidik.",
+    "stem": "Saya lebih suka mengerjakan seluruh proses penyelidikan tindak pidana sendirian tanpa melibatkan rekan tim lain agar seluruh reputasi keberhasilan penangkapan pelaku menjadi hak saya sepenuhnya.",
     "options": [
       {
         "key": "A",
@@ -5331,16 +5331,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Silo mentality menghambat keberhasilan pengungkapan perkara; kolaborasi intelijen adalah kunci. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Sikap individualistis dan ego sektoral membahayakan taktik penangkapan di lapangan serta merusak kohesi tim intelijen. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 244,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
     "difficulty": "MEDIUM",
-    "stem": "Saya mudah beradaptasi dan membangun hubungan kemitraan dengan tokoh masyarakat, pemuda, dan tokoh agama di tempat penugasan.",
+    "stem": "Saat ditempatkan sebagai Bhabinkamtibmas di kelurahan baru, saya segera meluangkan waktu bersilaturahmi dengan para ketua RT, tokoh agama, ketua pemuda karang taruna, dan tokoh adat guna memetakan potensi kerawanan sosial di wilayah tersebut.",
     "options": [
       {
         "key": "A",
@@ -5376,16 +5376,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Pemolisian masyarakat (Community Policing) berbasis kemitraan dan kepercayaan sosial yang erat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Pemolisian masyarakat (Community Policing) berpijak pada kemitraan sosial yang erat dan keterbukaan komunikasi dua arah dengan warga. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 245,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
     "difficulty": "EASY",
-    "stem": "Jika rekan satu tim berasal dari latar belakang suku atau agama yang berbeda, saya membatasi pergaulan kedinasan dengan mereka.",
+    "stem": "Bila rekan satu regu kerja saya memiliki perbedaan pandangan politik, suku, atau keyakinan agama dengan saya, saya memilih menjaga jarak emosional dan hanya berbicara seperlunya terkait urusan tanda tangan dinas saja.",
     "options": [
       {
         "key": "A",
@@ -5421,16 +5421,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Polri adalah perekat kebangsaan yang menjunjung tinggi kebinekaan tanpa sekat primordialisme. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Anggota Polri adalah miniatur persatuan bangsa; diskriminasi primordial antarsesama rekan kerja merusak soliditas korps Bhayangkara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 246,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
-    "difficulty": "MEDIUM",
-    "stem": "Saya menghargai perbedaan pendapat dalam rapat gelar perkara demi menemukan solusi hukum yang paling komprehensif.",
+    "difficulty": "HARD",
+    "stem": "Dalam forum gelar perkara pembunuhan berencana yang alot, saya mendengarkan secara saksama setiap teori hukum yang diajukan oleh dokter forensik dan tim laboratorium digital sebelum menyimpulkan konstruksi pasal pidana.",
     "options": [
       {
         "key": "A",
@@ -5466,16 +5466,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Gelar perkara membutuhkan dinamika dialektika akademis dan praktis yang saling melengkapi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Penyidikan berbasis bukti ilmiah (scientific crime investigation) membutuhkan kerendahan hati untuk menerima analisis multidisiplin ilmu. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 247,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
     "difficulty": "EASY",
-    "stem": "Saya enggan terlibat dalam kegiatan kerja bakti atau bakti sosial bersama warga karena itu di luar tugas utama penegakan hukum.",
+    "stem": "Bagi saya, kegiatan bakti sosial seperti membagikan sembako atau kerja bakti membersihkan tempat ibadah bersama warga hanyalah kegiatan seremonial yang membuang waktu penegakan hukum.",
     "options": [
       {
         "key": "A",
@@ -5511,16 +5511,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Bakti sosial adalah wujud nyata polisi pelindung dan pengayom yang mendekatkan Polri dengan nurani rakyat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Bakti sosial adalah wujud nyata kepolisian yang humanis, mendekatkan nurani Polri dengan rakyat, dan menumbuhkan legitimasi moral di masyarakat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 248,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
     "difficulty": "MEDIUM",
-    "stem": "Saya bersedia menerima kritik atau masukan dari rekan satu tim demi perbaikan kualitas kerja kelompok.",
+    "stem": "Saya bersedia menerima koreksi dan masukan taktis dari rekan sejawat yang lebih muda jika ide yang disampaikannya terbukti lebih efektif dan efisien dalam memecahkan kebuntuan penyelidikan perkara.",
     "options": [
       {
         "key": "A",
@@ -5556,26 +5556,26 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Keterbukaan terhadap umpan balik rekan sebaya (peer feedback) meningkatkan kohesivitas regu. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Keterbukaan terhadap umpan balik inovatif tanpa terbelenggu arogansi senioritas meningkatkan keunggulan operasional tim. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 249,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
-    "difficulty": "EASY",
-    "stem": "Saya merasa tidak perlu menjalin komunikasi ramah dengan warga sekitar polsek selama tidak ada kasus kriminalitas.",
+    "difficulty": "HARD",
+    "stem": "Ketika terjadi perselisihan antartetangga di pemukiman sekitar polsek, saya hadir sebagai mediator yang adil, tidak memihak, dan mengedepankan pendekatan musyawarah keadilan restoratif (restorative justice) sesuai aturan Polri.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -5585,42 +5585,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Komunikasi proaktif menciptakan deteksi dini dan partisipasi aktif warga dalam menjaga keamanan lingkungan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Peran problem solver kepolisian modern berorientasi pada pemulihan keharmonisan sosial warga tanpa selalu harus berujung pemidanaan formal. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 250,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kerja Sama dan Hubungan Sosial",
-    "difficulty": "HARD",
-    "stem": "Dalam penanganan perkara lintas fungsi (Reskrim, Lantas, Intelkam), saya selalu mengedepankan koordinasi yang transparan.",
+    "difficulty": "EASY",
+    "stem": "Saya merasa tidak perlu menjalin komunikasi ramah atau bertegur sapa dengan aparat kelurahan setempat selama tidak ada surat perintah kerja bersama dari kapolsek.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 5
+        "weight": 1
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "C",
@@ -5630,32 +5630,32 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 1
+        "weight": 5
       }
     ],
-    "correctKey": "A",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
+      "A": 1,
+      "B": 2,
       "C": 3,
-      "D": 2,
-      "E": 1
+      "D": 4,
+      "E": 5
     },
-    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Keterpaduan antar fungsi kepolisian menjamin penanganan peristiwa hukum secara paripurna. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kerja Sama dan Hubungan Sosial] Komunikasi informal yang proaktif dengan aparat pemerintah desa/kelurahan menciptakan sistem deteksi dini kamtibmas yang kokoh. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 251,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "HARD",
-    "stem": "Dalam situasi genting yang mengancam nyawa warga, saya berani mengambil tindakan diskresi kepolisian yang tegas dan terukur.",
+    "stem": "Dalam patroli malam di kawasan sepi, Anda menyaksikan seorang pria bersenjata tajam sedang mengancam nyawa seorang ibu dan anaknya untuk menyerahkan tas. Mengingat ancaman maut yang seketika, saya berani mengambil tindakan diskresi kepolisian yang terukur dan proporsional untuk melumpuhkan pelaku demi menyelamatkan nyawa korban.",
     "options": [
       {
         "key": "A",
@@ -5691,26 +5691,26 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Diskresi kepolisian dilindungi undang-undang demi keselamatan umum (salus populi suprema lex esto). Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Diskresi penggunaan kekuatan kepolisian untuk membela nyawa warga dilindungi oleh undang-undang dan merupakan tuntutan keberanian perwira. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 252,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "HARD",
-    "stem": "Saya ragu-ragu menghentikan kendaraan pejabat yang menerobos lampu merah karena takut akan sanksi pemindahan tugas.",
+    "stem": "Saat memimpin penertiban tambang pasir ilegal yang mencemari sungai desa, Anda didatangi oleh seorang tokoh politik lokal yang mengaku sebagai pemilik modal tambang tersebut dan meminta Anda membatalkan penyegelan. Sikap saya adalah menolak intervensi tersebut dan tetap memasang garis polisi (police line) sesuai prosedur hukum.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 1
+        "weight": 5
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "C",
@@ -5720,42 +5720,42 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 5
+        "weight": 1
       }
     ],
-    "correctKey": "E",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 2,
+      "A": 5,
+      "B": 4,
       "C": 3,
-      "D": 4,
-      "E": 5
+      "D": 2,
+      "E": 1
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Hukum berlaku sama bagi setiap warga negara tanpa pandang bulu; ketegasan tanpa rasa gentar adalah harga mati. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Ketegasan penegakan hukum lingkungan hidup tidak boleh goyah oleh tekanan relasi politik; hukum adalah panglima tertinggi. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 253,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "HARD",
-    "stem": "Saya menganalisis bukti-bukti forensik dan keterangan saksi secara objektif sebelum menetapkan status tersangka.",
+    "stem": "Ketika melihat konvoi kendaraan yang dipimpin oleh seorang pejabat daerah melanggar lampu merah dan membahayakan keselamatan pejalan kaki, saya memilih pura-pura tidak melihat karena takut akan ditegur atau dimutasi ke daerah terpencil.",
     "options": [
       {
         "key": "A",
         "text": "Sangat Setuju",
-        "weight": 5
+        "weight": 1
       },
       {
         "key": "B",
         "text": "Setuju",
-        "weight": 4
+        "weight": 2
       },
       {
         "key": "C",
@@ -5765,32 +5765,32 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       {
         "key": "D",
         "text": "Tidak Setuju",
-        "weight": 2
+        "weight": 4
       },
       {
         "key": "E",
         "text": "Sangat Tidak Setuju",
-        "weight": 1
+        "weight": 5
       }
     ],
-    "correctKey": "A",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 5,
-      "B": 4,
+      "A": 1,
+      "B": 2,
       "C": 3,
-      "D": 2,
-      "E": 1
+      "D": 4,
+      "E": 5
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Keputusan penetapan tersangka harus berlandaskan alat bukti yang sah dan scientific crime investigation. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Keberanian moral menegakkan hukum tanpa pandang bulu adalah ruh dari seorang polisi sejati; rasa takut akan sanksi politik mencederai sumpah jabatan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 254,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
-    "difficulty": "MEDIUM",
-    "stem": "Ketika terjadi keributan antar-warga, saya langsung membubarkan massa dengan ketegasan tanpa memihak salah satu kelompok.",
+    "difficulty": "HARD",
+    "stem": "Dalam forum penetapan tersangka kasus korupsi dana desa, meskipun ada desakan massa di luar polres yang menuntut tersangka langsung dibebaskan, saya tetap berpegang teguh pada dua alat bukti yang sah sesuai Pasal 184 KUHAP untuk melanjutkan penahanan.",
     "options": [
       {
         "key": "A",
@@ -5826,16 +5826,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Netralitas dan ketegasan aparat penegak hukum mengembalikan ketertiban secara adil. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Penegakan hukum profesional harus bebas dari intervensi trial by the press atau desakan massa emosional; putusan berpijak pada alat bukti yuridis. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 255,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
-    "difficulty": "HARD",
-    "stem": "Saya lebih memilih menunda keputusan penting penanganan unjuk rasa hingga ada komandan lain yang datang, meskipun situasi kian memburuk.",
+    "difficulty": "MEDIUM",
+    "stem": "Menghadapi situasi keributan antarkelompok pemuda di pasar malam, saya memilih menunda tindakan intervensi pembubaran hingga situasi mendingin dengan sendirinya, meskipun para pedagang mulai menjadi korban penjarahan.",
     "options": [
       {
         "key": "A",
@@ -5871,16 +5871,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Kebimbangan (indecisiveness) dalam momen kritis dapat berakibat fatal bagi keselamatan publik dan personel. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Ketidaktegasan dan penundaan keputusan taktis pada momen genting dapat memperluas eskalasi tindak pidana dan merugikan masyarakat luas. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 256,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
-    "difficulty": "MEDIUM",
-    "stem": "Saya tegas menolak permintaan damai di luar prosedur dari pihak tersangka kasus peredaran narkoba.",
+    "difficulty": "HARD",
+    "stem": "Sebelum memutuskan tindakan upaya paksa penangkapan dan penggeledahan rumah terduga gembong curanmor, saya menganalisis secara cermat risiko keselamatan personel, dampak lingkungan warga sekitar, serta kelengkapan administrasi surat perintah penyidikan.",
     "options": [
       {
         "key": "A",
@@ -5916,16 +5916,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Kasus tindak pidana luar biasa seperti narkoba tidak dapat ditoleransi dan wajib diproses tuntas secara hukum. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Keputusan taktis yang tegas harus diimbangi oleh kalkulasi risiko komprehensif dan kepatuhan mutlak pada due process of law. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 257,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "EASY",
-    "stem": "Jika rekan seangkatan saya berselisih paham saat bertugas, saya membiarkannya agar tidak memicu permusuhan pribadi.",
+    "stem": "Bila seorang tersangka kasus peredaran narkoba menangis dan memohon maaf serta bersedia memberikan seluruh uang simpanannya asalkan tidak dimasukkan ke dalam sel, saya bersedia membatalkan penahanan karena merasa kasihan pada nasib keluarganya.",
     "options": [
       {
         "key": "A",
@@ -5961,16 +5961,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Ketegasan memediasi atau menghentikan perselisihan internal mutlak diperlukan demi kelancaran tugas bersama. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Tindak pidana luar biasa seperti peredaran narkotika merusak masa depan generasi bangsa; belas kasihan tidak boleh mengorbankan hukum negara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 258,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "HARD",
-    "stem": "Saya mempertimbangkan dampak risiko hukum dan kemanusiaan secara cermat sebelum memutuskan tindakan penggeledahan.",
+    "stem": "Sebagai perwira pengendali pengamanan unjuk rasa, ketika massa aksi mulai melempari petugas dengan bom molotov yang membakar kendaraan patroli, saya dengan tegas dan terukur memerintahkan penggunaan gas air mata sesuai tahapan Perkap Pengendalian Massa.",
     "options": [
       {
         "key": "A",
@@ -6006,16 +6006,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Pengambilan keputusan yang matang mempertimbangkan due process of law dan perlindungan hak-hak sipil. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Pengambilan keputusan bertahap sesuai kontinjensi eskalasi ancaman mencerminkan kematangan komando perwira di lapangan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 259,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "MEDIUM",
-    "stem": "Saya mudah terpengaruh oleh opini emosional massa di lapangan dalam menentukan status tindak pidana seseorang.",
+    "stem": "Saya selalu menunggu arahan detail tertulis dari atasan untuk setiap langkah kecil penanganan TKP kecelakaan, meskipun korban sedang mengalami pendarahan hebat dan membutuhkan evakuasi medis darurat segera.",
     "options": [
       {
         "key": "A",
@@ -6051,16 +6051,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Penegak hukum harus independen, tidak boleh diintervensi oleh trial by the press atau desakan massa emosional. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Kelambanan bertindak dan ketergantungan birokratis pada momen kritis darurat membahayakan keselamatan nyawa manusia. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 260,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketegasan dan Pengambilan Keputusan",
     "difficulty": "HARD",
-    "stem": "Saya berani mempertanggungjawabkan setiap tindakan taktis yang saya perintahkan kepada anggota di hadapan sidang komisi kode etik.",
+    "stem": "Saya berani mempertanggungjawabkan setiap keputusan taktis dan perintah komando yang saya keluarkan di hadapan sidang komisi kode etik kedinasan maupun sidang peradilan umum.",
     "options": [
       {
         "key": "A",
@@ -6096,16 +6096,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Keberanian menanggung konsekuensi yuridis adalah cerminan ketegasan kepemimpinan komando. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketegasan dan Pengambilan Keputusan] Akuntabilitas yuridis dan moral adalah ciri utama perwira kesatria yang memimpin dengan integritas penuh. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 261,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
     "difficulty": "HARD",
-    "stem": "Saya tetap bersemangat dan fokus bertugas meskipun ditempatkan di pos perbatasan pelosok dengan fasilitas serba terbatas.",
+    "stem": "Ditempatkan di pulau terluar perbatasan negara dengan fasilitas air bersih terbatas, listrik bergilir, serta jauh dari akses hiburan modern kota, saya tetap menjalankan tugas patroli kedaulatan laut dengan penuh kebanggaan dan dedikasi prima.",
     "options": [
       {
         "key": "A",
@@ -6141,16 +6141,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketahanan Mental] Resiliensi dan kesiapan mengabdi di mana pun di seluruh wilayah NKRI adalah sumpah suci anggota Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Resiliensi mental dan kesiapan mengabdi di seluruh pelosok tumpah darah NKRI adalah ikrar kesetiaan setiap insan Bhayangkara. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 262,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
     "difficulty": "HARD",
-    "stem": "Tekanan target penyelidikan yang tinggi justru memicu konsentrasi saya untuk bekerja lebih teliti dan terstruktur.",
+    "stem": "Saat bertugas di lokasi bencana alam gempa bumi selama berminggu-minggu dalam kondisi lumpur, cuaca buruk, dan menyaksikan pemandangan jenazah korban, saya mampu menjaga stabilitas mental saya untuk terus menolong para penyintas.",
     "options": [
       {
         "key": "A",
@@ -6186,16 +6186,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketahanan Mental] Kapasitas mengelola stres menjadi energi produktif adalah indikator ketahanan psikologis perwira unggul. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Ketahanan psikologis prajurit memampukannya menjadi tumpuan harapan bagi masyarakat di tengah situasi krisis kemanusiaan paling kelam. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 263,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
     "difficulty": "EASY",
-    "stem": "Saya merasa putus asa dan ingin mengundurkan diri jika mendapat teguran keras dari pimpinan di depan apel.",
+    "stem": "Bila pimpinan memindahkan saya dari posisi satreskrim ke fungsi tugas pembinaan staf di polres pelosok, saya merasa karier saya sudah tamat dan mulai sering absen dinas karena kecewa berat.",
     "options": [
       {
         "key": "A",
@@ -6231,16 +6231,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketahanan Mental] Kritik dan teguran pimpinan harus dijadikan cambuk introspeksi diri tanpa meruntuhkan mentalitas pengabdian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Mentalitas cengeng dan mudah putus asa akibat rotasi jabatan mencerminkan belum matangnya komitmen pengabdian kepada institusi Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 264,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
-    "difficulty": "MEDIUM",
-    "stem": "Saya mampu bangkit dengan cepat dan mengevaluasi taktik setelah mengalami kegagalan dalam penangkapan target operasi.",
+    "difficulty": "HARD",
+    "stem": "Setelah mengalami kegagalan taktis saat target penggerebekan berhasil lolos karena faktor cuaca ekstrem, saya segera mengumpulkan tim, melakukan evaluasi titik kelemahan operasi, dan menyusun strategi pengepungan baru dengan semangat pantang menyerah.",
     "options": [
       {
         "key": "A",
@@ -6276,16 +6276,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketahanan Mental] Kegigihan (grit) dan daya lentur mental memungkinkan personel terus beradaptasi hingga misi sukses. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Daya lentur mental (grit and resilience) mengonversi kegagalan sesaat menjadi pembelajaran berharga menuju keberhasilan misi berikutnya. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 265,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
-    "difficulty": "EASY",
-    "stem": "Bekerja lembur berturut-turut dalam operasi kemanusiaan bencana alam membuat saya mengeluh dan bermalas-malasan.",
+    "difficulty": "HARD",
+    "stem": "Mendapat teror telepon dan ancaman pembunuhan terhadap keluarga saya dari sindikat mafia tanah yang sedang saya sidik membuat saya merasa gentar dan berniat mengundurkan diri dari tim penyidik.",
     "options": [
       {
         "key": "A",
@@ -6321,16 +6321,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketahanan Mental] Tugas kemanusiaan menuntut ketahanan fisik dan keikhlasan berkorban demi keselamatan korban bencana. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Keberanian menghadapi intimidasi pelaku kejahatan adalah benteng kehormatan penegak hukum; aparat tidak boleh tunduk pada teror kriminal. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 266,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
-    "difficulty": "HARD",
-    "stem": "Saya tidak goyah menghadapi intimidasi verbal atau ancaman teror dari kelompok pelaku kejahatan terorganisir.",
+    "difficulty": "MEDIUM",
+    "stem": "Saya rutin meluangkan waktu berolahraga beladiri, lari pagi, serta beribadah sesuai agama saya sebagai sarana manajemen stres yang sehat setelah menghadapi dinamika beban tugas kepolisian yang sangat padat.",
     "options": [
       {
         "key": "A",
@@ -6366,16 +6366,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketahanan Mental] Keberanian moral dan keteguhan mental adalah benteng utama penegak hukum melawan sindikat kejahatan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Pola hidup sehat dan spiritualitas yang kokoh merupakan fondasi pembentuk ketahanan fisik dan imunitas psikologis personel. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 267,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
     "difficulty": "EASY",
-    "stem": "Kondisi cuaca hujan badai atau panas terik membuat saya enggan menjalankan kewajiban pengaturan lalu lintas.",
+    "stem": "Ketika harus bekerja lembur tiga malam berturut-turut untuk menyelesaikan berkas perkara pembunuhan berantai sebelum masa penahanan habis, saya mulai mengeluh di media sosial dan melayani tamu kantor dengan ketus.",
     "options": [
       {
         "key": "A",
@@ -6411,16 +6411,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketahanan Mental] Dedikasi pelayanan lalu lintas dituntut hadir dalam segala cuaca demi keamanan para pengguna jalan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Pengabdian tanpa pamrih menuntut kesiapan berkorban tenaga dan waktu tanpa melampiaskan kelelahan fisik kepada masyarakat umum. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 268,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
-    "difficulty": "MEDIUM",
-    "stem": "Saya memiliki cara positif untuk menyalurkan kejenuhan bertugas, seperti berolahraga dan berkegiatan ibadah secara rutin.",
+    "difficulty": "HARD",
+    "stem": "Meskipun opini publik di media massa sempat memojokkan satuan kepolisian akibat ulah oknum tertentu, saya tetap teguh menjaga integritas diri dan membuktikan pengabdian terbaik kepada warga di wilayah binaan saya.",
     "options": [
       {
         "key": "A",
@@ -6456,16 +6456,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketahanan Mental] Manajemen koping stres yang sehat menjaga kesehatan jiwa raga personel secara berkelanjutan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Kekuatan mental insan Bhayangkara tidak mudah luntur oleh sentimen negatif luar; fokus utama adalah kinerja pelayanan nyata yang berintegritas. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 269,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
-    "difficulty": "MEDIUM",
-    "stem": "Saya merasa tidak sanggup melanjutkan karier kepolisian jika tidak ditempatkan di kota besar sesuai keinginan pribadi.",
+    "difficulty": "EASY",
+    "stem": "Saya merasa tidak sanggup melanjutkan profesi sebagai anggota kepolisian jika tidak ditugaskan di kesatuan favorit yang prestisius dan banyak fasilitas operasionalnya.",
     "options": [
       {
         "key": "A",
@@ -6501,16 +6501,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Ketahanan Mental] Kesiapan ditempatkan di mana saja adalah komitmen dasar yang tidak boleh dikompromikan oleh kenyamanan personal. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Kesetiaan pada profesi kepolisian tidak boleh bersyarat pada kemewahan fasilitas dinas atau gengsi kesatuan semata. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 270,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Ketahanan Mental",
     "difficulty": "HARD",
-    "stem": "Saya tetap tegar dan tabah saat menghadapi situasi duka akibat gugurnya rekan seperjuangan dalam tugas pengamanan.",
+    "stem": "Menghadapi peristiwa gugurnya rekan seperjuangan dalam baku tembak pengamanan operasi terorisme, saya mampu mengendalikan duka batin menjadi tekad baja untuk menuntaskan pengejaran kelompok pelaku hingga tuntas.",
     "options": [
       {
         "key": "A",
@@ -6546,16 +6546,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Ketahanan Mental] Ketabahan mental prajurit mengonversi kesedihan menjadi tekad untuk melanjutkan perjuangan menjaga kedaulatan hukum. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Ketahanan Mental] Ketabahan mental kesatria menyublimasikan kesedihan mendalam menjadi energi juang untuk melindungi tegaknya hukum dan keselamatan bangsa. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Ketahanan Mental"
   },
   {
     "id": 271,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "HARD",
-    "stem": "Saya menjunjung tinggi kehormatan institusi Polri di atas kepentingan pribadi, golongan, maupun partai politik.",
+    "stem": "Saya menjunjung tinggi kehormatan institusi Polri di atas segala kepentingan pribadi, kelompok bisnis, maupun partai politik, serta mematuhi seluruh perintah kedinasan yang sah dari pimpinan berjenjang.",
     "options": [
       {
         "key": "A",
@@ -6591,16 +6591,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Netralitas politik dan loyalitas tunggal kepada negara dan institusi adalah amanat UU No. 2 Tahun 2002. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Loyalitas tegak lurus pada negara dan institusi kepolisian adalah amanat undang-undang yang menjamin soliditas organisasi Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 272,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "MEDIUM",
-    "stem": "Saya terus memperbarui pengetahuan hukum dan teknologi terkini agar kemampuan penyidikan saya selalu relevan.",
+    "stem": "Di era transformasi digital kepolisian, saya proaktif mempelajari teknik analisis data forensik siber, regulasi UU ITE, dan bahasa asing secara otodidak guna meningkatkan kompetensi penyidikan saya menghadapi modus kejahatan baru.",
     "options": [
       {
         "key": "A",
@@ -6636,16 +6636,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Profesionalisme modern menuntut pembelajaran seumur hidup (lifelong learning) menghadapi tren kejahatan siber. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Profesionalisme modern menuntut budaya belajar seumur hidup (lifelong learning) agar personel selalu selangkah di depan para pelaku kejahatan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 273,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "EASY",
-    "stem": "Saya merasa tidak masalah menjelek-jelekkan korps kepolisian di media sosial pribadi saat merasa kecewa terhadap mutasi jabatan.",
+    "stem": "Saat merasa tidak puas terhadap keputusan rotasi jabatan yang ditetapkan oleh pimpinan polda, saya menyebarkan rumor tidak sedap mengenai komandan di grup WhatsApp alumni pendidikan kepolisian.",
     "options": [
       {
         "key": "A",
@@ -6681,16 +6681,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Menjaga marwah institusi adalah kode etik profesi; ketidakpuasan internal wajib disalurkan lewat saluran resmi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Menyebarkan isu negatif internal merusak marwah institusi; keberatan kedinasan wajib disampaikan melalui mekanisme resmi berjenjang. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 274,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "MEDIUM",
-    "stem": "Saya patuh dan loyal pada instruksi kedinasan yang sah dari pimpinan berjenjang sesuai dengan Tribrata dan Catur Prasetya.",
+    "stem": "Saya senantiasa mematuhi Standar Operasional Prosedur (SOP) pengawalan tahanan berbahaya dengan memasang borgol standar dan pengawalan ganda tanpa memotong prosedur demi alasan efisiensi waktu semata.",
     "options": [
       {
         "key": "A",
@@ -6726,16 +6726,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Hierarki komando dan kesetiaan pada pedoman luhur Polri menjamin soliditas organisasi kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Kepatuhan pada SOP adalah jaminan legalitas tindakan hukum dan mitigasi utama terhadap risiko insiden fatal di lapangan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 275,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "HARD",
-    "stem": "Bila ada tawaran pekerjaan di sektor swasta dengan gaji lebih tinggi saat negara sedang butuh tenaga saya, saya akan langsung mundur.",
+    "stem": "Bila ada pengusaha kenalan saya meminta informasi data registrasi pelat nomor kendaraan bermotor rahasia milik kompetitor bisnisnya, saya bersedia membukakannya melalui akses komputer kantor karena ada imbalan uang rokok.",
     "options": [
       {
         "key": "A",
@@ -6771,16 +6771,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Loyalitas Bhayangkara berpijak pada panggilan jiwa pengabdian pada nusa dan bangsa, bukan semata hitungan materi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Membocorkan data kepolisian yang bersifat tertutup untuk kepentingan privat melanggar hukum, kode etik profesi, dan merusak kepercayaan masyarakat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 276,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
-    "difficulty": "MEDIUM",
-    "stem": "Saya melaksanakan setiap prosedur operasional standar (SOP) dengan presisi tanpa memotong jalur demi kemudahan sendiri.",
+    "difficulty": "HARD",
+    "stem": "Dalam melaksanakan tugas pengamanan VIP pejabat negara asing, saya mematuhi rencana operasi pengamanan secara presisi, tidak meninggalkan pos pengamatan, dan selalu dalam kondisi siaga satu.",
     "options": [
       {
         "key": "A",
@@ -6816,16 +6816,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Kepatuhan SOP adalah jaminan legalitas tindakan hukum dan perlindungan terhadap hak asasi manusia. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Tugas pengamanan representasi negara menyangkut marwah dan hubungan diplomatik bangsa yang menuntut profesionalisme tanpa cacat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 277,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "HARD",
-    "stem": "Saya memanfaatkan akses informasi data kepolisian yang bersifat tertutup untuk kepentingan bisnis sampingan kerabat.",
+    "stem": "Bagi saya, loyalitas membela kawan seangkatan yang terbukti melakukan tindak pidana pemerasan jauh lebih mulia daripada mematuhi hukum negara.",
     "options": [
       {
         "key": "A",
@@ -6861,16 +6861,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Penyalahgunaan data intelijen/kedinasan melanggar hukum dan mencerminkan rendahnya profesionalisme aparat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Supremasi hukum adalah prinsip tertinggi dalam negara hukum; solidaritas angkatan yang buta tidak boleh mengalahkan hukum positif. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 278,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "MEDIUM",
-    "stem": "Saya rela meluangkan waktu ekstra untuk menuntaskan perkara demi rasa keadilan korban tindak pidana.",
+    "stem": "Saya rela meluangkan waktu di hari libur untuk mendampingi saksi korban kekerasan seksual yang membutuhkan rasa aman saat menjalani proses rekonstruksi perkara di kepolisian.",
     "options": [
       {
         "key": "A",
@@ -6906,16 +6906,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Komitmen pelayanan berkeadilan mendorong personel memberikan upaya terbaik bagi masyarakat yang terzalimi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Dedikasi pelayanan berkeadilan mencerminkan panggilan nurani perwira yang mengutamakan pemulihan hak-hak korban kejahatan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 279,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "HARD",
-    "stem": "Menurut saya, loyalitas pada kawan seangkatan lebih tinggi derajatnya daripada kepatuhan pada undang-undang yang berlaku.",
+    "stem": "Ketika mendapat tawaran menjadi konsultan keamanan pribadi sebuah korporasi bermasalah dengan gaji fantastis saat dinas sedang menghadapi krisis pengamanan daerah, saya langsung mengundurkan diri dari Polri.",
     "options": [
       {
         "key": "A",
@@ -6951,16 +6951,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Supremasi hukum adalah panglima tertinggi; loyalitas korps wajib tunduk pada hukum positif negara. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Pengabdian insan Bhayangkara berlandaskan kehormatan sumpah prajurit, bukan semata hitung-hitungan keuntungan materiil. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 280,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Loyalitas dan Profesionalisme",
     "difficulty": "EASY",
-    "stem": "Saya senantiasa menjaga nama baik pribadi dan kesatuan saat berinteraksi di dunia maya maupun nyata.",
+    "stem": "Saya selalu memastikan bahwa setiap tindakan kepolisian yang saya laksanakan selaras dengan nilai-nilai luhur Tribrata sebagai pedoman hidup dan Catur Prasetya sebagai pedoman kerja.",
     "options": [
       {
         "key": "A",
@@ -6996,16 +6996,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Loyalitas dan Profesionalisme] Sikap profesional melekat 24 jam dalam kehidupan prajurit Bhayangkara baik berseragam maupun saat lepas dinas. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Loyalitas dan Profesionalisme] Tribrata dan Catur Prasetya adalah kompas moral spiritual yang menuntun arah loyalitas dan profesionalisme sejati anggota Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 281,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "MEDIUM",
-    "stem": "Saya mampu mengakui kelebihan orang lain dan belajar dari keunggulan mereka tanpa merasa tersaingi secara negatif.",
+    "stem": "Saya mampu mengakui secara tulus keunggulan prestasi rekan sejawat yang berhasil meraih penghargaan Kapolri, serta menjadikan kesuksesannya sebagai motivasi positif untuk meningkatkan mutu kinerja diri saya sendiri.",
     "options": [
       {
         "key": "A",
@@ -7041,16 +7041,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kematangan Pribadi] Kematangan pribadi ditandai rasa percaya diri yang sehat dan sikap rendah hati untuk terus belajar. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Kematangan kepribadian ditandai oleh rasa percaya diri yang sehat, sportivitas tinggi, dan tiadanya rasa iri hati terhadap rekan kerja. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 282,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "EASY",
-    "stem": "Saya tidak mudah percaya pada kabar burung (hoaks) sebelum memeriksa fakta dan sumber informasi yang tepercaya.",
+    "stem": "Ketika menerima pesan berantai yang berisi informasi mengejutkan tentang instansi pemerintah di grup pesan instan, saya tidak langsung meneruskannya ke orang lain melainkan memverifikasi fakta melalui saluran informasi resmi terlebih dahulu.",
     "options": [
       {
         "key": "A",
@@ -7086,16 +7086,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kematangan Pribadi] Kecerdasan emosional dan logika analitis menyaring informasi secara kritis sebelum bereaksi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Sikap kritis dan literasi informasi yang matang membentengi diri dari penyebaran hoaks yang dapat memicu kepanikan warga. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 283,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "EASY",
-    "stem": "Saya sering merasa iri dan mendendam jika rekan seangkatan mendapat promosi kenaikan pangkat lebih dulu.",
+    "stem": "Saya sering merasa cemas, gelisah, dan menyalahkan nasib buruk apabila menghadapi kendala rumit dalam kehidupan pribadi di luar dinas.",
     "options": [
       {
         "key": "A",
@@ -7131,16 +7131,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kematangan Pribadi] Kedewasaan mental mendorong sikap sportivitas dan rasa bangga atas keberhasilan rekan seperjuangan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Kematangan diri membutuhkan lokus kendali internal (internal locus of control) yang memampukan seseorang bersikap tabah mencari solusi. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 284,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "MEDIUM",
-    "stem": "Saya mampu mengendalikan dorongan belanja konsumtif dan mengelola keuangan keluarga secara hemat dan bijak.",
+    "stem": "Saya membiasakan diri menerapkan gaya hidup sederhana, mengelola penghasilan gaji dinas secara bijak untuk masa depan keluarga, dan pantang bergaya hidup mewah (hedonisme) yang melukai hati masyarakat.",
     "options": [
       {
         "key": "A",
@@ -7176,16 +7176,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kematangan Pribadi] Pola hidup sederhana (tidak hedonis) adalah instruksi resmi kedinasan Polri untuk menjaga moralitas. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Pola hidup sederhana bagi anggota Polri adalah instruksi kedinasan yang menjaga integritas moral dan menghindarkan diri dari jerat korupsi. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 285,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
-    "difficulty": "EASY",
-    "stem": "Saya selalu mencari kambing hitam atas setiap kegagalan yang terjadi dalam kehidupan pribadi saya.",
+    "difficulty": "MEDIUM",
+    "stem": "Bila saran yang saya sampaikan dalam rapat perencanaan kerja tidak diterima oleh forum, saya merasa harga diri saya diinjak-injak dan memilih bersikap pasif dalam pelaksanaan kegiatan berikutnya.",
     "options": [
       {
         "key": "A",
@@ -7221,16 +7221,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kematangan Pribadi] Kematangan pribadi menuntut lokus kendali internal (internal locus of control) dan tanggung jawab penuh. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Kedewasaan mental tercermin dari kemampuan menerima keputusan mufakat bersama secara ikhlas tanpa mendendam secara personal. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 286,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "HARD",
-    "stem": "Saya memiliki prinsip moral yang kokoh sehingga tidak mudah terombang-ambing oleh pengaruh buruk lingkungan pergaulan.",
+    "stem": "Saya memiliki prinsip moral yang kokoh sehingga tidak pernah tergoda untuk terlibat dalam perjudian online, penyalahgunaan narkotika, atau pergaulan bebas meskipun diajak oleh lingkungan pergaulan terdekat.",
     "options": [
       {
         "key": "A",
@@ -7266,16 +7266,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kematangan Pribadi] Karakter mental yang mapan membentengi insan Bhayangkara dari jeratan narkoba, judi online, dan perbuatan tercela. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Karakter batin yang mandiri dan berintegritas menjadi perisai utama personel dari godaan gaya hidup destruktif. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 287,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "MEDIUM",
-    "stem": "Jika pendapat saya ditolak dalam forum musyawarah, saya merasa tersinggung dan memilih mendiamkan rekan lain.",
+    "stem": "Sebagai seorang perwira, saya merasa gengsi dan malu untuk meminta maaf secara terbuka kepada bintara muda bawahan saya apabila saya terbukti salah memberikan data informasi di lapangan.",
     "options": [
       {
         "key": "A",
@@ -7311,16 +7311,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kematangan Pribadi] Kematangan emosional tercermin dari kelapangan dada menerima hasil mufakat bersama. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Kerendahan hati untuk mengakui kekeliruan dan meminta maaf adalah mahkota kehormatan kepribadian seorang pemimpin sejati. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 288,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "EASY",
-    "stem": "Saya selalu bersyukur atas setiap rezeki halal dan pencapaian karier yang saya peroleh dalam kedinasan.",
+    "stem": "Saya senantiasa bersyukur atas setiap rezeki halal dan jenjang kepangkatan yang saya raih, serta fokus memberikan kontribusi terbaik di posisi penugasan apa pun yang diamanatkan.",
     "options": [
       {
         "key": "A",
@@ -7356,16 +7356,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kematangan Pribadi] Rasa syukur melahirkan ketenteraman batin dan mencegah sifat serakah serta praktik korupsi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Rasa syukur melahirkan ketenangan jiwa (inner peace) yang mencegah timbulnya ambisi berlebihan yang menabrak aturan hukum. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 289,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
-    "difficulty": "MEDIUM",
-    "stem": "Saya merasa gengsi untuk meminta maaf secara tulus kepada bawahan jika saya terbukti melakukan kekeliruan instruksi.",
+    "difficulty": "EASY",
+    "stem": "Saya mudah tersulut rasa benci dan mendendam bertahun-tahun kepada orang yang pernah mengkritik hasil kerja saya di masa lalu.",
     "options": [
       {
         "key": "A",
@@ -7401,16 +7401,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Kematangan Pribadi] Kerendahan hati untuk meminta maaf adalah cermin kematangan budi pekerti perwira sejati. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Sifat pendendam menggerogoti stabilitas emosional dan menghambat pertumbuhan kematangan pribadi yang sehat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 290,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Kematangan Pribadi",
     "difficulty": "MEDIUM",
-    "stem": "Saya mampu mengendalikan stres dengan hobi produktif dan senantiasa berpikiran positif menyongsong masa depan.",
+    "stem": "Saya mampu menjaga batas-batas etika kesopanan dan kehormatan seragam dinas dalam setiap interaksi sosial, baik saat bertugas resmi maupun saat berada di ruang publik informal bersama warga.",
     "options": [
       {
         "key": "A",
@@ -7446,16 +7446,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Kematangan Pribadi] Optimisme dan resiliensi psikologis menjaga stabilitas mental dalam menjalani dinamika tugas kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Kematangan Pribadi] Integritas kepribadian anggota kepolisian melekat secara utuh selama 24 jam sebagai panutan di tengah masyarakat. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Kematangan Pribadi"
   },
   {
     "id": 291,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "HARD",
-    "stem": "Sebagai calon perwira, saya memiliki visi strategis untuk memajukan unit kerja dengan inovasi pelayanan berbasis digital.",
+    "stem": "Sebagai calon perwira Polri, saya memiliki visi strategis untuk melakukan modernisasi tata kelola operasional satuan kerja dengan memanfaatkan kecerdasan buatan dan analitika data demi pencegahan tindak kejahatan secara presisi.",
     "options": [
       {
         "key": "A",
@@ -7491,16 +7491,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Perwira dituntut memiliki pola pikir visioner, adaptif, dan mampu menginisiasi pembaruan organisasi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Perwira Polri masa depan dituntut berpikir visioner, adaptif terhadap kemajuan teknologi global, dan mampu mengarahkan reformasi institusi. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 292,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "HARD",
-    "stem": "Saya berani mengambil tanggung jawab penuh atas keberhasilan maupun kegagalan seluruh personel di bawah kendali saya.",
+    "stem": "Dalam memimpin misi penertiban aksi premanisme terorganisir yang meresahkan para pedagang pasar, saya siap mengambil tanggung jawab penuh atas keberhasilan misi dan menjamin perlindungan hukum bagi seluruh personel regu saya.",
     "options": [
       {
         "key": "A",
@@ -7536,16 +7536,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Akuntabilitas kepemimpinan mutlak adalah karakteristik pembeda utama seorang perwira komando. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Keberanian memikul akuntabilitas kepemimpinan secara paripurna adalah tanda kematangan mental perwira pengendali. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 293,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "EASY",
-    "stem": "Saya merasa cukup hanya menjalankan tugas rutin tanpa perlu berinisiatif memecahkan permasalahan kamtibmas di wilayah.",
+    "stem": "Bagi saya, menjadi perwira kepolisian adalah sarana paling cepat untuk mendapatkan hak istimewa kekuasaan, disegani oleh masyarakat luas, dan menikmati fasilitas kedinasan tanpa perlu capek turun ke lapangan.",
     "options": [
       {
         "key": "A",
@@ -7581,16 +7581,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Mental Calon Perwira] Calon perwira wajib memiliki proaktivitas tinggi dan naluri problem solving terhadap keresahan masyarakat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Pangkat perwira adalah amanah pengorbanan dan pelayanan yang lebih berat bagi kemaslahatan rakyat, bukan privilese arogansi kekuasaan. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 294,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
-    "difficulty": "MEDIUM",
-    "stem": "Saya menjunjung tinggi kode etik kehormatan perwira dan pantang merendahkan martabat seragam Bhayangkara di mana pun.",
+    "difficulty": "HARD",
+    "stem": "Ketika ditugaskan memimpin gelar pasukan operasi lilin berskala besar di hadapan ribuan personel gabungan TNI, Polri, dan Pemda, saya mampu tampil percaya diri, berwibawa, dan menyampaikan instruksi taktis dengan intonasi jelas dan meyakinkan.",
     "options": [
       {
         "key": "A",
@@ -7626,16 +7626,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Kehormatan perwira dibangun dari integritas moral, keteladanan perilaku, dan kesatriaan tanpa cela. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Kharisma kepemimpinan dan wibawa komando di hadapan publik adalah kompetensi krusial bagi seorang perwira pengendali. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 295,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
-    "difficulty": "MEDIUM",
-    "stem": "Saya merasa cemas berlebihan dan ingin menghindar jika ditunjuk memimpin gelar pasukan operasi berskala besar.",
+    "difficulty": "HARD",
+    "stem": "Bila diperintahkan memimpin penggerebekan gudang penimbunan BBM subsidi milik seorang pengusaha yang memiliki koneksi dekat dengan petinggi partai politik, saya memilih menolak surat perintah tugas tersebut karena takut dikriminalisasi kelak.",
     "options": [
       {
         "key": "A",
@@ -7671,16 +7671,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Mental Calon Perwira] Perwira harus memiliki ketenangan, wibawa, dan keberanian tampil memimpin panggung operasional. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Perwira kesatria pantang gentar membela kepentingan kedaulatan ekonomi rakyat; ketegasan hukum tidak boleh berkompromi dengan relasi oligarki. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 296,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "HARD",
-    "stem": "Saya mampu berkomunikasi secara artikulatif, meyakinkan, dan berwibawa di hadapan media massa maupun forum masyarakat.",
+    "stem": "Saya mampu menjalin komunikasi publik yang lugas, empatik, dan transparan di hadapan awak media massa guna meluruskan disinformasi yang beredar liar di tengah masyarakat.",
     "options": [
       {
         "key": "A",
@@ -7716,16 +7716,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Kemampuan komunikasi publik strategis sangat penting untuk membangun transparansi dan kepercayaan masyarakat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Kemampuan manajemen media dan public relations adalah keterampilan strategis perwira Polri modern untuk menjaga kepercayaan publik. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 297,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
-    "difficulty": "HARD",
-    "stem": "Bila diperintahkan memimpin tugas penertiban tambang ilegal milik pengusaha besar, saya berani bertindak tegas sesuai hukum.",
+    "difficulty": "MEDIUM",
+    "stem": "Saya selalu berinisiatif menciptakan solusi terobosan kreatif (out of the box) untuk memecahkan hambatan keterbatasan anggaran bensin patroli, misalnya dengan merintis patroli bersepeda di gang padat pemukiman.",
     "options": [
       {
         "key": "A",
@@ -7761,16 +7761,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Keberanian menegakkan hukum terhadap kejahatan lingkungan dan kerah putih mencerminkan mental kesatria perwira. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Perwira unggul memiliki naluri pemecahan masalah yang fleksibel dan proaktif tanpa terjebak pada keluhan keterbatasan sarana. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 298,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "EASY",
-    "stem": "Saya menganggap kenaikan pangkat perwira semata-mata sebagai sarana memperluas wewenang dan fasilitas kemewahan.",
+    "stem": "Saya merasa cukup hanya menjadi pelaksana perintah rutin dari atasan tanpa perlu memikirkan ide inovasi pengembangan fungsi kepolisian di satuan kerja saya.",
     "options": [
       {
         "key": "A",
@@ -7806,16 +7806,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 4,
       "E": 5
     },
-    "explanation": "[Aspek Mental Calon Perwira] Pangkat perwira adalah amanah pengorbanan dan pelayanan yang lebih besar bagi kemakmuran bangsa, bukan privilese pribadi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Mentalitas pasif dan minim inisiatif tidak selaras dengan profil perwira yang diharapkan menjadi agen perubahan (agent of change). Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Tidak Setuju (E).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 299,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "HARD",
-    "stem": "Saya menanamkan jiwa kesatria untuk membela kebenaran dan melindungi masyarakat yang tertindas walau menghadapi risiko berat.",
+    "stem": "Saya menanamkan komitmen dalam sanubari untuk senantiasa membela kaum yang tertindas, menegakkan kebenaran tanpa gentar, dan rela mengorbankan jiwa raga demi keselamatan rakyat dan kedaulatan hukum Indonesia.",
     "options": [
       {
         "key": "A",
@@ -7851,16 +7851,16 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Hakikat perwira Bhayangkara adalah benteng keadilan dan pelindung kaum lemah. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Jiwa ksatria pelindung, pengayom, dan pelayan masyarakat adalah mahkota kehormatan tertinggi insan Bhayangkara perwira Polri. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   },
   {
     "id": 300,
-    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Kedinasan Polri)",
     "subtest": "KEPRIBADIAN",
     "subCategory": "Mental Calon Perwira",
     "difficulty": "HARD",
-    "stem": "Saya siap mengorbankan waktu istirahat dan kenyamanan pribadi demi menuntaskan krisis keamanan di wilayah hukum saya.",
+    "stem": "Saat menghadapi ancaman bencana kontinjensi di wilayah hukum saya, saya siap mengabaikan waktu istirahat dan kenyamanan pribadi untuk memimpin posko evakuasi darurat hingga situasi sepenuhnya kondusif.",
     "options": [
       {
         "key": "A",
@@ -7896,7 +7896,7 @@ const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
       "D": 2,
       "E": 1
     },
-    "explanation": "[Aspek Mental Calon Perwira] Semangat pengabdian tanpa pamrih (selfless service) adalah mahkota kepemimpinan perwira Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "explanation": "[Aspek: Mental Calon Perwira] Semangat pengabdian tanpa pamrih (selfless devotion) adalah inti kepemimpinan operasional perwira dalam mengabdi pada bangsa. Sikap yang paling tepat dan berbobot nilai maksimal (5 poin) adalah Sangat Setuju (A).",
     "dimension": "Mental Calon Perwira"
   }
 ];

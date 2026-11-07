@@ -1,107 +1,135 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
   import AdminIcon from '$lib/components/admin/AdminIcon.svelte';
-  import Badge from '@webcat/ui/components/Badge.svelte';
+  import { examPreferences } from '$lib/stores/examPreferences.svelte';
   import {
     SIMULATION_PACKETS,
     type SimPacket,
     type SimQuestion,
     type SimBenchmarkItem,
   } from './simulation-packets';
-  import { getOptionWeight, getWeightGradeLabel } from './psikotes-scoring';
+  import {
+    evaluatePsikotesExam,
+    getOptionWeight,
+    type PsikotesEvaluationResult,
+  } from './psikotes-scoring';
 
-  // 1. Kategori & Modul Bank Soal
-  type CategoryId = 'PSIKOTES' | 'TKK' | 'TPK' | 'ALL';
-  type SubtestId = 'ALL' | 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN';
+  // Alur 3 Tahap: 'selection' (Daftar Card Tes) -> 'working' (Halaman Mengerjakan Soal) -> 'result' (Hasil Rekapan Ujian)
+  type ViewState = 'selection' | 'working' | 'result';
 
-  let selectedCategoryId = $state<CategoryId>('PSIKOTES');
-  let selectedSubtestId = $state<SubtestId>('KECERDASAN');
-  let selectedSubCategory = $state<string>('ALL');
-  let selectedDifficulty = $state<'ALL' | 'EASY' | 'MEDIUM' | 'HARD'>('ALL');
-  let selectedStatus = $state<'ALL' | 'STUDIED' | 'UNSTUDIED' | 'BOOKMARKED'>('ALL');
-  let searchQuery = $state<string>('');
+  let viewState = $state<ViewState>('selection');
+  let activePacketId = $state<string>('psikotes-kecerdasan');
 
-  // 2. State Interaksi Pembelajaran (Tanpa Timer, Tanpa Gugur)
-  let currentIndex = $state(0);
-  let userAnswers = $state<Record<number, string>>({});
-  let bookmarkedIds = $state<Record<number, boolean>>({});
-  let showExplanationMap = $state<Record<number, boolean>>({});
-  let autoShowExplanation = $state(true);
+  // State Pengerjaan Soal
+  let currentIndex = $state<number>(0);
+  let answers = $state<Record<number, string>>({});
+  let doubts = $state<Record<number, boolean>>({});
+  let confirmFinishModal = $state<boolean>(false);
+  let reviewFilter = $state<'ALL' | 'CORRECT' | 'WRONG'>('ALL');
+  let advanceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  // 3. Sumber Bank Soal Dasar
-  const currentPacket = $derived.by<SimPacket>(() => {
-    if (selectedCategoryId === 'PSIKOTES') {
-      return (
-        SIMULATION_PACKETS.find(
-          (p) => p.category === 'PSIKOTES' && p.subtest === selectedSubtestId,
-        ) ?? SIMULATION_PACKETS[1] // Kecerdasan default
-      );
-    }
-    return (
-      SIMULATION_PACKETS.find((p) => p.category === selectedCategoryId) ??
-      SIMULATION_PACKETS[0]
-    );
-  });
+  // Urutan Card Tes yang Ditampilkan di Halaman Utama Pretest CAT
+  const TEST_CARDS: Array<{
+    packetId: string;
+    categoryLabel: string;
+    icon: 'brain' | 'shield' | 'zap' | 'devices' | 'book' | 'questions' | 'globe';
+    accent: 'indigo' | 'emerald' | 'amber' | 'sky' | 'blue' | 'slate';
+    highlights: string[];
+  }> = [
+    {
+      packetId: 'psikotes-kecerdasan',
+      categoryLabel: 'PSIKOTES POLRI',
+      icon: 'brain',
+      accent: 'indigo',
+      highlights: [
+        'Figural & Pola Visual',
+        'Denah Peta & Arah',
+        'Deret Angka & Aritmatika',
+        'Verbal & Silogisme Logis',
+      ],
+    },
+    {
+      packetId: 'psikotes-kepribadian',
+      categoryLabel: 'PSIKOTES POLRI',
+      icon: 'shield',
+      accent: 'emerald',
+      highlights: [
+        '10 Aspek Sikap Kepolisian',
+        'Narasi Studi Kasus Kedinasan',
+        'Skala Sikap Likert 5 Opsi',
+        'Evaluasi Bobot Poin 1–5',
+      ],
+    },
+    {
+      packetId: 'psikotes-kecermatan',
+      categoryLabel: 'PSIKOTES POLRI',
+      icon: 'zap',
+      accent: 'amber',
+      highlights: [
+        '5 Kolom Format Monokrom CAT',
+        'Pola Angka, Huruf & Simbol',
+        'Deteksi Karakter Hilang',
+        'Evaluasi Kecepatan & Akurasi',
+      ],
+    },
+    {
+      packetId: 'tkk',
+      categoryLabel: 'KOMPETENSI TEKNIS',
+      icon: 'devices',
+      accent: 'sky',
+      highlights: [
+        'Pengetahuan Dasar Komputer',
+        'Microsoft Office & Shortcut',
+        'Jaringan & Internet Polri',
+        'Informatika & Keamanan Siber',
+      ],
+    },
+    {
+      packetId: 'tpk',
+      categoryLabel: 'PENGETAHUAN KEPOLISIAN',
+      icon: 'book',
+      accent: 'blue',
+      highlights: [
+        'Tugas & Fungsi Kepolisian',
+        'Dasar Hukum UU No. 2/2002',
+        'Pedoman Pelaksanaan Tugas',
+        'KUHAP, Tribrata & Catur Prasetya',
+      ],
+    },
+    {
+      packetId: 'psikotes-all',
+      categoryLabel: 'PAKET GABUNGAN PSIKOTES',
+      icon: 'questions',
+      accent: 'indigo',
+      highlights: [
+        '100 Soal Kecerdasan',
+        '100 Soal Mental Kepribadian',
+        '100 Soal Kecermatan',
+        'Skor Komposit Psikotes Polri',
+      ],
+    },
+    {
+      packetId: 'cat-all',
+      categoryLabel: 'SIMULASI LENGKAP SIP',
+      icon: 'globe',
+      accent: 'slate',
+      highlights: [
+        'Total 500 Butir Soal Lengkap',
+        'Seluruh Subtes Psikotes (300)',
+        'Kemampuan Komputer TKK (100)',
+        'Pengetahuan Kepolisian TPK (100)',
+      ],
+    },
+  ];
 
-  const baseQuestions = $derived(currentPacket.questions);
-
-  // 4. Daftar Subkategori Unik dari Paket Aktif
-  const availableSubCategories = $derived.by<string[]>(() => {
-    const set = new Set<string>();
-    for (const q of baseQuestions) {
-      if (q.subCategory) set.add(q.subCategory);
-    }
-    return Array.from(set);
-  });
-
-  // 5. Soal Terfilter Sesuai Kriteria Pembelajaran
-  const filteredQuestions = $derived.by<SimQuestion[]>(() => {
-    let list = baseQuestions;
-
-    if (selectedSubCategory !== 'ALL') {
-      list = list.filter((q) => q.subCategory === selectedSubCategory);
-    }
-
-    if (selectedDifficulty !== 'ALL') {
-      list = list.filter((q) => q.difficulty === selectedDifficulty);
-    }
-
-    if (selectedStatus === 'STUDIED') {
-      list = list.filter((q) => userAnswers[q.id] !== undefined);
-    } else if (selectedStatus === 'UNSTUDIED') {
-      list = list.filter((q) => userAnswers[q.id] === undefined);
-    } else if (selectedStatus === 'BOOKMARKED') {
-      list = list.filter((q) => Boolean(bookmarkedIds[q.id]));
-    }
-
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter(
-        (item) =>
-          item.stem.toLowerCase().includes(q) ||
-          item.subCategory?.toLowerCase().includes(q) ||
-          item.explanation.toLowerCase().includes(q) ||
-          item.options.some((opt) => opt.text.toLowerCase().includes(q)),
-      );
-    }
-
-    return list;
-  });
-
-  // Clamp index jika daftar filter berubah
-  $effect(() => {
-    if (currentIndex >= filteredQuestions.length) {
-      currentIndex = Math.max(0, filteredQuestions.length - 1);
-    }
-  });
-
-  const currentQuestion = $derived<SimQuestion | undefined>(
-    filteredQuestions[currentIndex],
+  const currentPacket = $derived<SimPacket>(
+    SIMULATION_PACKETS.find((p) => p.id === activePacketId) ?? SIMULATION_PACKETS[1],
   );
 
-  const isKecermatan = $derived(Boolean(currentQuestion?.isKecermatan));
-  const isKepribadian = $derived(currentQuestion?.subtest === 'KEPRIBADIAN');
+  const questions = $derived<SimQuestion[]>(currentPacket.questions);
+  const currentQuestion = $derived<SimQuestion | undefined>(questions[currentIndex]);
+  const isKecermatan = $derived<boolean>(Boolean(currentQuestion?.isKecermatan));
+  const isKepribadian = $derived<boolean>(currentQuestion?.subtest === 'KEPRIBADIAN');
 
   const currentBenchmark = $derived<SimBenchmarkItem[]>(
     currentQuestion?.benchmark ?? [
@@ -117,97 +145,146 @@
     currentQuestion?.questionChars ?? ['?', '?', '?', '?'],
   );
 
-  // Metrik Progres Belajar
-  const totalBaseQuestions = $derived(baseQuestions.length);
-  const studiedBaseCount = $derived(
-    baseQuestions.filter((q) => userAnswers[q.id] !== undefined).length,
+  // Statistik Pengerjaan
+  const answeredCount = $derived<number>(Object.keys(answers).length);
+  const doubtCount = $derived<number>(
+    Object.values(doubts).filter(Boolean).length,
   );
-  const studiedProgressPercent = $derived(
-    totalBaseQuestions > 0
-      ? Math.round((studiedBaseCount / totalBaseQuestions) * 100)
-      : 0,
+  const unansweredCount = $derived<number>(
+    Math.max(0, questions.length - answeredCount),
   );
-
-  const currentAnswer = $derived<string | undefined>(
-    currentQuestion ? userAnswers[currentQuestion.id] : undefined,
-  );
-  const isCurrentBookmarked = $derived<boolean>(
-    currentQuestion ? Boolean(bookmarkedIds[currentQuestion.id]) : false,
-  );
-  const isCurrentExplanationVisible = $derived<boolean>(
-    currentQuestion
-      ? Boolean(showExplanationMap[currentQuestion.id] || (autoShowExplanation && userAnswers[currentQuestion.id] !== undefined))
-      : false,
+  const progressPercent = $derived<number>(
+    questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0,
   );
 
-  // Aksi Pembelajaran
+  // Evaluasi Hasil Rekapan (Dihitung saat selesai)
+  const correctCount = $derived<number>(
+    questions.filter((q, idx) => answers[idx] === q.correctKey).length,
+  );
+  const wrongCount = $derived<number>(
+    questions.filter((q, idx) => answers[idx] !== undefined && answers[idx] !== q.correctKey).length,
+  );
+
+  const psikotesResult = $derived<PsikotesEvaluationResult>(
+    evaluatePsikotesExam(currentPacket, questions, answers),
+  );
+
+  const finalScore = $derived<number>(
+    psikotesResult.isPsikotes
+      ? psikotesResult.finalScore
+      : questions.length > 0
+        ? Number(((correctCount / questions.length) * 100).toFixed(2))
+        : 0,
+  );
+
+  const isPassed = $derived<boolean>(
+    psikotesResult.isPsikotes ? psikotesResult.passed : finalScore >= 61,
+  );
+
+  // Filter daftar soal pada halaman rekapan hasil
+  const filteredReviewItems = $derived.by(() => {
+    return questions
+      .map((q, idx) => ({
+        question: q,
+        index: idx,
+        userKey: answers[idx],
+        isCorrect: answers[idx] === q.correctKey,
+        weight: q.subtest === 'KEPRIBADIAN' && answers[idx] ? getOptionWeight(q, answers[idx]) : null,
+      }))
+      .filter((item) => {
+        if (reviewFilter === 'CORRECT') return item.isCorrect;
+        if (reviewFilter === 'WRONG') return !item.isCorrect;
+        return true;
+      });
+  });
+
+  // Navigasi & Aksi
+  function startTest(packetId: string) {
+    if (advanceTimer) {
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+    }
+    activePacketId = packetId;
+    currentIndex = 0;
+    answers = {};
+    doubts = {};
+    confirmFinishModal = false;
+    reviewFilter = 'ALL';
+    viewState = 'working';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function backToSelection() {
+    if (advanceTimer) {
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+    }
+    confirmFinishModal = false;
+    viewState = 'selection';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function selectOption(key: string) {
-    if (!currentQuestion) return;
-    userAnswers[currentQuestion.id] = key;
-    if (autoShowExplanation) {
-      showExplanationMap[currentQuestion.id] = true;
+    if (viewState !== 'working') return;
+    answers[currentIndex] = key;
+
+    if (isKecermatan || examPreferences.mode === 'auto') {
+      if (advanceTimer) clearTimeout(advanceTimer);
+      const delay = isKecermatan ? 110 : 200;
+      advanceTimer = setTimeout(() => {
+        advanceTimer = null;
+        if (currentIndex < questions.length - 1) {
+          currentIndex += 1;
+        }
+      }, delay);
     }
   }
 
-  function toggleBookmark() {
-    if (!currentQuestion) return;
-    bookmarkedIds[currentQuestion.id] = !bookmarkedIds[currentQuestion.id];
+  function toggleDoubt() {
+    if (viewState !== 'working') return;
+    doubts[currentIndex] = !doubts[currentIndex];
   }
 
-  function toggleExplanation() {
-    if (!currentQuestion) return;
-    showExplanationMap[currentQuestion.id] = !isCurrentExplanationVisible;
+  function clearCurrentAnswer() {
+    if (viewState !== 'working') return;
+    delete answers[currentIndex];
   }
 
-  function nextQuestion() {
-    if (currentIndex < filteredQuestions.length - 1) {
-      currentIndex += 1;
-    }
-  }
-
-  function prevQuestion() {
+  function goPrev() {
     if (currentIndex > 0) {
       currentIndex -= 1;
     }
   }
 
+  function goNext() {
+    if (currentIndex < questions.length - 1) {
+      currentIndex += 1;
+    }
+  }
+
   function goToQuestion(idx: number) {
-    if (idx >= 0 && idx < filteredQuestions.length) {
+    if (idx >= 0 && idx < questions.length) {
       currentIndex = idx;
     }
   }
 
-  function resetProgress() {
-    if (
-      confirm(
-        'Apakah Anda yakin ingin mengatur ulang progres belajar modul ini? Riwayat jawaban latihan akan dibersihkan.',
-      )
-    ) {
-      for (const q of baseQuestions) {
-        delete userAnswers[q.id];
-        delete bookmarkedIds[q.id];
-        delete showExplanationMap[q.id];
-      }
-      currentIndex = 0;
-    }
+  function requestFinish() {
+    confirmFinishModal = true;
   }
 
-  function switchCategory(cat: CategoryId, sub?: SubtestId) {
-    selectedCategoryId = cat;
-    if (cat === 'PSIKOTES') {
-      selectedSubtestId = sub ?? 'KECERDASAN';
-    } else {
-      selectedSubtestId = 'ALL';
+  function confirmFinishExam() {
+    if (advanceTimer) {
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
     }
-    selectedSubCategory = 'ALL';
-    selectedDifficulty = 'ALL';
-    selectedStatus = 'ALL';
-    searchQuery = '';
-    currentIndex = 0;
+    confirmFinishModal = false;
+    viewState = 'result';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Keyboard Navigation: A-E atau 1-5 untuk jawab, Arrow untuk navigasi
   function handleKeydown(event: KeyboardEvent) {
+    if (viewState !== 'working' || confirmFinishModal) return;
+
     const target = event.target as HTMLElement | null;
     if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
       return;
@@ -230,10 +307,10 @@
 
     if (event.key === 'ArrowRight') {
       event.preventDefault();
-      nextQuestion();
+      goNext();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      prevQuestion();
+      goPrev();
     }
   }
 
@@ -241,1609 +318,1927 @@
     window.addEventListener('keydown', handleKeydown);
     return () => {
       window.removeEventListener('keydown', handleKeydown);
+      if (advanceTimer) clearTimeout(advanceTimer);
     };
   });
 </script>
 
 <svelte:head>
-  <title>Bank Soal & Pembelajaran CAT Polri — Pretest Mandiri</title>
+  <title>Pretest CAT Polri — Simulasi &amp; Latihan Mandiri</title>
 </svelte:head>
 
-<div class="bank-page">
-  <!-- 1. HERO & BANNER UJIAN CAT RESMI -->
-  <header class="bank-hero">
-    <div class="bank-hero__main">
-      <div class="bank-hero__badge-row">
-        <span class="hub-badge hub-badge--primary">
-          <AdminIcon name="questions" size={14} />
-          <span>PRETEST CAT — BANK SOAL PEMBELAJARAN</span>
-        </span>
-        <span class="hub-badge hub-badge--outline">
-          Tanpa Batas Waktu • Kunci &amp; Pembahasan Lengkap
-        </span>
+<div class="pretest-container">
+  {#if viewState === 'selection'}
+    <!-- ===================================================================== -->
+    <!-- TAHAP 1: DAFTAR CARD TES PRETEST CAT                                  -->
+    <!-- ===================================================================== -->
+    <header class="selection-header">
+      <div class="selection-header__eyebrow">
+        <AdminIcon name="shield" size={15} />
+        <span>MODUL PRETEST CAT POLRI • SELEKSI SIP &amp; BINTARA</span>
       </div>
-      <h1 class="bank-hero__title">Bank Soal &amp; Pembelajaran CAT Polri</h1>
-      <p class="bank-hero__desc">
-        Pusat pembelajaran mandiri untuk mendalami tipe soal, pola figural, denah arah, penalaran numerik, skala sikap mental kepribadian, serta pengetahuan teknis. Dilengkapi kunci jawaban dan pembahasan komprehensif di setiap butir.
+      <h1 class="selection-header__title">Daftar Paket Pretest CAT</h1>
+      <p class="selection-header__subtitle">
+        Pilih salah satu paket tes di bawah ini dan klik tombol <strong>Kerjakan Pretest</strong> untuk memulai pengerjaan soal. Hasil evaluasi dan rekapan nilai akan ditampilkan setelah Anda menyelesaikan sesi pengerjaan.
       </p>
-    </div>
+    </header>
 
-    <!-- BANNER CTA MENUNJUKKAN PERBEDAAN DENGAN TES CAT RESMI -->
-    <div class="exam-cta-card">
-      <div class="exam-cta-card__content">
-        <div class="exam-cta-card__icon">
-          <AdminIcon name="shield" size={24} />
-        </div>
-        <div class="exam-cta-card__text">
-          <strong>Siap Menguji Diri dalam Simulasi Nyata?</strong>
-          <p>
-            Modul <b>TES CAT</b> menyajikan simulasi ujian sesungguhnya dengan batas waktu ketat, sistem gugur, dan penilaian passing grade kelulusan SIP Polri.
+    <div class="cards-grid">
+      {#each TEST_CARDS as card (card.packetId)}
+        {@const packet = SIMULATION_PACKETS.find((p) => p.id === card.packetId)}
+        {#if packet}
+          <article class="test-card test-card--{card.accent}">
+            <div class="test-card__top">
+              <div class="test-card__icon-box test-card__icon-box--{card.accent}">
+                <AdminIcon name={card.icon} size={22} />
+              </div>
+              <div class="test-card__badges">
+                <span class="test-card__cat-tag">{card.categoryLabel}</span>
+                <span class="test-card__count-tag">{packet.questions.length} Soal</span>
+              </div>
+            </div>
+
+            <div class="test-card__body">
+              <h2 class="test-card__title">{packet.title.replace('Pretest CAT ', '')}</h2>
+              <p class="test-card__desc">{packet.description}</p>
+
+              <ul class="test-card__highlights">
+                {#each card.highlights as item}
+                  <li>
+                    <AdminIcon name="check" size={14} />
+                    <span>{item}</span>
+                  </li>
+                {/each}
+              </ul>
+            </div>
+
+            <div class="test-card__footer">
+              <button
+                type="button"
+                class="btn-start-test"
+                onclick={() => startTest(packet.id)}
+              >
+                <span>Kerjakan Pretest</span>
+                <AdminIcon name="arrow-right" size={16} />
+              </button>
+            </div>
+          </article>
+        {/if}
+      {/each}
+    </div>
+  {:else if viewState === 'working'}
+    <!-- ===================================================================== -->
+    <!-- TAHAP 2: HALAMAN PENGERJAAN SOAL (TANPA KUNCI & TANPA PEMBAHASAN)      -->
+    <!-- ===================================================================== -->
+    <header class="exam-topbar">
+      <div class="exam-topbar__left">
+        <button
+          type="button"
+          class="btn-back"
+          onclick={backToSelection}
+          title="Kembali ke daftar paket Pretest CAT"
+        >
+          <AdminIcon name="arrow-left" size={16} />
+          <span>Kembali</span>
+        </button>
+        <div class="exam-topbar__divider"></div>
+        <div class="exam-topbar__titles">
+          <h1 class="exam-topbar__title">{currentPacket.title}</h1>
+          <p class="exam-topbar__subtitle">
+            Terjawab {answeredCount} dari {questions.length} Soal ({progressPercent}%)
           </p>
         </div>
       </div>
-      <a class="button button--primary exam-cta-button" href="/exam">
-        <span>Masuk ke Simulasi TES CAT</span>
-        <AdminIcon name="arrow-right" size={16} />
-      </a>
-    </div>
-  </header>
 
-  <!-- 2. NAVIGASI MODUL PEMBELAJARAN (TAB UTAMA) -->
-  <nav class="module-nav" aria-label="Pilih Modul Pembelajaran">
-    <button
-      type="button"
-      class="module-nav__tab"
-      class:module-nav__tab--active={selectedCategoryId === 'PSIKOTES' && selectedSubtestId === 'KECERDASAN'}
-      onclick={() => switchCategory('PSIKOTES', 'KECERDASAN')}
-    >
-      <span class="module-nav__icon">🧠</span>
-      <div class="module-nav__meta">
-        <span class="module-nav__title">Psikotes Kecerdasan</span>
-        <span class="module-nav__sub">100 Soal • Figural, Deret, Denah</span>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      class="module-nav__tab"
-      class:module-nav__tab--active={selectedCategoryId === 'PSIKOTES' && selectedSubtestId === 'KEPRIBADIAN'}
-      onclick={() => switchCategory('PSIKOTES', 'KEPRIBADIAN')}
-    >
-      <span class="module-nav__icon">🛡️</span>
-      <div class="module-nav__meta">
-        <span class="module-nav__title">Mental Kepribadian</span>
-        <span class="module-nav__sub">100 Soal • 10 Aspek Likert 5</span>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      class="module-nav__tab"
-      class:module-nav__tab--active={selectedCategoryId === 'PSIKOTES' && selectedSubtestId === 'KECERMATAN'}
-      onclick={() => switchCategory('PSIKOTES', 'KECERMATAN')}
-    >
-      <span class="module-nav__icon">⚡</span>
-      <div class="module-nav__meta">
-        <span class="module-nav__title">Psikotes Kecermatan</span>
-        <span class="module-nav__sub">100 Soal • 5 Kolom Monokrom</span>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      class="module-nav__tab"
-      class:module-nav__tab--active={selectedCategoryId === 'TKK'}
-      onclick={() => switchCategory('TKK')}
-    >
-      <span class="module-nav__icon">💻</span>
-      <div class="module-nav__meta">
-        <span class="module-nav__title">Kemampuan Komputer (TKK)</span>
-        <span class="module-nav__sub">100 Soal • IT &amp; Siber Polri</span>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      class="module-nav__tab"
-      class:module-nav__tab--active={selectedCategoryId === 'TPK'}
-      onclick={() => switchCategory('TPK')}
-    >
-      <span class="module-nav__icon">📜</span>
-      <div class="module-nav__meta">
-        <span class="module-nav__title">Pengetahuan Kepolisian (TPK)</span>
-        <span class="module-nav__sub">100 Soal • UU 2/2002 &amp; KUHAP</span>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      class="module-nav__tab"
-      class:module-nav__tab--active={selectedCategoryId === 'ALL'}
-      onclick={() => switchCategory('ALL')}
-    >
-      <span class="module-nav__icon">🌐</span>
-      <div class="module-nav__meta">
-        <span class="module-nav__title">Semua Bank Soal</span>
-        <span class="module-nav__sub">Total 500 Soal Lengkap</span>
-      </div>
-    </button>
-  </nav>
-
-  <!-- 3. FILTER BAR: SUBKATEGORI, KESULITAN, STATUS & PENCARIAN -->
-  <section class="filter-panel" aria-label="Filter Bank Soal">
-    <div class="filter-panel__top">
-      <!-- Search Input -->
-      <div class="search-wrap">
-        <AdminIcon name="search" size={16} />
-        <input
-          type="search"
-          placeholder="Cari kata kunci materi, pertanyaan, atau konsep..."
-          bind:value={searchQuery}
-          class="search-input"
-        />
-        {#if searchQuery}
-          <button class="search-clear" type="button" onclick={() => (searchQuery = '')}>×</button>
-        {/if}
-      </div>
-
-      <!-- Filter Kesulitan -->
-      <div class="filter-group">
-        <label for="diff-select" class="filter-label">Tingkat Kesulitan:</label>
-        <select id="diff-select" bind:value={selectedDifficulty} class="filter-select">
-          <option value="ALL">Semua Tingkat</option>
-          <option value="EASY">Mudah (Dasar)</option>
-          <option value="MEDIUM">Sedang (Menengah)</option>
-          <option value="HARD">Sulit (Analisis Lanjut)</option>
-        </select>
-      </div>
-
-      <!-- Filter Status Belajar -->
-      <div class="filter-group">
-        <label for="status-select" class="filter-label">Status Soal:</label>
-        <select id="status-select" bind:value={selectedStatus} class="filter-select">
-          <option value="ALL">Semua Soal ({totalBaseQuestions})</option>
-          <option value="STUDIED">Sudah Dipelajari ({studiedBaseCount})</option>
-          <option value="UNSTUDIED">Belum Dipelajari ({totalBaseQuestions - studiedBaseCount})</option>
-          <option value="BOOKMARKED">Ditandai Bintang</option>
-        </select>
-      </div>
-
-      <!-- Toggle Selalu Tampilkan Pembahasan -->
-      <label class="toggle-control" title="Tampilkan penjelasan otomatis segera setelah menjawab">
-        <input type="checkbox" bind:checked={autoShowExplanation} />
-        <span class="toggle-slider"></span>
-        <span class="toggle-text">Auto Buka Pembahasan</span>
-      </label>
-    </div>
-
-    <!-- Subkategori Chips -->
-    {#if availableSubCategories.length > 0}
-      <div class="subcategory-chips">
-        <span class="chips-label">Subkategori Materi:</span>
+      <div class="exam-topbar__right">
         <button
           type="button"
-          class="chip"
-          class:chip--active={selectedSubCategory === 'ALL'}
-          onclick={() => {
-            selectedSubCategory = 'ALL';
-            currentIndex = 0;
-          }}
+          class="mode-switch-btn"
+          onclick={() =>
+            examPreferences.setMode(
+              examPreferences.mode === 'auto' ? 'manual' : 'auto',
+            )}
+          title="Ubah mode perpindahan soal setelah memilih opsi"
         >
-          Semua Materi ({baseQuestions.length})
+          <span class="mode-dot" class:mode-dot--active={examPreferences.mode === 'auto'}></span>
+          <span>{examPreferences.mode === 'auto' ? 'Auto Next: Aktif' : 'Mode Manual'}</span>
         </button>
-        {#each availableSubCategories as subCat}
-          {@const count = baseQuestions.filter((q) => q.subCategory === subCat).length}
-          <button
-            type="button"
-            class="chip"
-            class:chip--active={selectedSubCategory === subCat}
-            onclick={() => {
-              selectedSubCategory = subCat;
-              currentIndex = 0;
-            }}
-          >
-            {subCat} <span class="chip-count">({count})</span>
-          </button>
-        {/each}
+
+        <button
+          type="button"
+          class="btn-finish-top"
+          onclick={requestFinish}
+        >
+          <AdminIcon name="check" size={16} />
+          <span>Selesaikan Pretest</span>
+        </button>
       </div>
-    {/if}
-  </section>
+    </header>
 
-  <!-- 4. KONTEN PEMBELAJARAN UTAMA (GRID SOAL & PALET NAVIGASI) -->
-  <div class="bank-grid">
-    <!-- KOLOM KIRI: SOAL AKTIF & PEMBAHASAN -->
-    <main class="question-column">
-      {#if filteredQuestions.length === 0}
-        <div class="empty-state">
-          <div class="empty-state__icon">🔍</div>
-          <h3>Tidak Ada Soal yang Sesuai Kriteria</h3>
-          <p>Coba sesuaikan kata kunci pencarian atau ubah filter subkategori dan tingkat kesulitan Anda.</p>
-          <button
-            class="button button--secondary"
-            type="button"
-            onclick={() => {
-              selectedSubCategory = 'ALL';
-              selectedDifficulty = 'ALL';
-              selectedStatus = 'ALL';
-              searchQuery = '';
-            }}
-          >
-            Reset Semua Filter
-          </button>
-        </div>
-      {:else if currentQuestion}
-        <article class="study-card">
-          <!-- Header Soal: Nomor, Tag Subkategori, Kesulitan & Aksi -->
-          <div class="study-card__header">
-            <div class="study-card__meta">
-              <span class="q-number-badge">
-                Soal {currentIndex + 1} dari {filteredQuestions.length}
-              </span>
-              {#if currentQuestion.subCategory}
-                <span class="q-tag-subcat">{currentQuestion.subCategory}</span>
-              {/if}
-              {#if currentQuestion.difficulty}
-                <span
-                  class="q-tag-diff"
-                  class:q-tag-diff--easy={currentQuestion.difficulty === 'EASY'}
-                  class:q-tag-diff--medium={currentQuestion.difficulty === 'MEDIUM'}
-                  class:q-tag-diff--hard={currentQuestion.difficulty === 'HARD'}
-                >
-                  {currentQuestion.difficulty === 'EASY'
-                    ? 'Mudah'
-                    : currentQuestion.difficulty === 'MEDIUM'
-                      ? 'Sedang'
-                      : 'Sulit'}
+    <div class="workspace-grid">
+      <!-- AREA KIRI: SOAL & OPSI JAWABAN -->
+      <main class="question-pane">
+        {#if currentQuestion}
+          <article class="question-card">
+            <!-- Baris Informasi Nomor Soal -->
+            <div class="question-card__head">
+              <div class="question-card__badges">
+                <span class="q-num-pill">
+                  Soal No. {currentIndex + 1} / {questions.length}
                 </span>
-              {/if}
-            </div>
-
-            <div class="study-card__tools">
-              <!-- Bookmark / Tandai Soal -->
-              <button
-                type="button"
-                class="tool-btn"
-                class:tool-btn--bookmarked={isCurrentBookmarked}
-                onclick={toggleBookmark}
-                title={isCurrentBookmarked ? 'Hapus tanda bintang' : 'Tandai soal ini untuk dipelajari lagi'}
-              >
-                <span>{isCurrentBookmarked ? '★ Ditandai' : '☆ Tandai'}</span>
-              </button>
-
-              <!-- Tombol Pembahasan Toggle -->
-              <button
-                type="button"
-                class="tool-btn tool-btn--explanation"
-                class:tool-btn--active={isCurrentExplanationVisible}
-                onclick={toggleExplanation}
-              >
-                <AdminIcon name="sparkles" size={14} />
-                <span>{isCurrentExplanationVisible ? 'Tutup Pembahasan' : 'Lihat Pembahasan'}</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- TAMPILAN KHUSUS KECERMATAN (BENCHMARK TABLE & POLA TEST) -->
-          {#if isKecermatan}
-            <div class="kecermatan-study-box">
-              <div class="kecermatan-study-box__header">
-                <span class="study-badge">Pola Karakter Acuan Kolom {currentQuestion.columnNumber ?? 1}</span>
-                <span class="study-note">Pilihlah huruf kolom (A, B, C, D, E) yang karakternya TIDAK terdapat pada baris soal</span>
+                {#if currentQuestion.subCategory}
+                  <span class="q-subcat-pill">{currentQuestion.subCategory}</span>
+                {/if}
               </div>
 
-              <!-- Tabel Benchmark Karakter -->
-              <div class="benchmark-grid">
-                {#each currentBenchmark as item}
-                  <div class="benchmark-cell">
-                    <span class="benchmark-char">{item.char}</span>
-                    <span class="benchmark-label">{item.label}</span>
-                  </div>
-                {/each}
+              <div class="question-card__actions">
+                {#if answers[currentIndex] !== undefined}
+                  <button
+                    type="button"
+                    class="btn-action-subtle"
+                    onclick={clearCurrentAnswer}
+                  >
+                    <AdminIcon name="close" size={14} />
+                    <span>Batal Jawab</span>
+                  </button>
+                {/if}
+                <button
+                  type="button"
+                  class="btn-doubt"
+                  class:btn-doubt--active={Boolean(doubts[currentIndex])}
+                  onclick={toggleDoubt}
+                >
+                  <AdminIcon name="flag" size={14} />
+                  <span>{doubts[currentIndex] ? 'Ditandai Ragu-ragu' : 'Ragu-ragu'}</span>
+                </button>
               </div>
+            </div>
 
-              <!-- Baris Soal yang Diuji -->
-              <div class="question-chars-strip">
-                <span class="strip-label">Karakter Yang Muncul:</span>
-                <div class="strip-chars">
-                  {#each currentQuestionChars as char}
-                    <span class="char-box">{char}</span>
+            <!-- Bila Subtes Kecermatan: Tabel Acuan Monokrom -->
+            {#if isKecermatan}
+              <div class="kecermatan-panel">
+                <div class="kecermatan-panel__top">
+                  <span class="kecermatan-panel__tag">
+                    KOLOM {currentQuestion.columnNumber ?? 1}
+                  </span>
+                  <span class="kecermatan-panel__instruction">
+                    Tentukan 1 karakter acuan yang TIDAK ADA pada deret soal di bawah
+                  </span>
+                </div>
+
+                <div class="kecermatan-table">
+                  {#each currentBenchmark as item}
+                    <div class="kecermatan-cell">
+                      <span class="kecermatan-cell__char">{item.char}</span>
+                      <span class="kecermatan-cell__label">{item.label}</span>
+                    </div>
                   {/each}
                 </div>
-              </div>
-            </div>
-          {/if}
 
-          <!-- Teks Pertanyaan / Kasus -->
-          <div class="study-stem">
-            <p>{currentQuestion.stem}</p>
-
-            <!-- Gambar / Diagram (Jika Ada) -->
-            {#if currentQuestion.image}
-              <div class="study-image-wrap">
-                <img
-                  src={currentQuestion.image}
-                  alt="Ilustrasi Soal Nomor {currentIndex + 1}"
-                  class="study-image"
-                  loading="lazy"
-                />
+                <div class="kecermatan-probe">
+                  <span class="kecermatan-probe__label">SOAL:</span>
+                  <div class="kecermatan-probe__boxes">
+                    {#each currentQuestionChars as ch}
+                      <span class="kecermatan-probe__char">{ch}</span>
+                    {/each}
+                  </div>
+                </div>
               </div>
             {/if}
-          </div>
 
-          <!-- DAFTAR OPSI JAWABAN INTERAKTIF -->
-          <div class="study-options" role="radiogroup" aria-label="Pilihan Jawaban">
-            {#each currentQuestion.options as option}
-              {@const isSelected = currentAnswer === option.key}
-              {@const isCorrectKey = option.key === currentQuestion.correctKey}
-              {@const weight = isKepribadian ? getOptionWeight(currentQuestion, option.key) : undefined}
-              {@const revealCorrect = isCurrentExplanationVisible || currentAnswer !== undefined}
+            <!-- Narasi Pertanyaan & Gambar Ilustrasi -->
+            <div class="question-stem">
+              <p class="question-stem__text">{currentQuestion.stem}</p>
 
-              <button
-                type="button"
-                class="option-row"
-                class:option-row--selected={isSelected}
-                class:option-row--correct={revealCorrect && isCorrectKey && !isKepribadian}
-                class:option-row--wrong={revealCorrect && isSelected && !isCorrectKey && !isKepribadian}
-                onclick={() => selectOption(option.key)}
-              >
-                <div class="option-row__indicator">
-                  <span class="option-key">{option.key}</span>
+              {#if currentQuestion.image}
+                <div class="question-stem__figure">
+                  <img
+                    src={currentQuestion.image}
+                    alt="Ilustrasi Soal {currentIndex + 1}"
+                    class="question-stem__img"
+                    loading="lazy"
+                  />
                 </div>
+              {/if}
+            </div>
 
-                <div class="option-row__text">
-                  <span>{option.text}</span>
-                  {#if isKepribadian && weight !== undefined && isCurrentExplanationVisible}
-                    <span class="kepribadian-weight-pill" class:kepribadian-weight-pill--best={weight === 5}>
-                      Bobot Nilai: {weight} dari 5
+            <!-- Opsi Pilihan Jawaban (A - E) Tanpa Kunci & Tanpa Pembahasan -->
+            <div class="options-list" role="radiogroup" aria-label="Pilihan Jawaban">
+              {#each currentQuestion.options as option (option.key)}
+                {@const isSelected = answers[currentIndex] === option.key}
+                <button
+                  type="button"
+                  class="option-btn"
+                  class:option-btn--selected={isSelected}
+                  onclick={() => selectOption(option.key)}
+                  role="radio"
+                  aria-checked={isSelected}
+                >
+                  <span class="option-btn__key">{option.key}</span>
+                  <span class="option-btn__label">{option.text}</span>
+                  {#if isSelected}
+                    <span class="option-btn__check">
+                      <AdminIcon name="check" size={15} />
                     </span>
                   {/if}
-                </div>
+                </button>
+              {/each}
+            </div>
 
-                <div class="option-row__status">
-                  {#if isSelected}
-                    <span class="status-pill status-pill--chosen">Pilihan Anda</span>
-                  {/if}
-                  {#if revealCorrect && isCorrectKey && !isKepribadian}
-                    <span class="status-pill status-pill--key">✓ Kunci Resmi</span>
-                  {/if}
-                </div>
+            <!-- Baris Navigasi Bawah: Sebelumnya & Selanjutnya -->
+            <footer class="question-card__footer">
+              <button
+                type="button"
+                class="btn-nav btn-nav--prev"
+                disabled={currentIndex === 0}
+                onclick={goPrev}
+              >
+                <AdminIcon name="arrow-left" size={16} />
+                <span>Sebelumnya</span>
+              </button>
+
+              <span class="keyboard-hint">
+                Pintasan: Tombol <strong>A–E</strong> untuk memilih • Panah <strong>← / →</strong> untuk navigasi
+              </span>
+
+              {#if currentIndex < questions.length - 1}
+                <button
+                  type="button"
+                  class="btn-nav btn-nav--next"
+                  onclick={goNext}
+                >
+                  <span>Selanjutnya</span>
+                  <AdminIcon name="arrow-right" size={16} />
+                </button>
+              {:else}
+                <button
+                  type="button"
+                  class="btn-nav btn-nav--finish"
+                  onclick={requestFinish}
+                >
+                  <AdminIcon name="check" size={16} />
+                  <span>Selesaikan Ujian</span>
+                </button>
+              {/if}
+            </footer>
+          </article>
+        {/if}
+      </main>
+
+      <!-- AREA KANAN: DAFTAR NOMOR SOAL (PALET NAVIGASI) -->
+      <aside class="palette-pane">
+        <div class="palette-card">
+          <div class="palette-card__header">
+            <h2 class="palette-card__title">Daftar Nomor Soal</h2>
+            <span class="palette-card__badge">{answeredCount}/{questions.length}</span>
+          </div>
+
+          <!-- Ringkasan Status Pengerjaan -->
+          <div class="palette-stats">
+            <div class="palette-stat palette-stat--answered">
+              <span class="palette-stat__val">{answeredCount}</span>
+              <span class="palette-stat__lbl">Dijawab</span>
+            </div>
+            <div class="palette-stat palette-stat--doubt">
+              <span class="palette-stat__val">{doubtCount}</span>
+              <span class="palette-stat__lbl">Ragu</span>
+            </div>
+            <div class="palette-stat palette-stat--empty">
+              <span class="palette-stat__val">{unansweredCount}</span>
+              <span class="palette-stat__lbl">Kosong</span>
+            </div>
+          </div>
+
+          <div class="palette-progress">
+            <div class="palette-progress__bar" style="width: {progressPercent}%"></div>
+          </div>
+
+          <!-- Grid Nomor Soal -->
+          <div class="palette-numbers">
+            {#each questions as q, idx (q.id)}
+              {@const isCurrent = idx === currentIndex}
+              {@const isAnswered = answers[idx] !== undefined}
+              {@const isDoubt = Boolean(doubts[idx])}
+              <button
+                type="button"
+                class="num-btn"
+                class:num-btn--current={isCurrent}
+                class:num-btn--answered={isAnswered && !isDoubt}
+                class:num-btn--doubt={isDoubt}
+                onclick={() => goToQuestion(idx)}
+                title="Soal Nomor {idx + 1}{answers[idx] ? ` (Dijawab: ${answers[idx]})` : ''}"
+              >
+                <span class="num-btn__idx">{idx + 1}</span>
+                {#if answers[idx]}
+                  <span class="num-btn__ans">{answers[idx]}</span>
+                {/if}
               </button>
             {/each}
           </div>
 
-          <!-- KOTAK PEMBAHASAN MENDALAM (IN-DEPTH EXPLANATION) -->
-          {#if isCurrentExplanationVisible}
-            <div class="explanation-box" role="region" aria-label="Pembahasan Soal">
-              <div class="explanation-box__header">
-                <div class="explanation-box__title">
-                  <AdminIcon name="sparkles" size={18} />
-                  <strong>Pembahasan &amp; Bedah Materi Soal</strong>
-                </div>
-                <div class="explanation-box__key">
-                  {#if isKepribadian}
-                    <span class="key-label">Respons Ideal:</span>
-                    <strong class="key-val">{currentQuestion.correctKey} (Bobot 5)</strong>
-                  {:else}
-                    <span class="key-label">Kunci Jawaban Resmi:</span>
-                    <strong class="key-val">{currentQuestion.correctKey}</strong>
-                  {/if}
-                </div>
-              </div>
+          <div class="palette-legend">
+            <span class="legend-chip"><i class="dot dot--answered"></i> Terjawab</span>
+            <span class="legend-chip"><i class="dot dot--doubt"></i> Ragu-ragu</span>
+            <span class="legend-chip"><i class="dot dot--empty"></i> Belum</span>
+          </div>
 
-              <div class="explanation-box__body">
-                <p>{currentQuestion.explanation}</p>
+          <button
+            type="button"
+            class="btn-submit-all"
+            onclick={requestFinish}
+          >
+            <AdminIcon name="check" size={16} />
+            <span>Selesaikan &amp; Lihat Hasil</span>
+          </button>
+        </div>
+      </aside>
+    </div>
 
-                {#if isKepribadian && currentQuestion.dimension}
-                  <div class="explanation-aspect-note">
-                    <span class="aspect-label">Aspek Kompetensi:</span>
-                    <strong>{currentQuestion.dimension}</strong>
-                    <p class="aspect-desc">
-                      Pernyataan ini menilai kematangan mental calon perwira Polri dalam menerapkan etika profesi, objektivitas hukum, dan keteladanan kepemimpinan.
-                    </p>
-                  </div>
-                {/if}
-              </div>
-            </div>
-          {/if}
-
-          <!-- FOOTER NAVIGASI SOAL -->
-          <footer class="study-card__footer">
+    <!-- MODAL KONFIRMASI SELESAI MENGERJAKAN -->
+    {#if confirmFinishModal}
+      <div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="finish-modal-title">
+        <div class="modal-dialog">
+          <div class="modal-dialog__icon">
+            <AdminIcon name="award" size={26} />
+          </div>
+          <h3 id="finish-modal-title" class="modal-dialog__title">
+            Selesaikan Pretest Sekarang?
+          </h3>
+          <p class="modal-dialog__desc">
+            Anda telah menjawab <strong>{answeredCount}</strong> dari <strong>{questions.length}</strong> butir soal.
+            {#if unansweredCount > 0}
+              Masih terdapat <strong>{unansweredCount} soal</strong> yang belum dijawab.
+            {/if}
+            {#if doubtCount > 0}
+              Terdapat <strong>{doubtCount} soal</strong> yang ditandai ragu-ragu.
+            {/if}
+          </p>
+          <div class="modal-dialog__actions">
             <button
-              class="button button--secondary"
               type="button"
-              disabled={currentIndex === 0}
-              onclick={prevQuestion}
+              class="btn-modal-cancel"
+              onclick={() => (confirmFinishModal = false)}
             >
-              <AdminIcon name="chevron" size={16} />
-              <span>Soal Sebelumnya</span>
+              Kembali Periksa Soal
             </button>
-
-            <div class="shortcut-tip">
-              Gunakan tombol <b>A–E</b> untuk menjawab • Panah <b>←/→</b> untuk berpindah
-            </div>
-
             <button
-              class="button button--primary"
               type="button"
-              disabled={currentIndex === filteredQuestions.length - 1}
-              onclick={nextQuestion}
+              class="btn-modal-confirm"
+              onclick={confirmFinishExam}
             >
-              <span>Soal Selanjutnya</span>
-              <AdminIcon name="arrow-right" size={16} />
+              <AdminIcon name="check" size={16} />
+              <span>Ya, Selesaikan &amp; Lihat Rekapan</span>
             </button>
-          </footer>
-        </article>
-      {/if}
-    </main>
+          </div>
+        </div>
+      </div>
+    {/if}
+  {:else if viewState === 'result'}
+    <!-- ===================================================================== -->
+    <!-- TAHAP 3: HASIL REKAPAN UJIAN PRETEST CAT                              -->
+    <!-- ===================================================================== -->
+    <header class="exam-topbar">
+      <div class="exam-topbar__left">
+        <button
+          type="button"
+          class="btn-back"
+          onclick={backToSelection}
+        >
+          <AdminIcon name="arrow-left" size={16} />
+          <span>Kembali ke Daftar Pretest</span>
+        </button>
+        <div class="exam-topbar__divider"></div>
+        <div class="exam-topbar__titles">
+          <h1 class="exam-topbar__title">Hasil Rekapan Ujian: {currentPacket.title}</h1>
+          <p class="exam-topbar__subtitle">Evaluasi akhir pengerjaan dan ulasan jawaban</p>
+        </div>
+      </div>
 
-    <!-- KOLOM KANAN: PALET SOAL & PROGRES BELAJAR -->
-    <aside class="sidebar-column">
-      <div class="sidebar-card">
-        <div class="sidebar-card__header">
-          <h2 class="sidebar-card__title">Palet Soal Pembelajaran</h2>
-          <span class="palette-counter">
-            {studiedBaseCount} / {totalBaseQuestions} Dipelajari
+      <div class="exam-topbar__right">
+        <button
+          type="button"
+          class="btn-restart"
+          onclick={() => startTest(activePacketId)}
+        >
+          <AdminIcon name="refresh" size={16} />
+          <span>Ulangi Tes Ini</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- KARTU UTAMA SKOR AKHIR & STATUS KELULUSAN -->
+    <section class="recap-hero" class:recap-hero--pass={isPassed} class:recap-hero--fail={!isPassed}>
+      <div class="recap-hero__left">
+        <div class="recap-hero__badge-row">
+          <span class="recap-eyebrow">
+            <AdminIcon name="award" size={14} />
+            <span>REKAPAN NILAI PRETEST CAT POLRI</span>
+          </span>
+          <span class="verdict-pill" class:verdict-pill--pass={isPassed} class:verdict-pill--fail={!isPassed}>
+            {isPassed ? 'MEMENUHI SYARAT (MS)' : 'BELUM MEMENUHI SYARAT (TMS)'}
           </span>
         </div>
 
-        <!-- Progres Bar Pembelajaran -->
-        <div class="progress-wrap">
-          <div class="progress-bar">
-            <div
-              class="progress-bar__fill"
-              style="width: {studiedProgressPercent}%"
-            ></div>
-          </div>
-          <div class="progress-text">
-            <span>Kemajuan Belajar</span>
-            <strong>{studiedProgressPercent}%</strong>
+        <div class="recap-score-box">
+          <span class="recap-score-box__val">{finalScore.toFixed(2)}</span>
+          <div class="recap-score-box__meta">
+            <span class="recap-score-box__max">Skala 100.00</span>
+            <span class="recap-score-box__pass">Ambang Batas Minimal: 61.00</span>
           </div>
         </div>
 
-        <!-- Legenda Palet -->
-        <div class="palette-legend">
-          <span class="legend-item"><i class="legend-dot legend-dot--studied"></i> Terjawab</span>
-          <span class="legend-item"><i class="legend-dot legend-dot--unstudied"></i> Belum</span>
-          <span class="legend-item"><i class="legend-dot legend-dot--bookmarked"></i> Ditandai</span>
+        <p class="recap-hero__summary">
+          {psikotesResult.isPsikotes
+            ? psikotesResult.summaryExplanation
+            : isPassed
+              ? 'Selamat! Akumulasi nilai Anda telah melampaui ambang batas minimal kelulusan standar seleksi CAT Polri.'
+              : 'Nilai Anda masih berada di bawah ambang batas minimal 61.00. Tinjau kembali rekapan jawaban di bawah untuk memperkuat penguasaan materi.'}
+        </p>
+      </div>
+
+      <!-- Statistik Ringkas -->
+      <div class="recap-metrics">
+        <div class="metric-box">
+          <span class="metric-box__label">Total Soal</span>
+          <strong class="metric-box__val">{questions.length}</strong>
+        </div>
+        <div class="metric-box">
+          <span class="metric-box__label">Terjawab</span>
+          <strong class="metric-box__val">{answeredCount}</strong>
+        </div>
+        {#if psikotesResult.kepribadian && !psikotesResult.isMixed}
+          <div class="metric-box metric-box--success">
+            <span class="metric-box__label">Total Poin Sikap</span>
+            <strong class="metric-box__val">
+              {psikotesResult.kepribadian.totalScoreEarned} / {psikotesResult.kepribadian.maxPossibleScore}
+            </strong>
+          </div>
+          <div class="metric-box">
+            <span class="metric-box__label">Rata-rata Bobot</span>
+            <strong class="metric-box__val">{psikotesResult.kepribadian.averageWeight.toFixed(2)} / 5.00</strong>
+          </div>
+        {:else}
+          <div class="metric-box metric-box--success">
+            <span class="metric-box__label">Jawaban Benar</span>
+            <strong class="metric-box__val">{correctCount}</strong>
+          </div>
+          <div class="metric-box metric-box--danger">
+            <span class="metric-box__label">Salah / Kosong</span>
+            <strong class="metric-box__val">{questions.length - correctCount}</strong>
+          </div>
+        {/if}
+      </div>
+    </section>
+
+    <!-- RINCIAN REKAPAN JAWABAN PER SOAL -->
+    <section class="review-section">
+      <div class="review-section__header">
+        <div>
+          <h2 class="review-section__title">Rincian Jawaban &amp; Evaluasi</h2>
+          <p class="review-section__subtitle">
+            Periksa kembali setiap butir soal beserta jawaban yang Anda pilih dan kunci pembahasannya
+          </p>
         </div>
 
-        <!-- Grid Tombol Nomor Soal -->
-        <div class="palette-grid">
-          {#each filteredQuestions as q, idx (q.id)}
-            {@const isAnswered = userAnswers[q.id] !== undefined}
-            {@const isMarked = Boolean(bookmarkedIds[q.id])}
-            {@const isActive = idx === currentIndex}
-
-            <button
-              type="button"
-              class="palette-btn"
-              class:palette-btn--active={isActive}
-              class:palette-btn--studied={isAnswered}
-              class:palette-btn--bookmarked={isMarked}
-              onclick={() => goToQuestion(idx)}
-              title="Soal {idx + 1}: {q.subCategory ?? ''} ({isAnswered ? 'Sudah Dipelajari' : 'Belum Dipelajari'})"
-            >
-              {idx + 1}
-            </button>
-          {/each}
-        </div>
-
-        <!-- Reset Progres Belajar -->
-        <div class="sidebar-actions">
+        <div class="review-filters">
           <button
             type="button"
-            class="button-text-danger"
-            onclick={resetProgress}
+            class="filter-pill"
+            class:filter-pill--active={reviewFilter === 'ALL'}
+            onclick={() => (reviewFilter = 'ALL')}
           >
-            Bersihkan Progres Belajar Modul Ini
+            Semua ({questions.length})
+          </button>
+          <button
+            type="button"
+            class="filter-pill"
+            class:filter-pill--active={reviewFilter === 'CORRECT'}
+            onclick={() => (reviewFilter = 'CORRECT')}
+          >
+            Tepat ({correctCount})
+          </button>
+          <button
+            type="button"
+            class="filter-pill"
+            class:filter-pill--active={reviewFilter === 'WRONG'}
+            onclick={() => (reviewFilter = 'WRONG')}
+          >
+            Perlu Evaluasi ({questions.length - correctCount})
           </button>
         </div>
       </div>
 
-      <!-- KARTU INFORMASI PERBEDAAN PRETEST & TES CAT -->
-      <div class="info-guide-card">
-        <div class="info-guide-card__head">
-          <AdminIcon name="shield" size={18} />
-          <strong>Panduan Belajar CAT Polri</strong>
-        </div>
-        <ul class="info-guide-list">
-          <li><b>Pretest CAT:</b> Bebas belajar tanpa batas waktu, ulas pembahasan lengkap, dan pelajari pola trik jawaban.</li>
-          <li><b>TES CAT:</b> Simulasi riil CAT Polri dengan timer dinas resmi, sistem gugur, dan penilaian passing grade MS/TMS.</li>
-        </ul>
-        <a class="button button--secondary button--full" href="/exam">
-          Buka Simulasi Ujian CAT →
-        </a>
+      <div class="review-list">
+        {#each filteredReviewItems as item (item.question.id)}
+          <article class="review-item" class:review-item--correct={item.isCorrect} class:review-item--wrong={!item.isCorrect}>
+            <div class="review-item__head">
+              <div class="review-item__badges">
+                <span class="review-item__num">Soal #{item.index + 1}</span>
+                {#if item.question.subCategory}
+                  <span class="review-item__cat">{item.question.subCategory}</span>
+                {/if}
+              </div>
+
+              <div class="review-item__verdict">
+                {#if item.question.subtest === 'KEPRIBADIAN'}
+                  <span class="verdict-tag" class:verdict-tag--ok={item.weight === 5} class:verdict-tag--warn={item.weight !== 5}>
+                    {item.userKey
+                      ? `Jawaban Anda: ${item.userKey} (Bobot ${item.weight ?? 0}/5)`
+                      : 'Tidak Dijawab (0 Poin)'}
+                  </span>
+                {:else}
+                  <span class="verdict-tag" class:verdict-tag--ok={item.isCorrect} class:verdict-tag--warn={!item.isCorrect}>
+                    {item.isCorrect
+                      ? `Benar (${item.userKey})`
+                      : item.userKey
+                        ? `Salah (Dijawab: ${item.userKey} • Kunci: ${item.question.correctKey})`
+                        : `Kosong (Kunci: ${item.question.correctKey})`}
+                  </span>
+                {/if}
+              </div>
+            </div>
+
+            <p class="review-item__stem">{item.question.stem}</p>
+
+            <div class="review-item__options">
+              {#each item.question.options as opt (opt.key)}
+                {@const isUserChoice = item.userKey === opt.key}
+                {@const isKey = item.question.correctKey === opt.key}
+                <div
+                  class="review-opt"
+                  class:review-opt--key={isKey}
+                  class:review-opt--user-wrong={isUserChoice && !isKey}
+                >
+                  <span class="review-opt__key">{opt.key}</span>
+                  <span class="review-opt__text">{opt.text}</span>
+                  {#if isKey}
+                    <span class="review-opt__badge review-opt__badge--key">Kunci Utama</span>
+                  {:else if isUserChoice}
+                    <span class="review-opt__badge review-opt__badge--user">Pilihan Anda</span>
+                  {/if}
+                </div>
+              {/each}
+            </div>
+
+            <div class="review-item__explanation">
+              <strong>Evaluasi:</strong> {item.question.explanation}
+            </div>
+          </article>
+        {/each}
       </div>
-    </aside>
-  </div>
+    </section>
+  {/if}
 </div>
 
 <style>
-  /* Root Container */
-  .bank-page {
+  .pretest-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5, 1.25rem);
+    gap: 1.5rem;
     width: 100%;
     max-width: 1240px;
     margin: 0 auto;
-    padding-bottom: 3rem;
+    padding-bottom: 3.5rem;
   }
 
-  /* 1. Hero & Banner */
-  .bank-hero {
+  /* =========================================================================
+   * TAHAP 1: SELECTION SCREEN (CARD-CARD TES)
+   * ========================================================================= */
+  .selection-header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4, 1rem);
+    gap: 0.55rem;
+    padding: 1.5rem 1.75rem;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   }
 
-  .bank-hero__main {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .bank-hero__badge-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .hub-badge {
+  .selection-header__eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.65rem;
+    gap: 0.45rem;
+    width: fit-content;
+    padding: 0.3rem 0.7rem;
     border-radius: 999px;
+    background: rgba(2, 132, 199, 0.1);
+    color: #0284c7;
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
-  .hub-badge--primary {
-    background: rgba(14, 116, 144, 0.12);
-    color: #0891b2;
-    border: 1px solid rgba(14, 116, 144, 0.25);
-  }
-
-  :global([data-theme='dark']) .hub-badge--primary {
-    background: rgba(6, 182, 212, 0.15);
-    color: #38bdf8;
-    border-color: rgba(6, 182, 212, 0.3);
-  }
-
-  .hub-badge--outline {
-    background: var(--color-surface, #f8fafc);
-    color: var(--color-text-muted, #64748b);
-    border: 1px solid var(--color-border, #e2e8f0);
-  }
-
-  .bank-hero__title {
+  .selection-header__title {
     margin: 0;
-    font-size: clamp(1.5rem, 3.5vw, 2.15rem);
+    font-size: clamp(1.45rem, 3vw, 2rem);
     font-weight: 800;
     color: var(--color-text, #0f172a);
     letter-spacing: -0.02em;
   }
 
-  .bank-hero__desc {
+  .selection-header__subtitle {
     margin: 0;
     max-width: 78ch;
-    font-size: var(--text-sm, 0.925rem);
+    font-size: 0.925rem;
     line-height: 1.6;
     color: var(--color-text-muted, #475569);
   }
 
-  /* Exam CTA Card */
-  .exam-cta-card {
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .test-card {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 1rem;
-    padding: 1.1rem 1.4rem;
-    border-radius: var(--radius-lg, 12px);
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(14, 116, 144, 0.08) 100%);
-    border: 1px solid rgba(14, 116, 144, 0.2);
-  }
-
-  :global([data-theme='dark']) .exam-cta-card {
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(14, 116, 144, 0.2) 100%);
-    border-color: rgba(56, 189, 248, 0.25);
-  }
-
-  .exam-cta-card__content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    max-width: 75ch;
-  }
-
-  .exam-cta-card__icon {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: #0284c7;
-    color: #ffffff;
-    flex-shrink: 0;
-  }
-
-  .exam-cta-card__text strong {
-    display: block;
-    font-size: 0.95rem;
-    color: var(--color-text, #0f172a);
-    margin-bottom: 0.2rem;
-  }
-
-  .exam-cta-card__text p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--color-text-muted, #475569);
-    line-height: 1.45;
-  }
-
-  .exam-cta-button {
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.65rem 1.1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-
-  /* 2. Module Nav Tabs */
-  .module-nav {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.65rem;
-  }
-
-  .module-nav__tab {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 1rem;
-    background: var(--color-surface, #ffffff);
-    border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-md, 10px);
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.18s ease;
-  }
-
-  .module-nav__tab:hover {
-    border-color: #0284c7;
-    background: var(--color-surface-hover, #f8fafc);
-  }
-
-  .module-nav__tab--active {
-    border-color: #0284c7;
-    background: rgba(2, 132, 199, 0.08);
-    box-shadow: 0 0 0 1px #0284c7;
-  }
-
-  :global([data-theme='dark']) .module-nav__tab--active {
-    background: rgba(2, 132, 199, 0.18);
-  }
-
-  .module-nav__icon {
-    font-size: 1.5rem;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .module-nav__meta {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  .module-nav__title {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--color-text, #0f172a);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .module-nav__sub {
-    font-size: 0.75rem;
-    color: var(--color-text-muted, #64748b);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* 3. Filter Panel */
-  .filter-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding: 1rem 1.25rem;
-    background: var(--color-surface, #ffffff);
-    border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-lg, 12px);
-  }
-
-  .filter-panel__top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.85rem;
-  }
-
-  .search-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex: 1;
-    min-width: 240px;
-    background: var(--color-bg, #f1f5f9);
-    border: 1px solid var(--color-border, #cbd5e1);
-    border-radius: var(--radius-md, 8px);
-    padding: 0 0.75rem;
-    color: var(--color-text-muted, #64748b);
-  }
-
-  .search-input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 0.55rem 0.5rem;
-    font-size: 0.875rem;
-    color: var(--color-text, #0f172a);
-    outline: none;
-  }
-
-  .search-clear {
-    border: none;
-    background: transparent;
-    font-size: 1.15rem;
-    cursor: pointer;
-    color: var(--color-text-muted, #64748b);
-    padding: 0 0.25rem;
-  }
-
-  .filter-group {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .filter-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-text-muted, #64748b);
-    white-space: nowrap;
-  }
-
-  .filter-select {
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--color-border, #cbd5e1);
-    background: var(--color-surface, #ffffff);
-    color: var(--color-text, #0f172a);
-    font-size: 0.825rem;
-    font-weight: 500;
-    cursor: pointer;
-    outline: none;
-  }
-
-  /* Toggle Control */
-  .toggle-control {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    user-select: none;
-    margin-left: auto;
-  }
-
-  .toggle-control input {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .toggle-slider {
-    position: relative;
-    width: 36px;
-    height: 20px;
-    background-color: var(--color-border, #cbd5e1);
-    border-radius: 20px;
-    transition: background-color 0.2s ease;
-  }
-
-  .toggle-slider::before {
-    content: '';
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-  }
-
-  .toggle-control input:checked + .toggle-slider {
-    background-color: #0284c7;
-  }
-
-  .toggle-control input:checked + .toggle-slider::before {
-    transform: translateX(16px);
-  }
-
-  .toggle-text {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-text, #0f172a);
-  }
-
-  /* Subcategory Chips */
-  .subcategory-chips {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.45rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--color-border, #f1f5f9);
-  }
-
-  .chips-label {
-    font-size: 0.775rem;
-    font-weight: 700;
-    color: var(--color-text-muted, #64748b);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    margin-right: 0.25rem;
-  }
-
-  .chip {
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    background: var(--color-bg, #f8fafc);
-    border: 1px solid var(--color-border, #e2e8f0);
-    color: var(--color-text, #334155);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .chip:hover {
-    border-color: #0284c7;
-    color: #0284c7;
-  }
-
-  .chip--active {
-    background: #0284c7;
-    border-color: #0284c7;
-    color: #ffffff;
-    font-weight: 600;
-  }
-
-  .chip-count {
-    opacity: 0.8;
-    font-size: 0.725rem;
-  }
-
-  /* 4. Bank Grid Layout */
-  .bank-grid {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: var(--space-5, 1.25rem);
-    align-items: start;
-  }
-
-  @media (max-width: 960px) {
-    .bank-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Question Column & Study Card */
-  .question-column {
-    min-width: 0;
-  }
-
-  .study-card {
-    display: flex;
-    flex-direction: column;
     gap: 1.25rem;
     padding: 1.5rem;
     background: var(--color-surface, #ffffff);
     border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-lg, 14px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   }
 
-  .study-card__header {
+  .test-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
+    border-color: #0284c7;
+  }
+
+  .test-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .test-card__icon-box {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .test-card__icon-box--indigo {
+    background: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+  }
+
+  .test-card__icon-box--emerald {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+  }
+
+  .test-card__icon-box--amber {
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+  }
+
+  .test-card__icon-box--sky {
+    background: rgba(2, 132, 199, 0.1);
+    color: #0284c7;
+  }
+
+  .test-card__icon-box--blue {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+  }
+
+  .test-card__icon-box--slate {
+    background: rgba(15, 23, 42, 0.08);
+    color: var(--color-text, #0f172a);
+  }
+
+  .test-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .test-card__cat-tag {
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    background: var(--color-bg, #f1f5f9);
+    color: var(--color-text-muted, #475569);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .test-card__count-tag {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(2, 132, 199, 0.1);
+    color: #0284c7;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .test-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .test-card__title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text, #0f172a);
+    line-height: 1.35;
+  }
+
+  .test-card__desc {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--color-text-muted, #475569);
+  }
+
+  .test-card__highlights {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0.75rem 0 0;
+    border-top: 1px solid var(--color-border, #f1f5f9);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.45rem 0.75rem;
+  }
+
+  .test-card__highlights li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text, #334155);
+  }
+
+  .test-card__highlights li :global(svg) {
+    color: #10b981;
+    flex-shrink: 0;
+  }
+
+  .test-card__footer {
+    padding-top: 0.5rem;
+  }
+
+  .btn-start-test {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.15rem;
+    border-radius: 10px;
+    border: none;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  .btn-start-test:hover {
+    background: #0284c7;
+  }
+
+  :global([data-theme='dark']) .btn-start-test {
+    background: #0284c7;
+  }
+
+  :global([data-theme='dark']) .btn-start-test:hover {
+    background: #0369a1;
+  }
+
+  /* =========================================================================
+   * TAHAP 2: WORKSPACE PENGERJAAN SOAL
+   * ========================================================================= */
+  .exam-topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .exam-topbar__left {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 9px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-bg, #f8fafc);
+    color: var(--color-text, #0f172a);
+    font-size: 0.825rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .btn-back:hover {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: rgba(2, 132, 199, 0.06);
+  }
+
+  .exam-topbar__divider {
+    width: 1px;
+    height: 28px;
+    background: var(--color-border, #e2e8f0);
+    flex-shrink: 0;
+  }
+
+  .exam-topbar__titles {
+    min-width: 0;
+  }
+
+  .exam-topbar__title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--color-text, #0f172a);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .exam-topbar__subtitle {
+    margin: 0.15rem 0 0;
+    font-size: 0.78rem;
+    color: var(--color-text-muted, #64748b);
+  }
+
+  .exam-topbar__right {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .mode-switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-surface, #ffffff);
+    color: var(--color-text, #334155);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .mode-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+  }
+
+  .mode-dot--active {
+    background: #10b981;
+  }
+
+  .btn-finish-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 9px;
+    border: none;
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 0.825rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .btn-finish-top:hover {
+    background: #0369a1;
+  }
+
+  /* Grid 2 Kolom: Kiri Soal, Kanan Daftar Nomor */
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .workspace-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .question-pane {
+    min-width: 0;
+  }
+
+  .question-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    padding: 1.65rem;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  }
+
+  .question-card__head {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding-bottom: 0.85rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid var(--color-border, #f1f5f9);
   }
 
-  .study-card__meta {
+  .question-card__badges {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .q-number-badge {
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius-md, 8px);
+  .q-num-pill {
+    padding: 0.35rem 0.8rem;
+    border-radius: 8px;
     background: #0f172a;
     color: #ffffff;
     font-size: 0.85rem;
     font-weight: 700;
   }
 
-  :global([data-theme='dark']) .q-number-badge {
-    background: #1e293b;
-    border: 1px solid #334155;
+  :global([data-theme='dark']) .q-num-pill {
+    background: #0284c7;
   }
 
-  .q-tag-subcat {
-    padding: 0.3rem 0.65rem;
+  .q-subcat-pill {
+    padding: 0.3rem 0.7rem;
     border-radius: 999px;
     background: rgba(2, 132, 199, 0.1);
     color: #0284c7;
-    font-size: 0.775rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 700;
   }
 
-  .q-tag-diff {
-    padding: 0.3rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.775rem;
-    font-weight: 600;
-  }
-
-  .q-tag-diff--easy {
-    background: rgba(16, 185, 129, 0.12);
-    color: #059669;
-  }
-
-  .q-tag-diff--medium {
-    background: rgba(245, 158, 11, 0.12);
-    color: #d97706;
-  }
-
-  .q-tag-diff--hard {
-    background: rgba(239, 68, 68, 0.12);
-    color: #dc2626;
-  }
-
-  .study-card__tools {
+  .question-card__actions {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .tool-btn {
+  .btn-action-subtle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: transparent;
+    color: var(--color-text-muted, #64748b);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-action-subtle:hover {
+    color: #dc2626;
+    border-color: #fca5a5;
+  }
+
+  .btn-doubt {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     padding: 0.4rem 0.75rem;
-    border-radius: var(--radius-md, 8px);
-    font-size: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-bg, #f8fafc);
+    color: var(--color-text, #334155);
+    font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
-    background: var(--color-bg, #f8fafc);
-    border: 1px solid var(--color-border, #cbd5e1);
-    color: var(--color-text, #334155);
     transition: all 0.15s ease;
   }
 
-  .tool-btn:hover {
-    border-color: #0284c7;
-    color: #0284c7;
-  }
-
-  .tool-btn--bookmarked {
+  .btn-doubt--active {
     background: rgba(245, 158, 11, 0.15);
     border-color: #f59e0b;
-    color: #d97706;
+    color: #b45309;
   }
 
-  .tool-btn--explanation {
-    background: rgba(14, 116, 144, 0.08);
-    border-color: rgba(14, 116, 144, 0.25);
-    color: #0891b2;
-  }
-
-  .tool-btn--explanation.tool-btn--active {
-    background: #0891b2;
-    border-color: #0891b2;
-    color: #ffffff;
-  }
-
-  /* Kecermatan Box */
-  .kecermatan-study-box {
+  /* Kecermatan Panel */
+  .kecermatan-panel {
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
     padding: 1.15rem;
     background: #ffffff;
     color: #000000;
-    border: 2px solid #000000;
-    border-radius: var(--radius-md, 10px);
+    border: 2px solid #0f172a;
+    border-radius: 12px;
   }
 
-  .kecermatan-study-box__header {
+  .kecermatan-panel__top {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
-  .study-badge {
-    font-size: 0.8rem;
+  .kecermatan-panel__tag {
+    padding: 0.2rem 0.6rem;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.75rem;
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    border-radius: 4px;
   }
 
-  .study-note {
-    font-size: 0.775rem;
-    color: #555555;
+  .kecermatan-panel__instruction {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #334155;
   }
 
-  .benchmark-grid {
+  .kecermatan-table {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     border: 2px solid #000000;
     text-align: center;
   }
 
-  .benchmark-cell {
+  .kecermatan-cell {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #000000;
   }
 
-  .benchmark-cell:last-child {
+  .kecermatan-cell:last-child {
     border-right: none;
   }
 
-  .benchmark-char {
-    padding: 0.5rem 0.25rem;
-    font-size: 1.35rem;
+  .kecermatan-cell__char {
+    padding: 0.55rem 0.25rem;
+    font-size: 1.4rem;
     font-weight: 800;
     font-family: monospace;
-    border-bottom: 1px solid #000000;
     background: #f8fafc;
+    border-bottom: 1px solid #000000;
   }
 
-  .benchmark-label {
+  .kecermatan-cell__label {
     padding: 0.35rem 0.25rem;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 800;
-    background: #000000;
+    background: #0f172a;
     color: #ffffff;
   }
 
-  .question-chars-strip {
+  .kecermatan-probe {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
+    gap: 0.85rem;
+    padding: 0.75rem 1rem;
     background: #f1f5f9;
     border-radius: 8px;
   }
 
-  .strip-label {
-    font-size: 0.825rem;
-    font-weight: 700;
-    color: #000000;
+  .kecermatan-probe__label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #0f172a;
   }
 
-  .strip-chars {
+  .kecermatan-probe__boxes {
     display: flex;
     gap: 0.5rem;
   }
 
-  .char-box {
-    display: inline-grid;
+  .kecermatan-probe__char {
+    display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     background: #ffffff;
-    border: 2px solid #000000;
+    border: 2px solid #0f172a;
     border-radius: 6px;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 800;
     font-family: monospace;
   }
 
-  /* Stem */
-  .study-stem {
+  /* Narasi Soal */
+  .question-stem {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    font-size: clamp(1rem, 1.8vw, 1.125rem);
-    line-height: 1.65;
-    color: var(--color-text, #0f172a);
-    font-weight: 500;
   }
 
-  .study-image-wrap {
-    max-width: 520px;
-    border-radius: var(--radius-md, 10px);
+  .question-stem__text {
+    margin: 0;
+    font-size: clamp(1rem, 1.6vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-text, #0f172a);
+    font-weight: 500;
+    text-align: justify;
+  }
+
+  .question-stem__figure {
+    max-width: 500px;
+    border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--color-border, #cbd5e1);
     background: #ffffff;
+    padding: 0.5rem;
   }
 
-  .study-image {
+  .question-stem__img {
     display: block;
     width: 100%;
     height: auto;
     object-fit: contain;
   }
 
-  /* Options */
-  .study-options {
+  /* Opsi Jawaban */
+  .options-list {
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
   }
 
-  .option-row {
+  .option-btn {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.9rem;
+    width: 100%;
     padding: 0.9rem 1.15rem;
-    border-radius: var(--radius-md, 10px);
-    background: var(--color-surface, #ffffff);
+    border-radius: 12px;
     border: 1.5px solid var(--color-border, #e2e8f0);
-    cursor: pointer;
+    background: var(--color-surface, #ffffff);
+    color: var(--color-text, #0f172a);
     text-align: left;
-    transition: all 0.15s ease;
+    cursor: pointer;
+    transition: all 0.14s ease;
   }
 
-  .option-row:hover {
+  .option-btn:hover {
     border-color: #0284c7;
-    background: var(--color-surface-hover, #f8fafc);
+    background: rgba(2, 132, 199, 0.04);
   }
 
-  .option-row--selected {
+  .option-btn--selected {
     border-color: #0284c7;
-    background: rgba(2, 132, 199, 0.08);
+    background: rgba(2, 132, 199, 0.1);
+    box-shadow: 0 0 0 1px #0284c7;
   }
 
-  .option-row--correct {
-    border-color: #10b981;
-    background: rgba(16, 185, 129, 0.08);
-  }
-
-  .option-row--wrong {
-    border-color: #f59e0b;
-    background: rgba(245, 158, 11, 0.08);
-  }
-
-  .option-row__indicator {
-    flex-shrink: 0;
-  }
-
-  .option-key {
+  .option-btn__key {
     display: grid;
     place-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
     background: var(--color-bg, #f1f5f9);
     border: 1px solid var(--color-border, #cbd5e1);
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--color-text, #0f172a);
-  }
-
-  .option-row--selected .option-key {
-    background: #0284c7;
-    color: #ffffff;
-    border-color: #0284c7;
-  }
-
-  .option-row--correct .option-key {
-    background: #10b981;
-    color: #ffffff;
-    border-color: #10b981;
-  }
-
-  .option-row__text {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--color-text, #0f172a);
-  }
-
-  .kepribadian-weight-pill {
-    display: inline-block;
-    width: fit-content;
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    background: var(--color-bg, #f1f5f9);
-    color: var(--color-text-muted, #475569);
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  .kepribadian-weight-pill--best {
-    background: rgba(16, 185, 129, 0.15);
-    color: #059669;
-    font-weight: 700;
-  }
-
-  .option-row__status {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
     flex-shrink: 0;
   }
 
-  .status-pill {
-    padding: 0.25rem 0.55rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 700;
+  .option-btn--selected .option-btn__key {
+    background: #0284c7;
+    border-color: #0284c7;
+    color: #ffffff;
   }
 
-  .status-pill--chosen {
-    background: rgba(2, 132, 199, 0.15);
-    color: #0284c7;
-  }
-
-  .status-pill--key {
-    background: rgba(16, 185, 129, 0.15);
-    color: #059669;
-  }
-
-  /* Explanation Box */
-  .explanation-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding: 1.25rem;
-    border-radius: var(--radius-md, 10px);
-    background: rgba(14, 116, 144, 0.05);
-    border: 1px solid rgba(14, 116, 144, 0.25);
-  }
-
-  :global([data-theme='dark']) .explanation-box {
-    background: rgba(14, 116, 144, 0.15);
-    border-color: rgba(56, 189, 248, 0.25);
-  }
-
-  .explanation-box__header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding-bottom: 0.65rem;
-    border-bottom: 1px solid rgba(14, 116, 144, 0.15);
-  }
-
-  .explanation-box__title {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    color: #0891b2;
+  .option-btn__label {
+    flex: 1;
     font-size: 0.95rem;
+    line-height: 1.5;
+    font-weight: 500;
   }
 
-  .explanation-box__key {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.9rem;
+  .option-btn__check {
+    display: grid;
+    place-items: center;
+    color: #0284c7;
+    flex-shrink: 0;
   }
 
-  .key-label {
-    color: var(--color-text-muted, #64748b);
-  }
-
-  .key-val {
-    color: #059669;
-    font-weight: 800;
-  }
-
-  .explanation-box__body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    font-size: 0.925rem;
-    line-height: 1.6;
-    color: var(--color-text, #1e293b);
-  }
-
-  .explanation-aspect-note {
-    padding: 0.75rem 0.9rem;
-    border-radius: 8px;
-    background: var(--color-surface, #ffffff);
-    border: 1px solid var(--color-border, #e2e8f0);
-    font-size: 0.85rem;
-  }
-
-  .aspect-label {
-    color: var(--color-text-muted, #64748b);
-    font-size: 0.775rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-right: 0.25rem;
-  }
-
-  .aspect-desc {
-    margin: 0.35rem 0 0;
-    color: var(--color-text-muted, #475569);
-  }
-
-  /* Footer Navigation */
-  .study-card__footer {
+  /* Navigasi Bawah Soal (Sebelumnya & Selanjutnya) */
+  .question-card__footer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding-top: 1rem;
+    padding-top: 1.15rem;
     border-top: 1px solid var(--color-border, #f1f5f9);
   }
 
-  .shortcut-tip {
-    font-size: 0.8rem;
+  .btn-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-nav:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-nav--prev {
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-bg, #f8fafc);
+    color: var(--color-text, #0f172a);
+  }
+
+  .btn-nav--prev:not(:disabled):hover {
+    border-color: #0284c7;
+    color: #0284c7;
+  }
+
+  .btn-nav--next {
+    border: none;
+    background: #0f172a;
+    color: #ffffff;
+  }
+
+  .btn-nav--next:hover {
+    background: #0284c7;
+  }
+
+  :global([data-theme='dark']) .btn-nav--next {
+    background: #0284c7;
+  }
+
+  .btn-nav--finish {
+    border: none;
+    background: #059669;
+    color: #ffffff;
+  }
+
+  .btn-nav--finish:hover {
+    background: #047857;
+  }
+
+  .keyboard-hint {
+    font-size: 0.775rem;
     color: var(--color-text-muted, #64748b);
   }
 
-  /* Sidebar Column */
-  .sidebar-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+  /* Palet Daftar Nomor Soal (Sebelah Kanan) */
+  .palette-pane {
+    position: sticky;
+    top: 1rem;
   }
 
-  .sidebar-card {
+  .palette-card {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1.25rem;
+    padding: 1.35rem;
     background: var(--color-surface, #ffffff);
     border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-lg, 14px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
   }
 
-  .sidebar-card__header {
+  .palette-card__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
   }
 
-  .sidebar-card__title {
+  .palette-card__title {
     margin: 0;
     font-size: 0.95rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--color-text, #0f172a);
   }
 
-  .palette-counter {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-primary, #0284c7);
+  .palette-card__badge {
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(2, 132, 199, 0.1);
+    color: #0284c7;
+    font-size: 0.78rem;
+    font-weight: 700;
   }
 
-  .progress-wrap {
+  .palette-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .palette-stat {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background: var(--color-bg, #f8fafc);
+    border: 1px solid var(--color-border, #e2e8f0);
   }
 
-  .progress-bar {
+  .palette-stat__val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-text, #0f172a);
+  }
+
+  .palette-stat__lbl {
+    font-size: 0.7rem;
+    color: var(--color-text-muted, #64748b);
+    font-weight: 600;
+  }
+
+  .palette-progress {
     width: 100%;
-    height: 8px;
+    height: 7px;
     border-radius: 999px;
     background: var(--color-bg, #f1f5f9);
     overflow: hidden;
   }
 
-  .progress-bar__fill {
+  .palette-progress__bar {
     height: 100%;
-    background: linear-gradient(90deg, #0284c7 0%, #10b981 100%);
-    border-radius: 999px;
-    transition: width 0.25s ease;
+    background: linear-gradient(90deg, #0284c7, #10b981);
+    transition: width 0.2s ease;
   }
 
-  .progress-text {
+  .palette-numbers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 0.15rem;
+  }
+
+  .num-btn {
     display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: var(--color-text-muted, #64748b);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-bg, #f8fafc);
+    color: var(--color-text, #334155);
+    cursor: pointer;
+    transition: all 0.12s ease;
+    padding: 2px;
+  }
+
+  .num-btn:hover {
+    border-color: #0284c7;
+  }
+
+  .num-btn__idx {
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .num-btn__ans {
+    font-size: 0.65rem;
+    font-weight: 800;
+    opacity: 0.9;
+  }
+
+  .num-btn--answered {
+    background: #0284c7;
+    border-color: #0284c7;
+    color: #ffffff;
+  }
+
+  .num-btn--doubt {
+    background: #f59e0b;
+    border-color: #d97706;
+    color: #ffffff;
+  }
+
+  .num-btn--current {
+    box-shadow: 0 0 0 2px #0f172a;
+  }
+
+  :global([data-theme='dark']) .num-btn--current {
+    box-shadow: 0 0 0 2px #38bdf8;
   }
 
   .palette-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    padding: 0.5rem 0.65rem;
-    background: var(--color-bg, #f8fafc);
-    border-radius: 8px;
-    font-size: 0.75rem;
-    color: var(--color-text-muted, #475569);
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.25rem;
+    font-size: 0.72rem;
+    color: var(--color-text-muted, #64748b);
   }
 
-  .legend-item {
+  .legend-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
   }
 
-  .legend-dot {
+  .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
   }
 
-  .legend-dot--studied {
+  .dot--answered {
     background: #0284c7;
   }
 
-  .legend-dot--unstudied {
-    background: #cbd5e1;
-  }
-
-  .legend-dot--bookmarked {
+  .dot--doubt {
     background: #f59e0b;
   }
 
-  /* Palette Grid */
-  .palette-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.4rem;
-    max-height: 380px;
-    overflow-y: auto;
-    padding-right: 0.25rem;
+  .dot--empty {
+    background: #cbd5e1;
   }
 
-  .palette-btn {
+  .btn-submit-all {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: none;
+    background: #059669;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .btn-submit-all:hover {
+    background: #047857;
+  }
+
+  /* Modal Konfirmasi Selesai */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
     display: grid;
     place-items: center;
-    height: 36px;
-    border-radius: var(--radius-md, 6px);
-    background: var(--color-bg, #f8fafc);
-    border: 1px solid var(--color-border, #cbd5e1);
-    color: var(--color-text, #334155);
-    font-size: 0.825rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.12s ease;
+    padding: 1rem;
   }
 
-  .palette-btn:hover {
-    border-color: #0284c7;
-    color: #0284c7;
-  }
-
-  .palette-btn--studied {
-    background: rgba(2, 132, 199, 0.12);
-    border-color: #0284c7;
-    color: #0284c7;
-  }
-
-  .palette-btn--bookmarked {
-    background: rgba(245, 158, 11, 0.18);
-    border-color: #f59e0b;
-    color: #b45309;
-  }
-
-  .palette-btn--active {
-    box-shadow: 0 0 0 2px #0f172a;
-    font-weight: 800;
-  }
-
-  :global([data-theme='dark']) .palette-btn--active {
-    box-shadow: 0 0 0 2px #38bdf8;
-  }
-
-  .sidebar-actions {
-    display: flex;
-    justify-content: center;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--color-border, #f1f5f9);
-  }
-
-  .button-text-danger {
-    border: none;
-    background: transparent;
-    color: #dc2626;
-    font-size: 0.775rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-  }
-
-  .button-text-danger:hover {
-    text-decoration: underline;
-  }
-
-  /* Info Guide Card */
-  .info-guide-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.15rem;
+  .modal-dialog {
+    width: 100%;
+    max-width: 440px;
+    padding: 1.75rem;
     background: var(--color-surface, #ffffff);
     border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-lg, 12px);
-  }
-
-  .info-guide-card__head {
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    text-align: center;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.45rem;
-    color: #0284c7;
-    font-size: 0.875rem;
+    gap: 0.85rem;
   }
 
-  .info-guide-list {
+  .modal-dialog__icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(2, 132, 199, 0.12);
+    color: #0284c7;
+  }
+
+  .modal-dialog__title {
     margin: 0;
-    padding-left: 1.15rem;
-    font-size: 0.8rem;
-    line-height: 1.5;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--color-text, #0f172a);
+  }
+
+  .modal-dialog__desc {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
     color: var(--color-text-muted, #475569);
   }
 
-  .info-guide-list li {
-    margin-bottom: 0.45rem;
-  }
-
-  .button--full {
+  .modal-dialog__actions {
+    display: flex;
+    gap: 0.65rem;
     width: 100%;
-    justify-content: center;
+    margin-top: 0.5rem;
   }
 
-  /* Empty State */
-  .empty-state {
+  .btn-modal-cancel {
+    flex: 1;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-bg, #f8fafc);
+    color: var(--color-text, #334155);
+    font-size: 0.825rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-modal-confirm {
+    flex: 1.3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    border: none;
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 0.825rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* =========================================================================
+   * TAHAP 3: HASIL REKAPAN UJIAN
+   * ========================================================================= */
+  .btn-restart {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem;
+    border-radius: 9px;
+    border: none;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.825rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .recap-hero {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 1.5rem;
+    padding: 1.75rem;
+    background: var(--color-surface, #ffffff);
+    border: 1.5px solid var(--color-border, #e2e8f0);
+    border-radius: 16px;
+    align-items: center;
+  }
+
+  .recap-hero--pass {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(2, 132, 199, 0.04) 100%);
+  }
+
+  .recap-hero--fail {
+    border-color: rgba(245, 158, 11, 0.4);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(239, 68, 68, 0.04) 100%);
+  }
+
+  @media (max-width: 860px) {
+    .recap-hero {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .recap-hero__left {
     display: flex;
     flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .recap-hero__badge-row {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    text-align: center;
-    gap: 0.75rem;
-    padding: 3rem 1.5rem;
-    background: var(--color-surface, #ffffff);
-    border: 1px dashed var(--color-border, #cbd5e1);
-    border-radius: var(--radius-lg, 14px);
+    gap: 0.5rem;
   }
 
-  .empty-state__icon {
-    font-size: 2.5rem;
+  .recap-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--color-text-muted, #475569);
+    letter-spacing: 0.04em;
   }
 
-  .empty-state h3 {
-    margin: 0;
-    font-size: 1.15rem;
+  .verdict-pill {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
   }
 
-  .empty-state p {
-    margin: 0;
-    max-width: 45ch;
-    font-size: 0.875rem;
+  .verdict-pill--pass {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+  }
+
+  .verdict-pill--fail {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+
+  .recap-score-box {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .recap-score-box__val {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: var(--color-text, #0f172a);
+    line-height: 1;
+  }
+
+  .recap-score-box__meta {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
     color: var(--color-text-muted, #64748b);
+  }
+
+  .recap-score-box__pass {
+    font-weight: 700;
+    color: #0284c7;
+  }
+
+  .recap-hero__summary {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text, #334155);
+  }
+
+  .recap-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .metric-box {
+    padding: 1rem;
+    border-radius: 12px;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .metric-box__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted, #64748b);
+  }
+
+  .metric-box__val {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--color-text, #0f172a);
+  }
+
+  .metric-box--success .metric-box__val {
+    color: #059669;
+  }
+
+  .metric-box--danger .metric-box__val {
+    color: #dc2626;
+  }
+
+  /* Review Section */
+  .review-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .review-section__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .review-section__title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--color-text, #0f172a);
+  }
+
+  .review-section__subtitle {
+    margin: 0.2rem 0 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted, #64748b);
+  }
+
+  .review-filters {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .filter-pill {
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border, #cbd5e1);
+    background: var(--color-surface, #ffffff);
+    color: var(--color-text, #334155);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .filter-pill--active {
+    background: #0284c7;
+    border-color: #0284c7;
+    color: #ffffff;
+  }
+
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .review-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.35rem;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 14px;
+  }
+
+  .review-item__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .review-item__badges {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .review-item__num {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .review-item__cat {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #0284c7;
+  }
+
+  .verdict-tag {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .verdict-tag--ok {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+  }
+
+  .verdict-tag--warn {
+    background: rgba(245, 158, 11, 0.14);
+    color: #b45309;
+  }
+
+  .review-item__stem {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--color-text, #0f172a);
+  }
+
+  .review-item__options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .review-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border, #e2e8f0);
+    font-size: 0.85rem;
+  }
+
+  .review-opt--key {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: #10b981;
+  }
+
+  .review-opt--user-wrong {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: #f59e0b;
+  }
+
+  .review-opt__key {
+    font-weight: 800;
+    width: 22px;
+  }
+
+  .review-opt__text {
+    flex: 1;
+  }
+
+  .review-opt__badge {
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .review-opt__badge--key {
+    background: #10b981;
+    color: #ffffff;
+  }
+
+  .review-opt__badge--user {
+    background: #f59e0b;
+    color: #ffffff;
+  }
+
+  .review-item__explanation {
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    background: rgba(2, 132, 199, 0.06);
+    border-left: 3px solid #0284c7;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-text, #334155);
   }
 </style>
