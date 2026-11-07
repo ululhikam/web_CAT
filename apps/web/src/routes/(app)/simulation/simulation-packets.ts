@@ -23,6 +23,8 @@ export interface SimQuestion {
   id: number;
   module: string;
   subtest?: 'KECERDASAN' | 'KEPRIBADIAN' | 'KECERMATAN' | 'TKK' | 'TPK';
+  subCategory?: string;
+  difficulty?: string;
   stem: string;
   image?: string;
   options: SimOption[];
@@ -59,6 +61,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 101,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
     "image": "/images/questions/figural_q_1.png",
     "options": [
@@ -91,6 +95,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 102,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
     "image": "/images/questions/figural_q_2.png",
     "options": [
@@ -123,6 +129,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 103,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
     "image": "/images/questions/figural_q_3.png",
     "options": [
@@ -155,6 +163,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 104,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
     "image": "/images/questions/figural_q_4.png",
     "options": [
@@ -187,6 +197,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 105,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
     "image": "/images/questions/figural_q_5.png",
     "options": [
@@ -219,6 +231,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 106,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
     "image": "/images/questions/figural_q_6.png",
     "options": [
@@ -251,6 +265,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 107,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
     "image": "/images/questions/figural_q_7.png",
     "options": [
@@ -283,6 +299,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 108,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
     "image": "/images/questions/figural_q_8.png",
     "options": [
@@ -315,6 +333,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 109,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
     "image": "/images/questions/figural_q_9.png",
     "options": [
@@ -347,6 +367,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 110,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
     "image": "/images/questions/figural_q_10.png",
     "options": [
@@ -379,6 +401,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 111,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
     "image": "/images/questions/figural_q_11.png",
     "options": [
@@ -411,6 +435,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 112,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
     "image": "/images/questions/figural_q_12.png",
     "options": [
@@ -443,6 +469,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 113,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Perhatikan hubungan antara Bentuk A dan Bentuk B. Carilah hubungan yang setara untuk Bentuk C terhadap salah satu pilihan jawaban.",
     "image": "/images/questions/figural_q_13.png",
     "options": [
@@ -475,6 +503,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 114,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati urutan perubahan dari Pola 1 hingga Pola 4. Tentukan gambar selanjutnya (Pola 5) yang melengkapi deret figural tersebut.",
     "image": "/images/questions/figural_q_14.png",
     "options": [
@@ -507,6 +537,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 115,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Di antara kelima pilihan gambar (A, B, C, D, E), terdapat satu gambar yang tidak mengikuti pola kelompoknya (berbeda sendiri). Pilihlah gambar tersebut.",
     "image": "/images/questions/figural_q_15.png",
     "options": [
@@ -539,6 +571,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 116,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Figural Spasial] Amati matriks 3x3 di bawah ini. Tentukan bentuk yang paling tepat untuk mengisi sel berlabel tanda tanya (?) sesuai konsistensi baris dan kolom.",
     "image": "/images/questions/figural_q_16.png",
     "options": [
@@ -571,6 +605,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 117,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Berdasarkan denah di atas, bangunan yang berada tepat di sebelah utara R. Budi adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -603,6 +639,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 118,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Bangunan yang terletak di sudut antara Jln. Kusuma Raya dan Jln. Rambutan di sebelah utara jalan adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -635,6 +673,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 119,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Masjid terletak di sebelah... dari Lapangan.",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -667,6 +707,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 120,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Figural & Pola Visual",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Jika seseorang berada di Balai Desa dan berjalan ke arah barat menyusuri Jln. Kusuma Raya, bangunan pertama di sebelah kanan jalan yang ditemuinya adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -699,6 +741,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 121,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Bangunan yang berada paling selatan pada wilayah yang dibatasi Jln. Pemuda adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -731,6 +775,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 122,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Rumah warga yang terletak tepat di sebelah timur Kantor Polisi adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -763,6 +809,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 123,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Bangunan SD Brlian Jaya terletak di sebelah... Jln. Majapahit.",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -795,6 +843,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 124,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Di sebelah selatan R. Budi, dipisahkan oleh Jln. Kusuma Raya, berdiri bangunan...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -827,6 +877,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 125,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Posisi R. Bagas terletak pada sudut persimpangan antara jalan...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -859,6 +911,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 126,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Rumah warga yang berdekatan langsung dengan batas utara Balai Desa adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -891,6 +945,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 127,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Petugas patroli berangkat dari Kantor Polisi menuju Masjid. Rute jalan paling efisien yang dilalui adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -923,6 +979,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 128,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Seorang murid dari R. Anita ingin pergi ke SD Brlian Jaya. Jalur yang paling tepat adalah berjalan ke utara menyusuri...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -955,6 +1013,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 129,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Apabila Jln. Madukara ditutup total karena perbaikan, warga dari R. Sinta yang akan ke KUD harus berputar melalui...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -987,6 +1047,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 130,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Kurir mengantar paket dari KUA ke R. Bagas. Jalan yang TIDAK perlu dilalui adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1019,6 +1081,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 131,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Jalan yang membatasi antara Balai Desa dan SD Brlian Jaya adalah...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1051,6 +1115,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 132,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Untuk memindahkan barang dari Gd. Serbaguna ke KUD, rute paling lurus adalah menyusuri...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1083,6 +1149,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 133,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Jika seorang warga berencana pergi dari R. Ahmad ke Balai Desa, berapakah persimpangan jalan utama yang harus dilewatinya?",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1115,6 +1183,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 134,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Mobil polisi dari Kantor Polisi ingin menuju lokasi R. Bayu. Arah belokan pertama setelah menyusuri Jln. Kusuma Raya ke timur adalah belok...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1147,6 +1217,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 135,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Akses jalan tercepat dari R. Sari menuju Masjid adalah menyusuri...",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1179,6 +1251,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 136,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Penalaran Denah Wilayah & Orientasi Arah] Di manakah posisi Lapangan terhadap Jln. Pemuda dan Jln. Merdeka?",
     "image": "/images/questions/denah_lokasi_sip.png",
     "options": [
@@ -1211,6 +1285,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 137,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 4, 7, 12, 19, 28, ...",
     "options": [
       {
@@ -1242,6 +1318,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 138,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 3, 6, 12, 24, 48, ...",
     "options": [
       {
@@ -1273,6 +1351,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 139,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 3, 5, 8, 13, 21, ...",
     "options": [
       {
@@ -1304,6 +1384,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 140,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Denah, Peta & Arah",
+    "difficulty": "MEDIUM",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 100, 95, 85, 70, 50, ...",
     "options": [
       {
@@ -1335,6 +1417,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 141,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 1, 4, 9, 16, 25, 36, ...",
     "options": [
       {
@@ -1366,6 +1450,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 142,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 5, 8, 16, 19, 38, 41, ...",
     "options": [
       {
@@ -1397,6 +1483,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 143,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 5, 10, 17, 26, 37, ...",
     "options": [
       {
@@ -1428,6 +1516,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 144,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 64, 32, 16, 8, 4, ...",
     "options": [
       {
@@ -1459,6 +1549,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 145,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 3, 5, 9, 17, 33, ...",
     "options": [
       {
@@ -1490,6 +1582,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 146,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 12, 15, 20, 27, 36, ...",
     "options": [
       {
@@ -1521,6 +1615,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 147,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 1, 2, 6, 24, 120, ...",
     "options": [
       {
@@ -1552,6 +1648,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 148,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 4, 8, 7, 14, 13, 26, ...",
     "options": [
       {
@@ -1583,6 +1681,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 149,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 21, 20, 18, 15, 11, ...",
     "options": [
       {
@@ -1614,6 +1714,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 150,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 4, 8, 16, 32, 64, ...",
     "options": [
       {
@@ -1645,6 +1747,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 151,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 10, 12, 16, 22, 30, ...",
     "options": [
       {
@@ -1676,6 +1780,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 152,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 81, 27, 9, 3, ...",
     "options": [
       {
@@ -1707,6 +1813,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 153,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 1, 3, 7, 15, 31, 63, ...",
     "options": [
       {
@@ -1738,6 +1846,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 154,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 15, 14, 16, 15, 17, 16, ...",
     "options": [
       {
@@ -1769,6 +1879,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 155,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 2, 6, 12, 20, 30, 42, ...",
     "options": [
       {
@@ -1800,6 +1912,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 156,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang paling logis pada barisan bilangan berikut: 50, 48, 44, 38, 30, ...",
     "options": [
       {
@@ -1831,6 +1945,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 157,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Mobil patroli polisi bergerak dengan kecepatan rata-rata 75 km/jam menuju lokasi TKP yang berjarak 150 km. Berapa waktu tempuh yang dibutuhkan?",
     "options": [
       {
@@ -1862,6 +1978,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 158,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Sebuah regu pengamanan terdiri atas 12 personil. Jika rasio personil Polri terhadap massa aksi adalah 1 : 25, berapa jumlah massa maksimum yang dapat diamankan sesuai rasio tersebut?",
     "options": [
       {
@@ -1893,6 +2011,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 159,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Pada triwulan pertama tercatat 160 kasus kejahatan, dan pada triwulan kedua menurun menjadi 120 kasus. Berapakah persentase penurunan angka kejahatan tersebut?",
     "options": [
       {
@@ -1924,6 +2044,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 160,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Deret Angka & Pola Bilangan",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Kendaraan dinas menghabiskan 8 liter bensin untuk menempuh jarak 96 km. Berapa liter bensin yang diperlukan untuk rute patroli sejauh 240 km?",
     "options": [
       {
@@ -1955,6 +2077,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 161,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Sebuah pos polisi memiliki 45 personil. 60% dari personil bertugas di lapangan dan sisanya bertugas administrasi staf. Berapa personil yang bertugas administrasi staf?",
     "options": [
       {
@@ -1986,6 +2110,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 162,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Dua mobil patroli berangkat dari Mapolres menuju lokasi perbatasan dari arah berlawanan. Mobil A melaju 60 km/jam dan Mobil B melaju 80 km/jam. Jika mereka berjarak 280 km, setelah berapa jam mereka akan berpapasan?",
     "options": [
       {
@@ -2017,6 +2143,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 163,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Rata-rata nilai tes jasmani 5 personil adalah 78. Jika 1 personil baru dengan nilai 90 bergabung, berapakah nilai rata-rata sekarang?",
     "options": [
       {
@@ -2048,6 +2176,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 164,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Anggaran pemeliharaan sarpras sebesar Rp120.000.000 dialokasikan untuk 3 unit: Unit Patroli 50%, Unit Reskrim 30%, dan Unit Intelijen sisanya. Berapakah anggaran untuk Unit Intelijen?",
     "options": [
       {
@@ -2079,6 +2209,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 165,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Sebuah gudang logistik menyimpan 360 rompi antipeluru. Jika setiap peleton membutuhkan 45 rompi, berapa peleton yang dapat menerima perlengkapan tersebut secara lengkap?",
     "options": [
       {
@@ -2110,6 +2242,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 166,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Empat petugas mampu memeriksa 120 berkas perkara dalam waktu 6 hari. Berapa berkas yang dapat diperiksa oleh 6 petugas dalam 4 hari dengan kecepatan kerja yang sama?",
     "options": [
       {
@@ -2141,6 +2275,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 167,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Harga 3 unit radio komunikasi HT dan 2 baterai cadangan adalah Rp4.800.000. Jika harga 1 baterai cadangan Rp300.000, berapakah harga 1 unit HT?",
     "options": [
       {
@@ -2172,6 +2308,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 168,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Waktu operasional pos pengamanan Lebaran adalah 24 jam non-stop yang dibagi rata ke dalam 4 shift giliran jaga. Berapa jam durasi setiap shift?",
     "options": [
       {
@@ -2203,6 +2341,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 169,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Dari 200 pelanggar lalu lintas dalam operasi Zebra, 70% tidak membawa SIM, dan 45% tidak memakai helm SNI. Jika 25% melakukan kedua pelanggaran tersebut, berapa orang yang hanya melanggar salah satu aturan?",
     "options": [
       {
@@ -2234,6 +2374,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 170,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Jika x = 25% dari 480 dan y = 1/3 dari 360, maka hubungan x dan y yang tepat adalah...",
     "options": [
       {
@@ -2265,6 +2407,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 171,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Suatu regu menempuh 18 km dalam 20 menit saat patroli darurat. Berapakah kecepatan rata-rata mobil patroli dalam satuan km/jam?",
     "options": [
       {
@@ -2296,6 +2440,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 172,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Aritmatika Taktis] Seorang penyidik memeriksa saksi dari pukul 08.45 sampai 11.15 WIB. Berapa total menit durasi pemeriksaan berlangsung?",
     "options": [
       {
@@ -2327,6 +2473,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 173,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Bareskrim : Reserse = Korlantas : ...",
     "options": [
       {
@@ -2358,6 +2506,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 174,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Borgol : Tersangka = Helm Baja : ...",
     "options": [
       {
@@ -2389,6 +2539,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 175,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Sinonim kata DISKRESI dalam pelaksanaan tugas kepolisian adalah...",
     "options": [
       {
@@ -2420,6 +2572,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 176,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Lawan kata (antonim) yang paling tepat untuk istilah OBJEKTIF adalah...",
     "options": [
       {
@@ -2451,6 +2605,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 177,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Kompas : Arah = Speedometer : ...",
     "options": [
       {
@@ -2482,6 +2638,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 178,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Jaksa : Penuntutan = Hakim : ...",
     "options": [
       {
@@ -2513,6 +2671,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 179,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Sinonim kata INTEGRITAS yang paling dekat maknanya adalah...",
     "options": [
       {
@@ -2544,6 +2704,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 180,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Aritmatika & Soal Cerita",
+    "difficulty": "HARD",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Dokter : Rumah Sakit = Polisi : ...",
     "options": [
       {
@@ -2575,6 +2737,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 181,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Pilihlah kelompok kata yang TIDAK setara dengan yang lain:",
     "options": [
       {
@@ -2606,6 +2770,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 182,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] KUHAP : Hukum Acara Pidana = KUHP : ...",
     "options": [
       {
@@ -2637,6 +2803,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 183,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Sinonim kata YURISDIKSI dalam hukum kepolisian adalah...",
     "options": [
       {
@@ -2668,6 +2836,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 184,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Lawan kata dari TRANSPARAN dalam pelayanan publik adalah...",
     "options": [
       {
@@ -2699,6 +2869,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 185,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Patroli : Pencegahan = Olah TKP : ...",
     "options": [
       {
@@ -2730,6 +2902,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 186,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Tribrata : Falsafah Hidup = Catur Prasetya : ...",
     "options": [
       {
@@ -2761,6 +2935,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 187,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Surat Perintah Tugas : Sprin = Laporan Polisi : ...",
     "options": [
       {
@@ -2792,6 +2968,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 188,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Verbal & Analogi Kedinasan] Antonim kata RESISTENSI dalam dinamika sosial kemasyarakatan adalah...",
     "options": [
       {
@@ -2823,6 +3001,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 189,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua penyidik Polri berpangkat perwira. Sebagian penyidik Polri memiliki sertifikasi audit forensik. Kesimpulan yang sah adalah...",
     "options": [
       {
@@ -2854,6 +3034,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 190,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Kemampuan Verbal & Analogi",
+    "difficulty": "EASY",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Jika hujan lebat disertai badai, maka apel siaga dilakukan di aula dalam. Pagi ini apel siaga dilaksanakan di lapangan terbuka. Kesimpulan yang pasti adalah...",
     "options": [
       {
@@ -2885,6 +3067,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 191,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Empat saksi diperiksa terkait waktu keberadaan di TKP perampokan pada pukul 21.00 WIB:\n- Saksi A: 'Saya bersama Saksi B di warung kopi pukul 20.45 - 21.30.'\n- Saksi B: 'Saya sendirian di rumah membaca buku sejak pukul 20.00.'\n- Saksi C: 'Saya melihat Saksi D di pasar pukul 21.00.'\n- Saksi D: 'Saya berada di pasar membeli obat pukul 21.00.'\nBerdasarkan alibi di atas, dua saksi yang keterangannya saling bertentangan secara langsung adalah...",
     "options": [
       {
@@ -2916,6 +3100,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 192,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua kendaraan operasional kepolisian wajib diperiksa kelaikannya secara berkala. Kendaraan X tidak diperiksa kelaikannya secara berkala. Kesimpulan yang tepat adalah...",
     "options": [
       {
@@ -2947,6 +3133,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 193,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Tidak ada anggota kepolisian yang diperbolehkan mengonsumsi narkotika. Bripka Z adalah anggota kepolisian. Kesimpulan yang pasti adalah...",
     "options": [
       {
@@ -2978,6 +3166,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 194,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Di sebuah persimpangan jalan, kendaraan dari arah Barat hanya boleh belok kiri atau lurus. Mobil patroli datang dari arah Barat dan tidak belok kiri. Maka mobil patroli tersebut...",
     "options": [
       {
@@ -3009,6 +3199,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 195,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua dokumen rahasia berkas penyidikan disimpan dalam brankas terkunci. Dokumen Berkas M tidak disimpan dalam brankas terkunci. Kesimpulan yang logis adalah...",
     "options": [
       {
@@ -3040,6 +3232,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 196,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Jika seorang anggota Polri terbukti melanggar kode etik berat, maka ia akan menjalani Sidang KKEP. Inspektur Dua D tidak menjalani Sidang KKEP. Maka kesimpulannya adalah...",
     "options": [
       {
@@ -3071,6 +3265,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 197,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Setiap tindakan penangkapan oleh penyidik wajib dilengkapi Surat Perintah Penangkapan, kecuali dalam hal tertangkap tangan. Petugas menangkap tersangka Z tanpa Surat Perintah Penangkapan yang sah. Maka penangkapan tersebut sah HANYA JIKA...",
     "options": [
       {
@@ -3102,6 +3298,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 198,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Urutan prioritas pertama petugas kepolisian saat pertama kali tiba di TKP kecelakaan lalu lintas dengan korban luka parah adalah...",
     "options": [
       {
@@ -3133,6 +3331,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 199,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Semua anggota Dalmas wajib memakai helm pelindung dan tameng. Sebagian anggota Dalmas membawa alat pelontar gas air mata. Kesimpulan yang sah adalah...",
     "options": [
       {
@@ -3164,6 +3364,8 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
     "id": 200,
     "module": "Tes Psikologi — Kecerdasan (SIP Polri)",
     "subtest": "KECERDASAN",
+    "subCategory": "Penalaran Logis & Silogisme",
+    "difficulty": "HARD",
     "stem": "[Penalaran Logis & Silogisme Penyidikan] Hasil penyelidikan menunjukkan bahwa Pelaku kejahatan memiliki ciri: bertato di lengan kiri ATAU memakai jaket hitam. Tersangka K tidak bertato di lengan kiri, namun ia terbukti sebagai pelaku. Maka tersangka K...",
     "options": [
       {
@@ -3199,4303 +3401,4503 @@ const QUESTIONS_KECERDASAN: SimQuestion[] = [
 const QUESTIONS_KEPRIBADIAN: SimQuestion[] = [
   {
     "id": 201,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda mengetahui rekan kerja mengubah angka dalam laporan rekapitulasi penindakan agar hasil unit terlihat melampaui target. Tindakan paling tepat adalah...",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "MEDIUM",
+    "stem": "Saya menolak segala bentuk pemberian gratifikasi, bingkisan, atau imbalan dari pihak berperkara meskipun tanpa ada perjanjian khusus sebelumnya.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkannya karena tidak merugikan keuangan pribadi saya.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Memverifikasi fakta, mengingatkan rekan secara persuasif, dan melaporkan melalui jalur kedinasan bila tidak diperbaiki.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menceritakan kekeliruan tersebut kepada semua rekan di grup percakapan informal.",
-        "weight": 2
-      },
-      {
-        "key": "D",
-        "text": "Mengubah angka unit saya sendiri agar data terlihat serasi.",
-        "weight": 1
-      },
-      {
-        "key": "E",
-        "text": "Menegur rekan tersebut secara pribadi namun tidak berani melapor jika diabaikan.",
-        "weight": 3
-      }
-    ],
-    "correctKey": "B",
-    "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 3
-    },
-    "explanation": "Tindakan berintegritas menuntut verifikasi data, upaya koreksi internal secara persuasif, dan pelaporan berjenjang demi menjaga keakuratan dokumen dinas.",
-    "dimension": "Integritas & Etika Profesi"
-  },
-  {
-    "id": 202,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Seorang kerabat dekat meminta Anda mendahulukan pengurusan SIM tanpa melalui ujian praktik yang sah. Sikap Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Membantunya karena menjaga hubungan kekerabatan keluarga besar.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Meminta imbalan jasa tambahan atas bantuan yang diberikan.",
-        "weight": 1
-      },
-      {
-        "key": "C",
-        "text": "Menolak secara santun dan menjelaskan bahwa seluruh pemohon wajib mengikuti prosedur ujian sesuai aturan.",
-        "weight": 5
-      },
-      {
-        "key": "D",
-        "text": "Menolak dengan nada ketus dan memarahinya di depan umum.",
-        "weight": 2
-      },
-      {
-        "key": "E",
-        "text": "Menyarankan kerabat menghubungi calo di luar kantor pelayanan.",
-        "weight": 1
-      }
-    ],
-    "correctKey": "C",
-    "optionWeights": {
-      "A": 1,
-      "B": 1,
-      "C": 5,
-      "D": 2,
-      "E": 1
-    },
-    "explanation": "Integritas pelayanan publik kepolisian mengharuskan penolakan perlakuan khusus secara santun dengan tetap mengedukasi aturan resmi.",
-    "dimension": "Integritas & Etika Profesi"
-  },
-  {
-    "id": 203,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Saat membersihkan ruang pemeriksaan usai gelar perkara, Anda menemukan dompet berisi sejumlah uang milik saksi yang tertinggal. Tindakan Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Menyimpan dompet tersebut dan menggunakannya jika tidak ada yang mencari.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Segera mencatatnya dalam buku register barang temuan dan menyerahkannya kepada perwira piket SPKT untuk dikembalikan.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menitipkannya kepada petugas kebersihan kantor.",
-        "weight": 2
-      },
-      {
-        "key": "D",
-        "text": "Menunggu hingga pemiliknya datang sendiri tanpa melaporkannya ke buku inventaris.",
-        "weight": 3
-      },
-      {
-        "key": "E",
-        "text": "Mengambil uangnya dan mengembalikan dompet beserta kartu identitasnya.",
-        "weight": 1
-      }
-    ],
-    "correctKey": "B",
-    "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 3,
-      "E": 1
-    },
-    "explanation": "Menyerahkan barang temuan melalui pencatatan resmi register SPKT menjamin keamanan barang bukti dan akuntabilitas personel.",
-    "dimension": "Integritas & Etika Profesi"
-  },
-  {
-    "id": 204,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Atasan meminta Anda mencantumkan kegiatan sosialisasi yang sebenarnya belum terlaksana ke dalam laporan pertanggungjawaban penyerapan anggaran. Sikap Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Menuruti perintah atasan tanpa membantah demi kelancaran administrasi.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menyampaikan secara sopan kepada atasan bahwa pelaporan harus sesuai realisasi riil dan siap membantu mempercepat pelaksanaan kegiatan tersebut.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menolak secara kasar dan melaporkan atasan langsung ke media sosial.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menyetujui namun meminta kompensasi bagian dari anggaran tersebut.",
-        "weight": 1
-      },
-      {
-        "key": "E",
-        "text": "Membicarakan perintah tersebut dengan rekan sejawat tanpa memberikan solusi.",
-        "weight": 2
-      }
-    ],
-    "correctKey": "B",
-    "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
-    },
-    "explanation": "Integritas menuntut penolakan manipulasi dokumen secara beretika dengan menawarkan percepatan realisasi kegiatan riil.",
-    "dimension": "Integritas & Etika Profesi"
-  },
-  {
-    "id": 205,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Pihak pelapor kasus penipuan online memberikan bingkisan bernilai mahal sebagai ucapan terima kasih karena perkaranya lekas ditangani. Tindakan Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Menerima bingkisan tersebut karena diberikan secara sukarela setelah perkara selesai.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Menolak bingkisan dengan santun dan menjelaskan bahwa penanganan perkara adalah tugas dinas kepolisian yang bebas biaya.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menerima bingkisan lalu membagikannya kepada seluruh staf penyidik.",
-        "weight": 2
-      },
-      {
-        "key": "D",
-        "text": "Menolak di depan kantor namun meminta dikirimkan ke alamat rumah pribadi.",
-        "weight": 1
-      },
-      {
-        "key": "E",
-        "text": "Meminta bingkisan diganti dengan uang tunai untuk kas unit kerja.",
-        "weight": 1
-      }
-    ],
-    "correctKey": "B",
-    "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
-    },
-    "explanation": "Menolak gratifikasi dalam bentuk apa pun menjaga marwah independensi dan profesionalisme penyidik kepolisian.",
-    "dimension": "Integritas & Etika Profesi"
-  },
-  {
-    "id": 206,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Anda mengetahui rekan penyidik membocorkan jadwal penggerebekan lokasi perjudian kepada pengelola lokasi. Langkah Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Pura-pura tidak tahu agar tidak dimusuhi di kesatuan.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengumpulkan indikasi pendukung dan segera melaporkan pelanggaran kode etik tersebut kepada Si Propam.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Meminta bagian uang tutup mulut dari rekan tersebut.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menegur rekan di depan tahanan lain tanpa melapor ke atasan.",
-        "weight": 2
-      },
-      {
-        "key": "E",
-        "text": "Menghubungi media massa secara anonim.",
-        "weight": 2
-      }
-    ],
-    "correctKey": "B",
-    "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 2
-    },
-    "explanation": "Pembocoran rahasia operasi adalah pelanggaran disiplin berat yang wajib dilaporkan kepada Si Propam melalui bukti pendukung.",
-    "dimension": "Integritas & Etika Profesi"
-  },
-  {
-    "id": 207,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Saat melakukan penindakan tilang elektronik dan manual, pengemudi berusaha menyelipkan uang damai di balik surat kendaraan. Respons Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Mengembalikan uang tersebut secara tegas, mengedukasi pelanggar tentang sistem tilang resmi, dan memproses pelanggaran.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
         "key": "B",
-        "text": "Menerima uang damai tersebut demi mempercepat kelancaran arus lalu lintas.",
-        "weight": 1
+        "text": "Setuju",
+        "weight": 4
       },
       {
         "key": "C",
-        "text": "Mengancam pelanggar dengan hukuman pidana suap tanpa menjelaskan prosedur tilang.",
+        "text": "Ragu-Ragu",
         "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengabaikan pelanggaran dan membiarkan pengemudi melintas.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyita uang tersebut untuk keperluan kas patroli regu.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
     "correctKey": "A",
     "optionWeights": {
       "A": 5,
-      "B": 1,
+      "B": 4,
       "C": 3,
-      "D": 1,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Menolak suap secara tegas dan memproses tilang resmi mencerminkan kepatuhan penuh terhadap integritas penegak hukum lalu lintas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Integritas dan Kejujuran] Integritas sejati menuntut penolakan tegas terhadap setiap gratifikasi yang dapat mempengaruhi objektivitas tugas penegakan hukum Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
+  },
+  {
+    "id": 202,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "EASY",
+    "stem": "Ketika terjadi kesalahan pencatatan barang bukti oleh rekan satu regu, saya berani menyampaikannya secara jujur kepada pimpinan agar dilakukan pembetulan resmi.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 5
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
+      }
+    ],
+    "correctKey": "A",
+    "optionWeights": {
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
+    },
+    "explanation": "[Aspek Integritas dan Kejujuran] Kejujuran dalam tata kelola barang bukti merupakan pilar utama transparansi penyidikan dan kepercayaan masyarakat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
+  },
+  {
+    "id": 203,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "EASY",
+    "stem": "Jika peluang manipulasi data absensi dinas tidak akan pernah diketahui siapapun, wajar jika sesekali dimanfaatkan untuk keperluan mendesak.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 1
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
+      }
+    ],
+    "correctKey": "E",
+    "optionWeights": {
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
+    },
+    "explanation": "[Aspek Integritas dan Kejujuran] Sikap berintegritas konsisten menjauhi manipulasi meskipun tidak ada pengawasan langsung. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
+  },
+  {
+    "id": 204,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "MEDIUM",
+    "stem": "Saya selalu melaporkan penggunaan anggaran operasional dinas secara riil dan transparan tanpa ada penggelembungan biaya kuitansi.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 5
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
+      }
+    ],
+    "correctKey": "A",
+    "optionWeights": {
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
+    },
+    "explanation": "[Aspek Integritas dan Kejujuran] Akuntabilitas keuangan negara adalah kewajiban hukum dan cerminan etika moral insan Bhayangkara. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
+  },
+  {
+    "id": 205,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "MEDIUM",
+    "stem": "Menutup mata atas pelanggaran disiplin rekan kerja demi menjaga solidaritas angkatan adalah hal yang dapat dimaklumi.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 1
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
+      }
+    ],
+    "correctKey": "E",
+    "optionWeights": {
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
+    },
+    "explanation": "[Aspek Integritas dan Kejujuran] Jiwa korsa yang benar (esprit de corps) tidak boleh melindungi pelanggaran hukum atau mencederai integritas institusi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
+  },
+  {
+    "id": 206,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "HARD",
+    "stem": "Saya tetap menolak permintaan titipan perlakuan khusus perkara dari tokoh berpengaruh di wilayah hukum tempat saya bertugas.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 5
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 2
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
+      }
+    ],
+    "correctKey": "A",
+    "optionWeights": {
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
+    },
+    "explanation": "[Aspek Integritas dan Kejujuran] Persamaan di hadapan hukum (equality before the law) wajib dijunjung tinggi tanpa membedakan status sosial. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
+  },
+  {
+    "id": 207,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "EASY",
+    "stem": "Saya merasa tidak perlu mengembalikan kelebihan uang saku dinas yang ditransfer bagian logistik jika tidak ada tagihan susulan.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 1
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
+      }
+    ],
+    "correctKey": "E",
+    "optionWeights": {
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
+    },
+    "explanation": "[Aspek Integritas dan Kejujuran] Integritas personal menuntut pengembalian hak yang bukan miliknya secara proaktif. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 208,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda ditawari fasilitas menginap gratis di hotel berbintang oleh seorang saksi yang sedang diperiksa dalam kasus korupsi. Sikap Anda...",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "HARD",
+    "stem": "Saya memegang teguh sumpah jabatan dan rahasia negara serta tidak membocorkan rencana operasi kepolisian kepada pihak manapun.",
     "options": [
       {
         "key": "A",
-        "text": "Menerima fasilitas tersebut selama tidak mempengaruhi kesimpulan berita acara.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Menolak fasilitas tersebut dan memilih akomodasi dinas resmi yang telah dianggarkan kesatuan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mengajak anggota keluarga untuk turut menikmati fasilitas tersebut.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menerima fasilitas atas nama unit penyidikan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meminta fasilitas hotel dialihkan dalam bentuk uang tunai.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Menggunakan anggaran dinas resmi dan menolak fasilitas dari pihak terkait perkara mencegah terjadinya konflik kepentingan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Integritas dan Kejujuran] Menjaga kerahasiaan taktik dan data operasi adalah komitmen mutlak perlindungan keselamatan personel dan keberhasilan misi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 209,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang tokoh masyarakat meminta agar berkas perkara pidana anaknya diselesaikan secara damai tanpa melalui peradilan hukum pidana murni. Sikap Anda...",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "EASY",
+    "stem": "Bila terdesak waktu, menggunakan sarana dinas untuk kepentingan rekreasi keluarga tanpa izin pimpinan adalah hal wajar.",
     "options": [
       {
         "key": "A",
-        "text": "Langsung menyetujui permintaan tersebut demi menjaga hubungan baik dengan tokoh masyarakat.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menjelaskan mekanisme Restorative Justice (RJ) secara transparan sesuai Perpol No. 8/2021 dan memastikan syarat materiil serta formil terpenuhi.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menolak secara arogan tanpa memberikan penjelasan hukum yang edukatif.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Meminta sejumlah uang pelicin untuk menghentikan penyidikan perkara.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Membiarkan perkara menggantung tanpa kepastian hukum.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Penyelesaian perkara melalui keadilan restoratif harus berpijak pada ketentuan yuridis resmi Perpol No. 8 Tahun 2021 secara transparan.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Integritas dan Kejujuran] Fasilitas dinas adalah inventaris negara yang peruntukannya mutlak untuk tugas pelayanan dan operasional kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 210,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda melihat rekan kerja menggunakan mobil patroli dinas kepolisian untuk mengantar keperluan belanja pribadi keluarganya saat jam dinas. Tindakan Anda...",
+    "subCategory": "Integritas dan Kejujuran",
+    "difficulty": "HARD",
+    "stem": "Saya berani menanggung konsekuensi hukum dan dinas atas setiap pernyataan serta keputusan yang saya buat dalam berita acara.",
     "options": [
       {
         "key": "A",
-        "text": "Mengabaikannya karena bukan urusan tugas saya.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Mengingatkan rekan bahwa kendaraan dinas inventaris hanya boleh digunakan untuk tugas operasional kepolisian.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Meminjam mobil dinas tersebut untuk keperluan pribadi saya sendiri pada hari berikutnya.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Memviralkan rekaman mobil tersebut ke akun media sosial publik.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Melaporkan secara anonim ke provos tanpa melakukan teguran persuasif terlebih dahulu.",
-        "weight": 3
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 3
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Mengingatkan rekan secara persuasif tentang peruntukan aset dinas menjaga kepatuhan tata kelola inventaris institusi.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Integritas dan Kejujuran] Tanggung jawab moral dan kejujuran formal dalam produk administrasi kepolisian adalah inti integritas perwira. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Integritas dan Kejujuran"
   },
   {
     "id": 211,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika membuat laporan hasil interogasi tersangka, rekan penyidik mengusulkan menambahkan pengakuan palsu yang tidak diucapkan tersangka agar dakwaan semakin kuat. Sikap Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "HARD",
+    "stem": "Sebagai perwira pengendali, saya siap berdiri di garis depan bersama anggota dalam situasi tugas berisiko tinggi.",
     "options": [
       {
         "key": "A",
-        "text": "Menyetujui usulan tersebut agar tersangka segera dihukum berat.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menolak tegas usulan tersebut dan memastikan isi BAP hanya memuat keterangan faktual tersangka sesuai asas Due Process of Law.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mengundurkan diri dari proses penyidikan tanpa memberikan sanggahan.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyerahkan penyusunan berkas kepada rekan tanpa membaca ulang.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menanyakan pendapat tersangka mengenai penambahan pasal tersebut.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Penyidikan kepolisian berpijak pada fakta objektif dan scientific crime investigation, menolak keras rekayasa keterangan dalam BAP.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Kepemimpinan] Kepemimpinan keteladanan (leading by example) menumbuhkan moral tempur, keberanian, dan kepercayaan anak buah di lapangan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 212,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda menemukan kesalahan perhitungan dalam penetapan denda tilang tilang elektronik (ETLE) yang merugikan masyarakat pemilik kendaraan. Tindakan Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "MEDIUM",
+    "stem": "Saya memberikan bimbingan dan kesempatan berkembang kepada anggota bawahan yang melakukan kekeliruan teknis agar prestasinya meningkat.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkan data tersebut karena sistem sudah berjalan otomatis.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Segera berkoordinasi dengan tim IT dan pimpinan Satlantas untuk melakukan koreksi sistem serta menginformasikan kepada pemilik kendaraan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menghapus data pelanggaran secara manual tanpa izin atasan.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyalahkan pihak ketiga vendor penyedia perangkat kamera.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menunggu ada komplain resmi dari warga baru bertindak.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Koreksi proaktif terhadap anomali sistem teknologi penegakan hukum menunjukkan tanggung jawab moral dan akuntabilitas dinas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Kepemimpinan] Pemimpin transformasional fokus pada pembinaan sumber daya manusia Polri dengan memberikan koreksi konstruktif. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 213,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang pengusaha menawarkan bantuan renovasi pos polisi dengan harapan kendaraannya bebas dari pemeriksaan muatan berlebih (ODOL). Respons Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "EASY",
+    "stem": "Bila tim saya berhasil mencapai target, seluruh apresiasi dan penghargaan seharusnya diperuntukkan bagi komandan unit saja.",
     "options": [
       {
         "key": "A",
-        "text": "Menerima tawaran tersebut demi perbaikan fasilitas pos pengamanan.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Menjelaskan bahwa bantuan hibah harus melalui mekanisme resmi kedinasan dan tidak dapat dikaitkan dengan kelonggaran penegakan hukum.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Meminta pengusaha memberikan bantuan tunai langsung ke personel pos.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
-        "key": "D",
-        "text": "Menolak tawaran secara kasar dan mengusir pengusaha tersebut.",
+        "key": "B",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Menerima bantuan dan tetap menilang kendaraannya tanpa pemberitahuan.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 2
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Bantuan hibah sarana dinas wajib melalui jalur resmi kedinasan serta tidak boleh mengorbankan integritas penegakan hukum lalu lintas.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Kepemimpinan] Pemimpin yang arif membagi keberhasilan bersama seluruh anggota tim dan tidak egois mengklaim prestasi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 214,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam tugas penjagaan tahanan, keluarga salah satu tahanan meminta izin memasukkan telepon genggam ke dalam ruang sel dengan imbalan uang. Tindakan Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mendengarkan masukan dan saran teknis dari para bintara lapangan sebelum menetapkan rencana taktis patroli.",
     "options": [
       {
         "key": "A",
-        "text": "Mengizinkan selama telepon hanya digunakan untuk menghubungi anak dan istri.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menolak secara tegas dan menyita barang terlarang tersebut sesuai SOP pengamanan ruang tahanan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menerima uangnya namun menyimpan telepon di loker penjagaan.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengizinkan pada malam hari saat perwira pengawas sedang tidur.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Membiarkan keluarga memasukkan barang tanpa memeriksa isi bawaan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Menjaga ruang tahanan steril dari alat komunikasi ilegal adalah SOP mutlak demi mencegah pengendalian kejahatan dari dalam sel.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Kepemimpinan] Kepemimpinan partisipatif menggabungkan data real-time lapangan untuk meminimalkan risiko taktis. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 215,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas sebagai panitia lelang barang inventaris dinas yang telah rusak, ada peserta lelang yang mengajak berkomplot menetapkan harga rendah. Sikap Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "HARD",
+    "stem": "Dalam keadaan darurat, saya menyerahkan seluruh keputusan strategis kepada bawahan agar saya bebas dari tuntutan bila gagal.",
     "options": [
       {
         "key": "A",
-        "text": "Menyetujui ajakan tersebut demi mendapatkan bagian keuntungan lelang.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menolak ajakan tersebut, mencatat percobaan kolusi, dan memastikan proses lelang berjalan terbuka sesuai taksiran wajar KPKNL.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Membatalkan seluruh proses lelang secara sepihak tanpa koordinasi pimpinan.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Menyerahkan keputusan sepenuhnya kepada peserta lelang lainnya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Membantu peserta lelang dengan syarat rahasia terjaga.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Proses lelang aset negara harus menjunjung tinggi prinsip transparansi, persaingan sehat, dan akuntabilitas keuangan negara.",
-    "dimension": "Integritas & Etika Profesi"
+    "explanation": "[Aspek Kepemimpinan] Pemimpin sejati pantang melempar tanggung jawab komando (command responsibility) kepada anak buah. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 216,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Meskipun jarak rumah ke kantor cukup jauh dan cuaca hujan deras, Anda dijadwalkan menjadi perwira apel pagi pukul 07.00 WIB. Tindakan Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "HARD",
+    "stem": "Saya mampu memotivasi regu yang kelelahan setelah patroli panjang untuk tetap siaga menghadapi potensi kontinjensi.",
     "options": [
       {
         "key": "A",
-        "text": "Datang terlambat dan menyampaikan alasan cuaca buruk kepada pimpinan.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Berangkat lebih awal dengan persiapan mantel hujan agar dapat memimpin apel tepat waktu sesuai jadwal dinas.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Meminta rekan lain menggantikan tugas tanpa pemberitahuan resmi.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Tidak hadir dan langsung masuk saat jam kerja pelayanan dimulai.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menghubungi operator piket agar apel ditunda hingga hujan reda.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Kedisiplinan waktu ditunjukkan dengan kesiapan mengantisipasi kendala perjalanan demi menepati komitmen tugas dinas.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Kepemimpinan] Kemampuan menginjeksi semangat juang dan resiliensi tim merupakan indikator vital kepemimpinan lapangan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 217,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat hendak melakukan penangkapan tersangka narkotika, tim mendapati surat perintah penangkapan tertinggal di markas. Langkah regu...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "MEDIUM",
+    "stem": "Menegur kesalahan anggota di hadapan khalayak umum efektif memberikan efek jera secara instan.",
     "options": [
       {
         "key": "A",
-        "text": "Tetap melakukan penangkapan paksa tanpa surat dan mengurus administrasinya kemudian.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Memerintahkan satu personel mengambil surat tugas resmi secara cepat sementara regu melakukan pengintaian status quo.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Membatalkan operasi secara permanen dan membiarkan tersangka melarikan diri.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membuat surat perintah palsu di tempat menggunakan tanda tangan rekan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Mengancam tersangka agar menyerah secara sukarela tanpa surat resmi.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Pengamanan tersangka wajib mematuhi legalitas formil KUHAP; pengintaian taktis tetap berjalan sambil melengkapi surat perintah tugas.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Kepemimpinan] Koreksi terhadap personel harus mengedepankan etika kepemimpinan: puji di depan umum, tegur secara tertutup demi martabat anggota. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 218,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Pimpinan menginstruksikan seluruh personel wajib mengenakan rompi antipeluru dan helm taktis saat patroli malam di zona merah. Tindakan Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mendelegasikan tugas sesuai kompetensi masing-masing anggota secara adil dan terukur.",
     "options": [
       {
         "key": "A",
-        "text": "Hanya mengenakan rompi saat memasuki wilayah yang diperkirakan ada musuh.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Memakai seluruh perlengkapan pelindung diri sesuai instruksi sejak keluar mako demi keselamatan kerja.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menolak memakai karena rompi terasa berat dan membatasi gerak tubuh.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyimpan rompi di bagasi mobil patroli untuk diperlihatkan saat ada pemeriksaan provos.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Memakai helm saja tanpa mengenakan rompi antipeluru.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Mematuhi SOP perlengkapan keselamatan dinas melindungi personel dari ancaman fatalitas di area rawan kerawanan.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Kepemimpinan] Delegasi wewenang yang efektif mencerminkan manajemen manajerial perwira Polri yang profesional. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 219,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas jaga tahanan pada pukul 03.00 dini hari, rasa kantuk melanda Anda sangat hebat. Tindakan paling tepat adalah...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "EASY",
+    "stem": "Seorang komandan tidak perlu mengetahui latar belakang dan kendala pribadi anggotanya, yang penting target tercapai.",
     "options": [
       {
         "key": "A",
-        "text": "Tidur sejenak di meja penjagaan dan meminta tahanan tidak berisik.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Mencuci muka, melakukan peregangan ringan, dan bergiliran dengan rekan jaga untuk memastikan situasi sel tetap termonitor.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Meninggalkan ruang jaga dan mencari kopi di warung luar markas.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Membiarkan pintu sel terkunci gembok tanpa perlu melakukan patroli keliling lorong.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Menyalakan musik bervolume keras di ruang tahanan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Menjaga kewaspadaan piket melalui pembagian giliran aktif dan kebugaran fisik mencegah risiko tahanan melarikan diri.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Kepemimpinan] Pendekatan humanis dan kepedulian terhadap kondisi psikologis personel adalah kunci loyalitas dan efektivitas tim. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 220,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam penyusunan berkas administrasi penyelidikan, terdapat format baru sesuai Perkap terbaru yang belum Anda kuasai. Sikap Anda...",
+    "subCategory": "Kepemimpinan",
+    "difficulty": "HARD",
+    "stem": "Saya berani mengambil keputusan komando yang sulit dengan cepat demi menyelamatkan nyawa masyarakat dan keselamatan regu.",
     "options": [
       {
         "key": "A",
-        "text": "Tetap menggunakan format lama karena sudah biasa dan mudah.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Mempelajari pedoman format baru dari buku panduan dinas serta berkonsultasi dengan perwira hukum kesatuan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menyerahkan seluruh tugas pembuatan berkas kepada staf magang.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menunda pembuatan berkas hingga format lama diizinkan kembali.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Membuat berkas dengan format campuran seadanya.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Kepatuhan terhadap regulasi baru menunjukkan komitmen adaptif dan disiplin profesional dalam standardisasi dokumen penyidikan.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Kepemimpinan] Ketegasan komando dalam momen kritis adalah kualitas mutlak seorang perwira Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kepemimpinan"
   },
   {
     "id": 221,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat melakukan pengawalan tahanan menuju pengadilan, salah satu tahanan meminta borgolnya dilepas dengan alasan tangan kram. Respons Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "HARD",
+    "stem": "Saya mampu berbicara dengan nada tenang dan rasional meskipun sedang diprovokasi atau dimaki oleh massa yang berunjuk rasa.",
     "options": [
       {
         "key": "A",
-        "text": "Melepas borgol sepenuhnya karena merasa kasihan kepada tahanan.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Memeriksa kekencangan borgol, menyesuaikan tingkat kenyamanan tanpa melepas kunci pengaman, dan tetap waspada sesuai SOP pengawalan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membentak tahanan dan memperketat borgol hingga sakit.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengizinkan melepas borgol jika tahanan berjanji tidak kabur.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengabaikan keluhan tahanan tanpa memeriksa kondisi fisiknya.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Memastikan prosedur keamanan pengawalan tetap berlaku ketat sambil secara proporsional memeriksa kondisi fisik tahanan.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Pengendalian diri dan kematangan emosi mencegah ekskalasi konflik dan menjaga citra Polri yang humanis. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 222,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda melihat rekan bintara piket menerima tamu masyarakat di luar jam besuk tahanan resmi. Langkah Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "MEDIUM",
+    "stem": "Saat lelah fisik dan beban tugas menumpuk, saya tetap melayani laporan masyarakat dengan senyum, sapa, dan salam.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkannya karena merasa tidak enak menegur senior.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Mengingatkan rekan piket bahwa jam besuk telah diatur secara ketat dalam SOP rutan demi mencegah penyelundupan barang terlarang.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membantu tamu tersebut masuk ke dalam ruang tahanan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Melaporkan rekan ke media massa tanpa komunikasi internal.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meminta bayaran tiket masuk dari tamu tersebut.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Penegakan disiplin waktu kunjungan rutan merupakan kunci utama menjaga keamanan fasilitas tahanan kepolisian.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Dedikasi pelayanan publik menuntut stabilisasi emosi pribadi agar masyarakat mendapatkan hak perlindungan prima. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 223,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sebelum mengoperasikan senjata api dinas laras panjang saat pengamanan pemilu, tindakan wajib yang harus Anda lakukan adalah...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "EASY",
+    "stem": "Saya merasa wajar membalas perlakuan kasar pengemudi yang menolak ditilang dengan kata-kata bentakan keras.",
     "options": [
       {
         "key": "A",
-        "text": "Langsung mengisi peluru ke kamar senjata dan mencabut pengaman.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Melakukan pemeriksaan visual dan fisik kelaikan mekanik, kebersihan laras, dan memastikan laras mengarah ke arah yang aman.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Menembakkan senjata ke udara untuk menguji fungsinya.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meminjamkan senjata kepada warga masyarakat yang ingin berfoto.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Membawa senjata tanpa memeriksa buku mutasi amunisi.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Disiplin keamanan penanganan senjata api inventaris (weapons safety rules) wajib dipatuhi demi mencegah tembakan tidak disengaja.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Anggota Polri harus mampu mengendalikan emosi dan menerapkan asas profesionalisme serta kesabaran dalam penegakan hukum. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 224,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika diperintahkan membuat laporan intelijen kilat mengenai situasi kamtibmas pasca aksi massa, batas waktu pengiriman adalah 30 menit. Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika mendapat kritik pedas di media sosial mengenai kinerja kesatuan saya, saya menyikapinya sebagai bahan evaluasi perbaikan diri.",
     "options": [
       {
         "key": "A",
-        "text": "Mengirim laporan ala kadarnya tanpa memverifikasi kebenaran informasi.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Menyusun poin-poin data kunci yang telah diverifikasi secara cepat, cermat, dan mengirimkan laporan sebelum batas waktu habis.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Meminta perpanjangan waktu 2 jam dan mengabaikan sifat kedaruratan laporan.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengabaikan perintah dan menunggu arahan lanjutan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyalin laporan hari kemarin tanpa memperbarui fakta lapangan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Disiplin kecepatan dan akurasi informasi intelijen sangat krusial dalam mendukung pimpinan mengambil keputusan taktis.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Sikap terbuka terhadap kritik publik menunjukkan kedewasaan mental dan ketahanan emosional yang tinggi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 225,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas mengamankan aksi unjuk rasa, orator demonstrasi menyampaikan kata-kata provokatif terhadap institusi kepolisian. Tindakan regu...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "EASY",
+    "stem": "Jika rekan sekerja menyalahkan saya atas keterlambatan laporan, saya langsung meninggikan suara untuk membela diri.",
     "options": [
       {
         "key": "A",
-        "text": "Membalas makian orator dengan pengeras suara mobil Raisa.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Tetap dalam formasi pertahanan Dalmas, mengabaikan provokasi verbal, dan bertindak sesuai arahan komandan kompi.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Maju menyerang massa tanpa menunggu aba-aba dari komandan peleton.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meninggalkan barisan untuk mengamankan diri sendiri.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Melepaskan gas air mata atas inisiatif pribadi.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Kepatuhan terhadap garis komando saat pengendalian massa mencegah eskalasi anarkis dan menjamin penerapan SOP yang sah.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Reaksi defensif yang meledak-ledak merusak keharmonisan tim; penyelesaian harus dengan dialog kepala dingin. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 226,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sesuai aturan kedinasan, setiap serah terima piket wajib dilaksanakan pengecekan jumlah tahanan dan barang inventaris. Rekan mengajak melewati proses ini karena terburu-buru pulang. Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "HARD",
+    "stem": "Saya dapat berpikir jernih dan mengambil tindakan terukur saat berada di bawah tekanan situasi kerusuhan massal.",
     "options": [
       {
         "key": "A",
-        "text": "Menyetujui usulan rekan agar cepat beristirahat.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menolak tegas dan bersikeras melaksanakan apel serah terima serta pengecekan fisik bersama personel piket baru sesuai SOP.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Hanya mengecek jumlah tahanan lewat buku mutasi tanpa melihat kondisi fisik.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Melakukan serah terima lewat panggilan telepon.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menandatangani buku mutasi kosong dan pulang lebih dahulu.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Serah terima fisik piket jaga menjamin tidak adanya selisih inventaris dan memastikan status kesehatan tahanan secara nyata.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Kemampuan mengontrol kecemasan dan adrenalin menjamin keputusan taktis diambil berdasarkan akal sehat bukan kepanikan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 227,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika pimpinan memberikan teguran tertulis atas keterlambatan pengiriman berkas perkara, sikap Anda adalah...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "MEDIUM",
+    "stem": "Rasa jengkel terhadap atasan yang menegur membuat saya enggan menjalankan instruksi berikutnya dengan sungguh-sungguh.",
     "options": [
       {
         "key": "A",
-        "text": "Membantah dan menyalahkan bagian pos pengiriman berkas ekspedisi.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menerima teguran dengan sikap ksatria, mengevaluasi sistem kerja unit, dan berjanji memperbaiki manajemen waktu.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Melakukan aksi mogok kerja sebagai bentuk protes.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menghindari komunikasi dengan pimpinan selama beberapa minggu.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Mengajukan mutasi pindah ke satuan lain yang lebih santai.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Sikap ksatria dan disiplin menerima koreksi pimpinan merupakan ciri kedewasaan perwira dalam memperbaiki kinerja kedinasan.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Perwira profesional memisahkan perasaan emosional personal dari komitmen pelaksanaan perintah dinas. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 228,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat berpatroli, Anda melihat sepeda motor rekan polisi lain tidak dilengkapi spion dan pelat nomor dinas yang sah. Tindakan Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "HARD",
+    "stem": "Saya selalu mengambil jeda napas sejenak sebelum merespons provokasi tersangka agar tindakan saya tidak melanggar HAM.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkannya karena solidaritas sesama anggota korps kepolisian.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Mengingatkan rekan secara baik-baik bahwa anggota Polri harus menjadi teladan tertib berlalu lintas di jalan raya.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memviralkan rekan tersebut di media sosial tanpa koordinasi.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membantu membuatkan pelat dinas palsu.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menghukum rekan dengan push-up di pinggir jalan umum.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Menegakkan disiplin internal dimulai dari saling mengingatkan ketertiban berlalu lintas agar tidak mencoreng citra institusi.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Tindakan kepolisian yang taat prosedur dan berlandaskan HAM lahir dari kemampuan menunda respons emosional negatif. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 229,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam melaksanakan olah tempat kejadian perkara (TKP) pembunuhan, warga sekitar mendesak ingin masuk ke dalam garis polisi (police line). Tindakan Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "EASY",
+    "stem": "Saya mudah kehilangan kesabaran jika harus menjelaskan prosedur berulang kali kepada masyarakat lanjut usia.",
     "options": [
       {
         "key": "A",
-        "text": "Mengizinkan tokoh masyarakat masuk untuk melihat jenazah.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Secara humanis namun tegas melarang warga melintasi garis polisi demi menjaga keaslian dan status quo jejak forensik di TKP.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Membiarkan warga masuk karena jumlah personel polisi kalah banyak.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menggunakan senjata tajam untuk menakut-nakuti warga.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Membubarkan warga dengan menyemprotkan air pemadam kebakaran.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Menjaga status quo TKP dari kontaminasi warga merupakan prosedur mutlak keberhasilan pengungkapan bukti forensik ilmiah.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Polri sebagai pelayan masyarakat wajib memiliki kesabaran dan empati ekstra kepada kelompok rentan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 230,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Instruksi dinas mewajibkan pemusnahan berkas formulir permohonan yang salah cetak menggunakan mesin penghancur kertas (paper shredder). Rekan Anda membuangnya langsung ke tempat sampah terbuka. Anda...",
+    "subCategory": "Pengendalian Emosi",
+    "difficulty": "MEDIUM",
+    "stem": "Saya tidak membawa persoalan pribadi atau masalah keluarga ke dalam interaksi tugas kedinasan sehari-hari.",
     "options": [
       {
         "key": "A",
-        "text": "Mengikuti cara rekan karena lebih cepat dan tidak memakan waktu.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengambil kembali berkas tersebut dan memusnahkannya dengan paper shredder demi mencegah kebocoran data pribadi pemohon.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membakar sampah di halaman kantor yang mengganggu pernapasan warga.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menjual berkas bekas tersebut kepada pengepul kertas loak.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Membiarkan berkas berserakan di ruang kerja.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Pemusnahan berkas berdata identitas sesuai SOP dokumen rahasia melindungi privasi warga dan keamanan informasi publik.",
-    "dimension": "Disiplin & Ketaatan Prosedur"
+    "explanation": "[Aspek Pengendalian Emosi] Pemisahan tegas ranah domestik dan kedinasan menjamin konsistensi performa kerja kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Pengendalian Emosi"
   },
   {
     "id": 231,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas mengawal tahanan berisiko tinggi menuju rumah sakit untuk perawatan darurat, tahanan mencoba memanfaatkan kelengahan untuk melarikan diri. Tindakan Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "EASY",
+    "stem": "Saya selalu hadir di tempat tugas dan apel pagi setidaknya 15 menit sebelum waktu yang ditentukan dalam surat perintah.",
     "options": [
       {
         "key": "A",
-        "text": "Panik dan melepaskan tembakan membabi-buta di kerumunan pasien.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menerapkan teknik melumpuhkan tanpa senjata api sesuai level eskalasi ancaman dan segera mengamankan kembali borgol tahanan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membiarkan tahanan lari dan beralasan kelalaian pihak perawat.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meminta bantuan warga sipil bersenjata tajam untuk mengejar.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyerah dan meninggalkan lokasi rumah sakit.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Tanggung jawab pengawalan menuntut kesiapan respon taktis pelumpuhan proporsional tanpa membahayakan keselamatan pasien sipil di sekitar.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Ketepatan waktu apel adalah cerminan kedisiplinan dasar dan kesiapan operasional prajurit Bhayangkara. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 232,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda ditugaskan menyusun Surat Pemberitahuan Perkembangan Hasil Penyidikan (SP2HP) kepada pelapor kasus pencurian, namun data labfor belum keluar. Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika membuat kesalahan dalam pemberkasan administrasi, saya mengakuinya secara terbuka dan segera membetulkannya.",
     "options": [
       {
         "key": "A",
-        "text": "Tidak mengirimkan SP2HP sampai seluruh hasil labfor selesai tanpa batas waktu.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Tetap mengirimkan SP2HP tepat waktu dengan menerangkan secara transparan tahapan pemeriksaan labfor yang sedang berlangsung.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membuat kesimpulan labfor palsu agar pelapor tidak bertanya-tanya.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyuruh pelapor datang sendiri memeriksa ke laboratorium forensik.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengabaikan surat permohonan perkembangan perkara dari pelapor.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Kewajiban penyidik menyampaikan SP2HP secara berkala adalah wujud akuntabilitas transparansi penyidikan kepada masyarakat.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Keberanian bertanggung jawab atas kesalahan sendiri merupakan bukti kedewasaan dan kehormatan korps. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 233,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat memeriksa senjata inventaris dinas pasca patroli, Anda mendapati ada 1 butir amunisi yang hilang atau tidak cocok dengan catatan logistik. Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "EASY",
+    "stem": "Meninggalkan pos penjagaan sebelum anggota regu pengganti tiba adalah hal yang biasa jika shift sudah berakhir.",
     "options": [
       {
         "key": "A",
-        "text": "Membeli amunisi gelap di pasar ilegal untuk menggantikan yang hilang.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Melaporkan secara jujur ketidaksesuaian amunisi kepada Ba Logistik dan perwira pengawas serta membuat laporan kronologis tertulis.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Mengubah angka catatan mutasi agar data terlihat seimbang.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menyalahkan rekan jaga sebelumnya yang telah pulang.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Menyimpan senjata dan pura-pura tidak menyadari selisih amunisi.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Akuntabilitas pertanggungjawaban amunisi dinas menuntut kejujuran pelaporan kronologis demi mencegah penyalahgunaan senjata api.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Pos penjagaan mutlak tidak boleh kosong sedetik pun; serah terima jaga harus dilakukan secara fisik dan sah. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 234,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam penugasan pengamanan TPS Pemilu di pedalaman, terjadi banjir bandang yang mengancam keselamatan logistik kotak suara. Tindakan Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "MEDIUM",
+    "stem": "Saya merawat dan memastikan senjata api dinas serta perlengkapan selalu dalam kondisi bersih, aman, dan siap pakai.",
     "options": [
       {
         "key": "A",
-        "text": "Menyelamatkan barang pribadi dan membiarkan kotak suara hanyut.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Berkoordinasi dengan KPPS dan warga mengevakuasi kotak suara ke tempat aman tertinggi serta mengawal segel kotak suara secara ketat.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membuka kotak suara untuk mengeringkan surat suara yang basah tanpa saksi.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meninggalkan TPS dan kembali ke markas komando polsek.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyerahkan pengamanan kotak suara kepada relawan tanpa pengawasan.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Pengamanan logistik negara adalah amanat tanggung jawab mutlak personel kepolisian yang wajib diprioritaskan saat krisis kontinjensi.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Pemeliharaan inventaris dinas, khususnya senpi, adalah tanggung jawab mutlak keselamatan diri dan institusi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 235,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika mengemudikan kendaraan dinas, Anda tanpa sengaja menyenggol pagar rumah warga hingga rusak ringan. Sikap Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "EASY",
+    "stem": "Saya mengabaikan perintah dinas tertulis jika merasa perintah tersebut terlalu merepotkan saya pribadi.",
     "options": [
       {
         "key": "A",
-        "text": "Segera tancap gas meninggalkan lokasi mumpung tidak ada saksi yang melihat.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Berhenti, turun dari kendaraan, menemui pemilik rumah, meminta maaf secara santun, dan bertanggung jawab mengganti biaya perbaikan pagar.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menyalahkan pemilik rumah karena memasang pagar terlalu dekat dengan jalan.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Menakut-nakuti pemilik rumah dengan kewenangan dinas kepolisian.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menyuruh bawahan Anda mengaku sebagai pengemudi.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Perwira berintegritas dan bertanggung jawab mengakui kelalaian secara ksatria serta memberikan ganti rugi wajar kepada masyarakat.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Kepatuhan pada rantai komando dan perintah sah kedinasan adalah sendi pokok tegaknya disiplin Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 236,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda ditunjuk sebagai bendahara pengeluaran unit penugasan operasi khusus dan memegang uang operasional lapangan. Sikap Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "MEDIUM",
+    "stem": "Saya menuntaskan setiap laporan penyelidikan sesuai tenggat waktu (deadline) tanpa perlu ditagih berulang kali oleh atasan.",
     "options": [
       {
         "key": "A",
-        "text": "Menggunakan sebagian uang dinas untuk keperluan trading pribadi dengan janji dikembalikan.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mencatat setiap pengeluaran secara transparan, melampirkan bukti transaksi sah, dan membuat buku kas harian yang dapat diaudit sewaktu-waktu.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membelanjakan dana tanpa kuitansi pendukung karena situasi lapangan.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membagi sisa dana operasional sebagai bonus pribadi tanpa persetujuan komandan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyimpan pembukuan hanya dalam ingatan pribadi.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Akuntabilitas tata kelola keuangan penugasan kepolisian wajib dibuktikan dengan pencatatan tertib dan bukti kuitansi yang sah.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Akuntabilitas waktu penyelesaian tugas mencerminkan etos kerja tinggi dan komitmen pelayanan prima. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 237,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sebuah berkas perkara penganiayaan yang Anda tangani ditolak kejaksaan karena batas waktu penahanan tersangka hampir habis. Tindakan Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "MEDIUM",
+    "stem": "Menunda pembuatan laporan patroli hingga hari berikutnya tidak menjadi masalah selama situasi wilayah aman.",
     "options": [
       {
         "key": "A",
-        "text": "Menyerah dan melepaskan tersangka tanpa petunjuk jaksa.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Bekerja ekstra melengkapi kekurangan berkas (P-19) bersama tim secara cermat sebelum masa penahanan berakhir demi kepastian hukum.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menyalahkan jaksa penuntut umum di hadapan keluarga korban.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Memalsukan tanda tangan jaksa agar berkas tampak telah P-21.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menunda penyerahan berkas hingga masa penahanan kedaluwarsa.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Tanggung jawab penyidikan menuntut kerja keras melengkapi petunjuk P-19 secara cermat dalam batas tenggat hukum yang sah.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Laporan patroli wajib segera disusun saat peristiwa masih segar demi validitas data intelijen kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 238,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas di pos pelayanan pengaduan, sistem komputer pendaftaran mendadak mengalami gangguan jaringan offline. Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "EASY",
+    "stem": "Saya mematuhi ketentuan tata tertib kerapian seragam dinas (Gampol) dan sikap tampang sesuai peraturan kedinasan.",
     "options": [
       {
         "key": "A",
-        "text": "Menutup loket dan meminta warga datang kembali esok hari.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Segera beralih ke pencatatan register manual sementara waktu agar warga tetap terlayani dengan tertib tanpa menunggu perbaikan server.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menyalahkan tim teknisi jaringan di hadapan antrean warga.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Duduk santai di ruang tunggu sambil bermain telepon genggam.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menerima pengaduan hanya dari warga yang Anda kenal baik.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Solutif dan bertanggung jawab dalam pelayanan publik memastikan hak masyarakat tetap terlayani melalui mitigasi prosedur manual.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Penampilan dan sikap tampang yang rapi menumbuhkan wibawa institusi kepolisian di mata publik. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 239,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika barang bukti elektronik berupa laptop tersangka korupsi berada di bawah pengawasan Anda, rekan ingin meminjamnya untuk keperluan mengetik. Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "HARD",
+    "stem": "Saya merasa tidak bertanggung jawab jika ada barang bukti yang rusak selama berada di ruangan yang saya jaga.",
     "options": [
       {
         "key": "A",
-        "text": "Mengizinkan peminjaman asalkan tidak menghapus file penting.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menolak dengan tegas dan menjelaskan bahwa barang bukti berstatus disegel dan tidak boleh diakses tanpa penetapan pengadilan dan berita acara.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Membiarkan rekan menggunakan laptop tanpa pengawasan.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Membongkar harddisk laptop tersebut untuk diperiksa sendiri.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Menjual laptop tersebut dan menggantinya dengan unit serupa.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Menjaga integritas rantai bukti (chain of custody) barang bukti digital merupakan tanggung jawab mutlak penyidik tindak pidana.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Petugas jaga memikul tanggung jawab hukum dan dinas atas keamanan seluruh aset di area pengawasannya. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 240,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat mengawasi apel malam ruang tahanan, seorang tahanan mengeluh sakit dada hebat dan sesak napas. Langkah Anda...",
+    "subCategory": "Disiplin dan Tanggung Jawab",
+    "difficulty": "HARD",
+    "stem": "Saya menjalankan tugas patroli malam dengan dedikasi tinggi meskipun tidak ada pimpinan yang mengawasi di lapangan.",
     "options": [
       {
         "key": "A",
-        "text": "Menyuruh tahanan tidur dan beristirahat tanpa tindakan medis.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Segera berkoordinasi dengan perwira jaga dan membawa tahanan ke Dokkes atau rumah sakit terdekat dengan pengawalan ketat sesuai SOP.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memberikan obat pribadi yang Anda miliki tanpa resep dokter.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengeluarkan tahanan ke halaman luar tanpa borgol pengaman.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menunggu hingga jadwal pemeriksaan kesehatan rutin esok pagi.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Perlindungan hak asasi dan kesehatan tahanan adalah tanggung jawab hukum personel kepolisian; rujukan medis segera wajib dilakukan.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Disiplin dan Tanggung Jawab] Integritas disiplin mandiri (self-discipline) beroperasi atas dasar kesadaran moral tanpa memerlukan pengawasan ketat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Disiplin dan Tanggung Jawab"
   },
   {
     "id": 241,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Setelah selesai melaksanakan razia balap liar, Anda menemukan beberapa helm sitaan tercecer di pinggir jalan. Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "MEDIUM",
+    "stem": "Saya aktif membantu rekan seunit yang sedang kewalahan menangani antrean pelayanan masyarakat meskipun tugas saya sudah selesai.",
     "options": [
       {
         "key": "A",
-        "text": "Mengambil helm yang bagus untuk digunakan sendiri di rumah.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengumpulkan seluruh helm, mendatanya dalam daftar barang sitaan razia, dan membawanya ke kantor untuk disimpan di gudang barang bukti.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Meninggalkan helm di pinggir jalan karena bukan tanggung jawab saya.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membagikan helm kepada warga sekitar yang menonton razia.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Membuang helm tersebut ke sungai dekat lokasi razia.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Semua barang sitaan hasil operasi kepolisian wajib diinventarisasi secara tertib dan disimpan dalam gudang barang bukti resmi.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Solidaritas proaktif dan gotong royong mempercepat pencapaian misi kesatuan dan memperkuat ikatan tim. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 242,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika pimpinan memberikan tugas memimpin tim verifikasi data internal kesatuan dengan tenggat waktu ketat, sikap Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "HARD",
+    "stem": "Saya mampu menjalin komunikasi yang harmonis dan kooperatif dengan aparat TNI dan instansi pemerintah daerah saat bertugas bersama.",
     "options": [
       {
         "key": "A",
-        "text": "Mendelegasikan seluruh pekerjaan kepada bawahan dan pergi meninggalkan kantor.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menyusun pembagian kerja yang proporsional, memimpin pengecekan silang data secara berkala, dan memastikan hasil akurat sebelum diserahkan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membuat kesimpulan data berdasarkan estimasi kira-kira tanpa verifikasi.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menunda penyerahan laporan hingga ditegur berkali-kali oleh pimpinan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meminta tim lain mengambil alih tugas unit Anda.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kepemimpinan yang bertanggung jawab memastikan supervisi aktif dan akurasi data dalam menyelesaikan target kedinasan.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Sinergisitas TNI-Polri dan keterpaduan lintas sektoral adalah kunci stabilitas kamtibmas yang kokoh. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 243,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas patroli jalan raya, Anda menemukan lampu sirene kendaraan dinas mati akibat korsleting sekring. Tindakan Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "EASY",
+    "stem": "Saya lebih suka bekerja sendiri dan enggan berbagi informasi taktis kepada rekan satu tim penyidik.",
     "options": [
       {
         "key": "A",
-        "text": "Tetap berpatroli tanpa sirene dan mengabaikan kerusakan kendaraan.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Menepi di tempat aman, mengganti sekring cadangan yang tersedia atau segera melaporkannya ke bengkel dinas logistik polres.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Memukul lampu sirene dengan tongkat polisi agar menyala kembali.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mematikan mobil dan pulang ke rumah sebelum jam dinas selesai.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menyalakan klakson terus-menerus sebagai pengganti sirene.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Memelihara kelaikan operasional sarana mobilitas dinas merupakan bentuk tanggung jawab keselamatan personel dan pengguna jalan.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Silo mentality menghambat keberhasilan pengungkapan perkara; kolaborasi intelijen adalah kunci. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 244,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda ditugaskan mendampingi saksi mahkota dalam perjalanan menuju pengadilan. Keluarga terdakwa berusaha mendekati saksi untuk mengintimidasi. Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mudah beradaptasi dan membangun hubungan kemitraan dengan tokoh masyarakat, pemuda, dan tokoh agama di tempat penugasan.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkan keluarga terdakwa berbicara agar tidak terjadi keributan.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menempatkan posisi tubuh sebagai barikade pengaman, menjauhkan pihak pengintimidasi, dan memastikan saksi memasuki ruang steril pengadilan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membalas intimidasi dengan kekerasan fisik di depan umum.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meninggalkan saksi dan bersembunyi di mobil pengawal.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyarankan saksi untuk mengubah keterangannya di persidangan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Tanggung jawab perlindungan saksi mengharuskan tindakan proteksi fisik yang sigap, tegas, dan berpedoman pada SOP perlindungan saksi.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Pemolisian masyarakat (Community Policing) berbasis kemitraan dan kepercayaan sosial yang erat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 245,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam evaluasi triwulan, satuan kerja Anda mendapatkan nilai kinerja terendah akibat keterlambatan penyelesaian laporan online. Sebagai staf operator, Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "EASY",
+    "stem": "Jika rekan satu tim berasal dari latar belakang suku atau agama yang berbeda, saya membatasi pergaulan kedinasan dengan mereka.",
     "options": [
       {
         "key": "A",
-        "text": "Menyalahkan pimpinan karena sering memberikan tugas tambahan lain.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengakui kelemahan dalam manajemen waktu, menganalisis faktor penghambat, dan berkomitmen memperbaiki ritme pelaporan harian.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Bersikap masa bodoh karena merasa sudah bekerja sesuai gaji.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengajukan pengunduran diri dari posisi operator sistem data.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menghapus akun operator agar sistem dinilai rusak.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Sikap akuntabel menerima hasil evaluasi kinerja secara konstruktif dan berkomitmen melakukan perbaikan sistem kerja nyata.",
-    "dimension": "Tanggung Jawab & Akuntabilitas"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Polri adalah perekat kebangsaan yang menjunjung tinggi kebinekaan tanpa sekat primordialisme. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 246,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas mengurai kemacetan parah di perempatan jalan, seorang pengemudi mobil mewah memaki Anda dengan kata-kata kasar karena merasa jalurnya tertahan. Tindakan Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "MEDIUM",
+    "stem": "Saya menghargai perbedaan pendapat dalam rapat gelar perkara demi menemukan solusi hukum yang paling komprehensif.",
     "options": [
       {
         "key": "A",
-        "text": "Balik memaki pengemudi tersebut dengan suara lebih keras.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Tetap tenang, tidak terpancing emosi, menjelaskan pengaturan prioritas arus dengan santun namun tegas, lalu melanjutkan penarikan arus.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memukul kap mobil pengemudi menggunakan tongkat pengatur lalu lintas.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meninggalkan perempatan dan membiarkan kemacetan bertambah parah.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menahan kendaraan pengemudi tersebut selama berjam-jam tanpa alasan hukum.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Kematangan stabilitas emosi aparat penegak hukum diuji dari kemampuan tetap tenang, sopan, dan berfokus pada tugas utama saat diprovokasi.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Gelar perkara membutuhkan dinamika dialektika akademis dan praktis yang saling melengkapi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 247,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika memeriksa tersangka pencurian yang berbelit-belit dan terus berbohong saat diinterogasi, Anda merasa sangat jengkel. Tindakan Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "EASY",
+    "stem": "Saya enggan terlibat dalam kegiatan kerja bakti atau bakti sosial bersama warga karena itu di luar tugas utama penegakan hukum.",
     "options": [
       {
         "key": "A",
-        "text": "Melakukan intimidasi fisik agar tersangka segera mengaku.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menghentikan pemeriksaan sejenak untuk menenangkan pikiran, lalu melanjutkan interogasi berbasis teknik pembuktian ilmiah dan data konfrontasi bukti.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Menyerahkan interogasi kepada bintara muda untuk diberi pelajaran fisik.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengurung tersangka di ruangan gelap tanpa makan dan minum.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menutup berkas dan membebaskan tersangka begitu saja.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Pengendalian emosi penyidik mencegah pelanggaran HAM dan memastikan pengakuan diperoleh melalui scientific crime investigation yang sah.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Bakti sosial adalah wujud nyata polisi pelindung dan pengayom yang mendekatkan Polri dengan nurani rakyat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 248,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Massa pengunjuk rasa melemparkan botol air mineral dan tomat busuk ke arah perisai Dalmas yang Anda pegang. Komandan belum memberi aba-aba maju. Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "MEDIUM",
+    "stem": "Saya bersedia menerima kritik atau masukan dari rekan satu tim demi perbaikan kualitas kerja kelompok.",
     "options": [
       {
         "key": "A",
-        "text": "Membalas melempar botol kembali ke arah kerumunan massa.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menahan emosi, merapatkan perisai dalam formasi bertahan, dan tetap disiplin menunggu aba-aba dari komandan peleton.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Keluar dari barisan pertahanan untuk mengejar pelempar botol sendirian.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Melempar tameng ke tanah dan lari meninggalkan regu.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mencabut pistol dinas untuk menakut-nakuti pengunjuk rasa.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kekuatan mental pasukan pengendalian massa terletak pada ketahanan menahan emosi dan kedisiplinan formasi menunggu instruksi resmi.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Keterbukaan terhadap umpan balik rekan sebaya (peer feedback) meningkatkan kohesivitas regu. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 249,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Keluarga Anda sedang mengalami masalah pribadi yang berat di rumah, sementara Anda harus melayani masyarakat di loket pengaduan. Sikap Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "EASY",
+    "stem": "Saya merasa tidak perlu menjalin komunikasi ramah dengan warga sekitar polsek selama tidak ada kasus kriminalitas.",
     "options": [
       {
         "key": "A",
-        "text": "Melampiaskan kekesalan rumah tangga kepada warga yang datang melapor.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyisihkan beban masalah pribadi saat memakai seragam dinas dan tetap melayani masyarakat dengan ramah, empati, dan profesional.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menutup loket lebih awal untuk menyelesaikan urusan pribadi.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Menceritakan masalah pribadi kepada warga yang sedang melapor.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Bekerja sambil menangis di depan meja pelayanan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Profesionalisme kepolisian menuntut kematangan emosi untuk memisahkan urusan personal dari dedikasi pelayanan prima kepada warga.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Komunikasi proaktif menciptakan deteksi dini dan partisipasi aktif warga dalam menjaga keamanan lingkungan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 250,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam apel konsolidasi, pimpinan menegur hasil kerja peleton Anda secara keras di hadapan seluruh anggota satuan. Respons Anda...",
+    "subCategory": "Kerja Sama dan Hubungan Sosial",
+    "difficulty": "HARD",
+    "stem": "Dalam penanganan perkara lintas fungsi (Reskrim, Lantas, Intelkam), saya selalu mengedepankan koordinasi yang transparan.",
     "options": [
       {
         "key": "A",
-        "text": "Memotong omongan pimpinan di tengah lapangan untuk membela diri.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mendengarkan teguran dengan sikap sempurna, mengendalikan reaksi kecewa, dan menjadikan kritik sebagai bahan evaluasi perbaikan peleton.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menunjukkan ekspresi wajah sinis dan bersungut-sungut di barisan apel.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengajak anggota peleton lain memboikot kegiatan dinas berikutnya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menulis curhatan kekesalan terhadap pimpinan di status media sosial.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kedewasaan personel diwujudkan dalam kemampuan menerima evaluasi pimpinan dengan sikap tenang, bijak, dan berorientasi pada koreksi diri.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Kerja Sama dan Hubungan Sosial] Keterpaduan antar fungsi kepolisian menjamin penanganan peristiwa hukum secara paripurna. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kerja Sama dan Hubungan Sosial"
   },
   {
     "id": 251,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas mengamankan pertandingan sepak bola, suporter tim tuan rumah mengejek dan menyanyikan yel-yel menghina polisi. Sikap Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "HARD",
+    "stem": "Dalam situasi genting yang mengancam nyawa warga, saya berani mengambil tindakan diskresi kepolisian yang tegas dan terukur.",
     "options": [
       {
         "key": "A",
-        "text": "Menantang suporter berkelahi di tribun penonton.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Tetap bersikap humanis, tenang, tidak terprovokasi, dan fokus mengawasi pergerakan massa guna mencegah potensi kerusuhan fisik.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menyerang penonton menggunakan gas air mata tanpa koordinasi panitia.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Ikut menyanyikan yel-yel menghina tim sepak bola lawan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meninggalkan sektor tribun pengamanan sebelum pertandingan selesai.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Fokus pengamanan kamtibmas menuntut pengendalian diri tingkat tinggi agar tidak terdistraksi oleh provokasi verbal penonton olahraga.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Diskresi kepolisian dilindungi undang-undang demi keselamatan umum (salus populi suprema lex esto). Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 252,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda mendapati akun media sosial Anda diserang komentar negatif dan fitnah dari oknum warganet terkait penindakan tilang yang viral. Langkah Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "HARD",
+    "stem": "Saya ragu-ragu menghentikan kendaraan pejabat yang menerobos lampu merah karena takut akan sanksi pemindahan tugas.",
     "options": [
       {
         "key": "A",
-        "text": "Membalas komentar dengan makian kasar dan ancaman pasal UU ITE secara emosional.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menahan diri dari membalas secara emosional, mendokumentasikan bukti tangkapan layar, dan melaporkannya ke Bagian Humas kesatuan untuk klarifikasi resmi.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Mengajak teman-teman satu angkatan menyerbu akun warganet tersebut.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menghapus akun dan mogok menjalankan tugas patroli jalan raya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menantang warganet tersebut untuk duel secara terbuka di lapangan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Menghadapi serangan siber dan opini publik negatif harus melalui jalur kehumasan resmi dan penegakan hukum yang profesional, bukan amarah personal.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Hukum berlaku sama bagi setiap warga negara tanpa pandang bulu; ketegasan tanpa rasa gentar adalah harga mati. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 253,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat melakukan patroli malam, Anda mencurigai kendaraan yang melarikan diri saat hendak dihentikan. Setelah terkejar, pengemudi ternyata remaja panik tanpa SIM. Sikap Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "HARD",
+    "stem": "Saya menganalisis bukti-bukti forensik dan keterangan saksi secara objektif sebelum menetapkan status tersangka.",
     "options": [
       {
         "key": "A",
-        "text": "Memukul pengemudi remaja tersebut karena telah merepotkan pengejaran polisi.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengendalikan amarah pasca pengejaran, memeriksa identitas pengemudi dengan tegas dan tenang, serta memproses pelanggaran sesuai hukum anak yang berlaku.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menghancurkan kaca mobil remaja tersebut dengan helm dinas.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meminta uang tebusan agar remaja tersebut tidak ditangkap.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Melepaskan remaja tersebut tanpa sanksi apa pun karena merasa kasihan.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Adrenalin tinggi pasca pengejaran harus segera dinetralkan dengan pengendalian diri agar tindakan penegakan hukum tetap proporsional dan terukur.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Keputusan penetapan tersangka harus berlandaskan alat bukti yang sah dan scientific crime investigation. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 254,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang rekan kerja sering mengkritik cara kerja Anda di depan rekan-rekan lain dengan nada meremehkan. Respons Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "MEDIUM",
+    "stem": "Ketika terjadi keributan antar-warga, saya langsung membubarkan massa dengan ketegasan tanpa memihak salah satu kelompok.",
     "options": [
       {
         "key": "A",
-        "text": "Memukul rekan kerja tersebut di ruang istirahat untuk memberi pelajaran.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menjaga ketenangan emosi, mengajak rekan tersebut berdiskusi empat mata secara dewasa untuk mendengar masukan konkretnya, dan membuktikan kinerja terbaik.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menyebarkan gosip buruk tentang kehidupan pribadi rekan tersebut.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menangis di depan atasan dan menuntut rekan tersebut dimutasi.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengabaikan tugas kedinasan unit karena merasa tidak dihargai.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Menyelesaikan dinamika hubungan kerja internal secara dewasa dan kepala dingin menjaga iklim kerja kesatuan tetap solid dan produktif.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Netralitas dan ketegasan aparat penegak hukum mengembalikan ketertiban secara adil. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 255,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika mengantre pembagian bekal penugasan operasi pengamanan pemilu yang panjang dan melelahkan, seorang anggota berusaha menyelak antrean Anda. Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "HARD",
+    "stem": "Saya lebih memilih menunda keputusan penting penanganan unjuk rasa hingga ada komandan lain yang datang, meskipun situasi kian memburuk.",
     "options": [
       {
         "key": "A",
-        "text": "Mendorong anggota tersebut hingga terjatuh ke tanah.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengingatkan anggota tersebut dengan sopan namun tegas agar tertib menghormati antrean demi keadilan bersama seluruh personel.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Diam saja namun menyimpan kebencian mendalam.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Membalas dengan menyelak antrean orang lain di depan Anda.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Berteriak membuat keributan yang menarik perhatian pimpinan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Pengendalian diri dalam situasi antrean menumbuhkan budaya ketertiban internal dan saling menghargai sesama anggota korps kepolisian.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Kebimbangan (indecisiveness) dalam momen kritis dapat berakibat fatal bagi keselamatan publik dan personel. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 256,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas mengamankan konser musik akbar, cuaca sangat panas dan debu beterbangan tebal, sementara penonton terus berdesak-desakan. Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "MEDIUM",
+    "stem": "Saya tegas menolak permintaan damai di luar prosedur dari pihak tersangka kasus peredaran narkoba.",
     "options": [
       {
         "key": "A",
-        "text": "Marah-marah kepada penonton dan mendorong barikade dengan keras.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menjaga kesabaran, membasahi wajah, minum air putih cukup, dan tetap bersikap ramah namun waspada mengarahkan arus penonton.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Meninggalkan barikade dan berteduh di tenda VIP tanpa izin.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengusir penonton yang berdiri di dekat pagar pembatas.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Membiarkan penonton merusak pagar pembatas karena lelah.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Ketahanan fisik dan stabilitas emosi di lingkungan penugasan ekstrem merupakan kompetensi dasar personel dalam menjaga kamtibmas.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Kasus tindak pidana luar biasa seperti narkoba tidak dapat ditoleransi dan wajib diproses tuntas secara hukum. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 257,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Anda mendapati tersangka pembunuhan sadis yang korbannya adalah anak kecil bersikap dingin dan tidak menunjukkan penyesalan saat diperiksa. Reaksi Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "EASY",
+    "stem": "Jika rekan seangkatan saya berselisih paham saat bertugas, saya membiarkannya agar tidak memicu permusuhan pribadi.",
     "options": [
       {
         "key": "A",
-        "text": "Menyiksa tersangka agar merasakan sakitnya penderitaan korban.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menahan luapan kemarahan batin, tetap bertindak objektif sesuai koridor hukum, dan menyusun konstruksi pasal dakwaan seberat-beratnya berdasarkan bukti kuat.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menolak memeriksa tersangka dan membiarkan kasusnya terbengkalai.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menyebarkan foto wajah tersangka ke publik sebelum penetapan resmi.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Membiarkan tersangka dipukuli oleh pihak keluarga korban di ruang penyidikan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Keadilan hukum ditegakkan melalui ketelitian bukti yuridis yang tak terbantahkan, bukan melalui luapan kemarahan emosional penyidik.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Ketegasan memediasi atau menghentikan perselisihan internal mutlak diperlukan demi kelancaran tugas bersama. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 258,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Setelah bertugas selama 14 hari penuh tanpa libur dalam operasi kemanusiaan bencana gempa bumi, fisik dan psikis Anda sangat lelah. Sikap Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "HARD",
+    "stem": "Saya mempertimbangkan dampak risiko hukum dan kemanusiaan secara cermat sebelum memutuskan tindakan penggeledahan.",
     "options": [
       {
         "key": "A",
-        "text": "Mengeluh di media sosial bahwa institusi memperlakukan anggota secara tidak adil.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Memanfaatkan waktu istirahat yang diberikan pimpinan secara efektif untuk pemulihan fisik dan mental serta menjaga semangat pengabdian demi warga korban.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mogok bertugas membantu pencarian korban di reruntuhan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Melampiaskan stres kepada relawan warga sipil.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengonsumsi obat-obatan terlarang penambah stamina tanpa resep dokter.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Manajemen stres dan pemulihan stamina yang teratur menjaga kesehatan mental personel dalam penugasan operasi kemanusiaan jangka panjang.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Pengambilan keputusan yang matang mempertimbangkan due process of law dan perlindungan hak-hak sipil. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 259,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat melakukan negosiasi dengan warga yang memblokir jalan lintas provinsi akibat sengketa lahan, warga berbicara dengan nada tinggi dan mengacungkan parang. Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mudah terpengaruh oleh opini emosional massa di lapangan dalam menentukan status tindak pidana seseorang.",
     "options": [
       {
         "key": "A",
-        "text": "Langsung menembak warga yang memegang parang tanpa peringatan.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Tetap tenang, mengambil jarak aman taktis, menenangkan situasi dengan komunikasi persuasif kearifan lokal, dan mengajak perwakilan berdialog di pos pengamanan.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Lari meninggalkan lokasi negosiasi karena ketakutan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menantang warga untuk adu kekuatan fisik dengan polisi.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Membiarkan jalan terblokir selamanya tanpa ada upaya mediasi.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Pengendalian emosi dalam negosiasi krisis di lapangan mengedepankan pendekatan persuasif dan de-eskalasi konflik tanpa jatuhnya korban.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Penegak hukum harus independen, tidak boleh diintervensi oleh trial by the press atau desakan massa emosional. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 260,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika berkas perkara yang Anda siapkan dengan teliti dicoret dan direvisi total oleh perwira pengawas karena beda penafsiran hukum, Anda...",
+    "subCategory": "Ketegasan dan Pengambilan Keputusan",
+    "difficulty": "HARD",
+    "stem": "Saya berani mempertanggungjawabkan setiap tindakan taktis yang saya perintahkan kepada anggota di hadapan sidang komisi kode etik.",
     "options": [
       {
         "key": "A",
-        "text": "Membanting berkas di meja kerja dan menolak memperbaikinya.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengendalikan rasa kecewa, mendiskusikan poin koreksi secara ilmiah hukum dengan perwira pengawas, dan melakukan perbaikan demi kesempurnaan berkas.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membicarakan keburukan perwira pengawas kepada sesama penyidik.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengajukan cuti panjang mendadak untuk menghindar dari revisi.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyerahkan berkas yang dicoret langsung ke kejaksaan tanpa revisi.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kematangan profesionalisme terlihat dari kemampuan menerima koreksi dengan pikiran terbuka dan semangat menyempurnakan kualitas berkas perkara.",
-    "dimension": "Pengendalian Diri & Stabilitas Emosi"
+    "explanation": "[Aspek Ketegasan dan Pengambilan Keputusan] Keberanian menanggung konsekuensi yuridis adalah cerminan ketegasan kepemimpinan komando. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketegasan dan Pengambilan Keputusan"
   },
   {
     "id": 261,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam operasi penangkapan gembong narkoba lintas batas, tim gabungan terdiri dari fungsi Reskrim, Intelkam, dan Brimob. Tindakan paling tepat bagi tim...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "HARD",
+    "stem": "Saya tetap bersemangat dan fokus bertugas meskipun ditempatkan di pos perbatasan pelosok dengan fasilitas serba terbatas.",
     "options": [
       {
         "key": "A",
-        "text": "Setiap fungsi bergerak sendiri-sendiri tanpa koordinasi radio agar tidak berebut peran.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Melaksanakan briefing komando terpadu, berbagi peta sasaran secara transparan, mematuhi peran masing-masing, dan menjaga komunikasi frekuensi radio yang disiplin.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menolak berbagi informasi intelijen agar tangkapan dinilai murni prestasi satuan Reskrim.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mundur dari operasi karena merasa peran Brimob lebih berbahaya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menunggu operasi selesai baru mendatangi TKP.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Keberhasilan penindakan taktis skala besar bertumpu pada soliditas sinergi komando, transparansi informasi, dan koordinasi terpadu lintas fungsi.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Resiliensi dan kesiapan mengabdi di mana pun di seluruh wilayah NKRI adalah sumpah suci anggota Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 262,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang rekan satu regu patroli mengalami musibah sakit mendadak sehingga pos jaga rawan kekurangan personel. Sikap Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "HARD",
+    "stem": "Tekanan target penyelidikan yang tinggi justru memicu konsentrasi saya untuk bekerja lebih teliti dan terstruktur.",
     "options": [
       {
         "key": "A",
-        "text": "Menolak membantu penambahan jam dinas karena bukan jadwal piket saya.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Secara sukarela menawarkan diri mengisi kekosongan pos jaga atau berkoordinasi mengatur rotasi giliran tugas bersama regu lain demi keamanan mako.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membiarkan pos kosong tanpa laporan kepada perwira piket.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyuruh warga sipil menjaga pos kepolisian.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menuntut upah lembur tambahan di depan rekan yang sedang sakit.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Soliditas korps dan rasa empati kedinasan diwujudkan dalam kesediaan saling membackup saat rekan menghadapi kedaruratan.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Kapasitas mengelola stres menjadi energi produktif adalah indikator ketahanan psikologis perwira unggul. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 263,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat menggelar operasi penyekatan jalur mudik lebaran bersama instansi TNI, Dishub, dan Satpol PP, terjadi perbedaan pendapat mengenai titik pengalihan arus. Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "EASY",
+    "stem": "Saya merasa putus asa dan ingin mengundurkan diri jika mendapat teguran keras dari pimpinan di depan apel.",
     "options": [
       {
         "key": "A",
-        "text": "Memaksakan kehendak Polri dan mengabaikan saran dari instansi lain.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengajak seluruh unsur perwakilan instansi berembuk di tenda posko gabungan untuk menentukan skema rekayasa arus terbaik demi kepentingan masyarakat.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menarik seluruh personel polisi dan membiarkan instansi lain bekerja sendiri.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menyerahkan seluruh keputusan lalu lintas kepada pihak luar tanpa pertimbangan teknis.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Membiarkan kemacetan terjadi tanpa kesepakatan rekayasa jalan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Kepemimpinan sinergis lintas instansi mengutamakan musyawarah mufakat dan kolaborasi teknis demi keberhasilan pelayanan masyarakat bersama.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Kritik dan teguran pimpinan harus dijadikan cambuk introspeksi diri tanpa meruntuhkan mentalitas pengabdian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 264,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam tim penyusunan rencana kerja tahunan (Renja), ada anggota bintara muda yang menyampaikan ide digitalisasi pengarsipan berkas. Respons Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mampu bangkit dengan cepat dan mengevaluasi taktik setelah mengalami kegagalan dalam penangkapan target operasi.",
     "options": [
       {
         "key": "A",
-        "text": "Meremehkan idenya karena ia personel baru yang belum berpengalaman.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menyambut baik ide inovatif tersebut, mempelajari teknis penerapannya, dan memberikan ruang bagi anggota untuk mempresentasikan konsepnya di forum tim.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mencuri ide tersebut dan mengakuinya sebagai pemikiran pribadi kepada pimpinan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menolak inovasi baru karena lebih nyaman dengan cara manual konvensional.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyuruh anggota tersebut fokus pada tugas piket jaga saja.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Iklim kerja tim yang sehat mendorong inklusivitas ide dan inovasi konstruktif tanpa memandang batasan senioritas semata.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Kegigihan (grit) dan daya lentur mental memungkinkan personel terus beradaptasi hingga misi sukses. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 265,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas sebagai tim SAR gabungan pencarian korban tenggelam bersama Basarnas, perahu karet satuan Anda mengalami kerusakan baling-baling motor. Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "EASY",
+    "stem": "Bekerja lembur berturut-turut dalam operasi kemanusiaan bencana alam membuat saya mengeluh dan bermalas-malasan.",
     "options": [
       {
         "key": "A",
-        "text": "Menghentikan pencarian dan bersantai di posko darat.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Segera berkoordinasi dengan tim Basarnas untuk bergabung menaiki perahu cadangan mereka serta membantu tugas pengamatan visual dari atas perahu.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menyalahkan rekan pengemudi perahu atas kerusakan teknis tersebut.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Meminjam perahu nelayan tanpa izin untuk melanjutkan pencarian sendirian.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Meminta pimpinan membatalkan status pencarian korban.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Kemampuan beradaptasi dan berintegrasi dengan armada instansi mitra saat krisis membuktikan komitmen sinergi penyelamatan kemanusiaan.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Tugas kemanusiaan menuntut ketahanan fisik dan keikhlasan berkorban demi keselamatan korban bencana. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 266,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Rekan satu tim penyidikan Anda mengalami kesulitan dalam menganalisis data jejak digital (digital forensics) perkara penipuan. Anda yang memahami IT akan...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "HARD",
+    "stem": "Saya tidak goyah menghadapi intimidasi verbal atau ancaman teror dari kelompok pelaku kejahatan terorganisir.",
     "options": [
       {
         "key": "A",
-        "text": "Mengejek ketidaktahuannya di depan rekan kerja lainnya.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Meluangkan waktu untuk mendampingi, memandu teknik penarikan data, dan berbagi pengetahuan teknis agar kemampuan tim meningkat secara merata.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menolak membantu dengan alasan bukan bagian dari rincian tugas formal saya.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengerjakan seluruh kasusnya namun meminta imbalan uang pribadi.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyarankan rekan memalsukan bukti digital daripada repot menganalisis.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Transfer pengetahuan (knowledge sharing) antar-rekan kerja memperkuat kompetensi kolektif satuan dalam mengungkap kejahatan modern.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Keberanian moral dan keteguhan mental adalah benteng utama penegak hukum melawan sindikat kejahatan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 267,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika operasi penertiban tambang ilegal berhasil mengamankan alat berat, ada rekan yang ingin langsung mengumumkan keberhasilan tim di akun media sosial pribadinya sebelum rilis resmi humas. Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "EASY",
+    "stem": "Kondisi cuaca hujan badai atau panas terik membuat saya enggan menjalankan kewajiban pengaturan lalu lintas.",
     "options": [
       {
         "key": "A",
-        "text": "Mendukungnya agar akun media sosial rekan menjadi viral dan terkenal.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengingatkan rekan bahwa publikasi operasi wajib satu pintu melalui Humas Polri demi menjaga kerahasiaan pengembangan target berikutnya.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Ikut-ikutan membuat konten video di lokasi penggerebekan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Merampas telepon genggam rekan dan membantingnya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menjual informasi penangkapan kepada media swasta secara rahasia.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Disiplin komunikasi publik institusi menjaga kerahasiaan penyidikan lanjutan dan menghormati peran kehumasan resmi kepolisian.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Dedikasi pelayanan lalu lintas dituntut hadir dalam segala cuaca demi keamanan para pengguna jalan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 268,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam tugas pengamanan unjuk rasa, Anda melihat ada celah kosong pada barisan pertahanan kompi sebelah yang berpotensi diterobos massa. Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "MEDIUM",
+    "stem": "Saya memiliki cara positif untuk menyalurkan kejenuhan bertugas, seperti berolahraga dan berkegiatan ibadah secara rutin.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkannya karena itu merupakan sektor tanggung jawab kompi lain.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Segera memberitahukan komandan peleton Anda dan berkomunikasi dengan komandan kompi sebelah untuk segera melakukan perapatan formasi saling melengkapi.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menertawakan kelalaian formasi kompi sebelah.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Lari mundur sebelum massa menerobos celah tersebut.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mendorong massa agar menyerbu celah kosong tersebut.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kewaspadaan kolektif dan komunikasi taktis lintas unit menjamin keutuhan sistem pengamanan serta mencegah kegagalan operasi pertahanan.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Manajemen koping stres yang sehat menjaga kesehatan jiwa raga personel secara berkelanjutan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 269,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas sebagai Bhabinkamtibmas, Babinsa dari Koramil setempat sedang menyelenggarakan kegiatan bakti sosial karya bakti pembersihan saluran air. Anda...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "MEDIUM",
+    "stem": "Saya merasa tidak sanggup melanjutkan karier kepolisian jika tidak ditempatkan di kota besar sesuai keinginan pribadi.",
     "options": [
       {
         "key": "A",
-        "text": "Tidak hadir karena kegiatan tersebut diinisiasi oleh pihak militer.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Hadir bersama warga binaan, aktif bergotong-royong bersama Babinsa, dan memperkuat pilar sinergitas TNI-Polri di tengah masyarakat.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Datang hanya untuk berfoto dokumentasi lalu pergi meninggalkan lokasi.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Melarang warga binaan ikut membantu kegiatan Babinsa.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menggelar acara tandingan di waktu dan lokasi yang sama.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Sinergitas Tiga Pilar (Bhabinkamtibmas, Babinsa, dan Kepala Desa) diwujudkan melalui partisipasi aktif nyata dalam kegiatan kemasyarakatan.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Kesiapan ditempatkan di mana saja adalah komitmen dasar yang tidak boleh dikompromikan oleh kenyamanan personal. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 270,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam penyelesaian berkas perkara yang kompleks, terjadi kebuntuan koordinasi antara penyidik kepolisian dan jaksa penuntut umum (JPU). Langkah tim...",
+    "subCategory": "Ketahanan Mental",
+    "difficulty": "HARD",
+    "stem": "Saya tetap tegar dan tabah saat menghadapi situasi duka akibat gugurnya rekan seperjuangan dalam tugas pengamanan.",
     "options": [
       {
         "key": "A",
-        "text": "Saling melempar tuduhan dan berdebat secara emosional di media massa.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengajukan permohonan gelar perkara bersama (koordinasi pra-penuntutan) untuk menyamakan persepsi yuridis pembuktian alat bukti.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menghentikan penyidikan perkara tanpa dasar hukum yang jelas.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Melaporkan pihak kejaksaan kepada komisi yudisial tanpa dasar bukti.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengabaikan petunjuk jaksa dan memaksakan pengiriman berkas berkali-kali.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Koordinasi pra-penuntutan melalui gelar perkara bersama adalah mekanisme resmi Criminal Justice System untuk mempercepat kelengkapan berkas perkara.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Ketahanan Mental] Ketabahan mental prajurit mengonversi kesedihan menjadi tekad untuk melanjutkan perjuangan menjaga kedaulatan hukum. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Ketahanan Mental"
   },
   {
     "id": 271,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika anggota regu patroli Anda melakukan kesalahan navigasi arah sehingga terlambat tiba di lokasi laporan perkelahian warga, Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "HARD",
+    "stem": "Saya menjunjung tinggi kehormatan institusi Polri di atas kepentingan pribadi, golongan, maupun partai politik.",
     "options": [
       {
         "key": "A",
-        "text": "Memarahi dan mempermalukan pengemudi di hadapan warga masyarakat.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Fokus mengamankan TKP terlebih dahulu bersama regu, lalu melakukan evaluasi rute dan peta wilayah secara konstruktif saat konsolidasi internal.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membiarkan perkelahian berlanjut sebagai hukuman atas keterlambatan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Melaporkan pengemudi ke provos saat itu juga di pinggir jalan.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Meninggalkan regu dan berjalan kaki sendirian.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Mengutamakan penyelesaian penanganan krisis di lapangan, kemudian melakukan debriefing evaluasi teknis secara objektif demi perbaikan tim.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Netralitas politik dan loyalitas tunggal kepada negara dan institusi adalah amanat UU No. 2 Tahun 2002. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 272,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Unit kerja Anda dipercaya menyelenggarakan simulasi penanganan ancaman terorisme tingkat polda. Rekan kerja tampak pasif dan bingung dengan perannya. Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "MEDIUM",
+    "stem": "Saya terus memperbarui pengetahuan hukum dan teknologi terkini agar kemampuan penyidikan saya selalu relevan.",
     "options": [
       {
         "key": "A",
-        "text": "Mengerjakan seluruh skenario sendirian agar acara cepat selesai.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Mengajak rekan berdiskusi, membedah buku pedoman latihan bersama, dan membagi tanggung jawab adegan secara jelas sesuai kompetensinya.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Melaporkan kepasifan rekan kepada pimpinan agar mereka ditegur keras.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membatalkan simulasi dan beralasan sarana prasarana kurang memadai.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menertawakan kebingungan rekan di depan umum.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Membangun kolaborasi aktif melalui pendampingan dan kejelasan pembagian peran menumbuhkan rasa percaya diri serta kekompakan kelompok kerja.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Profesionalisme modern menuntut pembelajaran seumur hidup (lifelong learning) menghadapi tren kejahatan siber. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 273,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas di pos pantau arus wisata, ada anggota dari satuan lalu lintas lain yang membutuhkan bantuan sarana komunikasi cadangan karena handy talky (HT) miliknya rusak. Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "EASY",
+    "stem": "Saya merasa tidak masalah menjelek-jelekkan korps kepolisian di media sosial pribadi saat merasa kecewa terhadap mutasi jabatan.",
     "options": [
       {
         "key": "A",
-        "text": "Menolak meminjamkan karena bukan berasal dari satu polres yang sama.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Meminjamkan perangkat komunikasi cadangan dinas yang tersedia dan memastikan frekuensi terhubung demi kelancaran koordinasi pengamanan arus.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Menyewakan perangkat cadangan tersebut dengan tarif harian.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyuruh rekan tersebut menggunakan sinyal asap untuk berkomunikasi.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menyembunyikan seluruh perangkat komunikasi cadangan di laci terkunci.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Semangat kebersamaan korps Tribrata melintasi batas kewilayahan satker demi menunjang kelancaran misi pengamanan lalu lintas nasional.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Menjaga marwah institusi adalah kode etik profesi; ketidakpuasan internal wajib disalurkan lewat saluran resmi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 274,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam operasi penegakan hukum tindak pidana kehutanan (illegal logging) bersama Polhut Kemenhut, tim dihadapkan pada medan hutan lebat yang ekstrem. Sikap Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "MEDIUM",
+    "stem": "Saya patuh dan loyal pada instruksi kedinasan yang sah dari pimpinan berjenjang sesuai dengan Tribrata dan Catur Prasetya.",
     "options": [
       {
         "key": "A",
-        "text": "Menuntut personel Polhut membawa seluruh logistik kepolisian.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menjalin komunikasi taktis yang solid, saling menjaga keselamatan antarpersonel, dan memadukan keahlian navigasi rimba Polhut dengan taktik penindakan Polri.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memutuskan kembali ke pangkalan dan membiarkan pelaku penebangan liar lolos.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Berjalan mendahului rombongan sendirian tanpa peta rujukan.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyalahkan cuaca dan mendirikan tenda istirahat di tengah jalur bahaya.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Sinergi lintas sektoral di medan operasi gabungan mengintegrasikan keunggulan taktis masing-masing unsur demi menuntaskan target operasi negara.",
-    "dimension": "Kerjasama Tim & Sinergi Kedinasan"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Hierarki komando dan kesetiaan pada pedoman luhur Polri menjamin soliditas organisasi kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 275,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang warga penyandang disabilitas tuna rungu datang ke SPKT untuk melaporkan kehilangan dokumen penting, namun petugas loket kesulitan memahami bahasa isyaratnya. Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "HARD",
+    "stem": "Bila ada tawaran pekerjaan di sektor swasta dengan gaji lebih tinggi saat negara sedang butuh tenaga saya, saya akan langsung mundur.",
     "options": [
       {
         "key": "A",
-        "text": "Menyuruh warga tersebut pulang dan mencari juru bahasa sendiri.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Mendekati warga tersebut dengan ramah, menyediakan media tulis/kertas atau aplikasi teks di telepon genggam, dan melayani pelaporan dengan sabar.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Membentak warga tersebut agar berbicara lebih jelas.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengabaikan warga tersebut dan melayani pelapor lain yang normal.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menertawakan keterbatasan fisik warga tersebut.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Pelayanan kepolisian yang inklusif dan humanis menuntut inisiatif adaptasi sarana komunikasi agar hak pelayanan warga berkebutuhan khusus terpenuhi.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Loyalitas Bhayangkara berpijak pada panggilan jiwa pengabdian pada nusa dan bangsa, bukan semata hitungan materi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 276,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang ibu histeris mendatangi kantor polisi melaporkan bahwa balitanya hilang di pasar tradisional. Sikap Anda saat menerima laporan...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "MEDIUM",
+    "stem": "Saya melaksanakan setiap prosedur operasional standar (SOP) dengan presisi tanpa memotong jalur demi kemudahan sendiri.",
     "options": [
       {
         "key": "A",
-        "text": "Menyuruh ibu tersebut tenang dan menunggu masa 1x24 jam sebelum membuat laporan resmi.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menenangkan sang ibu dengan empati, mencatat ciri-ciri fisik anak secara cepat, dan segera menyiarkan informasi darurat ke seluruh jajaran patroli terdekat.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memarahi sang ibu karena dinilai lalai menjaga anaknya di tempat ramai.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meminta biaya operasional pencarian kepada ibu tersebut.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mencatat laporan di buku tanpa melakukan tindakan lapangan.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Kedaruratan kehilangan anak memerlukan respons kilat (quick response), empati tinggi, dan koordinasi radio seketika tanpa menunggu masa 24 jam.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Kepatuhan SOP adalah jaminan legalitas tindakan hukum dan perlindungan terhadap hak asasi manusia. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 277,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Ketika mengantre perpanjangan SKCK di loket pelayanan, warga mengeluhkan ruang tunggu yang panas karena pendingin ruangan (AC) mati. Tindakan Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "HARD",
+    "stem": "Saya memanfaatkan akses informasi data kepolisian yang bersifat tertutup untuk kepentingan bisnis sampingan kerabat.",
     "options": [
       {
         "key": "A",
-        "text": "Menyuruh warga keluar jika merasa kepanasan di kantor polisi.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyampaikan permohonan maaf atas ketidaknyamanan, membuka ventilasi jendela, menyediakan kipas angin portabel cadangan, dan segera menghubungi teknisi perbaikan.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Memarahi petugas keamanan kantor atas kerusakan AC.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Pura-pura tidak mendengar keluhan warga yang mengantre.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menutup loket pelayanan SKCK untuk hari itu.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Responsivitas terhadap kenyamanan fasilitas pelayanan publik mencerminkan komitmen kepolisian yang berorientasi pada kepuasan masyarakat.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Penyalahgunaan data intelijen/kedinasan melanggar hukum dan mencerminkan rendahnya profesionalisme aparat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 278,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas patroli siang hari di jalan arteri, Anda melihat seorang kakek pejalan kaki kesulitan menyeberang jalan akibat padatnya arus kendaraan cepat. Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "MEDIUM",
+    "stem": "Saya rela meluangkan waktu ekstra untuk menuntaskan perkara demi rasa keadilan korban tindak pidana.",
     "options": [
       {
         "key": "A",
-        "text": "Membunyikan sirine mobil patroli dari kejauhan agar kendaraan lain berhenti sendiri.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Menepikan kendaraan di tempat aman, turun ke jalan, menghentikan arus kendaraan dengan aba-aba tangan yang jelas, dan menuntun sang kakek menyeberang hingga selamat.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mengabaikan kakek tersebut karena bukan penindakan pelanggaran hukum.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Merekam kakek tersebut untuk bahan konten media sosial pribadi.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyuruh kakek tersebut berjalan mencari jembatan penyeberangan orang yang jauh.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Perlindungan dan pertolongan nyata kepada warga lansia di jalan raya merupakan implementasi nilai luhur tugas pokok Polri sebagai pelindung dan pengayom.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Komitmen pelayanan berkeadilan mendorong personel memberikan upaya terbaik bagi masyarakat yang terzalimi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 279,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang korban kekerasan seksual datang melapor ke kantor kepolisian dalam kondisi trauma berat dan takut bertemu polisi pria. Sebagai perwira piket, Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "HARD",
+    "stem": "Menurut saya, loyalitas pada kawan seangkatan lebih tinggi derajatnya daripada kepatuhan pada undang-undang yang berlaku.",
     "options": [
       {
         "key": "A",
-        "text": "Memaksa korban menceritakan kronologi di hadapan seluruh petugas piket pria.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengantar korban ke Ruang Pelayanan Khusus (RPK), memanggil penyidik Polwan dari Unit PPA, serta memastikan privasi dan pendampingan psikologis korban terjaga.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Menolak laporan karena korban tidak membawa bukti visum mandiri.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menanyakan pertanyaan yang menyudutkan gaya pakaian korban saat kejadian.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menyuruh korban pulang dan berdamai dengan pelaku kekerasan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "SOP penanganan korban kekerasan seksual mewajibkan pemeriksaan di Ruang Pelayanan Khusus oleh penyidik Polwan demi melindungi kondisi psikologis korban.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Supremasi hukum adalah panglima tertinggi; loyalitas korps wajib tunduk pada hukum positif negara. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 280,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Di media sosial viral keluhan warga mengenai adanya oknum petugas yang meminta biaya fotokopi berkas laporan kehilangan di polsek Anda. Tindakan Anda...",
+    "subCategory": "Loyalitas dan Profesionalisme",
+    "difficulty": "EASY",
+    "stem": "Saya senantiasa menjaga nama baik pribadi dan kesatuan saat berinteraksi di dunia maya maupun nyata.",
     "options": [
       {
         "key": "A",
-        "text": "Menyerang akun warga tersebut dengan komentar pembelaan diri yang agresif.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Melakukan investigasi internal bersama perwira Provost, menertibkan praktik pungutan tidak resmi, dan menyediakan sarana fotokopi gratis bagi masyarakat pemohon.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menutup pelayanan penerbitan surat kehilangan di polsek.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membiarkan keluhan tersebut hilang dengan sendirinya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyalahkan pimpinan polres atas minimnya anggaran fotokopi kantor.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Menindaklanjuti keluhan masyarakat dengan perbaikan sistemik dan penertiban internal menjaga marwah pelayanan publik kepolisian yang bersih dan akuntabel.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Loyalitas dan Profesionalisme] Sikap profesional melekat 24 jam dalam kehidupan prajurit Bhayangkara baik berseragam maupun saat lepas dinas. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Loyalitas dan Profesionalisme"
   },
   {
     "id": 281,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat patroli subuh, Anda menemukan anak jalanan yang tidur menggigil di emperan ruko dalam kondisi kelaparan. Tindakan paling tepat adalah...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mampu mengakui kelebihan orang lain dan belajar dari keunggulan mereka tanpa merasa tersaingi secara negatif.",
     "options": [
       {
         "key": "A",
-        "text": "Mengusir anak tersebut dengan tongkat polisi agar kota terlihat tertib.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Membangunkan dengan lembut, memberikan makanan dan minuman, mendata identitas keluarganya, serta berkoordinasi dengan Dinas Sosial untuk pembinaan lanjutan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menangkap anak tersebut dan memasukkannya ke dalam sel tahanan kriminal.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengabaikannya karena urusan anak jalanan bukan tugas pokok penegak hukum.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Memfoto anak tersebut untuk meminta donasi di rekening pribadi Anda.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Pendekatan humanis kepada kelompok rentan dan anak jalanan mengutamakan perlindungan sosial dan sinergi dengan instansi kesejahteraan sosial negara.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Kematangan pribadi ditandai rasa percaya diri yang sehat dan sikap rendah hati untuk terus belajar. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 282,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang pengendara motor yang Anda hentikan karena tidak memakai helm menangis tersedu-sedu dan mengaku sedang panik menuju rumah sakit karena anaknya kritis. Anda...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "EASY",
+    "stem": "Saya tidak mudah percaya pada kabar burung (hoaks) sebelum memeriksa fakta dan sumber informasi yang tepercaya.",
     "options": [
       {
         "key": "A",
-        "text": "Tetap menyita sepeda motornya di tempat dan membiarkan pengendara berjalan kaki.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Memverifikasi situasi secara cepat, memberikan pengawalan patroli motor menuju rumah sakit demi keselamatan anak, dan memproses pembinaan edukasi tilang kemudian.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memarahi pengendara karena berbohong menggunakan alasan anak sakit.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Meminta uang damai agar pengendara diizinkan lewat tanpa helm.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Melepaskan pengendara tanpa helm dan membiarkannya ngebut membahayakan diri di jalan.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 2
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
+      "E": 1
     },
-    "explanation": "Diskresi kepolisian yang berkeadilan mendahulukan nilai kemanusiaan darurat keselamatan jiwa dengan memberikan diskresi pengawalan menuju rumah sakit.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Kecerdasan emosional dan logika analitis menyaring informasi secara kritis sebelum bereaksi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 283,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Warga masyarakat di wilayah binaan Anda merasa takut melapor adanya bandar miras oplosan karena takut diintimidasi preman. Langkah Bhabinkamtibmas...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "EASY",
+    "stem": "Saya sering merasa iri dan mendendam jika rekan seangkatan mendapat promosi kenaikan pangkat lebih dulu.",
     "options": [
       {
         "key": "A",
-        "text": "Mengumumkan nama pelapor di pengeras suara masjid desa.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Membangun saluran aduan rahasia (hotline khusus), menjamin kerahasiaan identitas saksi pelapor, dan berkoordinasi dengan tim opsnal untuk penindakan.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menyuruh warga menangkap sendiri bandar miras tersebut.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menolak menangani aduan jika warga tidak mau menjadi saksi terbuka di persidangan.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Membiarkan peredaran miras karena tidak ada aduan tertulis resmi.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Menumbuhkan kepercayaan masyarakat (public trust) dicapai melalui jaminan kerahasiaan identitas dan perlindungan penuh kepada warga pelapor kejahatan.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Kedewasaan mental mendorong sikap sportivitas dan rasa bangga atas keberhasilan rekan seperjuangan. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 284,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat memberikan materi penyuluhan bahaya narkoba di sekolah menengah, para siswa tampak bosan dengan materi hukum yang kaku. Pendekatan Anda...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mampu mengendalikan dorongan belanja konsumtif dan mengelola keuangan keluarga secara hemat dan bijak.",
     "options": [
       {
         "key": "A",
-        "text": "Membentak para siswa agar memperhatikan ceramah dengan tertib.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengubah metode penyampaian dengan media interaktif, studi kasus nyata yang relevan bagi remaja, kuis berhadiah, dan dialog komunikasi dua arah yang hangat.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mempersingkat materi menjadi 5 menit dan langsung pulang.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Mengancam akan menilang seluruh siswa yang tidak memperhatikan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menyerahkan mic kepada guru dan tidur di belakang kelas.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Penyuluhan Binmas yang humanis dan edukatif menuntut kreativitas komunikasi agar pesan pencegahan kejahatan dapat diterima generasi muda secara efektif.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Pola hidup sederhana (tidak hedonis) adalah instruksi resmi kedinasan Polri untuk menjaga moralitas. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 285,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang turis asing kehilangan paspor dan dompet di kawasan objek wisata, namun turis tersebut tidak bisa berbahasa Indonesia. Tindakan petugas pos pam...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "EASY",
+    "stem": "Saya selalu mencari kambing hitam atas setiap kegagalan yang terjadi dalam kehidupan pribadi saya.",
     "options": [
       {
         "key": "A",
-        "text": "Mengusir turis tersebut karena menyulitkan komunikasi petugas pos.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Menyapa dengan ramah menggunakan bahasa Inggris dasar atau aplikasi penerjemah, menenangkan turis tersebut, menerbitkan surat tanda lapor kehilangan, dan membantu menghubungi kedutaannya.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Meminta bayaran dolar untuk biaya penterjemahan bahasa.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Menyuruh turis tersebut mencari kantor imigrasi sendiri.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
         "key": "E",
-        "text": "Mengabaikan turis tersebut hingga ia pergi dengan kebingungan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Pelayanan prima kepada wisatawan mencerminkan profesionalisme standar internasional kepolisian dalam menjaga keamanan destinasi pariwisata nasional.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Kematangan pribadi menuntut lokus kendali internal (internal locus of control) dan tanggung jawab penuh. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 286,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang warga mendatangi kantor polisi pada malam hari meminta bantuan mediasi perselisihan batas pekarangan dengan tetangganya yang memanas. Tindakan Anda...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "HARD",
+    "stem": "Saya memiliki prinsip moral yang kokoh sehingga tidak mudah terombang-ambing oleh pengaruh buruk lingkungan pergaulan.",
     "options": [
       {
         "key": "A",
-        "text": "Menolak melayani karena masalah perdata tanah bukan urusan polisi pidana.",
-        "weight": 2
-      },
-      {
-        "key": "B",
-        "text": "Menerima warga dengan baik, mendengarkan duduk perkara secara objektif, dan menawarkan kehadiran Bhabinkamtibmas untuk problem solving bersama kepala desa esok hari secara damai.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menyuruh kedua warga tersebut saling menuntut di pengadilan perdata.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menahan kedua belah pihak di sel kantor polisi agar tidak ribut.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meminta sertifikat tanah asli warga sebagai jaminan laporan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Peran kepolisian dalam Pemolisian Masyarakat (Polmas) mengedepankan problem solving awal untuk meredam potensi konflik horizontal antarwarga.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Karakter mental yang mapan membentengi insan Bhayangkara dari jeratan narkoba, judi online, dan perbuatan tercela. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 287,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Setelah jam pelayanan SIM ditutup pukul 15.00 WIB, seorang buruh pabrik yang baru saja izin kerja datang dengan terengah-engah memohon perpanjangan SIM karena hari itu adalah hari terakhir masa berlakunya. Anda...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "MEDIUM",
+    "stem": "Jika pendapat saya ditolak dalam forum musyawarah, saya merasa tersinggung dan memilih mendiamkan rekan lain.",
     "options": [
       {
         "key": "A",
-        "text": "Menutup pintu loket di depan wajah warga tanpa sepatah kata pun.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Memeriksa kelengkapan berkas, mengapresiasi itikad baik warga yang telah berusaha hadir, dan melayaninya melalui diskresi pelayanan lembur singkat agar SIM-nya tidak hangus.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Meminta bayaran denda keterlambatan uang pribadi sebesar dua kali lipat.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyuruh warga membuat SIM baru dari awal dengan ujian tes ulang.",
-        "weight": 2
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menyalahkan buruh tersebut mengapa baru datang sore hari.",
-        "weight": 2
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 2,
-      "E": 2
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Diskresi pelayanan humanis dalam batas kewajaran administrasi mencegah kerugian hak warga yang telah menunjukkan itikad baik mematuhi hukum.",
-    "dimension": "Pelayanan Publik & Humanis"
+    "explanation": "[Aspek Kematangan Pribadi] Kematangan emosional tercermin dari kelapangan dada menerima hasil mufakat bersama. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 288,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sebagai komandan regu patroli malam, Anda menerima informasi bahwa sekelompok geng motor bersenjata tajam sedang bergerak menuju pemukiman warga. Keputusan taktis Anda...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "EASY",
+    "stem": "Saya selalu bersyukur atas setiap rezeki halal dan pencapaian karier yang saya peroleh dalam kedinasan.",
     "options": [
       {
         "key": "A",
-        "text": "Menunggu hingga ada laporan warga yang menjadi korban baru bergerak.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengonsolidasikan regu dengan perlengkapan taktis, melapor ke perwira pengendali (Padal), mengarahkan rute penyekatan sebelum kelompok masuk ke pemukiman, dan meminta bantuan perkuatan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
-        "key": "C",
-        "text": "Menghindari rute geng motor agar personel regu patroli aman dari risiko.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Memerintahkan anggota regu melepaskan tembakan peluru tajam ke arah kepala tanpa peringatan.",
-        "weight": 1
-      },
-      {
-        "key": "E",
-        "text": "Membubarkan regu patroli dan berlindung di dalam kantor polsek.",
-        "weight": 1
-      }
-    ],
-    "correctKey": "B",
-    "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
-    },
-    "explanation": "Kepemimpinan taktis lapangan menuntut kesigapan langkah preventif penyekatan, koordinasi rantai komando, dan penindakan proporsional demi melindungi warga.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
-  },
-  {
-    "id": 289,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
-    "subtest": "KEPRIBADIAN",
-    "stem": "Dalam regu yang Anda pimpin, terdapat dua personel senior yang berselisih paham mengenai pembagian jadwal piket pengamanan, sehingga suasana kerja menjadi tegang. Sikap Anda...",
-    "options": [
-      {
-        "key": "A",
-        "text": "Membiarkan perselisihan berlanjut hingga salah satu mengalah sendiri.",
-        "weight": 1
-      },
-      {
         "key": "B",
-        "text": "Memanggil kedua personel ke ruang kerja, mendengarkan argumen masing-masing secara objektif, menegaskan kembali aturan dinas, dan menetapkan rotasi jadwal yang adil serta transparan.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 4
       },
       {
         "key": "C",
-        "text": "Memihak kepada personel yang paling dekat dengan Anda secara pribadi.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menghukum kedua personel dengan mencabut hak cuti mereka secara sepihak.",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengeluh kepada komandan kompi bahwa bawahan Anda tidak bisa diatur.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
       "D": 2,
       "E": 1
     },
-    "explanation": "Pemimpin yang efektif mengambil peran aktif sebagai penengah yang adil, menyelesaikan konflik internal secara bijaksana, dan menegakkan aturan objektif.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Kematangan Pribadi] Rasa syukur melahirkan ketenteraman batin dan mencegah sifat serakah serta praktik korupsi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
+  },
+  {
+    "id": 289,
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
+    "subtest": "KEPRIBADIAN",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "MEDIUM",
+    "stem": "Saya merasa gengsi untuk meminta maaf secara tulus kepada bawahan jika saya terbukti melakukan kekeliruan instruksi.",
+    "options": [
+      {
+        "key": "A",
+        "text": "Sangat Setuju",
+        "weight": 1
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 2
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
+        "weight": 4
+      },
+      {
+        "key": "E",
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
+      }
+    ],
+    "correctKey": "E",
+    "optionWeights": {
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
+    },
+    "explanation": "[Aspek Kematangan Pribadi] Kerendahan hati untuk meminta maaf adalah cermin kematangan budi pekerti perwira sejati. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 290,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat memimpin operasi tangkap tangan penyelundupan barang terlarang di pelabuhan, target melarikan diri ke area keramaian pasar ikan. Keputusan Anda...",
+    "subCategory": "Kematangan Pribadi",
+    "difficulty": "MEDIUM",
+    "stem": "Saya mampu mengendalikan stres dengan hobi produktif dan senantiasa berpikiran positif menyongsong masa depan.",
     "options": [
       {
         "key": "A",
-        "text": "Memerintahkan penembakan beruntun ke arah kerumunan pasar.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menginstruksikan pengepungan pintu keluar pasar secara senyap tanpa melepaskan tembakan yang dapat memicu kepanikan warga, serta berkoordinasi dengan pengamanan pelabuhan.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membatalkan pengejaran dan membiarkan pelaku kabur demi kenyamanan.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyuruh warga pasar menabrakkan diri ke arah pelaku yang membawa senjata tajam.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Melepaskan gas air mata di dalam pasar ikan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Keputusan taktis di area padat penduduk wajib mengutamakan keselamatan jiwa masyarakat sipil melalui teknik pengepungan perimeter tanpa senjata api.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Kematangan Pribadi] Optimisme dan resiliensi psikologis menjaga stabilitas mental dalam menjalani dinamika tugas kepolisian. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Kematangan Pribadi"
   },
   {
     "id": 291,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Unit kerja Anda dihadapkan pada target penuntasan perkara (Crime Clearance) yang menurun tajam dalam bulan ini. Sebagai kanit, langkah strategis Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "HARD",
+    "stem": "Sebagai calon perwira, saya memiliki visi strategis untuk memajukan unit kerja dengan inovasi pelayanan berbasis digital.",
     "options": [
       {
         "key": "A",
-        "text": "Menyalahkan bintara penyidik di hadapan pimpinan saat rapat polda.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Menggelar evaluasi gelar perkara internal, membedah hambatan pembuktian pada setiap berkas yang macet, serta menyusun jadwal asistensi teknis pemecahan masalah perkara.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Memalsukan laporan statistik agar angka pengungkapan perkara tampak tinggi.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menghentikan penyidikan seluruh perkara yang sulit pembuktiannya.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Mengundurkan diri dari jabatan kepala unit penyidikan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kepemimpinan visioner berfokus pada penyelesaian akar masalah (problem-solving) dan penguatan kapasitas tim dalam mendongkrak produktivitas kerja.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Perwira dituntut memiliki pola pikir visioner, adaptif, dan mampu menginisiasi pembaruan organisasi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 292,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang anggota regu Anda melakukan kesalahan prosedur penilangan karena kurang memahami aturan tilang baru sehingga videonya menuai kritik publik. Tindakan Anda sebagai pimpinan...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "HARD",
+    "stem": "Saya berani mengambil tanggung jawab penuh atas keberhasilan maupun kegagalan seluruh personel di bawah kendali saya.",
     "options": [
       {
         "key": "A",
-        "text": "Langsung mencopot dan menghukum anggota tersebut di depan media massa untuk cuci tangan.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengambil alih pertanggungjawaban komando, memberikan pembinaan dan pelatihan intensif kepada anggota, serta menyampaikan klarifikasi korektif yang santun kepada publik.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membela anggota secara membabi-buta meskipun jelas-jelas tindakannya salah.",
-        "weight": 2
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyembunyikan anggota tersebut di daerah terpencil tanpa pembinaan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menghapus akun humas polres agar tidak melihat kritik warga.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Pemimpin sejati memegang prinsip akuntabilitas komando, melindungi kehormatan institusi dengan pembinaan internal yang mendidik dan klarifikasi transparan.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Akuntabilitas kepemimpinan mutlak adalah karakteristik pembeda utama seorang perwira komando. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 293,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat bertugas mengamankan evakuasi warga korban tanah longsor, akses jalan utama terputus dan alat berat belum tiba. Sebagai perwira pengendali lapangan, Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "EASY",
+    "stem": "Saya merasa cukup hanya menjalankan tugas rutin tanpa perlu berinisiatif memecahkan permasalahan kamtibmas di wilayah.",
     "options": [
       {
         "key": "A",
-        "text": "Menunggu instruksi komando polda tanpa melakukan tindakan penyelamatan apa pun.",
-        "weight": 2
+        "text": "Sangat Setuju",
+        "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengambil inisiatif diskresi darurat mengerahkan personel dan relawan merintis jalur evakuasi alternatif setapak menggunakan tandu manual demi menyelamatkan korban luka parah.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Menyuruh warga korban longsor berjalan sendiri melintasi area rawan longsor susulan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Kembali ke markas komando karena fasilitas operasi dinilai minim.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Mengumumkan kepada publik bahwa operasi penyelamatan mustahil dilakukan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "A": 1,
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Inisiatif kepemimpinan darurat (crisis leadership) menuntut keberanian mengambil diskresi penyelamatan rute alternatif saat keselamatan jiwa warga terancam maut.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Calon perwira wajib memiliki proaktivitas tinggi dan naluri problem solving terhadap keresahan masyarakat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 294,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Pimpinan memberikan target penyerapan anggaran operasional dan penyusunan laporan pertanggungjawaban dalam sisa waktu 3 hari. Langkah Anda sebagai ketua tim...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "MEDIUM",
+    "stem": "Saya menjunjung tinggi kode etik kehormatan perwira dan pantang merendahkan martabat seragam Bhayangkara di mana pun.",
     "options": [
       {
         "key": "A",
-        "text": "Menolak target tersebut karena dinilai tidak masuk akal.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Membuat rencana kerja harian yang terperinci, membagi klaster penyusunan SPJ kepada anggota tim sesuai tupoksi, dan memonitor kelengkapan kuitansi setiap 4 jam.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menyerahkan seluruh berkas kosong kepada bendahara pengeluaran.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyalin SPJ tahun lalu tanpa memeriksa keabsahan transaksi riil.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Membiarkan batas waktu terlewati dan menerima teguran pimpinan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kemampuan manajerial pemimpin diuji dari efektivitas perencanaan kerja terstruktur dan pengawasan intensif dalam menyelesaikan tenggat waktu dinas.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Kehormatan perwira dibangun dari integritas moral, keteladanan perilaku, dan kesatriaan tanpa cela. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 295,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam situasi kebakaran hutan dan lahan (Karhutla), arah angin mendadak berbalik menuju posko pemadaman tim Anda. Keputusan cepat Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "MEDIUM",
+    "stem": "Saya merasa cemas berlebihan dan ingin menghindar jika ditunjuk memimpin gelar pasukan operasi berskala besar.",
     "options": [
       {
         "key": "A",
-        "text": "Menyuruh pasukan tetap memadamkan api di titik yang sama tanpa peduli arah angin.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Segera meniup peluit darurat, memerintahkan pergeseran pasukan mundur teratur ke zona aman yang telah ditentukan, dan mengatur formasi pemadaman dari arah berlawanan.",
-        "weight": 5
+        "text": "Setuju",
+        "weight": 2
       },
       {
         "key": "C",
-        "text": "Lari sendirian meninggalkan anggota pasukan di tengah kepulan asap tebal.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyerah dan membiarkan api membakar peralatan pemadam dinas.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Menyiramkan air ke seragam dinas sendiri dan tidur di semak belukar.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Keputusan taktis tanggap darurat memprioritaskan keselamatan jiwa personel (force protection) dengan reposisi terencana sebelum melakukan penanggulangan lanjutan.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Perwira harus memiliki ketenangan, wibawa, dan keberanian tampil memimpin panggung operasional. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 296,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Saat mengevaluasi pembagian penghargaan kenaikan pangkat luar biasa (KPLB), ada anggota berprestasi yang kurang disukai di kesatuan karena sifatnya yang pendiam. Keputusan Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "HARD",
+    "stem": "Saya mampu berkomunikasi secara artikulatif, meyakinkan, dan berwibawa di hadapan media massa maupun forum masyarakat.",
     "options": [
       {
         "key": "A",
-        "text": "Mencoret namanya dan mengusulkan anggota lain yang lebih populer.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Tetap mengusulkan nama anggota tersebut secara adil berdasarkan fakta riil data pengungkapan kasus dan prestasi operasionalnya yang gemilang.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Mengusulkan nama anggota keluarga pimpinan kesatuan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Membatalkan seluruh usulan KPLB bagi unit Anda.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meminta imbalan uang dari anggota tersebut jika ingin diusulkan.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Objektivitas dan keadilan meritokrasi merupakan pilar kepemimpinan berwibawa yang menghargai dedikasi nyata tanpa bias subjektivitas pertemanan.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Kemampuan komunikasi publik strategis sangat penting untuk membangun transparansi dan kepercayaan masyarakat. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 297,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sebagai padal pengamanan sidang vonis terorisme, suasana di ruang sidang mulai ricuh oleh teriakan simpatisan terdakwa. Keputusan Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "HARD",
+    "stem": "Bila diperintahkan memimpin tugas penertiban tambang ilegal milik pengusaha besar, saya berani bertindak tegas sesuai hukum.",
     "options": [
       {
         "key": "A",
-        "text": "Membiarkan simpatisan berteriak agar persidangan segera dibubarkan hakim.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Berkoordinasi dengan majelis hakim, memerintahkan regu sterilisasi menertibkan simpatisan anarkis keluar dari ruang sidang, dan memperkuat perimeter keamanan di dalam ruang sidang.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Menembakkan senjata api ke langit-langit ruang sidang pengadilan.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Memborgol majelis hakim dan jaksa penuntut umum.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Meninggalkan ruang sidang dan menutup pintu dari luar.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Menjaga wibawa peradilan (contempt of court) dan ketertiban ruang sidang dilakukan melalui penertiban terukur dan penguatan pengamanan perimeter.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Keberanian menegakkan hukum terhadap kejahatan lingkungan dan kerah putih mencerminkan mental kesatria perwira. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 298,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Seorang bintara muda dalam tim Anda tampak kehilangan rasa percaya diri setelah gagal dalam ujian menembak kualifikasi kelas satu. Tindakan kepemimpinan Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "EASY",
+    "stem": "Saya menganggap kenaikan pangkat perwira semata-mata sebagai sarana memperluas wewenang dan fasilitas kemewahan.",
     "options": [
       {
         "key": "A",
-        "text": "Mengejek bintara tersebut di depan anggota lain agar merasa malu.",
+        "text": "Sangat Setuju",
         "weight": 1
       },
       {
         "key": "B",
-        "text": "Mengajak bintara tersebut berdiskusi, mengevaluasi kesalahan teknik membidik, memberikan bimbingan latihan ekstra secara sabar, dan menumbuhkan kembali semangat juangnya.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Mencabut hak membawa senjata api secara permanen tanpa evaluasi.",
+        "text": "Setuju",
         "weight": 2
       },
       {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
         "key": "D",
-        "text": "Menyuruh bintara tersebut mengurus mutasi ke bagian administrasi non-lapangan.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 4
       },
       {
         "key": "E",
-        "text": "Mengabaikan masalah moral bawahan karena bukan urusan pribadi komandan.",
-        "weight": 1
+        "text": "Sangat Tidak Setuju",
+        "weight": 5
       }
     ],
-    "correctKey": "B",
+    "correctKey": "E",
     "optionWeights": {
       "A": 1,
-      "B": 5,
-      "C": 2,
-      "D": 1,
-      "E": 1
+      "B": 2,
+      "C": 3,
+      "D": 4,
+      "E": 5
     },
-    "explanation": "Fungsi kepemimpinan pembinaan (mentoring) berfokus pada pengembangan potensi bawahan melalui evaluasi teknik dan dorongan motivasi mental yang berkelanjutan.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Pangkat perwira adalah amanah pengorbanan dan pelayanan yang lebih besar bagi kemakmuran bangsa, bukan privilese pribadi. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Tidak Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 299,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Dalam pelaksanaan pengamanan rute konvoi kepala negara sahabat, terjadi kecelakaan lalu lintas warga sipil pada jalur alternatif yang sedang Anda amankan. Keputusan Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "HARD",
+    "stem": "Saya menanamkan jiwa kesatria untuk membela kebenaran dan melindungi masyarakat yang tertindas walau menghadapi risiko berat.",
     "options": [
       {
         "key": "A",
-        "text": "Mengabaikan korban kecelakaan karena tugas utama adalah pengawalan VVIP.",
+        "text": "Sangat Setuju",
+        "weight": 5
+      },
+      {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
+        "key": "C",
+        "text": "Ragu-Ragu",
+        "weight": 3
+      },
+      {
+        "key": "D",
+        "text": "Tidak Setuju",
         "weight": 2
       },
       {
-        "key": "B",
-        "text": "Membagi personel regu: menugaskan dua personel memberikan pertolongan pertama dan evakuasi korban ke tepi jalan, sementara jalur utama VVIP tetap steril dan terjaga aman.",
-        "weight": 5
-      },
-      {
-        "key": "C",
-        "text": "Menutup total seluruh jalur jalan raya dan menelantarkan korban di aspal.",
-        "weight": 1
-      },
-      {
-        "key": "D",
-        "text": "Memerintahkan konvoi VVIP berhenti dan ikut menolong korban kecelakaan.",
-        "weight": 1
-      },
-      {
         "key": "E",
-        "text": "Menyalahkan korban mengapa melintas di rute pengamanan negara.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 2,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Kepemimpinan taktis yang cakap mampu mengambil keputusan pembagian peran terukur (task allocation): prioritas keselamatan VVIP terjaga dan korban sipil tertolong.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Hakikat perwira Bhayangkara adalah benteng keadilan dan pelindung kaum lemah. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   },
   {
     "id": 300,
-    "module": "Tes Psikologi — Mental Kepribadian (SJT Polri)",
+    "module": "Tes Psikologi — Mental Kepribadian (10 Aspek Polri)",
     "subtest": "KEPRIBADIAN",
-    "stem": "Sebagai perwira pengendali, Anda menemukan fakta bahwa rencana penyergapan sarang peredaran senjata api ilegal telah tercium oleh mata-mata musuh. Keputusan Anda...",
+    "subCategory": "Mental Calon Perwira",
+    "difficulty": "HARD",
+    "stem": "Saya siap mengorbankan waktu istirahat dan kenyamanan pribadi demi menuntaskan krisis keamanan di wilayah hukum saya.",
     "options": [
       {
         "key": "A",
-        "text": "Tetap memaksakan rencana awal menyerbu ke titik sasaran yang telah siap disergap musuh.",
-        "weight": 1
-      },
-      {
-        "key": "B",
-        "text": "Mengubah rencana taktis operasi secara mendadak, menunda penyerbuan langsung, mengubah waktu serta sudut perimeter sergapan, dan mengisolasi jalur kebocoran informasi internal.",
+        "text": "Sangat Setuju",
         "weight": 5
       },
       {
+        "key": "B",
+        "text": "Setuju",
+        "weight": 4
+      },
+      {
         "key": "C",
-        "text": "Membatalkan seluruh penegakan hukum dan membiarkan para pelaku bebas beroperasi.",
-        "weight": 1
+        "text": "Ragu-Ragu",
+        "weight": 3
       },
       {
         "key": "D",
-        "text": "Menyerang markas musuh seorang diri tanpa melibatkan pasukan regu.",
-        "weight": 1
+        "text": "Tidak Setuju",
+        "weight": 2
       },
       {
         "key": "E",
-        "text": "Menghubungi pimpinan musuh untuk bernegosiasi damai.",
+        "text": "Sangat Tidak Setuju",
         "weight": 1
       }
     ],
-    "correctKey": "B",
+    "correctKey": "A",
     "optionWeights": {
-      "A": 1,
-      "B": 5,
-      "C": 1,
-      "D": 1,
+      "A": 5,
+      "B": 4,
+      "C": 3,
+      "D": 2,
       "E": 1
     },
-    "explanation": "Keberanian mengubah rencana operasi saat intelijen mendeteksi kebocoran taktik melindungi nyawa pasukan regu dan menjamin keberhasilan penegakan hukum.",
-    "dimension": "Kepemimpinan & Pengambilan Keputusan"
+    "explanation": "[Aspek Mental Calon Perwira] Semangat pengabdian tanpa pamrih (selfless service) adalah mahkota kepemimpinan perwira Polri. Sikap paling ideal bagi insan Bhayangkara adalah Sangat Setuju (Bobot 5).",
+    "dimension": "Mental Calon Perwira"
   }
 ];
 
@@ -7510,6 +7912,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7571,6 +7975,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7632,6 +8038,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7693,6 +8101,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7754,6 +8164,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7815,6 +8227,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7876,6 +8290,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7937,6 +8353,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -7998,6 +8416,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8059,6 +8479,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8120,6 +8542,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8181,6 +8605,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8242,6 +8668,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8303,6 +8731,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8364,6 +8794,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8425,6 +8857,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8486,6 +8920,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8547,6 +8983,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8608,6 +9046,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8669,6 +9109,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 1,
+    "subCategory": "Angka",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "8",
@@ -8730,6 +9172,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -8791,6 +9235,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -8852,6 +9298,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -8913,6 +9361,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -8974,6 +9424,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9035,6 +9487,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9096,6 +9550,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9157,6 +9613,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9218,6 +9676,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9279,6 +9739,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9340,6 +9802,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9401,6 +9865,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9462,6 +9928,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9523,6 +9991,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9584,6 +10054,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9645,6 +10117,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9706,6 +10180,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9767,6 +10243,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9828,6 +10306,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9889,6 +10369,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 2,
+    "subCategory": "Huruf",
+    "difficulty": "EASY",
     "benchmark": [
       {
         "char": "B",
@@ -9950,6 +10432,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10011,6 +10495,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10072,6 +10558,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10133,6 +10621,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10194,6 +10684,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10255,6 +10747,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10316,6 +10810,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10377,6 +10873,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10438,6 +10936,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10499,6 +10999,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10560,6 +11062,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10621,6 +11125,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10682,6 +11188,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10743,6 +11251,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10804,6 +11314,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10865,6 +11377,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10926,6 +11440,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -10987,6 +11503,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -11048,6 +11566,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -11109,6 +11629,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 3,
+    "subCategory": "Simbol",
+    "difficulty": "MEDIUM",
     "benchmark": [
       {
         "char": "★",
@@ -11170,6 +11692,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11231,6 +11755,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11292,6 +11818,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11353,6 +11881,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11414,6 +11944,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11475,6 +12007,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11536,6 +12070,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11597,6 +12133,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11658,6 +12196,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11719,6 +12259,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11780,6 +12322,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11841,6 +12385,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11902,6 +12448,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -11963,6 +12511,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12024,6 +12574,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12085,6 +12637,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12146,6 +12700,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12207,6 +12763,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12268,6 +12826,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12329,6 +12889,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 4,
+    "subCategory": "Angka & Huruf Hilang",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "7",
@@ -12390,6 +12952,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12451,6 +13015,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12512,6 +13078,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12573,6 +13141,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12634,6 +13204,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12695,6 +13267,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12756,6 +13330,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12817,6 +13393,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12878,6 +13456,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -12939,6 +13519,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13000,6 +13582,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13061,6 +13645,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13122,6 +13708,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13183,6 +13771,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13244,6 +13834,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13305,6 +13897,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13366,6 +13960,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13427,6 +14023,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13488,6 +14086,8 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
     "weight": 10,
     "isKecermatan": true,
     "columnNumber": 5,
+    "subCategory": "Kombinasi Campuran",
+    "difficulty": "HARD",
     "benchmark": [
       {
         "char": "2",
@@ -13608,7 +14208,9 @@ const QUESTIONS_KECERMATAN: SimQuestion[] = [
 const QUESTIONS_TKK: SimQuestion[] = [
   {
     "id": 401,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Komponen fisik komputer disebut…",
     "options": [
@@ -13639,7 +14241,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 402,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Perangkat lunak yang mengelola perangkat keras dan aplikasi adalah…",
     "options": [
@@ -13670,7 +14274,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 403,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Pusat pemrosesan instruksi komputer adalah…",
     "options": [
@@ -13701,7 +14307,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 404,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "RAM berfungsi sebagai…",
     "options": [
@@ -13732,7 +14340,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 405,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Perangkat untuk memasukkan teks adalah…",
     "options": [
@@ -13763,7 +14373,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 406,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Perangkat output visual adalah…",
     "options": [
@@ -13794,7 +14406,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 407,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Satuan kapasitas data digital adalah…",
     "options": [
@@ -13825,7 +14439,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 408,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Alat untuk mengubah dokumen kertas menjadi digital adalah…",
     "options": [
@@ -13856,7 +14472,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 409,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "SSD dan HDD digunakan untuk…",
     "options": [
@@ -13887,7 +14505,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 410,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Salinan data untuk pemulihan saat data utama hilang disebut…",
     "options": [
@@ -13918,7 +14538,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 411,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Perangkat lunak berbahaya disebut…",
     "options": [
@@ -13949,7 +14571,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 412,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Papan utama tempat komponen komputer terhubung disebut…",
     "options": [
@@ -13980,7 +14604,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 413,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ekstensi .docx umumnya untuk dokumen…",
     "options": [
@@ -14011,7 +14637,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 414,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ekstensi .xlsx digunakan untuk…",
     "options": [
@@ -14042,7 +14670,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 415,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ekstensi .pptx digunakan untuk…",
     "options": [
@@ -14073,7 +14703,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 416,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+C berfungsi untuk…",
     "options": [
@@ -14104,7 +14736,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 417,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+V berfungsi untuk…",
     "options": [
@@ -14135,7 +14769,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 418,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+Z umumnya berfungsi untuk…",
     "options": [
@@ -14166,7 +14802,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 419,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Folder digunakan untuk…",
     "options": [
@@ -14197,7 +14835,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 420,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Hardware dan Software",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Recycle Bin menampung…",
     "options": [
@@ -14228,7 +14868,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 421,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Untuk menemukan berkas, gunakan…",
     "options": [
@@ -14259,7 +14901,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 422,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Rename berarti…",
     "options": [
@@ -14290,7 +14934,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 423,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+S biasanya digunakan untuk…",
     "options": [
@@ -14321,7 +14967,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 424,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ekstensi .pdf lazim digunakan untuk…",
     "options": [
@@ -14352,7 +15000,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 425,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Microsoft Word terutama untuk…",
     "options": [
@@ -14383,7 +15033,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 426,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+B digunakan untuk…",
     "options": [
@@ -14414,7 +15066,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 427,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+I digunakan untuk…",
     "options": [
@@ -14445,7 +15099,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 428,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+U digunakan untuk…",
     "options": [
@@ -14476,7 +15132,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 429,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Ctrl+J pada Word menerapkan…",
     "options": [
@@ -14507,7 +15165,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 430,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Header berada di bagian…",
     "options": [
@@ -14538,7 +15198,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 431,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Footer berada di bagian…",
     "options": [
@@ -14569,7 +15231,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 432,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Fitur Numbering digunakan untuk…",
     "options": [
@@ -14600,7 +15264,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 433,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Find digunakan untuk…",
     "options": [
@@ -14631,7 +15297,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 434,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Mail Merge bermanfaat untuk…",
     "options": [
@@ -14662,7 +15330,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 435,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Save As digunakan untuk…",
     "options": [
@@ -14693,7 +15363,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 436,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Orientasi halaman mendatar disebut…",
     "options": [
@@ -14724,7 +15396,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 437,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Track Changes digunakan untuk…",
     "options": [
@@ -14755,7 +15429,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 438,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Nomor halaman disisipkan melalui…",
     "options": [
@@ -14786,7 +15462,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 439,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Format PDF berguna untuk…",
     "options": [
@@ -14817,7 +15495,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 440,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Komputer",
+    "difficulty": "EASY ",
     "subtest": "TKK",
     "stem": "Excel terutama digunakan untuk…",
     "options": [
@@ -14848,7 +15528,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 441,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Pertemuan baris dan kolom disebut…",
     "options": [
@@ -14879,7 +15561,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 442,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Alamat kolom B baris 5 adalah…",
     "options": [
@@ -14910,7 +15594,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 443,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Formula Excel umumnya diawali…",
     "options": [
@@ -14941,7 +15627,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 444,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "SUM digunakan untuk…",
     "options": [
@@ -14972,7 +15660,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 445,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "AVERAGE(A1:A5) menghitung…",
     "options": [
@@ -15003,7 +15693,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 446,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "MAX menghasilkan…",
     "options": [
@@ -15034,7 +15726,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 447,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "MIN menghasilkan…",
     "options": [
@@ -15065,7 +15759,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 448,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "COUNT menghitung…",
     "options": [
@@ -15096,7 +15792,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 449,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "COUNTA menghitung…",
     "options": [
@@ -15127,7 +15825,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 450,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "IF digunakan untuk…",
     "options": [
@@ -15158,7 +15858,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 451,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Jika A1=80, hasil =IF(A1>=75,\"Lulus\",\"Belum\") adalah…",
     "options": [
@@ -15189,7 +15891,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 452,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "A1:A10 menunjukkan…",
     "options": [
@@ -15220,7 +15924,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 453,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Sort digunakan untuk…",
     "options": [
@@ -15251,7 +15957,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 454,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Filter digunakan untuk…",
     "options": [
@@ -15282,7 +15990,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 455,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Referensi absolut menggunakan tanda…",
     "options": [
@@ -15313,7 +16023,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 456,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Formula =A1+B1 disalin satu baris ke bawah menjadi…",
     "options": [
@@ -15344,7 +16056,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 457,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Freeze Panes berguna untuk…",
     "options": [
@@ -15375,7 +16089,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 458,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Grafik dibuat melalui fitur…",
     "options": [
@@ -15406,7 +16122,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 459,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Error #DIV/0! muncul ketika…",
     "options": [
@@ -15437,7 +16155,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 460,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Microsoft Office dan Shortcut",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "PowerPoint digunakan untuk…",
     "options": [
@@ -15468,7 +16188,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 461,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Satu halaman presentasi disebut…",
     "options": [
@@ -15499,7 +16221,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 462,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "F5 umumnya memulai presentasi…",
     "options": [
@@ -15530,7 +16254,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 463,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Ctrl+M digunakan untuk…",
     "options": [
@@ -15561,7 +16287,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 464,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Transition mengatur…",
     "options": [
@@ -15592,7 +16320,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 465,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Animation diterapkan pada…",
     "options": [
@@ -15623,7 +16353,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 466,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Slide yang efektif sebaiknya…",
     "options": [
@@ -15654,7 +16386,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 467,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Presenter View membantu penyaji melihat…",
     "options": [
@@ -15685,7 +16419,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 468,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Ekspor presentasi menjadi PDF dilakukan melalui…",
     "options": [
@@ -15716,7 +16452,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 469,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Theme digunakan untuk…",
     "options": [
@@ -15747,7 +16485,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 470,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Aplikasi untuk menjelajahi situs web disebut…",
     "options": [
@@ -15778,7 +16518,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 471,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Alamat sumber daya internet disebut…",
     "options": [
@@ -15809,7 +16551,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 472,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "HTTPS menunjukkan…",
     "options": [
@@ -15840,7 +16584,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 473,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Mesin pencari berguna untuk…",
     "options": [
@@ -15871,7 +16617,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 474,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "BCC pada email digunakan untuk…",
     "options": [
@@ -15902,7 +16650,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 475,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Lampiran email disebut…",
     "options": [
@@ -15933,7 +16683,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 476,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Email kedinasan yang baik seharusnya…",
     "options": [
@@ -15964,7 +16716,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 477,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Cloud storage adalah…",
     "options": [
@@ -15995,7 +16749,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 478,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Berbagi dokumen cloud paling aman dengan…",
     "options": [
@@ -16026,7 +16782,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 479,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Informasi internet sebaiknya…",
     "options": [
@@ -16057,7 +16815,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 480,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Pengetahuan Dasar Internet & Jaringan",
+    "difficulty": "MEDIUM ",
     "subtest": "TKK",
     "stem": "Phishing adalah…",
     "options": [
@@ -16088,7 +16848,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 481,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Kata sandi kuat sebaiknya…",
     "options": [
@@ -16119,7 +16881,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 482,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "MFA berarti…",
     "options": [
@@ -16150,7 +16914,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 483,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Lampiran email mencurigakan sebaiknya…",
     "options": [
@@ -16181,7 +16947,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 484,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Malware adalah…",
     "options": [
@@ -16212,7 +16980,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 485,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Ransomware umumnya…",
     "options": [
@@ -16243,7 +17013,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 486,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Saat memakai Wi-Fi publik…",
     "options": [
@@ -16274,7 +17046,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 487,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Data kedinasan seharusnya…",
     "options": [
@@ -16305,7 +17079,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 488,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Pembaruan sistem penting karena…",
     "options": [
@@ -16336,7 +17112,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 489,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Jika perangkat dinas hilang…",
     "options": [
@@ -16367,7 +17145,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 490,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Jaringan komputer adalah…",
     "options": [
@@ -16398,7 +17178,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 491,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Perangkat yang meneruskan paket antarjaringan disebut…",
     "options": [
@@ -16429,7 +17211,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 492,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "LAN adalah singkatan dari…",
     "options": [
@@ -16460,7 +17244,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 493,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Alamat IP digunakan untuk…",
     "options": [
@@ -16491,7 +17277,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 494,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Wi-Fi merupakan teknologi…",
     "options": [
@@ -16522,7 +17310,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 495,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Jika komputer tidak terhubung internet, langkah awal…",
     "options": [
@@ -16553,7 +17343,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 496,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Database adalah…",
     "options": [
@@ -16584,7 +17376,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 497,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Primary key berfungsi untuk…",
     "options": [
@@ -16615,7 +17409,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 498,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "CSV umumnya digunakan untuk…",
     "options": [
@@ -16646,7 +17442,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 499,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Jika printer tidak mencetak, langkah awal…",
     "options": [
@@ -16677,7 +17475,9 @@ const QUESTIONS_TKK: SimQuestion[] = [
   },
   {
     "id": 500,
-    "module": "Tes Kemampuan Komputer (TKK)",
+    "module": "Tes Kemampuan Komputer",
+    "subCategory": "Informatika & Keamanan Siber",
+    "difficulty": "HARD ",
     "subtest": "TKK",
     "stem": "Perintah Ctrl+A umumnya berarti…",
     "options": [
@@ -16745,7 +17545,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 502,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Rumusan Pancasila tercantum dalam bagian mana dari UUD 1945?",
     "options": [
@@ -16776,7 +17578,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 503,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Sila ketiga Pancasila menekankan nilai apa?",
     "options": [
@@ -16807,7 +17611,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 504,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Menurut UUD 1945, kedaulatan berada di tangan siapa?",
     "options": [
@@ -16838,7 +17644,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 505,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Indonesia adalah negara apa menurut Pasal 1 ayat (3) UUD 1945?",
     "options": [
@@ -16869,7 +17677,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 506,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Lembaga yang memegang kekuasaan membentuk undang-undang adalah?",
     "options": [
@@ -16900,7 +17710,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 507,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Presiden menurut UUD 1945 memegang kekuasaan apa?",
     "options": [
@@ -16931,7 +17743,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 508,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Bentuk negara Indonesia adalah?",
     "options": [
@@ -16962,7 +17776,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 509,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Persamaan warga negara di hadapan hukum dikenal sebagai prinsip apa?",
     "options": [
@@ -16993,7 +17809,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 510,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Pembatasan kekuasaan dalam negara hukum terutama bertujuan untuk apa?",
     "options": [
@@ -17024,7 +17842,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 511,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Undang-undang pokok yang mengatur Polri adalah?",
     "options": [
@@ -17055,7 +17875,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 512,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Tiga tugas pokok Polri meliputi apa?",
     "options": [
@@ -17086,7 +17908,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 513,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Polri berada di bawah siapa dalam struktur ketatanegaraan?",
     "options": [
@@ -17117,7 +17941,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 514,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Kapolri diangkat dan diberhentikan Presiden dengan persetujuan siapa?",
     "options": [
@@ -17148,7 +17974,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 515,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Fungsi kepolisian merupakan fungsi pemerintahan di bidang apa?",
     "options": [
@@ -17179,7 +18007,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 516,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Polri sebagai Kepolisian Nasional berarti apa?",
     "options": [
@@ -17210,7 +18040,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 517,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Pelaksanaan tugas Polri harus menjunjung tinggi apa?",
     "options": [
@@ -17241,7 +18073,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 518,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Contoh tugas preventif kepolisian adalah?",
     "options": [
@@ -17272,7 +18106,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 519,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Contoh tindakan represif dalam penegakan hukum adalah?",
     "options": [
@@ -17303,7 +18139,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 520,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Tugas dan Fungsi Kepolisian",
+    "difficulty": "EASY ",
     "subtest": "TPK",
     "stem": "Pelayanan publik Polri seharusnya seperti apa?",
     "options": [
@@ -17334,7 +18172,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 521,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Salah satu kewenangan umum Polri menurut UU 2/2002 adalah?",
     "options": [
@@ -17365,7 +18205,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 522,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Tindakan pertama di TKP bertujuan antara lain untuk apa?",
     "options": [
@@ -17396,7 +18238,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 523,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Prinsip legalitas dalam tindakan kepolisian berarti apa?",
     "options": [
@@ -17427,7 +18271,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 524,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Prinsip nesesitas dalam penggunaan kekuatan menghendaki apa?",
     "options": [
@@ -17458,7 +18304,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 525,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Prinsip proporsionalitas berarti apa?",
     "options": [
@@ -17489,7 +18337,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 526,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Akuntabilitas tindakan kepolisian menuntut apa?",
     "options": [
@@ -17520,7 +18370,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 527,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Diskresi kepolisian seharusnya digunakan bagaimana?",
     "options": [
@@ -17551,7 +18403,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 528,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Saat menerima laporan masyarakat, petugas sebaiknya?",
     "options": [
@@ -17582,7 +18436,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 529,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Jika konflik warga berpotensi meluas, langkah awal tepat adalah?",
     "options": [
@@ -17613,7 +18469,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 530,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Barang temuan yang diterima petugas harus bagaimana?",
     "options": [
@@ -17644,7 +18502,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 531,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "KUHP nasional diatur dalam undang-undang nomor berapa?",
     "options": [
@@ -17675,7 +18535,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 532,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "KUHP nasional mulai berlaku kapan?",
     "options": [
@@ -17706,7 +18568,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 533,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Asas legalitas pidana secara umum mengandung prinsip apa?",
     "options": [
@@ -17737,7 +18601,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 534,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Pertanggungjawaban pidana pada prinsipnya berkaitan dengan apa?",
     "options": [
@@ -17768,7 +18634,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 535,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Perbedaan tindak pidana dan pelanggaran etik adalah?",
     "options": [
@@ -17799,7 +18667,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 536,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Pidana dijatuhkan oleh siapa?",
     "options": [
@@ -17830,7 +18700,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 537,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Tujuan pemidanaan modern dapat mencakup apa?",
     "options": [
@@ -17861,7 +18733,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 538,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Percobaan melakukan tindak pidana pada umumnya berkaitan dengan apa?",
     "options": [
@@ -17892,7 +18766,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 539,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Pembelaan terpaksa dalam hukum pidana dikenal dengan istilah apa?",
     "options": [
@@ -17923,7 +18799,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 540,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Dasar Hukum Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Penerapan KUHP dalam perkara konkret harus memperhatikan apa?",
     "options": [
@@ -17954,7 +18832,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 541,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "KUHAP yang berlaku sejak 2 Januari 2026 adalah?",
     "options": [
@@ -17985,7 +18865,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 542,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Penyelidikan pada pokoknya bertujuan untuk apa?",
     "options": [
@@ -18016,7 +18898,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 543,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Penyidikan pada pokoknya bertujuan untuk apa?",
     "options": [
@@ -18047,7 +18931,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 544,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Penyidik wajib bekerja berdasarkan apa?",
     "options": [
@@ -18078,7 +18964,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 545,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "UU 20/2025 menekankan penguatan hak siapa?",
     "options": [
@@ -18109,7 +18997,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 546,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Praperadilan merupakan mekanisme apa?",
     "options": [
@@ -18140,7 +19030,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 547,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Barang bukti harus dikelola dengan prinsip apa?",
     "options": [
@@ -18171,7 +19063,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 548,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Keterangan saksi yang baik dalam pembuktian adalah?",
     "options": [
@@ -18202,7 +19096,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 549,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Hak atas bantuan hukum bertujuan untuk apa?",
     "options": [
@@ -18233,7 +19129,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 550,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Keadilan restoratif menitikberatkan pada apa?",
     "options": [
@@ -18264,7 +19162,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 551,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Perpol yang mengatur Kode Etik Profesi dan Komisi Kode Etik Polri adalah?",
     "options": [
@@ -18295,7 +19195,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 552,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Peraturan disiplin anggota Polri diatur dalam?",
     "options": [
@@ -18326,7 +19228,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 553,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Kode etik profesi terutama berfungsi sebagai apa?",
     "options": [
@@ -18357,7 +19261,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 554,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Integritas dalam tugas kepolisian tercermin dari apa?",
     "options": [
@@ -18388,7 +19294,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 555,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Konflik kepentingan terjadi ketika apa?",
     "options": [
@@ -18419,7 +19327,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 556,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Jika mengetahui rekan meminta imbalan ilegal, tindakan profesional adalah?",
     "options": [
@@ -18450,7 +19360,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 557,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Praduga tak bersalah berarti apa?",
     "options": [
@@ -18481,7 +19393,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 558,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Perlakuan terhadap tahanan harus bagaimana?",
     "options": [
@@ -18512,7 +19426,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 559,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Penyiksaan untuk memperoleh pengakuan adalah?",
     "options": [
@@ -18543,7 +19459,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 560,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pedoman Pelaksanaan Tugas Kepolisian",
+    "difficulty": "MEDIUM ",
     "subtest": "TPK",
     "stem": "Netralitas anggota Polri dalam politik praktis menuntut apa?",
     "options": [
@@ -18574,7 +19492,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 561,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Fungsi utama lalu lintas berkaitan dengan apa?",
     "options": [
@@ -18605,7 +19525,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 562,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Contoh kegiatan preventif Satlantas adalah?",
     "options": [
@@ -18636,7 +19558,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 563,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Fungsi Reserse terutama berhubungan dengan apa?",
     "options": [
@@ -18667,7 +19591,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 564,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Fungsi Intelkam mendukung tugas melalui apa?",
     "options": [
@@ -18698,7 +19624,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 565,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Fungsi Samapta antara lain melaksanakan apa?",
     "options": [
@@ -18729,7 +19657,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 566,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Fungsi Binmas menitikberatkan pada apa?",
     "options": [
@@ -18760,7 +19690,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 567,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Identifikasi kepolisian membantu apa?",
     "options": [
@@ -18791,7 +19723,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 568,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Laboratorium forensik berperan dalam apa?",
     "options": [
@@ -18822,7 +19756,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 569,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Kedokteran kepolisian dapat mendukung apa?",
     "options": [
@@ -18853,7 +19789,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 570,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Kemitraan polisi-masyarakat bertujuan apa?",
     "options": [
@@ -18884,7 +19822,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 571,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Kepemimpinan berintegritas ditunjukkan dengan apa?",
     "options": [
@@ -18915,7 +19855,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 572,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Delegasi tugas yang baik harus disertai apa?",
     "options": [
@@ -18946,7 +19888,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 573,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Saat menerima informasi belum terverifikasi, pimpinan sebaiknya?",
     "options": [
@@ -18977,7 +19921,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 574,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Dalam situasi darurat, prioritas pertama petugas adalah?",
     "options": [
@@ -19008,7 +19954,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 575,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Pelayanan berorientasi masyarakat berarti?",
     "options": [
@@ -19039,7 +19987,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 576,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Pengawasan melekat atasan bertujuan apa?",
     "options": [
@@ -19070,7 +20020,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 577,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Evaluasi setelah operasi berguna untuk apa?",
     "options": [
@@ -19101,7 +20053,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 578,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Dalam konflik internal tim, pemimpin sebaiknya?",
     "options": [
@@ -19132,7 +20086,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 579,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Indikator pelayanan baik antara lain?",
     "options": [
@@ -19163,7 +20119,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 580,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Pengetahuan Umum Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Perwira menerima kritik valid dari anggota. Sikap terbaik?",
     "options": [
@@ -19194,7 +20152,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 581,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Rekan memakai kendaraan dinas untuk kepentingan pribadi yang dilarang. Respons?",
     "options": [
@@ -19225,7 +20185,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 582,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Di TKP kecelakaan, kerumunan menghalangi ambulans. Prioritas?",
     "options": [
@@ -19256,7 +20218,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 583,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Pelapor meminta kepastian terlapor langsung ditahan. Petugas sebaiknya?",
     "options": [
@@ -19287,7 +20251,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 584,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Atasan meminta bawahan mengubah fakta laporan. Bawahan sebaiknya?",
     "options": [
@@ -19318,7 +20284,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 585,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Informasi intelijen berbeda dengan temuan lapangan. Langkah tepat?",
     "options": [
@@ -19349,7 +20317,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 586,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Korban takut memberi keterangan. Petugas sebaiknya?",
     "options": [
@@ -19380,7 +20350,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 587,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Saat menerima pengaduan diskriminasi, petugas harus?",
     "options": [
@@ -19411,7 +20383,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 588,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Jika terjadi kesalahan prosedur, langkah tepat?",
     "options": [
@@ -19442,7 +20416,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 589,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Saat tekanan massa meningkat, komandan lapangan harus?",
     "options": [
@@ -19473,7 +20449,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 590,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Keputusan tepat ketika data belum cukup adalah?",
     "options": [
@@ -19504,7 +20482,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 591,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Akronim PRESISI dikenal sebagai apa?",
     "options": [
@@ -19535,7 +20515,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 592,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Pemolisian prediktif menekankan apa?",
     "options": [
@@ -19566,7 +20548,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 593,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Transparansi berkeadilan berarti apa?",
     "options": [
@@ -19597,7 +20581,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 594,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Responsibilitas dalam pelayanan menekankan apa?",
     "options": [
@@ -19628,7 +20614,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 595,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Kepercayaan publik terhadap Polri dibangun melalui apa?",
     "options": [
@@ -19659,7 +20647,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 596,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Koordinasi lintas instansi diperlukan karena apa?",
     "options": [
@@ -19690,7 +20680,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 597,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Dalam penggunaan media sosial anggota perlu menjaga apa?",
     "options": [
@@ -19721,7 +20713,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 598,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Data pribadi korban/saksi sebaiknya bagaimana?",
     "options": [
@@ -19752,7 +20746,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 599,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Profesionalisme anggota menuntut kompetensi yang bagaimana?",
     "options": [
@@ -19783,7 +20779,9 @@ const QUESTIONS_TPK: SimQuestion[] = [
   },
   {
     "id": 600,
-    "module": "Tes Pengetahuan Kepolisian (TPK)",
+    "module": "Tes Pengetahuan Kepolisian",
+    "subCategory": "Kebijakan Kepolisian",
+    "difficulty": "HARD ",
     "subtest": "TPK",
     "stem": "Sikap yang mencerminkan pelindung, pengayom, pelayan masyarakat adalah?",
     "options": [
