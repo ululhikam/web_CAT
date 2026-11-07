@@ -133,6 +133,7 @@ function buildMultipleChoice(
     correct + intBetween(rng, 1, 3),
     correct - intBetween(rng, 1, 3),
     correct + intBetween(rng, 4, 7),
+    correct - intBetween(rng, 4, 7),
   ]).map((value, optionIndex) => ({
     key: LETTERS[optionIndex] as string,
     text: String(value),

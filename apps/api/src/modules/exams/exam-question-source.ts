@@ -73,6 +73,10 @@ function intBetween(rng: () => number, min: number, max: number): number {
   return min + Math.floor(rng() * (max - min + 1));
 }
 
+function pick<T>(rng: () => number, items: readonly T[]): T {
+  return items[intBetween(rng, 0, items.length - 1)]!;
+}
+
 function shuffle<T>(rng: () => number, values: readonly T[]): T[] {
   const copy = [...values];
   for (let index = copy.length - 1; index > 0; index -= 1) {
@@ -167,16 +171,95 @@ function buildChoice(
   topic: string,
   stemPrefix: string,
 ): QuestionSnapshot {
-  const a = intBetween(rng, 11, 89);
-  const b = intBetween(rng, 11, 89);
-  const answer = a + b;
-  const distractors = shuffle(rng, [answer + 1, answer - 1, answer + 10, answer - 10, answer + 2])
-    .filter((value, index, all) => value !== answer && all.indexOf(value) === index)
-    .slice(0, 4);
-  while (distractors.length < 4) {
-    const candidate = answer + intBetween(rng, 11, 20);
-    if (candidate !== answer && !distractors.includes(candidate)) distractors.push(candidate);
+  const typeIndex = intBetween(rng, 0, 3);
+  let stem = '';
+  let answer = '';
+  let distractors: string[] = [];
+
+  if (topic.includes('Numerik') || topic.includes('Aritmetika')) {
+    if (typeIndex === 0) {
+      const speed = pick(rng, [60, 75, 80, 90, 100]);
+      const hours = pick(rng, [1.5, 2, 2.5, 3]);
+      const dist = Math.round(speed * hours);
+      const minutes = Math.round(hours * 60);
+      stem = `[Penalaran Aritmatika Taktis] Sebuah mobil patroli polisi melaju dengan kecepatan rata-rata ${speed} km/jam menuju lokasi kejadian berjarak ${dist} km. Waktu tempuh perjalanan tersebut adalah...`;
+      answer = `${minutes} menit`;
+      distractors = [
+        `${minutes + 15} menit`,
+        `${minutes - 15} menit`,
+        `${minutes + 30} menit`,
+        `${minutes - 30} menit`,
+      ];
+    } else if (typeIndex === 1) {
+      const start = intBetween(rng, 3, 9);
+      const diff1 = intBetween(rng, 3, 5);
+      const diff2 = diff1 + 2;
+      const diff3 = diff2 + 2;
+      const diff4 = diff3 + 2;
+      const s1 = start;
+      const s2 = s1 + diff1;
+      const s3 = s2 + diff2;
+      const s4 = s3 + diff3;
+      const nextVal = s4 + diff4;
+      stem = `[Deret Angka & Pola Bilangan] Tentukan angka kelanjutan yang logis pada barisan bertingkat berikut: ${s1}, ${s2}, ${s3}, ${s4}, ...`;
+      answer = String(nextVal);
+      distractors = [
+        String(nextVal + 2),
+        String(nextVal - 2),
+        String(nextVal + 4),
+        String(nextVal - 4),
+      ];
+    } else {
+      const count = pick(rng, [120, 150, 180, 240]);
+      const pct = pick(rng, [15, 20, 25, 30]);
+      const val = Math.round((count * pct) / 100);
+      stem = `[Analisis Persentase Anggaran] Dari total ${count} unit perlengkapan taktis dinas, sebanyak ${pct}% dialokasikan untuk cadangan kontinjensi. Jumlah unit cadangan adalah...`;
+      answer = `${val} unit`;
+      distractors = [
+        `${val + 5} unit`,
+        `${val - 5} unit`,
+        `${val + 10} unit`,
+        `${val - 10} unit`,
+      ];
+    }
+  } else if (topic.includes('Verbal') || topic.includes('Silogisme')) {
+    stem = `[Penalaran Logis & Silogisme] Semua personel satgas wajib mengikuti apel konsolidasi sebelum bertugas. Sebagian anggota regu intelijen ditugaskan dalam satgas pengamanan VVIP. Kesimpulan sah yang dapat ditarik adalah...`;
+    answer = 'Sebagian anggota regu intelijen wajib mengikuti apel konsolidasi sebelum bertugas';
+    distractors = [
+      'Semua anggota regu intelijen tidak perlu mengikuti apel konsolidasi',
+      'Tidak ada personel satgas yang mengikuti apel konsolidasi',
+      'Hanya anggota regu intelijen yang mengikuti apel konsolidasi',
+      'Semua personel satgas adalah anggota regu intelijen',
+    ];
+  } else if (topic.includes('Peta') || topic.includes('Denah')) {
+    stem = `[Orientasi Denah & Arah Taktis] Mobil patroli bergerak dari Markas Komando sejauh 6 km ke arah Barat, kemudian berbelok 90 derajat ke arah Utara sejauh 8 km menuju Pos Pengamanan. Jarak garis lurus terpendek antara Markas Komando dan Pos Pengamanan adalah...`;
+    answer = '10 km (Arah Barat Laut)';
+    distractors = [
+      '14 km (Arah Barat Laut)',
+      '12 km (Arah Barat)',
+      '8 km (Arah Utara)',
+      '16 km (Arah Barat Daya)',
+    ];
+  } else if (topic.includes('Figural')) {
+    stem = `[Penalaran Figural Spasial] Suatu tanda panah arah kompas mula-mula menunjuk ke arah Barat Laut (315 derajat). Jika jarum diputar 135 derajat searah jarum jam, lalu diputar 90 derajat berlawanan arah jarum jam, maka arah akhir jarum adalah...`;
+    answer = 'Utara (0 / 360 derajat)';
+    distractors = [
+      'Timur Laut (45 derajat)',
+      'Timur (90 derajat)',
+      'Barat (270 derajat)',
+      'Selatan (180 derajat)',
+    ];
+  } else {
+    stem = `[Studi Kasus & Regulasi Kepolisian] Sesuai UU No. 2 Tahun 2002 dan kode etik profesi Polri, tindakan diskresi kepolisian di lapangan dapat dibenarkan secara hukum apabila...`;
+    answer = 'Memenuhi asas nesesitas, proporsionalitas, dan semata-mata untuk kepentingan umum';
+    distractors = [
+      'Mendapatkan imbalan sukarela dari pihak pelapor perkara',
+      'Dilakukan atas kehendak bebas pribadi tanpa dasar pertimbangan situasi',
+      'Mengabaikan keselamatan masyarakat di sekitar lokasi penindakan',
+      'Diterapkan untuk kepentingan kelompok atau kerabat dekat pejabat',
+    ];
   }
+
   const values = shuffle(rng, [answer, ...distractors]);
   const labels = ['A', 'B', 'C', 'D', 'E'];
   const options: SnapshotOption[] = values.map((value, index) => ({
@@ -192,7 +275,7 @@ function buildChoice(
   return {
     sourceId,
     type: 'SINGLE_CHOICE',
-    stem: `${stemPrefix} ${topic}: berapakah hasil dari ${a} + ${b}?`,
+    stem,
     stemFormat: 'MARKDOWN',
     difficulty: ['EASY', 'MEDIUM', 'HARD'][intBetween(rng, 0, 2)] as QuestionSnapshot['difficulty'],
     weight: 1,
